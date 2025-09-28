@@ -16,9 +16,7 @@ public partial class MainWindowViewModel : ViewModelBase, INavigationHost
 
     private readonly NavigationService _navigationService;
     private readonly DialogService _dialogService;
-
-    private readonly IWritableOptions<AppSettings> _appSettings;
-
+    
     public string DialogHostId { get; } = "MainWindow-" + Guid.NewGuid().ToString("D");
 
     public MainWindowViewModel(NavigationService navigationService, DialogService dialogService,
@@ -26,19 +24,12 @@ public partial class MainWindowViewModel : ViewModelBase, INavigationHost
     {
         _navigationService = navigationService;
         _dialogService = dialogService;
-        _appSettings = appSettings;
 
         _dialogService.SetDialogHostId(DialogHostId);
 
         _navigationService.Register(this);
-
-        if (!_appSettings.Value.SkipFirstSetup)
-        {
-            _navigationService.Navigate<GuideWelcomePageViewModel>();
-            return;
-        }
-
-        _navigationService.Navigate<HomePageViewModel>();
+        
+        _navigationService.Navigate<BootstrapPageViewModel>();
     }
 
     public void Navigate(PageViewModelBase pageViewModel)

@@ -23,6 +23,8 @@ public static class ServicesExtenstion
 
         services.AddSingleton<NavigationService>();
 
+        services.AddTransient<BootstrapPageViewModel>();
+        
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
 

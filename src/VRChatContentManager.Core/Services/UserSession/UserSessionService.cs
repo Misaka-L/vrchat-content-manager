@@ -28,6 +28,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         string userNameOrEmail,
         IServiceScopeFactory scopeFactory,
         string? userId,
+        CookieContainer? cookieContainer,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
         _scopeFactory = scopeFactory;
@@ -36,7 +37,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
         _userNameOrEmail = userNameOrEmail;
 
-        _cookieContainer = new CookieContainer();
+        _cookieContainer = cookieContainer ?? new CookieContainer();
         _sessionHttpClient = new HttpClient(
             new InspectorHttpHandler(async () => await _saveFunc(_cookieContainer, _userId, _userNameOrEmail))
             {
@@ -117,9 +118,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
 public sealed class UserSessionFactory(IServiceScopeFactory scopeFactory)
 {
-    public UserSessionService Create(string userNameOrEmail, string? userId,
+    public UserSessionService Create(string userNameOrEmail, string? userId, CookieContainer? cookieContainer,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
-        return new UserSessionService(userNameOrEmail, scopeFactory, userId, saveFunc);
+        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, saveFunc);
     }
 }

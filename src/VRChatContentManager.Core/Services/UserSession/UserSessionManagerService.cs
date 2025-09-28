@@ -11,26 +11,50 @@ public sealed class UserSessionManagerService(
     private readonly List<UserSessionService> _sessions = [];
     public IReadOnlyList<UserSessionService> Sessions => _sessions.AsReadOnly();
 
-    public UserSessionService CreateSession(string userNameOrEmail, string? userId = null)
+    public async Task RestoreSessionsAsync()
     {
-        var session = sessionFactory.Create(userNameOrEmail, userId, async (cookies, sessionUserId, userName) =>
+        foreach (var (userId, sessionItem) in userSessionStorage.Value.Sessions)
         {
-            if (sessionUserId is null || userName is null)
-                return;
-
-            await userSessionStorage.UpdateAsync(sessions =>
+            var cookieContainer = new CookieContainer();
+            foreach (var cookie in sessionItem.Cookies)
             {
-                if (sessions.Sessions.TryGetValue(sessionUserId, out var session))
-                {
-                    session.Cookies.Clear();
-                    session.Cookies.AddRange(cookies.GetAllCookies());
-                    return;
-                }
+                cookieContainer.Add(cookie);
+            }
 
-                sessions.Sessions.Add(sessionUserId,
-                    new UserSessionStorageItem(userName, new List<Cookie>(cookies.GetAllCookies())));
+            var session = CreateSession(sessionItem.UserName, userId, cookieContainer);
+            try
+            {
+                await session.CreateSessionScopeAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+    }
+
+    public UserSessionService CreateSession(string userNameOrEmail, string? userId = null, CookieContainer?
+        cookieContainer = null)
+    {
+        var session = sessionFactory.Create(userNameOrEmail, userId, cookieContainer,
+            async (cookies, sessionUserId, userName) =>
+            {
+                if (sessionUserId is null || userName is null)
+                    return;
+
+                await userSessionStorage.UpdateAsync(sessions =>
+                {
+                    if (sessions.Sessions.TryGetValue(sessionUserId, out var session))
+                    {
+                        session.Cookies.Clear();
+                        session.Cookies.AddRange(cookies.GetAllCookies());
+                        return;
+                    }
+
+                    sessions.Sessions.Add(sessionUserId,
+                        new UserSessionStorageItem(userName, new List<Cookie>(cookies.GetAllCookies())));
+                });
             });
-        });
 
         _sessions.Add(session);
 
