@@ -1,0 +1,61 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="VRChatContentManager.App.Pages.HomeTab.HomeTasksPage">
+
+    <StackPanel>
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4" Margin="8,8,8,0">
+            <TextBlock Text="Misaka-L" />
+            <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
+        </Grid>
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">
+            <avalonia:MaterialIcon Kind="Person" Height="32" Width="32" />
+            <StackPanel Grid.Column="1" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <TextBlock Text="Misaka_MOD_MFY_SailorLoliEx" FontSize="18" />
+                    <TextBlock Text="v4" FontSize="12" Opacity="0.8" VerticalAlignment="Bottom" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Uploading..." FontSize="12" Opacity="0.8" />
+                    <ProgressBar Value="42" />
+                </StackPanel>
+            </StackPanel>
+            <Button Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
+        </Grid>
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">
+            <avalonia:MaterialIcon Kind="Person" Height="32" Width="32" />
+            <StackPanel Grid.Column="1" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <TextBlock Text="Misaka_MOD_MFY_Suit" FontSize="18" />
+                    <TextBlock Text="v8" FontSize="12" Opacity="0.8" VerticalAlignment="Bottom" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Compressing..." FontSize="12" Opacity="0.8" />
+                    <ProgressBar IsIndeterminate="True" />
+                </StackPanel>
+            </StackPanel>
+            <Button Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
+        </Grid>
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">
+            <avalonia:MaterialIcon Kind="Earth" Height="32" Width="32" />
+            <StackPanel Grid.Column="1" Spacing="2">
+                <StackPanel Orientation="Horizontal" Spacing="2">
+                    <TextBlock Text="AAAS Demo Next (LEO Space Station)" FontSize="18" />
+                    <TextBlock Text="v8" FontSize="12" Opacity="0.8" VerticalAlignment="Bottom" />
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Upload Failed, Retrying... (Attempt #2)" FontSize="12" Opacity="0.8" />
+                    <ProgressBar IsIndeterminate="True" />
+                </StackPanel>
+            </StackPanel>
+            <Button Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
+        </Grid>
+        <!-- <Button Margin="10" Content="Pos" Click="Button_OnClick" /> -->
+    </StackPanel>
+</UserControl>

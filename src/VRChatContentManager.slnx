@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="AssetsTools.NET\AssetTools.NET\AssetsTools.NET.csproj" />
+  <Project Path="VRChatContentManager.App\VRChatContentManager.App.csproj" Type="Classic C#" />
+  <Project Path="VRChatContentManager.Core\VRChatContentManager.Core.csproj" Type="Classic C#" />
+  <Project Path="VRChatContentManager.Test\VRChatContentManager.Test.csproj" />
+</Solution>

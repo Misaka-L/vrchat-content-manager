@@ -1,0 +1,3 @@
+[submodule "assets-tools-net"]
+	path = src/AssetsTools.NET
+	url = https://github.com/project-vrcz/AssetsTools.NET.git

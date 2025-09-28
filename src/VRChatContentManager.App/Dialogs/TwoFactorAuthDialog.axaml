@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+             xmlns:dialogs="clr-namespace:VRChatContentManager.App.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="dialogs:TwoFactorAuthDialogViewModel"
+             x:Class="VRChatContentManager.App.Dialogs.TwoFactorAuthDialog">
+
+    <Grid Width="320" Height="320">
+        <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
+                Padding="0" Margin="0,0,0,5"
+                Theme="{StaticResource MaterialFlatButton}"
+                Command="{Binding RequestCloseCommand}"
+                HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <StackPanel Spacing="36" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center">
+                <avalonia:MaterialIcon Kind="Lock" Height="64" Width="64" HorizontalAlignment="Center"
+                                       Margin="0,0,0,12" />
+                <TextBlock Text="One Time Password Required" HorizontalAlignment="Center"
+                           FontSize="22" FontWeight="SemiBold" />
+                <TextBlock Text="Please check your email" HorizontalAlignment="Center" />
+            </StackPanel>
+            <TextBox Text="{Binding Code}"
+                     MaxLength="6" AcceptsReturn="False" AcceptsTab="False"
+                     MaxLines="1" TextWrapping="NoWrap" Width="200" FontSize="24"
+                     TextAlignment="Center" HorizontalAlignment="Center"
+                     UseFloatingWatermark="False" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                     TextChanged="Totp_OnTextChanged" KeyDown="Totp_OnKeyDown"
+                     Watermark="Code" />
+        </StackPanel>
+    </Grid>
+</UserControl>
