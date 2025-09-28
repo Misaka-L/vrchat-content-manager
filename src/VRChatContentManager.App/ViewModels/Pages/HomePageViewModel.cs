@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
+using VRChatContentManager.Core.Settings;
+using VRChatContentManager.Core.Settings.Models;
 
 namespace VRChatContentManager.App.ViewModels.Pages;
 
@@ -22,12 +25,17 @@ public partial class HomePageViewModel : PageViewModelBase
     ];
 
     private readonly NavigationService _navigationService;
+    private readonly IWritableOptions<AppSettings> _appSettings;
     private readonly IServiceProvider _serviceProvider;
 
-    public HomePageViewModel(NavigationService navigationService, IServiceProvider serviceProvider)
+    public HomePageViewModel(
+        NavigationService navigationService,
+        IServiceProvider serviceProvider,
+        IWritableOptions<AppSettings> appSettings)
     {
         _navigationService = navigationService;
         _serviceProvider = serviceProvider;
+        _appSettings = appSettings;
 
         PropertyChanged += (_, args) =>
         {
@@ -45,6 +53,15 @@ public partial class HomePageViewModel : PageViewModelBase
         };
 
         CurrentNavigationItem = Items[0];
+    }
+
+    [RelayCommand]
+    private async Task Load()
+    {
+        await _appSettings.UpdateAsync(settings =>
+        {
+            settings.SkipFirstSetup = true;
+        });
     }
 
     [RelayCommand]

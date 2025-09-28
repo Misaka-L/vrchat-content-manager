@@ -38,6 +38,13 @@ public static class ServicesExtension
         var sessionsSection = builder.Configuration.GetSection("Sessions");
         builder.Services.Configure<UserSessionStorage>(sessionsSection);
         builder.Services.AddWriteableOptions<UserSessionStorage>(sessionsSection.Key, sessionsFileName);
+        
+        const string appSettingsFileName = "settings.json";
+        builder.Configuration.AddAppJsonFile(appSettingsFileName);
+        
+        var appSettingsSection = builder.Configuration.GetSection("Settings");
+        builder.Services.Configure<AppSettings>(appSettingsSection);
+        builder.Services.AddWriteableOptions<AppSettings>(appSettingsSection.Key, appSettingsFileName);
 
         return builder;
     }
