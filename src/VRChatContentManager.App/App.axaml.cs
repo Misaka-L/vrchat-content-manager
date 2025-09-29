@@ -3,7 +3,10 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.Dialogs;
 using VRChatContentManager.App.Pages;
@@ -15,6 +18,8 @@ using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
 using VRChatContentManager.App.Views;
+using VRChatContentManager.Core;
+using VRChatContentManager.Core.Services.App;
 
 namespace VRChatContentManager.App;
 
@@ -26,17 +31,24 @@ public partial class App : Application
 #pragma warning restore CS8603
 #pragma warning restore CS8600
     
-    
     private readonly IServiceProvider _serviceProvider = null!;
+    
+    public readonly AppWebImageLoader AsyncImageLoader;
     
     public App()
     {
         // Make Previewer happy
+        var httpClient = new HttpClient();
+        httpClient.AddUserAgent();
+        
+        var memoryCache = new MemoryCache(new MemoryCacheOptions());
+        AsyncImageLoader = new AppWebImageLoader(new RemoteImageService(httpClient, memoryCache), memoryCache);
     }
 
     public App(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
+        AsyncImageLoader = _serviceProvider.GetRequiredService<AppWebImageLoader>();
     }
     
     public override void Initialize()

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels;
+using VRChatContentManager.App.ViewModels.Data;
 using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
@@ -12,6 +13,8 @@ public static class ServicesExtenstion
 {
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
+        services.AddSingleton<AppWebImageLoader>();
+        
         // Dialog
         services.AddSingleton<DialogService>();
 
@@ -27,6 +30,9 @@ public static class ServicesExtenstion
         
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
+        
+        // Data ViewModels
+        services.AddTransient<UserSessionViewModelFactory>();
 
         // HomePage Tabs
         services.AddTransient<HomeTasksPageViewModel>();

@@ -14,6 +14,11 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
+        services.AddMemoryCache();
+
+        services.AddSingleton<RemoteImageService>();
+        services.AddHttpClient<RemoteImageService>(client => { client.AddUserAgent(); });
+        
         services.AddSingleton<UserSessionManagerService>();
 
         services.AddScoped<UserSessionScopeService>();

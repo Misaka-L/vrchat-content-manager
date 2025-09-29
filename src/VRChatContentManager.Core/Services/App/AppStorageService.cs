@@ -13,6 +13,15 @@ public static class AppStorageService
 
         return appDataPath;
     }
+
+    public static string GetTempPath()
+    {
+        var tempPath = Path.Combine(GetStoragePath(), "temp");
+        if (!Directory.Exists(tempPath))
+            Directory.CreateDirectory(tempPath);
+        
+        return tempPath;
+    }
     
     private static string GetOsAppDataPath()
     {

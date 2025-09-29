@@ -3,12 +3,52 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:VRChatContentManager.App.ViewModels.Pages"
+             xmlns:data="clr-namespace:VRChatContentManager.App.ViewModels.Data"
+             xmlns:controls="clr-namespace:VRChatContentManager.App.Controls"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="pages:SettingsPageViewModel"
              x:Class="VRChatContentManager.App.Pages.SettingsPage">
 
-    <StackPanel>
-        <Button Content="Back" Command="{Binding NavigateToHomeCommand}"/>
-        <TextBlock Text="Settings" />
-    </StackPanel>
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <Grid RowDefinitions="Auto,*">
+        <Border>
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
+                        Command="{Binding NavigateToHomeCommand}"
+                        Padding="0" Margin="0,0,0,5" Foreground="White"
+                        Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
+                <TextBlock Text="Settings" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
+        <StackPanel Grid.Row="1" Spacing="24" Margin="18">
+            <Expander Header="Accounts">
+                <ItemsControl ItemsSource="{Binding UserSessions}" Margin="8">
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate x:DataType="data:UserSessionViewModel">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                <Border CornerRadius="100" Height="40" Width="40" ClipToBounds="True">
+                                    <Image controls:AsyncImageLoader.Source="{Binding ProfilePictureUrl}"
+                                           Stretch="UniformToFill" />
+                                </Border>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{Binding UserId}" />
+                                    <TextBlock Text="{Binding UserNameOrEmail}" />
+                                    <TextBlock Text="{Binding DisplayName}" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.DataTemplates>
+                </ItemsControl>
+            </Expander>
+        </StackPanel>
+    </Grid>
 </UserControl>
