@@ -29,7 +29,7 @@ public sealed partial class GuideAccountPageViewModel(
     [RelayCommand]
     private async Task Login()
     {
-        var session = userSessionManagerService.CreateSession(Username);
+        var session = userSessionManagerService.CreateOrGetSession(Username);
 
         var loginResult = await session.LoginAsync(Password);
         

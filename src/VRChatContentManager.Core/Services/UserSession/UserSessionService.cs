@@ -18,9 +18,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private readonly VRChatApiClient _apiClient;
 
-    private string _userNameOrEmail;
-    private string? _userId;
-    private CurrentUser? _currentUser;
+    public string UserNameOrEmail { get; private set; }
+    public string? UserId { get; private set; }
+    public CurrentUser? CurrentUser { get; private set; }
 
     private AsyncServiceScope? _sessionScope;
 
@@ -33,13 +33,13 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     {
         _scopeFactory = scopeFactory;
         _saveFunc = saveFunc;
-        _userId = userId;
+        UserId = userId;
 
-        _userNameOrEmail = userNameOrEmail;
+        UserNameOrEmail = userNameOrEmail;
 
         _cookieContainer = cookieContainer ?? new CookieContainer();
         _sessionHttpClient = new HttpClient(
-            new InspectorHttpHandler(async () => await _saveFunc(_cookieContainer, _userId, _userNameOrEmail))
+            new InspectorHttpHandler(async () => await _saveFunc(_cookieContainer, UserId, UserNameOrEmail))
             {
                 InnerHandler = new SocketsHttpHandler
                 {
@@ -61,18 +61,18 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     public async ValueTask<LoginResult> LoginAsync(string password)
     {
-        return await _apiClient.LoginAsync(_userNameOrEmail, password);
+        return await _apiClient.LoginAsync(UserNameOrEmail, password);
     }
-    
+
     public async ValueTask<CurrentUser> GetCurrentUserAsync()
     {
-        _currentUser = await _apiClient.GetCurrentUser();
-        _userId = _currentUser.Id;
-        _userNameOrEmail = _currentUser.UserName;
+        CurrentUser = await _apiClient.GetCurrentUser();
+        UserId = CurrentUser.Id;
+        UserNameOrEmail = CurrentUser.UserName;
 
-        await _saveFunc(_cookieContainer, _userId, _userNameOrEmail);
+        await _saveFunc(_cookieContainer, UserId, UserNameOrEmail);
 
-        return _currentUser;
+        return CurrentUser;
     }
 
     public async Task CreateSessionScopeAsync()
@@ -80,11 +80,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         if (_sessionScope is not null)
             throw new InvalidOperationException("The session scope has already been created.");
 
-        _currentUser = await _apiClient.GetCurrentUser();
-        _userId = _currentUser.Id;
-        _userNameOrEmail = _currentUser.UserName;
-        
-        await _saveFunc(_cookieContainer, _userId, _userNameOrEmail);
+        CurrentUser = await _apiClient.GetCurrentUser();
+        UserId = CurrentUser.Id;
+        UserNameOrEmail = CurrentUser.UserName;
+
+        await _saveFunc(_cookieContainer, UserId, UserNameOrEmail);
 
         await CreateSessionScopeAsyncCore();
     }

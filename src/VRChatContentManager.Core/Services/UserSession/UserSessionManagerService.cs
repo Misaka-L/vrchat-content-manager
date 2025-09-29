@@ -21,7 +21,7 @@ public sealed class UserSessionManagerService(
                 cookieContainer.Add(cookie);
             }
 
-            var session = CreateSession(sessionItem.UserName, userId, cookieContainer);
+            var session = CreateOrGetSession(sessionItem.UserName, userId, cookieContainer);
             try
             {
                 await session.CreateSessionScopeAsync();
@@ -33,9 +33,17 @@ public sealed class UserSessionManagerService(
         }
     }
 
-    public UserSessionService CreateSession(string userNameOrEmail, string? userId = null, CookieContainer?
+    public UserSessionService CreateOrGetSession(string userNameOrEmail, string? userId = null, CookieContainer?
         cookieContainer = null)
     {
+        if (_sessions.FirstOrDefault(session =>
+                (session.UserId is not null && userId == session.UserId) ||
+                session.UserNameOrEmail == userNameOrEmail
+            ) is { } existingSession)
+        {
+            return existingSession;
+        }
+
         var session = sessionFactory.Create(userNameOrEmail, userId, cookieContainer,
             async (cookies, sessionUserId, userName) =>
             {
