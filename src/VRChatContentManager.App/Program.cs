@@ -26,7 +26,7 @@ internal sealed class Program
     public static void Main(string[] args)
     {
         var builder = new HostApplicationBuilder();
-
+        
         builder.UseAppCore();
         builder.Services.AddAppServices();
         builder.Services.AddAvaloniauiDesktopApplication<App>(appBuilder => appBuilder

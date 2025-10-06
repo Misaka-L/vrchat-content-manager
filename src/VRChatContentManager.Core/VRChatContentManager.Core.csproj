@@ -19,5 +19,9 @@
         <RuntimeHostConfigurationOption Include="System.Text.Json.Serialization.RespectNullableAnnotationsDefault" Value="true"/>
         <RuntimeHostConfigurationOption Include="System.Text.Json.Serialization.RespectRequiredConstructorParametersDefault" Value="true"/>
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\VRChatContentManager.ConnectCore\VRChatContentManager.ConnectCore.csproj" />
+    </ItemGroup>
 
 </Project>

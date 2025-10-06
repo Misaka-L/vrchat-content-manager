@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.Core.Services.App;
 using VRChatContentManager.Core.Services.PublishTask;
 using VRChatContentManager.Core.Services.UserSession;
@@ -14,6 +15,8 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
+        services.AddConnectCore();
+        
         services.AddMemoryCache();
 
         services.AddSingleton<RemoteImageService>();
