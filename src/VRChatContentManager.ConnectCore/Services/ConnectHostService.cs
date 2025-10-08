@@ -1,11 +1,14 @@
 ﻿using Microsoft.Extensions.Hosting;
+using VRChatContentManager.ConnectCore.Extensions;
 
 namespace VRChatContentManager.ConnectCore.Services;
 
-public class ConnectHostService(HttpServerService httpServerService) : IHostedService
+public class ConnectHostService(HttpServerService httpServerService, EndpointService endpointService) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        endpointService.MapConnectService();
+        
         await httpServerService.StartAsync(cancellationToken);
     }
 

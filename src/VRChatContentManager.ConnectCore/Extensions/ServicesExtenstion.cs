@@ -10,6 +10,7 @@ public static class ServicesExtenstion
     {
         services.AddSingleton<HttpServerService>();
         services.AddHostedService<ConnectHostService>();
+        services.AddSingleton<EndpointService>();
         
         // Middlewares
         services.AddTransient<RequestLoggingMiddleware>();
