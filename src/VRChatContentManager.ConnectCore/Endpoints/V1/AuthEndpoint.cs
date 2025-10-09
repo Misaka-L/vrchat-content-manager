@@ -78,7 +78,7 @@ public static class AuthEndpoint
         var sessionService = services.GetRequiredService<ClientSessionService>();
         var clientId = requestBody.ClientId;
 
-        sessionService.CreateChallenge(clientId);
+        await sessionService.CreateChallengeAsync(clientId);
 
         context.Response.StatusCode = StatusCodes.Status204NoContent;
     }

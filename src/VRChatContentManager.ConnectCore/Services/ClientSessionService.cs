@@ -7,7 +7,9 @@ using VRChatContentManager.ConnectCore.Models.ClientSession;
 
 namespace VRChatContentManager.ConnectCore.Services;
 
-public sealed class ClientSessionService(ILogger<ClientSessionService> logger)
+public sealed class ClientSessionService(
+    ILogger<ClientSessionService> logger,
+    IRequestChallengeService requestChallengeService)
 {
     private const string Issuer = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
@@ -53,25 +55,27 @@ public sealed class ClientSessionService(ILogger<ClientSessionService> logger)
         return result;
     }
 
-    public string CreateChallenge(string clientId)
+    public async Task<string> CreateChallengeAsync(string clientId)
     {
         CleanupExpiredSessions();
-        
+
         logger.LogInformation("Creating challenge for client {ClientId}", clientId);
+        var code = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant();
+        
         lock (_sessionLock)
         {
             if (_challengeSessions.FirstOrDefault(challenge => challenge.ClientId == clientId) is { } session)
                 _challengeSessions.Remove(session);
 
-            var code = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant();
             var expires = DateTimeOffset.UtcNow.AddMinutes(5);
 
             var challengeSession = new ChallengeSession(code, clientId, expires);
             _challengeSessions.Add(challengeSession);
-            logger.LogInformation("Created challenge code {Code} for client {ClientId}", code, clientId);
-
-            return code;
         }
+
+        await requestChallengeService.RequestChallengeAsync(code, clientId);
+
+        return code;
     }
 
     public string CreateSession(string code, string clientId)
@@ -100,7 +104,7 @@ public sealed class ClientSessionService(ILogger<ClientSessionService> logger)
     public string RefreshSession(string clientId)
     {
         CleanupExpiredSessions();
-        
+
         logger.LogInformation("Refreshing session for client {ClientId}", clientId);
         lock (_sessionLock)
         {

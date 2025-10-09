@@ -69,6 +69,7 @@ public partial class App : Application
         
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
+        ViewLocator.Register<RequestChallengeDialogViewModel, RequestChallengeDialog>();
         
         AvaloniaXamlLoader.Load(this);
         

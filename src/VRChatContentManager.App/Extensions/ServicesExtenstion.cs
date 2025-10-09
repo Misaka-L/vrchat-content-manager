@@ -6,6 +6,7 @@ using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
+using VRChatContentManager.ConnectCore.Services;
 
 namespace VRChatContentManager.App.Extensions;
 
@@ -20,6 +21,7 @@ public static class ServicesExtenstion
 
         // Dialogs
         services.AddTransient<TwoFactorAuthDialogViewModelFactory>();
+        services.AddTransient<RequestChallengeDialogViewModelFactory>();
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
@@ -42,6 +44,9 @@ public static class ServicesExtenstion
         services.AddTransient<GuideWelcomePageViewModel>();
         services.AddTransient<GuideAccountPageViewModel>();
         services.AddTransient<GuideSetupUnityPageViewModel>();
+        
+        // Connect Core
+        services.AddSingleton<IRequestChallengeService, RequestChallengeService>();
 
         return services;
     }

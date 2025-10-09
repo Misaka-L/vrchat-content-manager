@@ -1,0 +1,30 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentManager.App.ViewModels.Dialogs"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="dialogs:RequestChallengeDialogViewModel"
+             x:Class="VRChatContentManager.App.Dialogs.RequestChallengeDialog">
+
+    <StackPanel Spacing="24" Margin="8">
+        <StackPanel>
+            <TextBlock Text="Auth challenge request from" TextAlignment="Center"
+                       FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
+            <TextBlock Text="{Binding ClientId}" TextAlignment="Center" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="Finish challenge by enter this code" TextAlignment="Center"
+                       FontSize="18" />
+            <TextBlock Text="{Binding Code}" FontWeight="SemiBold" FontSize="36"
+                       TextAlignment="Center" />
+        </StackPanel>
+        <StackPanel Spacing="4">
+            <avalonia:MaterialIcon Kind="Warning" Height="30" Width="30" />
+            <TextBlock Text="Only Enter This Code When Challenge Was Requested By The Client You Trust."
+                       TextWrapping="Wrap" TextAlignment="Center" />
+        </StackPanel>
+        <Button Content="Close" Command="{Binding RequestCloseCommand}" />
+    </StackPanel>
+</UserControl>
