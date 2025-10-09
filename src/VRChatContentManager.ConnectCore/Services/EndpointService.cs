@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using VRChatContentManager.ConnectCore.Extensions;
+using VRChatContentManager.ConnectCore.Models.Api.V1;
 
 namespace VRChatContentManager.ConnectCore.Services;
 
@@ -36,11 +38,14 @@ public sealed class EndpointService(ILogger<EndpointService> logger, IServicePro
 
         if (_handlers.Any(pair => pair.Key.Path == requestPath))
         {
-            context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
+            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
+                StatusCodes.Status405MethodNotAllowed,
+                "Method Not Allowed", "The method is not allowed for the requested Endpoint.");
             return;
         }
 
-        context.Response.StatusCode = StatusCodes.Status404NotFound;
+        await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status404NotFound,
+            "Not Found", "The requested Endpoint was not found on the server.");
     }
 
     private record EndpointInfo(string Path, string Method);

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Middlewares;
+using VRChatContentManager.ConnectCore.Models.Api.V1;
 
 namespace VRChatContentManager.ConnectCore.Services;
 
@@ -34,10 +36,10 @@ public sealed class HttpServerService
         _kestrelServer = new KestrelServer(
             new OptionsWrapper<KestrelServerOptions>(kestrelServerOptions), transportFactory, loggerFactory);
         _simpleHttpApplication = new SimpleHttpApplication(HandleRequestAsync);
-        
+
         _preRequestMiddlewares.Add(requestLoggingMiddleware);
         _preRequestMiddlewares.Add(jwtAuthMiddleware);
-        
+
         _postRequestMiddlewares.Add(endpointMiddleware);
         _postRequestMiddlewares.Add(postRequestLoggingMiddleware);
     }
@@ -59,23 +61,25 @@ public sealed class HttpServerService
             var middlewares = new List<MiddlewareBase>();
             middlewares.AddRange(_preRequestMiddlewares);
             middlewares.AddRange(_postRequestMiddlewares);
-            
+
             await RunMiddlewaresAsync(httpContext, middlewares);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error handling HTTP request");
-            httpContext.Response.StatusCode = 500;
+            await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
+                StatusCodes.Status500InternalServerError,
+                "Internal Server Error", "An unexpected error occurred.");
         }
     }
-    
+
     private async Task RunMiddlewaresAsync(HttpContext httpContext, List<MiddlewareBase> middlewares)
     {
         var index = 0;
         await Next();
         return;
 
-        async Task Next() 
+        async Task Next()
         {
             if (index < middlewares.Count)
             {
