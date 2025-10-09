@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging;
 
 namespace VRChatContentManager.ConnectCore.Services;
 
-public sealed class EndpointService(ILogger<EndpointService> logger)
+public sealed class EndpointService(ILogger<EndpointService> logger, IServiceProvider serviceProvider)
 {
-    private readonly Dictionary<EndpointInfo, Func<HttpContext, Task>> _handlers = [];
+    private readonly Dictionary<EndpointInfo, Func<HttpContext, IServiceProvider, Task>> _handlers = [];
 
-    public void Map(string method, string path, Func<HttpContext, Task> handler)
+    public void Map(string method, string path, Func<HttpContext, IServiceProvider, Task> handler)
     {
         var key = new EndpointInfo(path, method.ToUpperInvariant());
         _handlers[key] = handler;
@@ -23,7 +23,7 @@ public sealed class EndpointService(ILogger<EndpointService> logger)
         {
             try
             {
-                await handler(context);
+                await handler(context, serviceProvider);
                 return;
             }
             catch (Exception exception)
