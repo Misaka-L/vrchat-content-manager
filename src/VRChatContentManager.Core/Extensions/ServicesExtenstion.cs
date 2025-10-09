@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.Core.Services;
 using VRChatContentManager.Core.Services.App;
 using VRChatContentManager.Core.Services.PublishTask;
 using VRChatContentManager.Core.Services.UserSession;
@@ -17,7 +18,7 @@ public static class ServicesExtension
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
         services.AddConnectCore();
-        services.AddSingleton<ISessionStorageService, MemorySessionStorageService>();
+        services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         
         services.AddMemoryCache();
 
@@ -55,6 +56,13 @@ public static class ServicesExtension
         var appSettingsSection = builder.Configuration.GetSection("Settings");
         builder.Services.Configure<AppSettings>(appSettingsSection);
         builder.Services.AddWriteableOptions<AppSettings>(appSettingsSection.Key, appSettingsFileName);
+        
+        const string rpcSessionsFileName = "rpc-sessions.json";
+        builder.Configuration.AddAppJsonFile(rpcSessionsFileName);
+        
+        var rpcSessionsSection = builder.Configuration.GetSection("RpcSessions");
+        builder.Services.Configure<RpcSessionStorage>(rpcSessionsSection);
+        builder.Services.AddWriteableOptions<RpcSessionStorage>(rpcSessionsSection.Key, rpcSessionsFileName);
 
         return builder;
     }
