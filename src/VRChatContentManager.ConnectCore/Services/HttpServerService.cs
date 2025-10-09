@@ -19,7 +19,7 @@ public sealed class HttpServerService
 
     public HttpServerService(ILoggerFactory loggerFactory, ILogger<HttpServerService> logger,
         RequestLoggingMiddleware requestLoggingMiddleware, EndpointMiddleware endpointMiddleware,
-        PostRequestLoggingMiddleware postRequestLoggingMiddleware)
+        PostRequestLoggingMiddleware postRequestLoggingMiddleware, JwtAuthMiddleware jwtAuthMiddleware)
     {
         _logger = logger;
 
@@ -36,6 +36,7 @@ public sealed class HttpServerService
         _simpleHttpApplication = new SimpleHttpApplication(HandleRequestAsync);
         
         _preRequestMiddlewares.Add(requestLoggingMiddleware);
+        _preRequestMiddlewares.Add(jwtAuthMiddleware);
         
         _postRequestMiddlewares.Add(endpointMiddleware);
         _postRequestMiddlewares.Add(postRequestLoggingMiddleware);
@@ -55,8 +56,11 @@ public sealed class HttpServerService
     {
         try
         {
-            await RunMiddlewaresAsync(httpContext, _preRequestMiddlewares);
-            await RunMiddlewaresAsync(httpContext, _postRequestMiddlewares);
+            var middlewares = new List<MiddlewareBase>();
+            middlewares.AddRange(_preRequestMiddlewares);
+            middlewares.AddRange(_postRequestMiddlewares);
+            
+            await RunMiddlewaresAsync(httpContext, middlewares);
         }
         catch (Exception ex)
         {
