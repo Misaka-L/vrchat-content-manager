@@ -9,7 +9,8 @@ namespace VRChatContentManager.ConnectCore.Services;
 
 public sealed class ClientSessionService(
     ILogger<ClientSessionService> logger,
-    IRequestChallengeService requestChallengeService)
+    IRequestChallengeService requestChallengeService,
+    ISessionStorageService sessionStorageService)
 {
     private const string Issuer = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
@@ -17,9 +18,7 @@ public sealed class ClientSessionService(
     private const string SecretKey =
         "Ocxo643MhcRq2EDF58nx4u4UD6c1s9GGwvq57c8OO8G6WH2Ovi3E1080rFmlxJQHhiqg3980CCIw3443iPY084x2p0beRx278wrsG819zzAQup7x8v4VykPr714MX3Bl";
 
-    private readonly Lock _sessionLock = new();
-
-    private readonly List<RpcClientSession> _sessions = [];
+    private readonly Lock _challengeSessionLock = new();
     private readonly List<ChallengeSession> _challengeSessions = [];
 
     public async ValueTask<TokenValidationResult> ValidateJwtAsync(string jwt)
@@ -43,26 +42,28 @@ public sealed class ClientSessionService(
             NameClaimType = JwtRegisteredClaimNames.Aud,
             AudienceValidator = (audiences, _, _) =>
             {
-                return audiences.Any(audience =>
-                    _sessions.Any(session =>
-                        session.ClientId == audience &&
-                        session.Expires > DateTimeOffset.UtcNow
-                    )
-                );
+                foreach (var audience in audiences)
+                {
+                    if (sessionStorageService.GetSessionByClientId(audience) is { } session &&
+                        session.Expires > DateTimeOffset.UtcNow)
+                        return true;
+                }
+
+                return false;
             }
         });
 
         return result;
     }
 
-    public async Task<string> CreateChallengeAsync(string clientId)
+    public async ValueTask<string> CreateChallengeAsync(string clientId)
     {
-        CleanupExpiredSessions();
+        await CleanupExpiredSessionsAsync();
 
         logger.LogInformation("Creating challenge for client {ClientId}", clientId);
         var code = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant();
-        
-        lock (_sessionLock)
+
+        lock (_challengeSessionLock)
         {
             if (_challengeSessions.FirstOrDefault(challenge => challenge.ClientId == clientId) is { } session)
                 _challengeSessions.Remove(session);
@@ -78,12 +79,12 @@ public sealed class ClientSessionService(
         return code;
     }
 
-    public string CreateSession(string code, string clientId)
+    public async ValueTask<string> CreateSessionTask(string code, string clientId)
     {
-        CleanupExpiredSessions();
+        await CleanupExpiredSessionsAsync();
 
         logger.LogInformation("Creating session for client {ClientId}", clientId);
-        lock (_sessionLock)
+        lock (_challengeSessionLock)
         {
             if (_challengeSessions.FirstOrDefault(session => session.Code == code) is not { } challengeSession)
             {
@@ -91,46 +92,42 @@ public sealed class ClientSessionService(
             }
 
             _challengeSessions.Remove(challengeSession);
-
-            var expires = DateTimeOffset.UtcNow.AddHours(1);
-
-            var session = new RpcClientSession(clientId, expires);
-            _sessions.Add(session);
-
-            return GenerateJwt(clientId);
         }
+
+        var expires = DateTimeOffset.UtcNow.AddHours(1);
+
+        var session = new RpcClientSession(clientId, expires);
+        await sessionStorageService.AddSessionAsync(session);
+
+        return GenerateJwt(clientId);
     }
 
-    public string RefreshSession(string clientId)
+    public async ValueTask<string> RefreshSessionAsync(string clientId)
     {
-        CleanupExpiredSessions();
+        await CleanupExpiredSessionsAsync();
 
         logger.LogInformation("Refreshing session for client {ClientId}", clientId);
-        lock (_sessionLock)
+        if (sessionStorageService.GetSessionByClientId(clientId) is not { } existingSession)
         {
-            if (_sessions.FirstOrDefault(session => session.ClientId == clientId) is not { } existingSession)
-            {
-                throw new InvalidOperationException("No existing session found for the given client ID.");
-            }
-
-            _sessions.Remove(existingSession);
-
-            var expires = DateTimeOffset.UtcNow.AddHours(1);
-
-            var newSession = new RpcClientSession(clientId, expires);
-            _sessions.Add(newSession);
-
-            return GenerateJwt(clientId);
+            throw new InvalidOperationException("No existing session found for the given client ID.");
         }
+
+        await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
+
+        var expires = DateTimeOffset.UtcNow.AddHours(1);
+        var newSession = new RpcClientSession(clientId, expires);
+        await sessionStorageService.AddSessionAsync(newSession);
+
+        return GenerateJwt(clientId);
     }
 
-    private void CleanupExpiredSessions()
+    private async Task CleanupExpiredSessionsAsync()
     {
-        lock (_sessionLock)
-        {
-            var now = DateTimeOffset.UtcNow;
+        var now = DateTimeOffset.UtcNow;
 
-            _sessions.RemoveAll(session => session.Expires <= now);
+        await sessionStorageService.RemoveExpiredSessionsAsync();
+        lock (_challengeSessionLock)
+        {
             _challengeSessions.RemoveAll(session => session.Expires <= now);
         }
     }

@@ -3,4 +3,5 @@
 public class ApiV1AuthChallengeRequest
 {
     public required string Code { get; set; }
+    public required string ClientId { get; set; }
 }

@@ -45,7 +45,7 @@ public static class AuthEndpoint
         var sessionService = services.GetRequiredService<ClientSessionService>();
         var sessionId = context.User.Identity.Name;
         
-        var jwt = sessionService.RefreshSession(sessionId);
+        var jwt = await sessionService.RefreshSessionAsync(sessionId);
         await context.Response.WriteAsJsonAsync(new ApiV1ChallengeResponse(jwt), ApiV1JsonContext.Default.ApiV1ChallengeResponse);
     }
 
@@ -60,7 +60,7 @@ public static class AuthEndpoint
         string jwt;
         try
         {
-            jwt = sessionService.CreateSession(code, "test-client");
+            jwt = await sessionService.CreateSessionTask(code, requestBody.ClientId);
         }
         catch (InvalidOperationException)
         {
