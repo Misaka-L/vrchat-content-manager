@@ -10,23 +10,23 @@ namespace VRChatContentManager.ConnectCore.Services;
 public sealed class ClientSessionService(
     ILogger<ClientSessionService> logger,
     IRequestChallengeService requestChallengeService,
-    ISessionStorageService sessionStorageService)
+    ISessionStorageService sessionStorageService,
+    ITokenSecretKeyProvider tokenSecretKeyProvider)
 {
     private const string Issuer = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
-
-    private const string SecretKey =
-        "Ocxo643MhcRq2EDF58nx4u4UD6c1s9GGwvq57c8OO8G6WH2Ovi3E1080rFmlxJQHhiqg3980CCIw3443iPY084x2p0beRx278wrsG819zzAQup7x8v4VykPr714MX3Bl";
-
+    
     private readonly Lock _challengeSessionLock = new();
     private readonly List<ChallengeSession> _challengeSessions = [];
 
     public async ValueTask<TokenValidationResult> ValidateJwtAsync(string jwt)
     {
+        var securityKey = await tokenSecretKeyProvider.GetSecretKeyAsync();
+        
         var tokenHandler = new JwtSecurityTokenHandler();
         var result = await tokenHandler.ValidateTokenAsync(jwt, new TokenValidationParameters
         {
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(securityKey),
             ValidIssuer = Issuer,
             ValidAlgorithms =
             [
@@ -99,7 +99,7 @@ public sealed class ClientSessionService(
         var session = new RpcClientSession(clientId, expires);
         await sessionStorageService.AddSessionAsync(session);
 
-        return GenerateJwt(clientId);
+        return await GenerateJwtAsync(clientId);
     }
 
     public async ValueTask<string> RefreshSessionAsync(string clientId)
@@ -118,7 +118,7 @@ public sealed class ClientSessionService(
         var newSession = new RpcClientSession(clientId, expires);
         await sessionStorageService.AddSessionAsync(newSession);
 
-        return GenerateJwt(clientId);
+        return await GenerateJwtAsync(clientId);
     }
 
     private async Task CleanupExpiredSessionsAsync()
@@ -132,7 +132,7 @@ public sealed class ClientSessionService(
         }
     }
 
-    private string GenerateJwt(string clientId)
+    private async Task<string> GenerateJwtAsync(string clientId)
     {
         var currentDateTime = DateTimeOffset.UtcNow;
 
@@ -146,7 +146,8 @@ public sealed class ClientSessionService(
             new(JwtRegisteredClaimNames.Nbf, currentDateTime.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
         ];
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretKey));
+        var securityKey = await tokenSecretKeyProvider.GetSecretKeyAsync();
+        var key = new SymmetricSecurityKey(securityKey);
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
