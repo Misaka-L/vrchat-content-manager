@@ -58,7 +58,7 @@ public static class AuthEndpoint
         string jwt;
         try
         {
-            jwt = await sessionService.CreateSessionTask(requestBody.Code, requestBody.ClientId, requestBody.IdentityPrompt);
+            jwt = await sessionService.CreateSessionAsync(requestBody.Code, requestBody.ClientId, requestBody.IdentityPrompt);
         }
         catch (InvalidOperationException)
         {

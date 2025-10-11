@@ -79,7 +79,7 @@ public sealed class ClientSessionService(
         return code;
     }
 
-    public async ValueTask<string> CreateSessionTask(string code, string clientId, string identityPrompt)
+    public async ValueTask<string> CreateSessionAsync(string code, string clientId, string identityPrompt)
     {
         await CleanupExpiredSessionsAsync();
 
