@@ -10,9 +10,9 @@
 
     <StackPanel Spacing="24" Margin="8">
         <StackPanel>
-            <TextBlock Text="Auth challenge request from" TextAlignment="Center"
+            <TextBlock Text="Identity Prompt" TextAlignment="Center" />
+            <TextBlock Text="{Binding IdentityPrompt}" TextAlignment="Center"
                        FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
-            <TextBlock Text="{Binding ClientId}" TextAlignment="Center" />
         </StackPanel>
         <StackPanel>
             <TextBlock Text="Finish challenge by enter this code" TextAlignment="Center"
@@ -24,6 +24,10 @@
             <avalonia:MaterialIcon Kind="Warning" Height="30" Width="30" />
             <TextBlock Text="Only Enter This Code When Challenge Was Requested By The Client You Trust."
                        TextWrapping="Wrap" TextAlignment="Center" />
+        </StackPanel>
+        <StackPanel>
+            <TextBlock Text="Challenge request from Client" TextAlignment="Center" />
+            <TextBlock Text="{Binding ClientId}" TextAlignment="Center" />
         </StackPanel>
         <Button Content="Close" Command="{Binding RequestCloseCommand}" />
     </StackPanel>

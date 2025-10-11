@@ -9,11 +9,11 @@ public class RequestChallengeService(
     DialogService dialogService,
     RequestChallengeDialogViewModelFactory dialogViewModelFactory) : IRequestChallengeService
 {
-    public Task RequestChallengeAsync(string code, string clientId)
+    public Task RequestChallengeAsync(string code, string clientId, string identityPrompt)
     {
         Dispatcher.UIThread.Invoke(async () =>
         {
-            await dialogService.ShowDialogAsync(dialogViewModelFactory.Create(code, clientId)).AsTask();
+            await dialogService.ShowDialogAsync(dialogViewModelFactory.Create(code, clientId, identityPrompt)).AsTask();
         });
         
         return Task.CompletedTask;

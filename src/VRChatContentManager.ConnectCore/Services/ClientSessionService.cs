@@ -15,14 +15,14 @@ public sealed class ClientSessionService(
 {
     private const string Issuer = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
-    
+
     private readonly Lock _challengeSessionLock = new();
     private readonly List<ChallengeSession> _challengeSessions = [];
 
     public async ValueTask<TokenValidationResult> ValidateJwtAsync(string jwt)
     {
         var securityKey = await tokenSecretKeyProvider.GetSecretKeyAsync();
-        
+
         var tokenHandler = new JwtSecurityTokenHandler();
         var result = await tokenHandler.ValidateTokenAsync(jwt, new TokenValidationParameters
         {
@@ -56,7 +56,7 @@ public sealed class ClientSessionService(
         return result;
     }
 
-    public async ValueTask<string> CreateChallengeAsync(string clientId)
+    public async ValueTask<string> CreateChallengeAsync(string clientId, string identityPrompt)
     {
         await CleanupExpiredSessionsAsync();
 
@@ -70,23 +70,26 @@ public sealed class ClientSessionService(
 
             var expires = DateTimeOffset.UtcNow.AddMinutes(5);
 
-            var challengeSession = new ChallengeSession(code, clientId, expires);
+            var challengeSession = new ChallengeSession(code, clientId, identityPrompt, expires);
             _challengeSessions.Add(challengeSession);
         }
 
-        await requestChallengeService.RequestChallengeAsync(code, clientId);
+        await requestChallengeService.RequestChallengeAsync(code, clientId, identityPrompt);
 
         return code;
     }
 
-    public async ValueTask<string> CreateSessionTask(string code, string clientId)
+    public async ValueTask<string> CreateSessionTask(string code, string clientId, string identityPrompt)
     {
         await CleanupExpiredSessionsAsync();
 
         logger.LogInformation("Creating session for client {ClientId}", clientId);
         lock (_challengeSessionLock)
         {
-            if (_challengeSessions.FirstOrDefault(session => session.Code == code) is not { } challengeSession)
+            if (_challengeSessions.FirstOrDefault(session => session.Code == code &&
+                                                             session.IdentityPrompt == identityPrompt &&
+                                                             session.ClientId == clientId
+                ) is not { } challengeSession)
             {
                 throw new InvalidOperationException("Invalid challenge code.");
             }

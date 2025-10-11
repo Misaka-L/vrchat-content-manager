@@ -53,14 +53,12 @@ public static class AuthEndpoint
     {
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.ApiV1AuthChallengeRequest) is not { } requestBody) return;
 
-        var code = requestBody.Code;
-
         var sessionService = services.GetRequiredService<ClientSessionService>();
 
         string jwt;
         try
         {
-            jwt = await sessionService.CreateSessionTask(code, requestBody.ClientId);
+            jwt = await sessionService.CreateSessionTask(requestBody.Code, requestBody.ClientId, requestBody.IdentityPrompt);
         }
         catch (InvalidOperationException)
         {
@@ -77,8 +75,9 @@ public static class AuthEndpoint
 
         var sessionService = services.GetRequiredService<ClientSessionService>();
         var clientId = requestBody.ClientId;
+        var identityPrompt = requestBody.IdentityPrompt;
 
-        await sessionService.CreateChallengeAsync(clientId);
+        await sessionService.CreateChallengeAsync(clientId, identityPrompt);
 
         context.Response.StatusCode = StatusCodes.Status204NoContent;
     }
