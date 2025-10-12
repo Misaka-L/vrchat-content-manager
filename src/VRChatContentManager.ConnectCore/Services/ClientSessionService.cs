@@ -97,7 +97,7 @@ public sealed class ClientSessionService(
             _challengeSessions.Remove(challengeSession);
         }
 
-        var expires = DateTimeOffset.UtcNow.AddHours(1);
+        var expires = DateTimeOffset.UtcNow.AddDays(7);
 
         var session = new RpcClientSession(clientId, expires);
         await sessionStorageService.AddSessionAsync(session);
