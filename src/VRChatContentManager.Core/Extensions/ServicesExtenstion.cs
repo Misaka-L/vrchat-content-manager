@@ -20,6 +20,7 @@ public static class ServicesExtension
         services.AddConnectCore();
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
+        services.AddSingleton<IFileService, TempFileService>();
         
         services.AddMemoryCache();
 

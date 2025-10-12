@@ -9,6 +9,7 @@ public static class EndpointExtenstion
     {
         endpointService.MapMetadataEndpoint();
         endpointService.MapAuthEndpoints();
+        endpointService.MapFileEndpoints();
         
         return endpointService;
     }

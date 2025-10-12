@@ -101,7 +101,7 @@ public sealed class RemoteImageService(HttpClient httpClient, IMemoryCache memor
 
         var cacheKey = GetVRChatFileCacheKey(uri.AbsolutePath);
 
-        return Path.Combine(AppStorageService.GetTempPath(), cacheKey);
+        return Path.Combine(AppStorageService.GetTempPath(), "images", cacheKey);
     }
 
     internal string GetVRChatFileCacheKey(string urlPath)
