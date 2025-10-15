@@ -6,7 +6,7 @@ using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
-using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect.Challenge;
 
 namespace VRChatContentManager.App.Extensions;
 

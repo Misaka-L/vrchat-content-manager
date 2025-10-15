@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.ConnectCore.Middlewares;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect;
 
 namespace VRChatContentManager.ConnectCore.Extensions;
 

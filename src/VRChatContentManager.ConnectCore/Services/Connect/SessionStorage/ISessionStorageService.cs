@@ -1,6 +1,6 @@
 ﻿using VRChatContentManager.ConnectCore.Models.ClientSession;
 
-namespace VRChatContentManager.ConnectCore.Services;
+namespace VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
 
 public interface ISessionStorageService
 {

@@ -1,11 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using VRChatContentManager.ConnectCore.Models.ClientSession;
+using VRChatContentManager.ConnectCore.Services.Connect.Challenge;
+using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
 
-namespace VRChatContentManager.ConnectCore.Services;
+namespace VRChatContentManager.ConnectCore.Services.Connect;
 
 public sealed class ClientSessionService(
     ILogger<ClientSessionService> logger,

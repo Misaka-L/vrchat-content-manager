@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Hosting;
 using VRChatContentManager.ConnectCore.Extensions;
 
-namespace VRChatContentManager.ConnectCore.Services;
+namespace VRChatContentManager.ConnectCore.Services.Connect;
 
 public class ConnectHostService(HttpServerService httpServerService, EndpointService endpointService) : IHostedService
 {

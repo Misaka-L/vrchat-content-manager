@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography;
-using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentManager.Core.Settings;
 using VRChatContentManager.Core.Settings.Models;
 

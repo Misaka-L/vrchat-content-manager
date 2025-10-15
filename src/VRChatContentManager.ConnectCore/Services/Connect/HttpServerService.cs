@@ -7,7 +7,7 @@ using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Middlewares;
 using VRChatContentManager.ConnectCore.Models.Api.V1;
 
-namespace VRChatContentManager.ConnectCore.Services;
+namespace VRChatContentManager.ConnectCore.Services.Connect;
 
 public sealed class HttpServerService
 {

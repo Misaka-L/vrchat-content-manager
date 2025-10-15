@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentManager.Core.Services;
 using VRChatContentManager.Core.Services.App;
 using VRChatContentManager.Core.Services.PublishTask;

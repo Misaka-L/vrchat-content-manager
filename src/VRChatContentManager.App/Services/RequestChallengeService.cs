@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Avalonia.Threading;
 using VRChatContentManager.App.ViewModels.Dialogs;
-using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect.Challenge;
 
 namespace VRChatContentManager.App.Services;
 

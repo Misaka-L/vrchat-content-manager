@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Models.Api.V1;
 
-namespace VRChatContentManager.ConnectCore.Services;
+namespace VRChatContentManager.ConnectCore.Services.Connect;
 
 public sealed class EndpointService(ILogger<EndpointService> logger, IServiceProvider serviceProvider)
 {

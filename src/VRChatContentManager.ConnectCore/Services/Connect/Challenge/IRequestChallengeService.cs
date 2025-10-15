@@ -1,4 +1,4 @@
-﻿namespace VRChatContentManager.ConnectCore.Services;
+﻿namespace VRChatContentManager.ConnectCore.Services.Connect.Challenge;
 
 public interface IRequestChallengeService
 {

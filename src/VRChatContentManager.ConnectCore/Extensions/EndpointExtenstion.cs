@@ -1,5 +1,6 @@
 ﻿using VRChatContentManager.ConnectCore.Endpoints.V1;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect;
 
 namespace VRChatContentManager.ConnectCore.Extensions;
 

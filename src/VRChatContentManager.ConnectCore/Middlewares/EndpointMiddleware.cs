@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect;
 
 namespace VRChatContentManager.ConnectCore.Middlewares;
 

@@ -2,6 +2,7 @@
 using VRChatContentManager.ConnectCore.Models.Api.V1;
 using VRChatContentManager.ConnectCore.Models.Api.V1.Responses.Meta;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect;
 
 namespace VRChatContentManager.ConnectCore.Endpoints.V1;
 
