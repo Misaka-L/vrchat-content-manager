@@ -52,7 +52,6 @@ public partial class VRChatApiClient
             throw new UnexpectedApiBehaviourException("Api did not return file or signature info for created file version.");
 
         // Step 5. Upload bundle file and signature to aws s3
-        // TODO: multipart upload
 
         logger.LogInformation("Uploading file version {Version} for file {FileId}", fileVersion.Version, fileId);
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
@@ -85,9 +84,11 @@ public partial class VRChatApiClient
             return;
         }
 
-        var firstPartUploadUrl = await GetFilePartUploadUrlAsync(fileId, version, 1, fileType);
-        var eTag = await UploadFileToS3Async(firstPartUploadUrl, fileStream, awsClient, md5, isSimpleUpload);
-        await CompleteFilePartUploadAsync(fileId, version, [eTag], fileType);
+        var uploader = concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient);
+        var eTags = await uploader.UploadAsync();
+        // var firstPartUploadUrl = await GetFilePartUploadUrlAsync(fileId, version, 1, fileType);
+        // var eTag = await UploadFileToS3Async(firstPartUploadUrl, fileStream, awsClient, md5, isSimpleUpload);
+        await CompleteFilePartUploadAsync(fileId, version, eTags, fileType);
     }
 
     private async ValueTask<string> UploadFileToS3Async(string uploadUrl, Stream stream, HttpClient awsClient,

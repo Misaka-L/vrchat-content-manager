@@ -10,10 +10,14 @@ using VRChatContentManager.Core.Models.VRChatApi.Rest;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Auth;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Files;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Worlds;
+using VRChatContentManager.Core.Services.VRChatApi.S3;
 
 namespace VRChatContentManager.Core.Services.VRChatApi;
 
-public sealed partial class VRChatApiClient(HttpClient httpClient, ILogger<VRChatApiClient> logger)
+public sealed partial class VRChatApiClient(
+    HttpClient httpClient,
+    ILogger<VRChatApiClient> logger,
+    ConcurrentMultipartUploaderFactory concurrentMultipartUploaderFactory)
 {
     public async ValueTask<CurrentUser> GetCurrentUser()
     {
@@ -240,7 +244,7 @@ public sealed partial class VRChatApiClient(HttpClient httpClient, ILogger<VRCha
 
         return uploadUrl.Url;
     }
-    
+
     public async ValueTask CompleteSimpleFileUploadAsync(string fileId, int version,
         VRChatApiFileType fileType = VRChatApiFileType.File)
     {

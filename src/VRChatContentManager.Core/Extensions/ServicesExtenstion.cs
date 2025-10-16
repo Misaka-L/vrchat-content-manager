@@ -13,6 +13,7 @@ using VRChatContentManager.Core.Services.PublishTask.Connect;
 using VRChatContentManager.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentManager.Core.Services.UserSession;
 using VRChatContentManager.Core.Services.VRChatApi;
+using VRChatContentManager.Core.Services.VRChatApi.S3;
 using VRChatContentManager.Core.Settings;
 using VRChatContentManager.Core.Settings.Models;
 
@@ -33,6 +34,8 @@ public static class ServicesExtension
         
         services.AddMemoryCache();
 
+        services.AddTransient<ConcurrentMultipartUploaderFactory>();
+
         services.AddSingleton<RemoteImageService>();
         services.AddHttpClient<RemoteImageService>(client => { client.AddUserAgent(); });
 
@@ -51,6 +54,12 @@ public static class ServicesExtension
         {
             client.AddUserAgent();
             client.Timeout = TimeSpan.FromMinutes(30);
+        })
+        .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+        {
+            UseCookies = false,
+            MaxConnectionsPerServer = 50,
+            PooledConnectionLifetime = TimeSpan.Zero
         });
 
         return services;
