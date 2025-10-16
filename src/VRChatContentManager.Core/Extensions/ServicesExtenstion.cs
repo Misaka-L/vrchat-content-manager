@@ -53,7 +53,7 @@ public static class ServicesExtension
         services.AddHttpClient<ContentPublishTaskFactory>(client =>
         {
             client.AddUserAgent();
-            client.Timeout = TimeSpan.FromMinutes(30);
+            client.Timeout = Timeout.InfiniteTimeSpan;
         })
         .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
         {
