@@ -59,7 +59,9 @@ public static class ServicesExtension
         {
             UseCookies = false,
             MaxConnectionsPerServer = 50,
-            PooledConnectionLifetime = TimeSpan.Zero
+            PooledConnectionLifetime = TimeSpan.Zero,
+            EnableMultipleHttp2Connections = true,
+            EnableMultipleHttp3Connections = true
         });
 
         return services;
