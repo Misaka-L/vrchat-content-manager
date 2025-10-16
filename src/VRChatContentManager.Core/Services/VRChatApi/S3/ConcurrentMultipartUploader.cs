@@ -28,7 +28,7 @@ public sealed class ConcurrentMultipartUploader(
         logger.LogInformation("Starting upload of file {FileId} version {FileVersion} in chunks of {ChunkSize} bytes",
             fileId, fileVersion, ChunkSize);
 
-        _ = Task.Factory.StartNew(CreateChunks, TaskCreationOptions.LongRunning);
+        _ = Task.Factory.StartNew(CreateChunks);
         return await _allChunksUploadedTcs.Task;
     }
 
