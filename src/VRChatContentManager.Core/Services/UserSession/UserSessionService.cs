@@ -29,6 +29,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         IServiceScopeFactory scopeFactory,
         string? userId,
         CookieContainer? cookieContainer,
+        VRChatApiClientFactory apiClientFactory,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
         _scopeFactory = scopeFactory;
@@ -53,7 +54,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
         _sessionHttpClient.AddUserAgent();
 
-        _apiClient = new VRChatApiClient(_sessionHttpClient);
+        _apiClient = apiClientFactory.Create(_sessionHttpClient);
     }
 
     public HttpClient GetHttpClient() => _sessionHttpClient;
@@ -75,10 +76,10 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         return CurrentUser;
     }
 
-    public async Task CreateSessionScopeAsync()
+    public async ValueTask<AsyncServiceScope> CreateOrGetSessionScopeAsync()
     {
-        if (_sessionScope is not null)
-            throw new InvalidOperationException("The session scope has already been created.");
+        if (_sessionScope is { } scope)
+            return scope;
 
         CurrentUser = await _apiClient.GetCurrentUser();
         UserId = CurrentUser.Id;
@@ -86,10 +87,10 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
         await _saveFunc(_cookieContainer, UserId, UserNameOrEmail);
 
-        await CreateSessionScopeAsyncCore();
+        return await CreateSessionScopeAsyncCore();
     }
 
-    private Task CreateSessionScopeAsyncCore()
+    private ValueTask<AsyncServiceScope> CreateSessionScopeAsyncCore()
     {
         var scope = _scopeFactory.CreateAsyncScope();
         var sessionScopeService = scope.ServiceProvider.GetRequiredService<UserSessionScopeService>();
@@ -97,7 +98,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
         _sessionScope = scope;
 
-        return Task.CompletedTask;
+        return ValueTask.FromResult(scope);
     }
 
     #region Dispose
@@ -116,11 +117,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     #endregion
 }
 
-public sealed class UserSessionFactory(IServiceScopeFactory scopeFactory)
+public sealed class UserSessionFactory(IServiceScopeFactory scopeFactory, VRChatApiClientFactory apiClientFactory)
 {
     public UserSessionService Create(string userNameOrEmail, string? userId, CookieContainer? cookieContainer,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
-        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, saveFunc);
+        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, apiClientFactory, saveFunc);
     }
 }

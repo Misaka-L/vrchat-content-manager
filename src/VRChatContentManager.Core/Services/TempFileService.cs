@@ -18,7 +18,7 @@ public sealed class TempFileService : IFileService
         var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.Asynchronous);
         var uploadFileTask = new UploadFileTask(fileStream, fileId);
         
-        _fileMap[fileName] = fileId;
+        _fileMap[fileId] = filePath;
 
         return ValueTask.FromResult(uploadFileTask);
     }

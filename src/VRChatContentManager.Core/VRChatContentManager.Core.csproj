@@ -13,6 +13,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9"/>
         <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.9"/>
+        <PackageReference Include="SauceControl.Blake2Fast" Version="2.0.0" />
     </ItemGroup>
     
     <ItemGroup>
@@ -21,6 +22,7 @@
     </ItemGroup>
     
     <ItemGroup>
+      <ProjectReference Include="..\AssetsTools.NET\AssetTools.NET\AssetsTools.NET.csproj" />
       <ProjectReference Include="..\VRChatContentManager.ConnectCore\VRChatContentManager.ConnectCore.csproj" />
     </ItemGroup>
 

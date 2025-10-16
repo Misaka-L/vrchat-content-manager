@@ -27,6 +27,7 @@ public sealed class HttpServerService
 
         var kestrelServerOptions = new KestrelServerOptions();
 
+        kestrelServerOptions.Limits.MaxRequestBodySize = null;
         kestrelServerOptions.ListenLocalhost(59328);
 
         var transportOptions = new SocketTransportOptions();

@@ -1,5 +1,4 @@
 ﻿using VRChatContentManager.ConnectCore.Endpoints.V1;
-using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.ConnectCore.Services.Connect;
 
 namespace VRChatContentManager.ConnectCore.Extensions;
@@ -11,6 +10,7 @@ public static class EndpointExtenstion
         endpointService.MapMetadataEndpoint();
         endpointService.MapAuthEndpoints();
         endpointService.MapFileEndpoints();
+        endpointService.MapTaskEndpoint();
         
         return endpointService;
     }

@@ -24,7 +24,7 @@ public sealed class UserSessionManagerService(
             var session = CreateOrGetSession(sessionItem.UserName, userId, cookieContainer);
             try
             {
-                await session.CreateSessionScopeAsync();
+                await session.CreateOrGetSessionScopeAsync();
             }
             catch (Exception ex)
             {

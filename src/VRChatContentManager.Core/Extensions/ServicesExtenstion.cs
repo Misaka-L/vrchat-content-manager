@@ -5,10 +5,14 @@ using Microsoft.Extensions.Options;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
+using VRChatContentManager.ConnectCore.Services.PublishTask;
 using VRChatContentManager.Core.Services;
 using VRChatContentManager.Core.Services.App;
 using VRChatContentManager.Core.Services.PublishTask;
+using VRChatContentManager.Core.Services.PublishTask.Connect;
+using VRChatContentManager.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentManager.Core.Services.UserSession;
+using VRChatContentManager.Core.Services.VRChatApi;
 using VRChatContentManager.Core.Settings;
 using VRChatContentManager.Core.Settings.Models;
 
@@ -22,11 +26,17 @@ public static class ServicesExtension
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
         services.AddSingleton<IFileService, TempFileService>();
+
+        services.AddTransient<IWorldPublishTaskService, WorldPublishTaskService>();
+
+        services.AddTransient<WorldContentPublisherFactory>();
         
         services.AddMemoryCache();
 
         services.AddSingleton<RemoteImageService>();
         services.AddHttpClient<RemoteImageService>(client => { client.AddUserAgent(); });
+
+        services.AddTransient<VRChatApiClientFactory>();
         
         services.AddSingleton<UserSessionManagerService>();
 
@@ -37,7 +47,11 @@ public static class ServicesExtension
         services.AddTransient<ContentPublishTaskFactory>();
 
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
-        services.AddHttpClient<ContentPublishTaskFactory>(client => { client.AddUserAgent(); });
+        services.AddHttpClient<ContentPublishTaskFactory>(client =>
+        {
+            client.AddUserAgent();
+            client.Timeout = TimeSpan.FromMinutes(30);
+        });
 
         return services;
     }
