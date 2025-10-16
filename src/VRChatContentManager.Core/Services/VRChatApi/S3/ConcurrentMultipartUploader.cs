@@ -13,7 +13,7 @@ public sealed class ConcurrentMultipartUploader(
     int fileVersion,
     VRChatApiFileType fileType)
 {
-    private const long ChunkSize = 100 * 1024 * 1024; // 100 MB
+    private const long ChunkSize = 50 * 1024 * 1024; // 50 MB
 
     private readonly Lock _chunkCreationLock = new();
     private int _lastPartNumber;
@@ -34,39 +34,38 @@ public sealed class ConcurrentMultipartUploader(
 
     private void CreateChunks()
     {
-        _chunkCreationLock.Enter();
-
-        var completedChunks = _chunks.Where(c => c.IsCompleted).ToArray();
-        if (completedChunks.Length > 0)
+        lock (_chunkCreationLock)
         {
-            foreach (var uploadChunk in _chunks)
+            var completedChunks = _chunks.Where(c => c.IsCompleted).ToArray();
+            if (completedChunks.Length > 0)
             {
-                _eTags[uploadChunk.PartNumber] = uploadChunk.ETag;
+                foreach (var uploadChunk in _chunks)
+                {
+                    _eTags[uploadChunk.PartNumber] = uploadChunk.ETag;
+                }
+
+                _chunks.RemoveAll(chunk => chunk.IsCompleted);
             }
 
-            _chunks.RemoveAll(chunk => chunk.IsCompleted);
-        }
-
-        while (_chunks.Count < 2)
-        {
-            var chunk = CreateChunk();
-            if (chunk is null)
+            while (_chunks.Count < 3)
             {
-                logger.LogInformation("All chunks created for file {FileId} version {FileVersion}", fileId,
-                    fileVersion);
+                var chunk = CreateChunk();
+                if (chunk is null)
+                {
+                    logger.LogInformation("All chunks created for file {FileId} version {FileVersion}", fileId,
+                        fileVersion);
 
-                if (_chunks.Count != 0 && _chunks.Any(c => !c.IsCompleted))
+                    if (_chunks.Count != 0 && _chunks.Any(c => !c.IsCompleted))
+                        return;
+
+                    var eTags = _eTags.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToArray();
+                    _allChunksUploadedTcs.SetResult(eTags);
                     return;
+                }
 
-                var eTags = _eTags.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToArray();
-                _allChunksUploadedTcs.SetResult(eTags);
-                return;
+                _chunks.Add(chunk);
             }
-
-            _chunks.Add(chunk);
         }
-
-        _chunkCreationLock.Exit();
     }
 
     private UploadChunk? CreateChunk()
