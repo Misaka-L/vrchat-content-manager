@@ -2,6 +2,7 @@
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels;
 using VRChatContentManager.App.ViewModels.Data;
+using VRChatContentManager.App.ViewModels.Data.PublishTasks;
 using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
@@ -35,6 +36,8 @@ public static class ServicesExtenstion
         
         // Data ViewModels
         services.AddTransient<UserSessionViewModelFactory>();
+        services.AddTransient<PublishTaskViewModelFactory>();
+        services.AddTransient<PublishTaskManagerViewModelFactory>();
 
         // HomePage Tabs
         services.AddTransient<HomeTasksPageViewModel>();

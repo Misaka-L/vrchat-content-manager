@@ -16,6 +16,8 @@ public sealed class WorldContentPublisher(
     string? worldSignature)
     : IContentPublisher
 {
+    public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
+
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {
         if (!bundleFileStream.CanRead || !bundleFileStream.CanSeek)
@@ -28,6 +30,8 @@ public sealed class WorldContentPublisher(
         // This step also cleanups any incomplete file versions.
 
         logger.LogInformation("Publish World {WorldId}", worldId);
+        UpdateProgress("Fetching world detail...", null);
+
         var world = await apiClient.GetWorldAsync(worldId);
         // Find the latest unity package for the specified platform (to get the file id)
         var platformApiUnityPackage = world.UnityPackages
@@ -48,18 +52,21 @@ public sealed class WorldContentPublisher(
             throw new UnexpectedApiBehaviourException("Api returned an invalid asset url.");
 
         logger.LogInformation("Using file id {FileId} for world {WorldId}", fileId, worldId);
+        UpdateProgress("Preparing for upload bundle file...", null);
 
-        var fileVersion = await apiClient.CreateAndUploadFileVersionAsync(bundleFileStream, fileId, awsClient);
+        var fileVersion = await apiClient.CreateAndUploadFileVersionAsync(bundleFileStream, fileId, awsClient,
+            arg =>
+            {
+                UpdateProgress(arg.ProgressText, arg.ProgressValue);
+            });
         if (fileVersion.File is null)
             throw new UnexpectedApiBehaviourException("Api did not return file info for created file version.");
 
-        logger.LogInformation("Waiting for file version {Version} to be processed for world {WorldId}",
-            fileVersion.Version, worldId);
-        await Task.Delay(TimeSpan.FromSeconds(5));
-
+        // Step 6. Update World
         logger.LogInformation("Updating world {WorldId} to use new file version {Version}", worldId,
             fileVersion.Version);
-        // Step 6. Update World
+        UpdateProgress("Updating world to latest asset version...", null);
+
         await apiClient.CreateWorldVersionAsync(worldId, new CreateWorldVersionRequest(
             fileVersion.File.Url,
             fileVersion.Version,
@@ -69,6 +76,12 @@ public sealed class WorldContentPublisher(
         ));
 
         logger.LogInformation("Successfully published world {WorldId}", worldId);
+        UpdateProgress("World Published", 1);
+    }
+
+    private void UpdateProgress(string text, double? value)
+    {
+        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value));
     }
 }
 

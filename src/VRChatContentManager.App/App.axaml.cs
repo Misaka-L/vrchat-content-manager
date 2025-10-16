@@ -13,11 +13,14 @@ using VRChatContentManager.App.Pages;
 using VRChatContentManager.App.Pages.GettingStarted;
 using VRChatContentManager.App.Pages.HomeTab;
 using VRChatContentManager.App.ViewModels;
+using VRChatContentManager.App.ViewModels.Data.PublishTasks;
 using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
 using VRChatContentManager.App.Views;
+using VRChatContentManager.App.Views.Data;
+using VRChatContentManager.App.Views.Data.PublishTasks;
 using VRChatContentManager.Core;
 using VRChatContentManager.Core.Services.App;
 
@@ -70,6 +73,10 @@ public partial class App : Application
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
         ViewLocator.Register<RequestChallengeDialogViewModel, RequestChallengeDialog>();
+        
+        // Data
+        ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
+        ViewLocator.Register<PublishTaskViewModel, PublishTaskView>();
         
         AvaloniaXamlLoader.Load(this);
         

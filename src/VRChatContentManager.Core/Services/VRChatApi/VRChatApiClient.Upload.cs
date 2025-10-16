@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Files;
 using VRChatContentManager.Core.Utils;
@@ -8,14 +9,18 @@ namespace VRChatContentManager.Core.Services.VRChatApi;
 public partial class VRChatApiClient
 {
     public async ValueTask<VRChatApiFileVersion> CreateAndUploadFileVersionAsync(Stream fileStream, string fileId,
-        HttpClient awsClient)
+        HttpClient awsClient, Action<PublishTaskProgressEventArg>? progressCallback = null)
     {
         var currentAssetFile = await GetFileAsync(fileId);
 
         // Step 1. Cleanup any incomplete file versions.
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Cleanup all incomplete file versions...", null));
+
         await VRChatApiFlieUtils.CleanupIncompleteFileVersionsAsync(currentAssetFile, this);
 
         // Step 2.Caulate bundle file md5 and check is same file exists.
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating MD5 for bundle file...", null));
+
         var fileMd5 = await VRChatApiFlieUtils.GetMd5FromStreamForVRChatAsync(fileStream);
         var fileLength = fileStream.Length;
 
@@ -38,34 +43,49 @@ public partial class VRChatApiClient
         }
 
         // Step 3. Caulate file signature
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating (Blake2b) Signature for bundle file...",
+            null));
+
         var signatureStream =
             new MemoryStream(await VRChatApiFlieUtils.GetSignatureFromStreamForVRChatAsync(fileStream));
         var signatureMd5 = await VRChatApiFlieUtils.GetMd5FromStreamForVRChatAsync(signatureStream);
         var signatureLength = signatureStream.Length;
 
         logger.LogInformation("Creating new file version for file {FileId}", fileId);
+        
         // Step 4. Create new file version
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Creating new file version...", null));
+        
         var fileVersion =
             await CreateFileVersionAsync(fileId, fileMd5, fileLength, signatureMd5, signatureLength);
-        
+
         if (fileVersion.File is null || fileVersion.Signature is null)
-            throw new UnexpectedApiBehaviourException("Api did not return file or signature info for created file version.");
+            throw new UnexpectedApiBehaviourException(
+                "Api did not return file or signature info for created file version.");
 
         // Step 5. Upload bundle file and signature to aws s3
-
         logger.LogInformation("Uploading file version {Version} for file {FileId}", fileVersion.Version, fileId);
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload bundle file...", null));
+
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
             fileVersion.File.Category == "simple", VRChatApiFileType.File, awsClient);
-
+        
         logger.LogInformation("Uploading signature for world {FileId}", fileId);
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null));
+
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
             fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, awsClient);
 
         // Step 6. Wait for server to process the uploaded file version
         logger.LogInformation("Waiting for server processing of file version {Version} for file {FileId}",
             fileVersion.Version, fileId);
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Waiting for server processing (for 3s)...", null));
+        
         await Task.Delay(TimeSpan.FromSeconds(3));
-
+        
+        logger.LogInformation("Fetching completed file version {Version} for file {FileId}", fileVersion.Version, fileId);
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Fetching new file version detail...", null));
+        
         var completedFile = await GetFileAsync(fileId);
         return completedFile.Versions.FirstOrDefault(ver => ver.Version == fileVersion.Version) ??
                throw new UnexpectedApiBehaviourException(
@@ -84,7 +104,8 @@ public partial class VRChatApiClient
             return;
         }
 
-        var uploader = concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient);
+        var uploader =
+            concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient);
         var eTags = await uploader.UploadAsync();
         // var firstPartUploadUrl = await GetFilePartUploadUrlAsync(fileId, version, 1, fileType);
         // var eTag = await UploadFileToS3Async(firstPartUploadUrl, fileStream, awsClient, md5, isSimpleUpload);
@@ -99,7 +120,7 @@ public partial class VRChatApiClient
         {
             if (md5 is null)
                 throw new ArgumentNullException(nameof(md5), "MD5 should be provided for simple upload.");
-            
+
             content.Headers.ContentMD5 = Convert.FromBase64String(md5);
         }
 

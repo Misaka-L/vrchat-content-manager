@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:publishTasks="clr-namespace:VRChatContentManager.App.ViewModels.Data.PublishTasks"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="publishTasks:PublishTaskViewModel"
+             x:Class="VRChatContentManager.App.Views.Data.PublishTasks.PublishTaskView">
+
+    <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">
+        <avalonia:MaterialIcon Kind="Person" Height="32" Width="32" />
+        <StackPanel Grid.Column="1" Spacing="2">
+            <StackPanel Orientation="Horizontal" Spacing="2">
+                <TextBlock Text="{Binding ContentId}" FontSize="18" />
+                <TextBlock Text="v4" FontSize="12" Opacity="0.8" VerticalAlignment="Bottom" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{Binding ProgressText}" FontSize="12" Opacity="0.8" />
+                <ProgressBar IsIndeterminate="{Binding ProgressValue, Converter={x:Static ObjectConverters.IsNull}}"
+                             Value="{Binding ProgressValue, FallbackValue=0}" />
+            </StackPanel>
+        </StackPanel>
+        <Button Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
+                Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
+    </Grid>
+</UserControl>

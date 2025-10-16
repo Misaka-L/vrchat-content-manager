@@ -51,4 +51,11 @@
         <!-- Preserve Avalonia types for reflection -->
         <TrimmerRootAssembly Include="Avalonia.Controls"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\Data\PublishTasks\PublishTaskManagerView.axaml.cs">
+        <DependentUpon>TaskManagerView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>
