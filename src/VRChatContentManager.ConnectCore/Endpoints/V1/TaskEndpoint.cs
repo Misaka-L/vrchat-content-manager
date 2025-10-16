@@ -12,6 +12,7 @@ public static class TaskEndpoint
     public static EndpointService MapTaskEndpoint(this EndpointService service)
     {
         service.Map("POST", "/v1/tasks/world", CreateWorldPublishTask);
+        service.Map("POST", "/v1/tasks/avatar", CreateAvatarPublishTask);
 
         return service;
     }
@@ -30,5 +31,20 @@ public static class TaskEndpoint
             request.Platform,
             request.UnityVersion,
             request.WorldSignature);
+    }
+    
+    private static async Task CreateAvatarPublishTask(HttpContext context, IServiceProvider services)
+    {
+        if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.CreateAvatarPublishTaskRequest) is not
+            { } request)
+            return;
+
+        var avatarPublishTaskService = services.GetRequiredService<IAvatarPublishTaskService>();
+        await avatarPublishTaskService.CreatePublishTaskAsync(
+            request.AvatarId,
+            request.AvatarBundleFileId,
+            request.Name,
+            request.Platform,
+            request.UnityVersion);
     }
 }

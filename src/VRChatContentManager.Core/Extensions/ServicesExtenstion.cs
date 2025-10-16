@@ -28,9 +28,12 @@ public static class ServicesExtension
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
         services.AddSingleton<IFileService, TempFileService>();
 
+        // Connect Publish Service
         services.AddTransient<IWorldPublishTaskService, WorldPublishTaskService>();
-
         services.AddTransient<WorldContentPublisherFactory>();
+        
+        services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
+        services.AddTransient<AvatarContentPublisherFactory>();
         
         services.AddMemoryCache();
 

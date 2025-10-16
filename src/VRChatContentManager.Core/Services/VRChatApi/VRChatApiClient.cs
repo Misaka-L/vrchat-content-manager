@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Auth;
+using VRChatContentManager.Core.Models.VRChatApi.Rest.Avatars;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Files;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Worlds;
 using VRChatContentManager.Core.Services.VRChatApi.S3;
@@ -109,6 +110,42 @@ public sealed partial class VRChatApiClient(
         var response = await httpClient.PutAsync("logout", null);
         await HandleErrorResponseAsync(response);
     }
+
+    #region Avatars
+
+    public async ValueTask<VRChatApiAvatar> GetAvatarAsync(string avatarId)
+    {
+        var response = await httpClient.GetAsync($"avatars/{avatarId}");
+
+        await HandleErrorResponseAsync(response);
+
+        var avatar = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiAvatar);
+        if (avatar is null)
+            throw new UnexpectedApiBehaviourException("The API returned a null avatar object.");
+
+        return avatar;
+    }
+    
+    public async ValueTask<VRChatApiAvatar> CreateAvatarVersionAsync(string avatarId,
+        CreateAvatarVersionRequest createRequest)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Put, $"avatars/{avatarId}")
+        {
+            Content = JsonContent.Create(createRequest, ApiJsonContext.Default.CreateAvatarVersionRequest)
+        };
+
+        var response = await httpClient.SendAsync(request);
+
+        await HandleErrorResponseAsync(response);
+
+        var world = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiAvatar);
+        if (world is null)
+            throw new UnexpectedApiBehaviourException("The API returned a null avatar object.");
+
+        return world;
+    }
+
+    #endregion
 
     #region Worlds
 

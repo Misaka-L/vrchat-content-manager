@@ -15,5 +15,6 @@ namespace VRChatContentManager.ConnectCore.Models.Api.V1;
 [JsonSerializable(typeof(ApiV1AuthMetadataResponse))]
 [JsonSerializable(typeof(ApiV1UploadFileResponse))]
 [JsonSerializable(typeof(CreateWorldPublishTaskRequest))]
+[JsonSerializable(typeof(CreateAvatarPublishTaskRequest))]
 [JsonSerializable(typeof(ProblemDetails))]
 public sealed partial class ApiV1JsonContext : JsonSerializerContext;
