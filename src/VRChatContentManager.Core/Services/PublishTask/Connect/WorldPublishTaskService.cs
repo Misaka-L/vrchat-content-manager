@@ -13,9 +13,7 @@ public class WorldPublishTaskService(
         string unityVersion,
         string? worldSignature)
     {
-        // TODO: Find user owned this content
-
-        var userSession = userSessionManagerService.Sessions[0];
+        var userSession = await GetUserSessionByWorldIdAsync(worldId);
         var scope = await userSession.CreateOrGetSessionScopeAsync();
 
         var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
@@ -26,5 +24,23 @@ public class WorldPublishTaskService(
         _ = task.StartTaskAsync().AsTask();
 
         return "task-id";
+    }
+
+    public async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(string worldId)
+    {
+        foreach (var session in userSessionManagerService.Sessions)
+        {
+            try
+            {
+                await session.GetApiClient().GetWorldAsync(worldId);
+                return session;
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+        
+        throw new Exception("User session not found for the given world ID");
     }
 }
