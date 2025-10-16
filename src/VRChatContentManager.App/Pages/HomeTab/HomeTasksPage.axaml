@@ -13,7 +13,7 @@
         </EventTriggerBehavior>
     </Interaction.Behaviors>
 
-    <StackPanel>
+    <ScrollViewer>
         <ItemsControl ItemsSource="{Binding TaskManagers}"/>
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>
