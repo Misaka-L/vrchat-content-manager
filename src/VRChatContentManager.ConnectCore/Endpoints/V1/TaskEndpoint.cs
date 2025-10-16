@@ -23,7 +23,12 @@ public static class TaskEndpoint
             return;
 
         var worldPublishTaskService = services.GetRequiredService<IWorldPublishTaskService>();
-        await worldPublishTaskService.CreatePublishTaskAsync(request.WorldId, request.WorldBundleFileId, request.Platform,
-            request.UnityVersion, request.WorldSignature);
+        await worldPublishTaskService.CreatePublishTaskAsync(
+            request.WorldId,
+            request.WorldBundleFileId,
+            request.Name,
+            request.Platform,
+            request.UnityVersion,
+            request.WorldSignature);
     }
 }

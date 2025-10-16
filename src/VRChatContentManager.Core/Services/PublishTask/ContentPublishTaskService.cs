@@ -16,8 +16,10 @@ public sealed class ContentPublishTaskService
 
     private readonly ILogger<ContentPublishTaskService> _logger;
 
-    public string ContentId { get; private set; }
-    
+    public string ContentId { get; }
+    public string ContentName { get; }
+    public string ContentType { get; }
+
     private readonly string _bundleFileId;
 
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
@@ -31,6 +33,9 @@ public sealed class ContentPublishTaskService
         IContentPublisher contentPublisher, ILogger<ContentPublishTaskService> logger)
     {
         ContentId = contentId;
+        ContentName = contentPublisher.GetContentName();
+        ContentType = contentPublisher.GetContentType();
+
         _bundleFileId = bundleFileId;
 
         _awsHttpClient = awsHttpClient;

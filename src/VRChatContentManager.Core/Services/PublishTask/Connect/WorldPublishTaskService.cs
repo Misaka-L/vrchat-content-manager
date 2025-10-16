@@ -9,7 +9,11 @@ public class WorldPublishTaskService(
     UserSessionManagerService userSessionManagerService,
     WorldContentPublisherFactory contentPublisherFactory) : IWorldPublishTaskService
 {
-    public async ValueTask<string> CreatePublishTaskAsync(string worldId, string worldBundleFileId, string platform,
+    public async ValueTask<string> CreatePublishTaskAsync(
+        string worldId,
+        string worldBundleFileId,
+        string worldName,
+        string platform,
         string unityVersion,
         string? worldSignature)
     {
@@ -18,7 +22,7 @@ public class WorldPublishTaskService(
 
         var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
         var contentPublisher =
-            contentPublisherFactory.Create(userSession, worldId, platform, unityVersion, worldSignature);
+            contentPublisherFactory.Create(userSession, worldId, worldName, platform, unityVersion, worldSignature);
 
         var task = await taskManager.CreateTask(worldId, worldBundleFileId, contentPublisher);
         _ = task.StartTaskAsync().AsTask();
@@ -40,7 +44,7 @@ public class WorldPublishTaskService(
                 // ignored
             }
         }
-        
+
         throw new Exception("User session not found for the given world ID");
     }
 }

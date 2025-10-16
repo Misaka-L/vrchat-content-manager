@@ -6,6 +6,9 @@ namespace VRChatContentManager.App.ViewModels.Data.PublishTasks;
 public sealed class PublishTaskViewModel : ViewModelBase
 {
     public string ContentId => _publishTaskService.ContentId;
+    public string ContentName => _publishTaskService.ContentName;
+    public string ContentType => _publishTaskService.ContentType;
+    
     public string ProgressText => _publishTaskService.ProgressText;
     public double? ProgressValue => _publishTaskService.ProgressValue * 100;
     public bool IsIndeterminate => !ProgressValue.HasValue;

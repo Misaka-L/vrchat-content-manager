@@ -11,12 +11,17 @@ public sealed class WorldContentPublisher(
     UserSessionService userSessionService,
     ILogger<WorldContentPublisher> logger,
     string worldId,
+    string worldName,
     string platform,
     string unityVersion,
     string? worldSignature)
     : IContentPublisher
 {
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
+
+    public string GetContentType() => "world";
+
+    public string GetContentName() => worldName;
 
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {
@@ -55,10 +60,7 @@ public sealed class WorldContentPublisher(
         UpdateProgress("Preparing for upload bundle file...", null);
 
         var fileVersion = await apiClient.CreateAndUploadFileVersionAsync(bundleFileStream, fileId, awsClient,
-            arg =>
-            {
-                UpdateProgress(arg.ProgressText, arg.ProgressValue);
-            });
+            arg => { UpdateProgress(arg.ProgressText, arg.ProgressValue); });
         if (fileVersion.File is null)
             throw new UnexpectedApiBehaviourException("Api did not return file info for created file version.");
 
@@ -90,11 +92,12 @@ public sealed class WorldContentPublisherFactory(ILogger<WorldContentPublisher> 
     public WorldContentPublisher Create(
         UserSessionService userSessionService,
         string worldId,
+        string worldName,
         string platform,
         string unityVersion,
         string? worldSignature)
     {
-        return new WorldContentPublisher(userSessionService, logger, worldId, platform, unityVersion,
+        return new WorldContentPublisher(userSessionService, logger, worldId, worldName, platform, unityVersion,
             worldSignature);
     }
 }

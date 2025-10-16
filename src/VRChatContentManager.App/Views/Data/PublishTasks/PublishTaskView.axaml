@@ -9,11 +9,11 @@
              x:Class="VRChatContentManager.App.Views.Data.PublishTasks.PublishTaskView">
 
     <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">
-        <avalonia:MaterialIcon Kind="Person" Height="32" Width="32" />
+        <avalonia:MaterialIcon Kind="{Binding ContentType, Converter={StaticResource ContentTypeIconConverter}}"
+                               Height="32" Width="32" />
         <StackPanel Grid.Column="1" Spacing="2">
             <StackPanel Orientation="Horizontal" Spacing="2">
-                <TextBlock Text="{Binding ContentId}" FontSize="18" />
-                <TextBlock Text="v4" FontSize="12" Opacity="0.8" VerticalAlignment="Bottom" />
+                <TextBlock Text="{Binding ContentName}" FontSize="18" />
             </StackPanel>
             <StackPanel>
                 <TextBlock Text="{Binding ProgressText}" FontSize="12" Opacity="0.8" />
