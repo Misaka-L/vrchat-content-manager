@@ -36,7 +36,10 @@ public class WorldPublishTaskService(
         {
             try
             {
-                await session.GetApiClient().GetWorldAsync(worldId);
+                var world = await session.GetApiClient().GetWorldAsync(worldId);
+                if (world.AuthorId != session.UserId)
+                    continue;
+
                 return session;
             }
             catch

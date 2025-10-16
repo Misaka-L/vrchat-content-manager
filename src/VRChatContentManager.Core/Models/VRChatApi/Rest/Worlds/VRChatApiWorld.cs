@@ -6,5 +6,6 @@ namespace VRChatContentManager.Core.Models.VRChatApi.Rest.Worlds;
 public record VRChatApiWorld(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("unityPackages")] VRChatApiUnityPackage[] UnityPackages
+    [property: JsonPropertyName("unityPackages")] VRChatApiUnityPackage[] UnityPackages,
+    [property: JsonPropertyName("authorId")] string AuthorId
 );
