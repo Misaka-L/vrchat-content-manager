@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
+using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Files;
 
@@ -13,6 +15,8 @@ public sealed class ConcurrentMultipartUploader(
     int fileVersion,
     VRChatApiFileType fileType)
 {
+    public event EventHandler<double>? ProgressChanged;
+
     private const long ChunkSize = 50 * 1024 * 1024; // 50 MB
 
     private readonly Lock _chunkCreationLock = new();
@@ -20,6 +24,8 @@ public sealed class ConcurrentMultipartUploader(
 
     private readonly List<UploadChunk> _chunks = [];
     private readonly Dictionary<int, string> _eTags = [];
+
+    private readonly ConcurrentDictionary<int, long> _uploadProgress = [];
 
     private readonly TaskCompletionSource<string[]> _allChunksUploadedTcs = new();
 
@@ -81,9 +87,21 @@ public sealed class ConcurrentMultipartUploader(
         var uploadUrl = apiClient.GetFilePartUploadUrlAsync(fileId, fileVersion, _lastPartNumber, fileType)
             .AsTask().GetAwaiter().GetResult();
 
-        logger.LogInformation("Creating upload chunk {PartNumber} Size {Size}MiB for file {FileId} version {FileVersion}",
+        logger.LogInformation(
+            "Creating upload chunk {PartNumber} Size {Size}MiB for file {FileId} version {FileVersion}",
             _lastPartNumber, bytesRead / 1024d / 1024d, fileId, fileVersion);
-        var chunk = new UploadChunk(_lastPartNumber, buffer, bytesRead, uploadUrl, awsClient, CreateChunks);
+        var chunk = new UploadChunk(_lastPartNumber, buffer, bytesRead, uploadUrl, awsClient, CreateChunks,
+            (uploaded, partNumber) =>
+            {
+                _uploadProgress[partNumber] = uploaded;
+                
+                var totalUploaded = _uploadProgress.Values.Sum();
+                var totalSize = fileStream.Length;
+                var progress = (double)totalUploaded / totalSize;
+                
+                ProgressChanged?.Invoke(null, progress);
+            });
+        
         _ = Task.Factory.StartNew(async () =>
         {
             try
@@ -106,7 +124,8 @@ public sealed class ConcurrentMultipartUploader(
         int bufferSize,
         string uploadUrl,
         HttpClient awsClient,
-        Action completedCallback)
+        Action completedCallback,
+        Action<long, int> uploadProgressCallback)
     {
         public int PartNumber => partNumber;
         public bool IsCompleted { get; private set; }
@@ -114,7 +133,12 @@ public sealed class ConcurrentMultipartUploader(
 
         public async Task UploadAsync()
         {
-            using var content = new ByteArrayContent(buffer, 0, bufferSize);
+            using var stream = new MemoryStream(buffer, 0, bufferSize);
+            using var content = new ProgressStreamContent(stream, uploaded =>
+            {
+                uploadProgressCallback(uploaded, partNumber);
+            });
+
             var response = await awsClient.PutAsync(uploadUrl, content);
 
             response.EnsureSuccessStatusCode();

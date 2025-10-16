@@ -68,13 +68,15 @@ public partial class VRChatApiClient
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload bundle file...", null));
 
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
-            fileVersion.File.Category == "simple", VRChatApiFileType.File, awsClient);
+            fileVersion.File.Category == "simple", VRChatApiFileType.File, awsClient,
+            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading bundle file...", progress)));
         
         logger.LogInformation("Uploading signature for world {FileId}", fileId);
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null));
 
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
-            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, awsClient);
+            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, awsClient,
+            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading signature...", progress)));
 
         // Step 6. Wait for server to process the uploaded file version
         logger.LogInformation("Waiting for server processing of file version {Version} for file {FileId}",
@@ -93,23 +95,28 @@ public partial class VRChatApiClient
     }
 
     private async ValueTask UploadFileVersionAsync(Stream fileStream, string fileId, int version, string md5,
-        bool isSimpleUpload, VRChatApiFileType fileType, HttpClient awsClient)
+        bool isSimpleUpload, VRChatApiFileType fileType, HttpClient awsClient, Action<double?>? progressCallback = null)
     {
+        progressCallback?.Invoke(null);
         if (isSimpleUpload)
         {
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType);
             await UploadFileToS3Async(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType);
+            
+            progressCallback?.Invoke(1);
 
             return;
         }
 
         var uploader =
             concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient);
+        uploader.ProgressChanged += (_, progress) => progressCallback?.Invoke(progress);
+        
         var eTags = await uploader.UploadAsync();
-        // var firstPartUploadUrl = await GetFilePartUploadUrlAsync(fileId, version, 1, fileType);
-        // var eTag = await UploadFileToS3Async(firstPartUploadUrl, fileStream, awsClient, md5, isSimpleUpload);
+        
         await CompleteFilePartUploadAsync(fileId, version, eTags, fileType);
+        progressCallback?.Invoke(1);
     }
 
     private async ValueTask<string> UploadFileToS3Async(string uploadUrl, Stream stream, HttpClient awsClient,
