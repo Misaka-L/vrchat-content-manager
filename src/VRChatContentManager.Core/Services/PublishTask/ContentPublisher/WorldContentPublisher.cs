@@ -70,6 +70,7 @@ public sealed class WorldContentPublisher(
         UpdateProgress("Updating world to latest asset version...", null);
 
         await apiClient.CreateWorldVersionAsync(worldId, new CreateWorldVersionRequest(
+            worldName,
             fileVersion.File.Url,
             fileVersion.Version,
             platform,
