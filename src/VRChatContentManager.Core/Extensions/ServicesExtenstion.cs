@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
+using Polly;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
@@ -54,18 +56,29 @@ public static class ServicesExtension
 
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
         services.AddHttpClient<ContentPublishTaskFactory>(client =>
-        {
-            client.AddUserAgent();
-            client.Timeout = Timeout.InfiniteTimeSpan;
-        })
-        .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-        {
-            UseCookies = false,
-            MaxConnectionsPerServer = 50,
-            PooledConnectionLifetime = TimeSpan.Zero,
-            EnableMultipleHttp2Connections = true,
-            EnableMultipleHttp3Connections = true
-        });
+            {
+                client.AddUserAgent();
+                client.Timeout = Timeout.InfiniteTimeSpan;
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                UseCookies = false,
+                MaxConnectionsPerServer = 10,
+                PooledConnectionLifetime = TimeSpan.Zero,
+                EnableMultipleHttp2Connections = true,
+                EnableMultipleHttp3Connections = true
+            })
+            .AddResilienceHandler("awsClient", builder =>
+            {
+                builder.AddRetry(new HttpRetryStrategyOptions
+                {
+                    UseJitter = true,
+                    ShouldRetryAfterHeader = true,
+                    MaxRetryAttempts = 3,
+                    Delay = TimeSpan.FromSeconds(2),
+                    BackoffType = DelayBackoffType.Linear
+                });
+            });
 
         return services;
     }

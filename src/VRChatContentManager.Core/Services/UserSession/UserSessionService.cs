@@ -1,5 +1,10 @@
 ﻿using System.Net;
+using System.Threading.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http.Logging;
+using Microsoft.Extensions.Http.Resilience;
+using Microsoft.Extensions.Logging;
+using Polly;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Auth;
 using VRChatContentManager.Core.Services.VRChatApi;
@@ -30,6 +35,8 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         string? userId,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
+        ILogger<UserSessionService> logger,
+        ILoggerFactory loggerFactory,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
         _scopeFactory = scopeFactory;
@@ -39,13 +46,44 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         UserNameOrEmail = userNameOrEmail;
 
         _cookieContainer = cookieContainer ?? new CookieContainer();
+
+        var socketHttpHandler = new SocketsHttpHandler
+        {
+            CookieContainer = _cookieContainer,
+            UseCookies = true
+        };
+
+        var retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
+            .AddRetry(new HttpRetryStrategyOptions
+            {
+                ShouldHandle = args => ValueTask.FromResult(
+                    args.Outcome.Exception is not null &&
+                    args.Outcome.Exception is not UnexpectedApiBehaviourException &&
+                    args.Outcome.Exception is not HttpRequestException),
+                UseJitter = true,
+                ShouldRetryAfterHeader = true,
+                MaxRetryAttempts = 3,
+                Delay = TimeSpan.FromSeconds(2),
+                BackoffType = DelayBackoffType.Linear
+            })
+            .AddConcurrencyLimiter(new ConcurrencyLimiterOptions
+            {
+                PermitLimit = 1,
+                QueueLimit = 120,
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+            })
+            .ConfigureTelemetry(loggerFactory)
+            .Build();
+
         _sessionHttpClient = new HttpClient(
             new InspectorHttpHandler(async () => await _saveFunc(_cookieContainer, UserId, UserNameOrEmail))
             {
-                InnerHandler = new SocketsHttpHandler
+                InnerHandler = new ResilienceHandler(retryPipeline)
                 {
-                    CookieContainer = _cookieContainer,
-                    UseCookies = true
+                    InnerHandler = new LoggingScopeHttpMessageHandler(logger)
+                    {
+                        InnerHandler = socketHttpHandler
+                    }
                 }
             })
         {
@@ -117,11 +155,16 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     #endregion
 }
 
-public sealed class UserSessionFactory(IServiceScopeFactory scopeFactory, VRChatApiClientFactory apiClientFactory)
+public sealed class UserSessionFactory(
+    IServiceScopeFactory scopeFactory,
+    VRChatApiClientFactory apiClientFactory,
+    ILogger<UserSessionService> logger,
+    ILoggerFactory loggerFactory)
 {
     public UserSessionService Create(string userNameOrEmail, string? userId, CookieContainer? cookieContainer,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
-        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, apiClientFactory, saveFunc);
+        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, apiClientFactory, logger,
+            loggerFactory, saveFunc);
     }
 }
