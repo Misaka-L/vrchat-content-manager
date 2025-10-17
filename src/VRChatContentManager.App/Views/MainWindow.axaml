@@ -9,7 +9,6 @@
         x:DataType="vm:MainWindowViewModel"
         ExtendClientAreaToDecorationsHint="True" SystemDecorations="None"
         ExtendClientAreaChromeHints="NoChrome" ShowInTaskbar="True" Topmost="True"
-        Background="Transparent"
         Opened="TopLevel_OnOpened" Width="420" Height="680"
         Icon="/Assets/avalonia-logo.ico"
         Title="VRChatContentManager.App">

@@ -11,7 +11,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        TransparencyLevelHint = [WindowTransparencyLevel.Mica];
+        // TransparencyLevelHint = [WindowTransparencyLevel.Mica];
     }
 
     private enum TaskBarLocation
