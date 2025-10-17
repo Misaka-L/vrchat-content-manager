@@ -13,6 +13,8 @@ public class ProgressStreamContent(
 
     protected override async Task SerializeToStreamAsync(Stream stream, TransportContext? context)
     {
+        _source.Position = 0;
+        
         var buffer = new byte[bufferSize];
         long uploaded = 0;
         int read;
