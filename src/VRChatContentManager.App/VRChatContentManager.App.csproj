@@ -41,6 +41,20 @@
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
 
         <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6" />
+
+        <PackageReference Include="Serilog" Version="4.3.0" />
+
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+
+        <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
+
+        <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
+
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+
+        <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>

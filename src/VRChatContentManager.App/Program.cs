@@ -1,16 +1,16 @@
 ﻿using Avalonia;
 using System;
+using System.IO;
 using System.Runtime.Versioning;
 using HotAvalonia;
 using Lemon.Hosting.AvaloniauiDesktop;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Formatting.Compact;
+using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentManager.App.Extensions;
 using VRChatContentManager.Core.Extensions;
-using VRChatContentManager.Core.Services;
 using VRChatContentManager.Core.Services.App;
-using VRChatContentManager.Core.Settings;
-using VRChatContentManager.Core.Settings.Models;
 
 namespace VRChatContentManager.App;
 
@@ -26,7 +26,19 @@ internal sealed class Program
     public static void Main(string[] args)
     {
         var builder = new HostApplicationBuilder();
-        
+
+        var logPath = Path.Combine(AppStorageService.GetStoragePath(), "logs", "log-.json");
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
+            .WriteTo.Async(writer =>
+                writer.File(new CompactJsonFormatter(), logPath,
+                    rollingInterval: RollingInterval.Day))
+            .WriteTo.Debug()
+            .CreateLogger();
+
+        builder.Services.AddSerilog();
+
         builder.UseAppCore();
         builder.Services.AddAppServices();
         builder.Services.AddAvaloniauiDesktopApplication<App>(appBuilder => appBuilder
@@ -36,7 +48,7 @@ internal sealed class Program
             .LogToTrace());
 
         var app = builder.Build();
-        
+
         app.RunAvaloniauiApplication(args);
     }
 
