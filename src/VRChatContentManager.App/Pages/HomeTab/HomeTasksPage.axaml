@@ -14,6 +14,12 @@
     </Interaction.Behaviors>
 
     <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding TaskManagers}"/>
+        <ItemsControl ItemsSource="{Binding TaskManagers}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </ScrollViewer>
 </UserControl>
