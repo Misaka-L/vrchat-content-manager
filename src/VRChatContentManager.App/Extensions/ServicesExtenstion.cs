@@ -47,6 +47,7 @@ public static class ServicesExtenstion
         services.AddTransient<GuideWelcomePageViewModel>();
         services.AddTransient<GuideAccountPageViewModel>();
         services.AddTransient<GuideSetupUnityPageViewModel>();
+        services.AddTransient<GuideFinishSetupPageViewModel>();
         
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();

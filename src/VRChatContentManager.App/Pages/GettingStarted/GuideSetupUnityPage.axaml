@@ -3,7 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gettingStarted="clr-namespace:VRChatContentManager.App.ViewModels.Pages.GettingStarted"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="680"
              x:DataType="gettingStarted:GuideSetupUnityPageViewModel"
              x:Class="VRChatContentManager.App.Pages.GettingStarted.GuideSetupUnityPage">
 
@@ -13,10 +13,24 @@
         </EventTriggerBehavior>
     </Interaction.Behaviors>
 
-    <StackPanel>
-        <TextBlock Text="{Binding UserId}" />
-        <TextBlock Text="{Binding UserName}" />
-        <TextBlock Text="{Binding DisplayName}" />
-        <Button Command="{Binding LogoffCommand}" Content="Logoff" />
+    <StackPanel Spacing="24">
+        <Border Height="140">
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <TextBlock Text="Finish setup by" FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock Text="Connect Unity to App" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel>
+            <TextBlock Text="Setup Guide W.I.P" TextAlignment="Center" />
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center" Width="200">
+            <Button Content="Skip" Command="{Binding SkipCommand}"
+                    Theme="{StaticResource MaterialFlatButton}" />
+        </StackPanel>
     </StackPanel>
 </UserControl>

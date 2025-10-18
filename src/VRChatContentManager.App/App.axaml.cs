@@ -69,6 +69,7 @@ public partial class App : Application
         ViewLocator.Register<GuideWelcomePageViewModel, GuideWelcomePage>();
         ViewLocator.Register<GuideAccountPageViewModel, GuideAccountPage>();
         ViewLocator.Register<GuideSetupUnityPageViewModel, GuideSetupUnityPage>();
+        ViewLocator.Register<GuideFinishSetupPageViewModel, GuideFinishPage>();
         
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
