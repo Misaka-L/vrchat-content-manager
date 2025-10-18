@@ -52,27 +52,19 @@ public sealed class ContentPublishTaskService
 
             // Step 1: Decompress (if needed) and recompress the bundle file.
             _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
-
             UpdateProgress("Preparing to process bundle file...", null);
 
-            _logger.LogInformation("Getting stream of bundle file {BundleFileId}", _bundleFileId);
-            await using var fileStream = await _tempFileService.GetFileAsync(_bundleFileId);
-            if (fileStream is null)
-                throw new InvalidOperationException("Bundle file with provided id is not found.");
-
             var tempBundleFilePath = GetTempBundleFilePath();
-
-            _logger.LogInformation("Compressing bundle file to temporary path {TempBundleFilePath}",
-                tempBundleFilePath);
             await using var tempBundleFileStream =
                 File.Create(tempBundleFilePath, 81920, FileOptions.DeleteOnClose | FileOptions.Asynchronous);
 
-            await CompressBundleAsync(fileStream, tempBundleFileStream);
+            await ProcessBundleAsync(_bundleFileId, tempBundleFileStream);
+            await _tempFileService.DeleteFileAsync(_bundleFileId);
 
-            UpdateProgress("Preparing for publish...", null);
-
-            _logger.LogInformation("Compression completed, preparing to publish.");
             // Step 2: Publish the content using the provided content publisher.
+            UpdateProgress("Preparing for publish...", null);
+            _logger.LogInformation("Compression completed, preparing to publish.");
+
             await _contentPublisher.PublishAsync(tempBundleFileStream, _awsHttpClient);
         }
         catch (Exception ex)
@@ -80,6 +72,18 @@ public sealed class ContentPublishTaskService
             _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
             UpdateProgress("FAILED: " + ex.Message, 0);
         }
+    }
+
+    private async ValueTask ProcessBundleAsync(string bundleFileId, Stream targetStream)
+    {
+        _logger.LogInformation("Getting stream of bundle file {BundleFileId}", _bundleFileId);
+        await using var fileStream = await _tempFileService.GetFileAsync(_bundleFileId);
+        if (fileStream is null)
+            throw new InvalidOperationException("Bundle file with provided id is not found.");
+
+        _logger.LogInformation("Compressing bundle file {FileId} to temporary path", bundleFileId);
+
+        await CompressBundleAsync(fileStream, targetStream);
     }
 
     private Task CompressBundleAsync(Stream bundleStream, Stream outputStream)

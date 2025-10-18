@@ -31,6 +31,21 @@ public sealed class TempFileService : IFileService
         return ValueTask.FromResult<Stream?>(File.OpenRead(filePath));
     }
 
+    public ValueTask DeleteFileAsync(string fileId)
+    {
+        if (_fileMap.TryGetValue(fileId, out var filePath))
+        {
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            
+            _fileMap.Remove(fileId);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
     private string GetTempFileRootPath()
     {
         var tempPath = AppStorageService.GetTempPath();

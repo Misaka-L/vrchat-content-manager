@@ -7,4 +7,6 @@ public interface IFileService
     ValueTask<UploadFileTask> GetUploadFileStreamAsync(string fileName);
 
     ValueTask<Stream?> GetFileAsync(string fileId);
+    
+    ValueTask DeleteFileAsync(string fileId);
 }
