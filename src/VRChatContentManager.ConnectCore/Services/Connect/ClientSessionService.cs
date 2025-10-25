@@ -16,6 +16,8 @@ public sealed class ClientSessionService(
 {
     private const string Issuer = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
+    
+    private readonly TimeSpan _expiry = TimeSpan.FromDays(14);
 
     private readonly Lock _challengeSessionLock = new();
     private readonly List<ChallengeSession> _challengeSessions = [];
@@ -98,7 +100,7 @@ public sealed class ClientSessionService(
             _challengeSessions.Remove(challengeSession);
         }
 
-        var expires = DateTimeOffset.UtcNow.AddDays(7);
+        var expires = DateTimeOffset.UtcNow + _expiry;
 
         var session = new RpcClientSession(clientId, expires);
         await sessionStorageService.AddSessionAsync(session);
@@ -118,7 +120,7 @@ public sealed class ClientSessionService(
 
         await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
 
-        var expires = DateTimeOffset.UtcNow.AddHours(1);
+        var expires = DateTimeOffset.UtcNow + _expiry;
         var newSession = new RpcClientSession(clientId, expires);
         await sessionStorageService.AddSessionAsync(newSession);
 
@@ -145,7 +147,7 @@ public sealed class ClientSessionService(
             new(JwtRegisteredClaimNames.Iss, Issuer),
             new(JwtRegisteredClaimNames.Sub, Subject),
             new(JwtRegisteredClaimNames.Aud, clientId),
-            new(JwtRegisteredClaimNames.Exp, currentDateTime.AddMinutes(30).ToUnixTimeSeconds().ToString()),
+            new(JwtRegisteredClaimNames.Exp, (currentDateTime + _expiry).ToUnixTimeSeconds().ToString()),
             new(JwtRegisteredClaimNames.Iat, currentDateTime.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64),
             new(JwtRegisteredClaimNames.Nbf, currentDateTime.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
         ];
