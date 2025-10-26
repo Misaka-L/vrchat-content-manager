@@ -70,7 +70,7 @@ public sealed class AvatarContentPublisher(
         await apiClient.CreateAvatarVersionAsync(avatarId, new CreateAvatarVersionRequest(
             name,
             fileVersion.File.Url,
-            fileVersion.Version,
+            1,
             platform,
             unityVersion
         ));
