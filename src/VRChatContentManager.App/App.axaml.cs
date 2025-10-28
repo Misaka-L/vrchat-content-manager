@@ -4,7 +4,6 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,14 +11,15 @@ using VRChatContentManager.App.Dialogs;
 using VRChatContentManager.App.Pages;
 using VRChatContentManager.App.Pages.GettingStarted;
 using VRChatContentManager.App.Pages.HomeTab;
+using VRChatContentManager.App.Pages.Settings;
 using VRChatContentManager.App.ViewModels;
 using VRChatContentManager.App.ViewModels.Data.PublishTasks;
 using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
+using VRChatContentManager.App.ViewModels.Pages.Settings;
 using VRChatContentManager.App.Views;
-using VRChatContentManager.App.Views.Data;
 using VRChatContentManager.App.Views.Data.PublishTasks;
 using VRChatContentManager.Core;
 using VRChatContentManager.Core.Services.App;
@@ -70,6 +70,9 @@ public partial class App : Application
         ViewLocator.Register<GuideAccountPageViewModel, GuideAccountPage>();
         ViewLocator.Register<GuideSetupUnityPageViewModel, GuideSetupUnityPage>();
         ViewLocator.Register<GuideFinishSetupPageViewModel, GuideFinishPage>();
+        
+        // Settings Pages
+        ViewLocator.Register<SettingsAddAccountPageViewModel, SettingsAddAccountPage>();
         
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();

@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels.Data;
+using VRChatContentManager.App.ViewModels.Pages.Settings;
 using VRChatContentManager.Core.Services.UserSession;
 
 namespace VRChatContentManager.App.ViewModels.Pages;
@@ -33,5 +34,11 @@ public sealed partial class SettingsPageViewModel(
     private void NavigateToHome()
     {
         navigationService.Navigate<HomePageViewModel>();
+    }
+
+    [RelayCommand]
+    private void AddNewAccount()
+    {
+        navigationService.Navigate<SettingsAddAccountPageViewModel>();
     }
 }
