@@ -11,6 +11,25 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+#if DEBUG
+        ShowInTaskbar = true;
+#endif
+        
+        Activate();
+
+        Closing += (_, arg) =>
+        {
+            arg.Cancel = true;
+            Hide();
+        };
+
+        Deactivated += (_, _) =>
+        {
+#if !DEBUG
+            Hide();
+#endif
+        };
+
         // TransparencyLevelHint = [WindowTransparencyLevel.Mica];
     }
 

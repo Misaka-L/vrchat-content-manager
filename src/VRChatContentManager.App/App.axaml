@@ -21,4 +21,19 @@
         <avalonia:MaterialIconStyles />
         <dialogHostAvalonia:DialogHostStyles />
     </Application.Styles>
+
+    <TrayIcon.Icons>
+        <TrayIcons>
+            <TrayIcon Icon="/Assets/avalonia-logo.ico"
+                      ToolTipText="VRChat Content Manager"
+                      Clicked="ShowWindowClicked">
+                <TrayIcon.Menu>
+                    <NativeMenu>
+                        <NativeMenuItem Header="Show Window" Click="ShowWindowClicked" />
+                        <NativeMenuItem Header="Exit" Click="ExitAppClicked" />
+                    </NativeMenu>
+                </TrayIcon.Menu>
+            </TrayIcon>
+        </TrayIcons>
+    </TrayIcon.Icons>
 </Application>

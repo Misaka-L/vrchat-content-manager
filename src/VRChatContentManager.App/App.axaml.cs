@@ -33,17 +33,17 @@ public partial class App : Application
     public new static App Current => (App)Application.Current;
 #pragma warning restore CS8603
 #pragma warning restore CS8600
-    
+
     private readonly IServiceProvider _serviceProvider = null!;
-    
+
     public readonly AppWebImageLoader AsyncImageLoader;
-    
+
     public App()
     {
         // Make Previewer happy
         var httpClient = new HttpClient();
         httpClient.AddUserAgent();
-        
+
         var memoryCache = new MemoryCache(new MemoryCacheOptions());
         AsyncImageLoader = new AppWebImageLoader(new RemoteImageService(httpClient, memoryCache), memoryCache);
     }
@@ -53,37 +53,37 @@ public partial class App : Application
         _serviceProvider = serviceProvider;
         AsyncImageLoader = _serviceProvider.GetRequiredService<AppWebImageLoader>();
     }
-    
+
     public override void Initialize()
     {
         ViewLocator.Register<BootstrapPageViewModel, BootstrapPage>();
-        
+
         ViewLocator.Register<HomePageViewModel, HomePage>();
         ViewLocator.Register<SettingsPageViewModel, SettingsPage>();
-        
+
         // HomePage Tabs
         ViewLocator.Register<HomeTasksPageViewModel, HomeTasksPage>();
         ViewLocator.Register<HomeContentsPageViewModel, HomeContentsPage>();
-        
+
         // Getting Started Pages
         ViewLocator.Register<GuideWelcomePageViewModel, GuideWelcomePage>();
         ViewLocator.Register<GuideAccountPageViewModel, GuideAccountPage>();
         ViewLocator.Register<GuideSetupUnityPageViewModel, GuideSetupUnityPage>();
         ViewLocator.Register<GuideFinishSetupPageViewModel, GuideFinishPage>();
-        
+
         // Settings Pages
         ViewLocator.Register<SettingsAddAccountPageViewModel, SettingsAddAccountPage>();
-        
+
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
         ViewLocator.Register<RequestChallengeDialogViewModel, RequestChallengeDialog>();
-        
+
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
         ViewLocator.Register<PublishTaskViewModel, PublishTaskView>();
-        
+
         AvaloniaXamlLoader.Load(this);
-        
+
         this.AttachDeveloperTools();
     }
 
@@ -114,5 +114,20 @@ public partial class App : Application
         {
             BindingPlugins.DataValidators.Remove(plugin);
         }
+    }
+
+    private void ShowWindowClicked(object? sender, EventArgs e)
+    {
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+        desktop.MainWindow?.Show();
+        desktop.MainWindow?.Activate();
+    }
+
+    private void ExitAppClicked(object? sender, EventArgs e)
+    {
+        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+        desktop.Shutdown();
     }
 }
