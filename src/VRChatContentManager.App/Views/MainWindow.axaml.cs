@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using VRChatContentManager.App.ViewModels;
 
 namespace VRChatContentManager.App.Views;
 
@@ -25,6 +26,8 @@ public partial class MainWindow : Window
 
         Deactivated += (_, _) =>
         {
+            if (DataContext is MainWindowViewModel { Pinned: true })
+                return;
 #if !DEBUG
             Hide();
 #endif
