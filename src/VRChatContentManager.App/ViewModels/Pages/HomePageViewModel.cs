@@ -24,18 +24,22 @@ public partial class HomePageViewModel : PageViewModelBase
         new("Contents", MaterialIconKind.CubeSend, typeof(HomeContentsPageViewModel))
     ];
 
+    public bool IsPinned => _appWindowService.IsPinned();
+
     private readonly NavigationService _navigationService;
+    private readonly AppWindowService _appWindowService;
     private readonly IWritableOptions<AppSettings> _appSettings;
     private readonly IServiceProvider _serviceProvider;
 
     public HomePageViewModel(
         NavigationService navigationService,
         IServiceProvider serviceProvider,
-        IWritableOptions<AppSettings> appSettings)
+        IWritableOptions<AppSettings> appSettings, AppWindowService appWindowService)
     {
         _navigationService = navigationService;
         _serviceProvider = serviceProvider;
         _appSettings = appSettings;
+        _appWindowService = appWindowService;
 
         PropertyChanged += (_, args) =>
         {
@@ -68,6 +72,13 @@ public partial class HomePageViewModel : PageViewModelBase
     private void NavigateToSettings()
     {
         _navigationService.Navigate<SettingsPageViewModel>();
+    }
+
+    [RelayCommand]
+    private void ToggleWindowPin()
+    {
+        _appWindowService.SetPin(!_appWindowService.IsPinned());
+        OnPropertyChanged(nameof(IsPinned));
     }
 }
 

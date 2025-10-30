@@ -17,6 +17,8 @@ public static class ServicesExtenstion
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
         services.AddSingleton<AppWebImageLoader>();
+
+        services.AddSingleton<AppWindowService>();
         
         // Dialog
         services.AddSingleton<DialogService>();
