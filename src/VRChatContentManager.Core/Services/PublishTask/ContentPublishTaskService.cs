@@ -71,7 +71,7 @@ public sealed class ContentPublishTaskService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
-            UpdateProgress("FAILED: " + ex.Message, 0, ContentPublishTaskStatus.Failed);
+            UpdateProgress(ex.Message, 0, ContentPublishTaskStatus.Failed);
         }
     }
 
