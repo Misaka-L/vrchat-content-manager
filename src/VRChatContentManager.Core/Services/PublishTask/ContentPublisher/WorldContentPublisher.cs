@@ -79,12 +79,12 @@ public sealed class WorldContentPublisher(
         ));
 
         logger.LogInformation("Successfully published world {WorldId}", worldId);
-        UpdateProgress("World Published", 1);
+        UpdateProgress("World Published", 1, ContentPublishTaskStatus.Completed);
     }
 
-    private void UpdateProgress(string text, double? value)
+    private void UpdateProgress(string text, double? value, ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
-        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value));
+        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
 }
 

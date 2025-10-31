@@ -14,12 +14,14 @@ public partial class VRChatApiClient
         var currentAssetFile = await GetFileAsync(fileId);
 
         // Step 1. Cleanup any incomplete file versions.
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Cleanup all incomplete file versions...", null));
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Cleanup all incomplete file versions...", null,
+            ContentPublishTaskStatus.InProgress));
 
         await VRChatApiFlieUtils.CleanupIncompleteFileVersionsAsync(currentAssetFile, this);
 
         // Step 2.Caulate bundle file md5 and check is same file exists.
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating MD5 for bundle file...", null));
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating MD5 for bundle file...", null,
+            ContentPublishTaskStatus.InProgress));
 
         var fileMd5 = await VRChatApiFlieUtils.GetMd5FromStreamForVRChatAsync(fileStream);
         var fileLength = fileStream.Length;
@@ -44,7 +46,7 @@ public partial class VRChatApiClient
 
         // Step 3. Caulate file signature
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating (Blake2b) Signature for bundle file...",
-            null));
+            null, ContentPublishTaskStatus.InProgress));
 
         var signatureStream =
             new MemoryStream(await VRChatApiFlieUtils.GetSignatureFromStreamForVRChatAsync(fileStream));
@@ -52,10 +54,11 @@ public partial class VRChatApiClient
         var signatureLength = signatureStream.Length;
 
         logger.LogInformation("Creating new file version for file {FileId}", fileId);
-        
+
         // Step 4. Create new file version
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Creating new file version...", null));
-        
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Creating new file version...", null,
+            ContentPublishTaskStatus.InProgress));
+
         var fileVersion =
             await CreateFileVersionAsync(fileId, fileMd5, fileLength, signatureMd5, signatureLength);
 
@@ -65,29 +68,36 @@ public partial class VRChatApiClient
 
         // Step 5. Upload bundle file and signature to aws s3
         logger.LogInformation("Uploading file version {Version} for file {FileId}", fileVersion.Version, fileId);
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload bundle file...", null));
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload bundle file...", null,
+            ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
             fileVersion.File.Category == "simple", VRChatApiFileType.File, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading bundle file...", progress)));
-        
+            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading bundle file...",
+                progress, ContentPublishTaskStatus.InProgress)));
+
         logger.LogInformation("Uploading signature for world {FileId}", fileId);
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null));
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null,
+            ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
             fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading signature...", progress)));
+            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading signature...", progress,
+                ContentPublishTaskStatus.InProgress)));
 
         // Step 6. Wait for server to process the uploaded file version
         logger.LogInformation("Waiting for server processing of file version {Version} for file {FileId}",
             fileVersion.Version, fileId);
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Waiting for server processing (for 3s)...", null));
-        
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Waiting for server processing (for 3s)...", null,
+            ContentPublishTaskStatus.InProgress));
+
         await Task.Delay(TimeSpan.FromSeconds(3));
-        
-        logger.LogInformation("Fetching completed file version {Version} for file {FileId}", fileVersion.Version, fileId);
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Fetching new file version detail...", null));
-        
+
+        logger.LogInformation("Fetching completed file version {Version} for file {FileId}", fileVersion.Version,
+            fileId);
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Fetching new file version detail...", null,
+            ContentPublishTaskStatus.InProgress));
+
         var completedFile = await GetFileAsync(fileId);
         return completedFile.Versions.FirstOrDefault(ver => ver.Version == fileVersion.Version) ??
                throw new UnexpectedApiBehaviourException(
@@ -103,7 +113,7 @@ public partial class VRChatApiClient
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType);
             await UploadFileToS3Async(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType);
-            
+
             progressCallback?.Invoke(1);
 
             return;
@@ -112,9 +122,9 @@ public partial class VRChatApiClient
         var uploader =
             concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient);
         uploader.ProgressChanged += (_, progress) => progressCallback?.Invoke(progress);
-        
+
         var eTags = await uploader.UploadAsync();
-        
+
         await CompleteFilePartUploadAsync(fileId, version, eTags, fileType);
         progressCallback?.Invoke(1);
     }

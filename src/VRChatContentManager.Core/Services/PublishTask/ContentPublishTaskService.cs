@@ -25,6 +25,7 @@ public sealed class ContentPublishTaskService
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
 
     public string ProgressText { get; private set; } = "Waiting for task started...";
+    public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.InProgress;
     public double? ProgressValue { get; private set; }
 
     internal ContentPublishTaskService(
@@ -70,7 +71,7 @@ public sealed class ContentPublishTaskService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
-            UpdateProgress("FAILED: " + ex.Message, 0);
+            UpdateProgress("FAILED: " + ex.Message, 0, ContentPublishTaskStatus.Failed);
         }
     }
 
@@ -124,11 +125,12 @@ public sealed class ContentPublishTaskService
         return Path.Combine(tempBundlePath, $"{ContentId}-{Guid.NewGuid():N}");
     }
 
-    private void UpdateProgress(string text, double? value)
+    private void UpdateProgress(string text, double? value, ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
         ProgressText = text;
         ProgressValue = value;
-        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value));
+        Status = status;
+        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
 }
 

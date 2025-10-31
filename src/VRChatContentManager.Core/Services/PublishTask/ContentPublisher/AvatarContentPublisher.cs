@@ -76,12 +76,12 @@ public sealed class AvatarContentPublisher(
         ));
 
         logger.LogInformation("Successfully published avatar {AvatarId}", avatarId);
-        UpdateProgress("Avatar Published", 1);
+        UpdateProgress("Avatar Published", 1, ContentPublishTaskStatus.Completed);
     }
 
-    private void UpdateProgress(string text, double? value)
+    private void UpdateProgress(string text, double? value, ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
-        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value));
+        ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
 }
 
