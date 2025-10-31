@@ -6,6 +6,7 @@
              xmlns:data="clr-namespace:VRChatContentManager.App.ViewModels.Data"
              xmlns:controls="clr-namespace:VRChatContentManager.App.Controls"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="pages:SettingsPageViewModel"
              x:Class="VRChatContentManager.App.Pages.SettingsPage">
@@ -29,7 +30,7 @@
                 <TextBlock Text="Settings" FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
-        <StackPanel Grid.Row="1" Spacing="24" Margin="18">
+        <StackPanel Grid.Row="1" Spacing="8" Margin="18">
             <Expander Header="Accounts">
                 <StackPanel>
                     <Button Command="{Binding AddNewAccountCommand}"
@@ -57,6 +58,16 @@
                             </DataTemplate>
                         </ItemsControl.DataTemplates>
                     </ItemsControl>
+                </StackPanel>
+            </Expander>
+            <Expander Header="Connect">
+                <StackPanel Margin="8" Spacing="8">
+                    <TextBox Text="{Binding ConnectInstanceName}"
+                             UseFloatingWatermark="True" Watermark="e.g Greatest Chiffon" Classes="outline"
+                             assists:TextFieldAssist.Label="Connect Instance Name"
+                             Theme="{StaticResource OutlineTextBox}" />
+                    <CheckBox Content="Allow LAN discovery" IsEnabled="False" />
+                    <Button Content="Apply" Command="{Binding ApplyConnectSettingsCommand}" />
                 </StackPanel>
             </Expander>
         </StackPanel>
