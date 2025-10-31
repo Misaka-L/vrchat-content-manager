@@ -10,6 +10,7 @@
 
     <Application.Resources>
         <converters:ContentTypeIconConverter x:Key="ContentTypeIconConverter" />
+        <converters:ContentPublishTaskStatusColorConverter x:Key="ContentPublishTaskStatusColorConverter" />
     </Application.Resources>
 
     <Application.DataTemplates>

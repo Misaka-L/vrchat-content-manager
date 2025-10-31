@@ -1,4 +1,5 @@
 ﻿using Avalonia.Threading;
+using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Services.PublishTask;
 
 namespace VRChatContentManager.App.ViewModels.Data.PublishTasks;
@@ -12,6 +13,8 @@ public sealed class PublishTaskViewModel : ViewModelBase
     public string ProgressText => _publishTaskService.ProgressText;
     public double? ProgressValue => _publishTaskService.ProgressValue * 100;
     public bool IsIndeterminate => !ProgressValue.HasValue;
+    
+    public ContentPublishTaskStatus Status => _publishTaskService.Status;
 
     private readonly ContentPublishTaskService _publishTaskService;
 
@@ -26,6 +29,7 @@ public sealed class PublishTaskViewModel : ViewModelBase
                 OnPropertyChanged(nameof(ProgressText));
                 OnPropertyChanged(nameof(ProgressValue));
                 OnPropertyChanged(nameof(IsIndeterminate));
+                OnPropertyChanged(nameof(Status));
             });
         };
     }
