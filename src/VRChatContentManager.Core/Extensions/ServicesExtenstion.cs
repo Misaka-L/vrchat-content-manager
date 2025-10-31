@@ -66,7 +66,8 @@ public static class ServicesExtension
                 MaxConnectionsPerServer = 10,
                 PooledConnectionLifetime = TimeSpan.Zero,
                 EnableMultipleHttp2Connections = true,
-                EnableMultipleHttp3Connections = true
+                EnableMultipleHttp3Connections = true,
+                ConnectTimeout = TimeSpan.FromSeconds(5)
             })
             .AddResilienceHandler("awsClient", builder =>
             {

@@ -50,7 +50,8 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         var socketHttpHandler = new SocketsHttpHandler
         {
             CookieContainer = _cookieContainer,
-            UseCookies = true
+            UseCookies = true,
+            ConnectTimeout = TimeSpan.FromSeconds(5)
         };
 
         var retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
@@ -59,7 +60,8 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
                 ShouldHandle = args => ValueTask.FromResult(
                     args.Outcome.Exception is not null &&
                     args.Outcome.Exception is not UnexpectedApiBehaviourException &&
-                    args.Outcome.Exception is not HttpRequestException),
+                    args.Outcome.Exception is not HttpRequestException &&
+                    args.Outcome.Exception is not ApiErrorException),
                 UseJitter = true,
                 ShouldRetryAfterHeader = true,
                 MaxRetryAttempts = 3,
@@ -87,7 +89,8 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
                 }
             })
         {
-            BaseAddress = new Uri("https://api.vrchat.cloud/api/1/")
+            BaseAddress = new Uri("https://api.vrchat.cloud/api/1/"),
+            Timeout = TimeSpan.FromSeconds(30)
         };
 
         _sessionHttpClient.AddUserAgent();
