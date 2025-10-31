@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Polly;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Services;
+using VRChatContentManager.ConnectCore.Services.Connect.Metadata;
 using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentManager.ConnectCore.Services.PublishTask;
 using VRChatContentManager.Core.Services;
@@ -29,6 +30,7 @@ public static class ServicesExtension
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
         services.AddSingleton<IFileService, TempFileService>();
+        services.AddTransient<IConnectMetadataProvider, ConnectMetadataProvider>();
 
         // Connect Publish Service
         services.AddTransient<IWorldPublishTaskService, WorldPublishTaskService>();

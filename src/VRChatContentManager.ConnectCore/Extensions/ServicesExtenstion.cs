@@ -2,6 +2,7 @@
 using VRChatContentManager.ConnectCore.Middlewares;
 using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.ConnectCore.Services.Connect;
+using VRChatContentManager.ConnectCore.Services.Connect.Metadata;
 
 namespace VRChatContentManager.ConnectCore.Extensions;
 
@@ -14,6 +15,8 @@ public static class ServicesExtenstion
         services.AddSingleton<HttpServerService>();
         services.AddHostedService<ConnectHostService>();
         services.AddSingleton<EndpointService>();
+
+        services.AddTransient<ConnectMetadataService>();
         
         // Middlewares
         services.AddTransient<RequestLoggingMiddleware>();
