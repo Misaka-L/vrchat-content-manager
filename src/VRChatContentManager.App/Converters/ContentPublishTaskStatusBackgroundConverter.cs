@@ -6,7 +6,7 @@ using VRChatContentManager.Core.Models;
 
 namespace VRChatContentManager.App.Converters;
 
-public sealed class ContentPublishTaskStatusColorConverter : IValueConverter
+public sealed class ContentPublishTaskStatusBackgroundConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
@@ -16,7 +16,7 @@ public sealed class ContentPublishTaskStatusColorConverter : IValueConverter
         return status switch
         {
             ContentPublishTaskStatus.Failed => new SolidColorBrush(Color.Parse("#d50000")),
-            ContentPublishTaskStatus.InProgress => new SolidColorBrush(Color.Parse("#757de8")),
+            ContentPublishTaskStatus.InProgress => new SolidColorBrush(Color.Parse("#304ffe")),
             ContentPublishTaskStatus.Completed => new SolidColorBrush(Color.Parse("#00c853")),
             _ => null
         };

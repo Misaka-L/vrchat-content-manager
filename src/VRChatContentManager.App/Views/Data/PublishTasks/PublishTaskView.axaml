@@ -22,7 +22,8 @@
                            FontSize="12" Opacity="0.8" />
                 <ProgressBar IsIndeterminate="{Binding IsIndeterminate}"
                              Value="{Binding ProgressValue, FallbackValue=0}"
-                             Background="{Binding Status, Converter={StaticResource ContentPublishTaskStatusColorConverter}}" />
+                             Background="{Binding Status, Converter={StaticResource ContentPublishTaskStatusBackgroundConverter}}"
+                             Foreground="{Binding Status, Converter={StaticResource ContentPublishTaskStatusForegroundConverter}}" />
             </StackPanel>
         </StackPanel>
         <Button Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
