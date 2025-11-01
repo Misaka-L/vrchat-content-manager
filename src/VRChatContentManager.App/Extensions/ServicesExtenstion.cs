@@ -8,6 +8,7 @@ using VRChatContentManager.App.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.App.ViewModels.Pages.HomeTab;
 using VRChatContentManager.App.ViewModels.Pages.Settings;
+using VRChatContentManager.App.ViewModels.Settings;
 using VRChatContentManager.ConnectCore.Services.Connect.Challenge;
 
 namespace VRChatContentManager.App.Extensions;
@@ -19,7 +20,7 @@ public static class ServicesExtenstion
         services.AddSingleton<AppWebImageLoader>();
 
         services.AddSingleton<AppWindowService>();
-        
+
         // Dialog
         services.AddSingleton<DialogService>();
 
@@ -33,10 +34,10 @@ public static class ServicesExtenstion
         services.AddSingleton<NavigationService>();
 
         services.AddTransient<BootstrapPageViewModel>();
-        
+
         services.AddTransient<HomePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
-        
+
         // Data ViewModels
         services.AddTransient<UserSessionViewModelFactory>();
         services.AddTransient<PublishTaskViewModelFactory>();
@@ -51,10 +52,14 @@ public static class ServicesExtenstion
         services.AddTransient<GuideAccountPageViewModel>();
         services.AddTransient<GuideSetupUnityPageViewModel>();
         services.AddTransient<GuideFinishSetupPageViewModel>();
-        
+
         // Settings Pages
         services.AddTransient<SettingsAddAccountPageViewModel>();
-        
+
+        // Settings Sections
+        services.AddTransient<AccountsSettingsViewModel>();
+        services.AddTransient<ConnectSettingsViewModel>();
+
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();
 

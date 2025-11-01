@@ -3,19 +3,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:VRChatContentManager.App.ViewModels.Pages"
-             xmlns:data="clr-namespace:VRChatContentManager.App.ViewModels.Data"
-             xmlns:controls="clr-namespace:VRChatContentManager.App.Controls"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="pages:SettingsPageViewModel"
              x:Class="VRChatContentManager.App.Pages.SettingsPage">
-
-    <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
-            <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
-    </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*">
         <Border>
@@ -32,43 +23,10 @@
         </Border>
         <StackPanel Grid.Row="1" Spacing="8" Margin="18">
             <Expander Header="Accounts">
-                <StackPanel>
-                    <Button Command="{Binding AddNewAccountCommand}"
-                            Theme="{StaticResource MaterialFlatButton}" HorizontalContentAlignment="Stretch"
-                            Padding="8,4">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
-                            <avalonia:MaterialIcon Height="24" Width="24" Kind="Add" />
-                            <TextBlock Grid.Column="1" Text="Add New Account" VerticalAlignment="Center" />
-                        </Grid>
-                    </Button>
-                    <ItemsControl ItemsSource="{Binding UserSessions}" Margin="8">
-                        <ItemsControl.DataTemplates>
-                            <DataTemplate x:DataType="data:UserSessionViewModel">
-                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                                    <Border CornerRadius="100" Height="40" Width="40" ClipToBounds="True">
-                                        <Image controls:AsyncImageLoader.Source="{Binding ProfilePictureUrl}"
-                                               Stretch="UniformToFill" />
-                                    </Border>
-                                    <StackPanel Grid.Column="1">
-                                        <TextBlock Text="{Binding UserId}" />
-                                        <TextBlock Text="{Binding UserNameOrEmail}" />
-                                        <TextBlock Text="{Binding DisplayName}" />
-                                    </StackPanel>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.DataTemplates>
-                    </ItemsControl>
-                </StackPanel>
+                <ContentControl Content="{Binding AccountsSettingsViewModel}" />
             </Expander>
             <Expander Header="Connect">
-                <StackPanel Margin="8" Spacing="8">
-                    <TextBox Text="{Binding ConnectInstanceName}"
-                             UseFloatingWatermark="True" Watermark="e.g Greatest Chiffon" Classes="outline"
-                             assists:TextFieldAssist.Label="Connect Instance Name"
-                             Theme="{StaticResource OutlineTextBox}" />
-                    <CheckBox Content="Allow LAN discovery" IsEnabled="False" />
-                    <Button Content="Apply" Command="{Binding ApplyConnectSettingsCommand}" />
-                </StackPanel>
+                <ContentControl Content="{Binding ConnectSettingsViewModel}" />
             </Expander>
         </StackPanel>
     </Grid>
