@@ -37,7 +37,7 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <ToggleButton Theme="{StaticResource MaterialFlatToggleButton}" Height="48" Width="48"
                             Content="{avalonia:MaterialIconExt Kind=Pin, Size=26}"
-                            IsChecked="{Binding}"
+                            IsChecked="{Binding IsPinned}"
                             Command="{Binding ToggleWindowPinCommand}"/>
                     <Button Command="{Binding NavigateToSettingsCommand}"
                             Theme="{StaticResource MaterialFlatButton}" Height="48" Width="48"
