@@ -15,9 +15,9 @@ public sealed class ContentPublishTaskStatusForegroundConverter : IValueConverte
 
         return status switch
         {
-            ContentPublishTaskStatus.Failed => new SolidColorBrush(Color.Parse("#f44336")),
-            ContentPublishTaskStatus.InProgress => new SolidColorBrush(Color.Parse("#3f51b5")),
-            ContentPublishTaskStatus.Completed => new SolidColorBrush(Color.Parse("#4caf50")),
+            ContentPublishTaskStatus.Failed => new SolidColorBrush(Color.Parse("#d50000")),
+            ContentPublishTaskStatus.InProgress => new SolidColorBrush(Color.Parse("#304ffe")),
+            ContentPublishTaskStatus.Completed => new SolidColorBrush(Color.Parse("#00c853")),
             _ => null
         };
     }
