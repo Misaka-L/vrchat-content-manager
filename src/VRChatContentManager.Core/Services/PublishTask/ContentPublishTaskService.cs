@@ -49,7 +49,8 @@ public sealed class ContentPublishTaskService
     {
         try
         {
-            _contentPublisher.ProgressChanged += (_, args) => UpdateProgress(args.ProgressText, args.ProgressValue);
+            _contentPublisher.ProgressChanged +=
+                (_, args) => UpdateProgress(args.ProgressText, args.ProgressValue, args.Status);
 
             // Step 1: Decompress (if needed) and recompress the bundle file.
             _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
@@ -71,7 +72,7 @@ public sealed class ContentPublishTaskService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
-            UpdateProgress(ex.Message, 0, ContentPublishTaskStatus.Failed);
+            UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
         }
     }
 
@@ -125,7 +126,8 @@ public sealed class ContentPublishTaskService
         return Path.Combine(tempBundlePath, $"{ContentId}-{Guid.NewGuid():N}");
     }
 
-    private void UpdateProgress(string text, double? value, ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
+    private void UpdateProgress(string text, double? value,
+        ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
         ProgressText = text;
         ProgressValue = value;
