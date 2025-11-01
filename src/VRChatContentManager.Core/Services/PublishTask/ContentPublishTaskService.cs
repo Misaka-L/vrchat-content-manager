@@ -19,6 +19,7 @@ public sealed class ContentPublishTaskService
     public string ContentId { get; }
     public string ContentName { get; }
     public string ContentType { get; }
+    public string ContentPlatform { get; }
 
     private readonly string _bundleFileId;
 
@@ -36,6 +37,7 @@ public sealed class ContentPublishTaskService
         ContentId = contentId;
         ContentName = contentPublisher.GetContentName();
         ContentType = contentPublisher.GetContentType();
+        ContentPlatform = contentPublisher.GetContentPlatform();
 
         _bundleFileId = bundleFileId;
 

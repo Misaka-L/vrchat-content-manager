@@ -20,6 +20,7 @@ public sealed class AvatarContentPublisher(
 
     public string GetContentType() => "avatar";
     public string GetContentName() => name;
+    public string GetContentPlatform() => platform;
 
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {

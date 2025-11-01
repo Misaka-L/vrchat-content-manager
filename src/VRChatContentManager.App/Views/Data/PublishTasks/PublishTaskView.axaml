@@ -12,7 +12,8 @@
         <avalonia:MaterialIcon Kind="{Binding ContentType, Converter={StaticResource ContentTypeIconConverter}}"
                                Height="32" Width="32" />
         <StackPanel Grid.Column="1" Spacing="2">
-            <StackPanel Orientation="Horizontal" Spacing="2">
+            <StackPanel Spacing="2">
+                <TextBlock Text="{Binding ContentPlatform}" FontSize="12" Opacity="0.7" />
                 <TextBlock Text="{Binding ContentName}" FontSize="18" />
             </StackPanel>
             <StackPanel>

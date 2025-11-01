@@ -8,5 +8,6 @@ public interface IContentPublisher
 
     string GetContentType();
     string GetContentName();
+    string GetContentPlatform();
     ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient);
 }

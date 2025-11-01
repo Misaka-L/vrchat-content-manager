@@ -22,6 +22,7 @@ public sealed class WorldContentPublisher(
     public string GetContentType() => "world";
 
     public string GetContentName() => worldName;
+    public string GetContentPlatform() => platform;
 
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {
