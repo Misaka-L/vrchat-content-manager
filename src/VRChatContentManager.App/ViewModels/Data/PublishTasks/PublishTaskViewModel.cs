@@ -9,6 +9,7 @@ public sealed class PublishTaskViewModel : ViewModelBase
     public string ContentId => _publishTaskService.ContentId;
     public string ContentName => _publishTaskService.ContentName;
     public string ContentType => _publishTaskService.ContentType;
+    public string ContentPlatform => _publishTaskService.ContentPlatform;
     
     public string ProgressText => _publishTaskService.ProgressText;
     public double? ProgressValue => _publishTaskService.ProgressValue * 100;
