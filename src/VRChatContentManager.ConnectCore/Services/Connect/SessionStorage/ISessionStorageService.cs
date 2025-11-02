@@ -8,4 +8,6 @@ public interface ISessionStorageService
     ValueTask AddSessionAsync(RpcClientSession session);
     ValueTask RemoveSessionByClientIdAsync(string clientId);
     ValueTask RemoveExpiredSessionsAsync();
+
+    ValueTask<string> GetIssuerAsync();
 }

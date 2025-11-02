@@ -7,6 +7,8 @@ public sealed class MemorySessionStorageService : ISessionStorageService
     private readonly Lock _sessionLock = new();
 
     private readonly List<RpcClientSession> _sessions = [];
+    
+    private string _sessionIssuer = Guid.NewGuid().ToString("D");
 
     public RpcClientSession? GetSessionByClientId(string clientId)
     {
@@ -46,4 +48,6 @@ public sealed class MemorySessionStorageService : ISessionStorageService
 
         return ValueTask.CompletedTask;
     }
+
+    public ValueTask<string> GetIssuerAsync() => ValueTask.FromResult(_sessionIssuer);
 }

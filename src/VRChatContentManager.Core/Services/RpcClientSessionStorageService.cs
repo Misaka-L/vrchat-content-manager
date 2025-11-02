@@ -5,7 +5,8 @@ using VRChatContentManager.Core.Settings.Models;
 
 namespace VRChatContentManager.Core.Services;
 
-public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionStorage> sessionsStorage) : ISessionStorageService
+public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionStorage> sessionsStorage)
+    : ISessionStorageService
 {
     public RpcClientSession? GetSessionByClientId(string clientId)
     {
@@ -14,10 +15,7 @@ public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionSt
 
     public async ValueTask AddSessionAsync(RpcClientSession session)
     {
-        await sessionsStorage.UpdateAsync(sessions =>
-        {
-            sessions.Sessions.Add(session);
-        });
+        await sessionsStorage.UpdateAsync(sessions => { sessions.Sessions.Add(session); });
     }
 
     public async ValueTask RemoveSessionByClientIdAsync(string clientId)
@@ -35,5 +33,17 @@ public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionSt
             var now = DateTimeOffset.UtcNow;
             sessions.Sessions.RemoveAll(session => session.Expires < now);
         });
+    }
+
+    public async ValueTask<string> GetIssuerAsync()
+    {
+        var issuer = sessionsStorage.Value.IssuerKey;
+        if (issuer is null)
+        {
+            issuer = Guid.CreateVersion7().ToString("D");
+            await sessionsStorage.UpdateAsync(storage => { storage.IssuerKey = issuer; });
+        }
+
+        return issuer;
     }
 }
