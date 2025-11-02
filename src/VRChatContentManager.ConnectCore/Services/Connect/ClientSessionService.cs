@@ -14,9 +14,9 @@ public sealed class ClientSessionService(
     ISessionStorageService sessionStorageService,
     ITokenSecretKeyProvider tokenSecretKeyProvider)
 {
-    private const string Issuer = "vrchat-content-manager";
+    private const string IssuerPrefix = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
-    
+
     private readonly TimeSpan _expiry = TimeSpan.FromDays(14);
 
     private readonly Lock _challengeSessionLock = new();
@@ -25,12 +25,13 @@ public sealed class ClientSessionService(
     public async ValueTask<TokenValidationResult> ValidateJwtAsync(string jwt)
     {
         var securityKey = await tokenSecretKeyProvider.GetSecretKeyAsync();
+        var issuer = await GetIssuerAsync();
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var result = await tokenHandler.ValidateTokenAsync(jwt, new TokenValidationParameters
         {
             IssuerSigningKey = new SymmetricSecurityKey(securityKey),
-            ValidIssuer = Issuer,
+            ValidIssuer = issuer,
             ValidAlgorithms =
             [
                 SecurityAlgorithms.HmacSha256
@@ -142,9 +143,11 @@ public sealed class ClientSessionService(
     {
         var currentDateTime = DateTimeOffset.UtcNow;
 
+        var issuer = await GetIssuerAsync();
+
         Claim[] claims =
         [
-            new(JwtRegisteredClaimNames.Iss, Issuer),
+            new(JwtRegisteredClaimNames.Iss, issuer),
             new(JwtRegisteredClaimNames.Sub, Subject),
             new(JwtRegisteredClaimNames.Aud, clientId),
             new(JwtRegisteredClaimNames.Exp, (currentDateTime + _expiry).ToUnixTimeSeconds().ToString()),
@@ -162,5 +165,11 @@ public sealed class ClientSessionService(
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private async ValueTask<string> GetIssuerAsync()
+    {
+        var issuerKey = await sessionStorageService.GetIssuerAsync();
+        return $"{IssuerPrefix}-{issuerKey}";
     }
 }
