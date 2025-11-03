@@ -66,7 +66,7 @@ public sealed class ClientSessionService(
 
         logger.LogInformation("Creating challenge for client {ClientId}", clientId);
         await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
-        
+
         var code = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant();
 
         lock (_challengeSessionLock)
@@ -103,6 +103,8 @@ public sealed class ClientSessionService(
 
             _challengeSessions.Remove(challengeSession);
         }
+
+        await requestChallengeService.CompleteChallengeAsync(clientId);
 
         var expires = DateTimeOffset.UtcNow + _expiry;
 
