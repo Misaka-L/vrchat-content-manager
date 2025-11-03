@@ -6,4 +6,9 @@ public sealed class DefaultRequestChallengeService : IRequestChallengeService
     {
         return Task.CompletedTask;
     }
+
+    public Task CompleteChallengeAsync(string clientId)
+    {
+        return Task.CompletedTask;
+    }
 }

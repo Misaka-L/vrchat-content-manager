@@ -8,6 +8,12 @@
              x:DataType="dialogs:RequestChallengeDialogViewModel"
              x:Class="VRChatContentManager.App.Dialogs.RequestChallengeDialog">
 
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
     <StackPanel Spacing="24" Margin="8">
         <StackPanel>
             <TextBlock Text="Identity Prompt" TextAlignment="Center" />
