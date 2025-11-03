@@ -7,8 +7,18 @@ public sealed class MemorySessionStorageService : ISessionStorageService
     private readonly Lock _sessionLock = new();
 
     private readonly List<RpcClientSession> _sessions = [];
-    
-    private string _sessionIssuer = Guid.NewGuid().ToString("D");
+
+    private readonly string _sessionIssuer = Guid.NewGuid().ToString("D");
+
+    public event EventHandler? SessionsChanged;
+
+    public List<RpcClientSession> GetAllSessions()
+    {
+        lock (_sessionLock)
+        {
+            return [.._sessions];
+        }
+    }
 
     public RpcClientSession? GetSessionByClientId(string clientId)
     {
@@ -25,6 +35,8 @@ public sealed class MemorySessionStorageService : ISessionStorageService
             _sessions.Add(session);
         }
 
+        SessionsChanged?.Invoke(this, EventArgs.Empty);
+
         return ValueTask.CompletedTask;
     }
 
@@ -35,9 +47,11 @@ public sealed class MemorySessionStorageService : ISessionStorageService
             _sessions.RemoveAll(session => session.ClientId == clientId);
         }
 
+        SessionsChanged?.Invoke(this, EventArgs.Empty);
+
         return ValueTask.CompletedTask;
     }
-    
+
     public ValueTask RemoveExpiredSessionsAsync()
     {
         var now = DateTimeOffset.UtcNow;
@@ -45,6 +59,8 @@ public sealed class MemorySessionStorageService : ISessionStorageService
         {
             _sessions.RemoveAll(session => session.Expires <= now);
         }
+
+        SessionsChanged?.Invoke(this, EventArgs.Empty);
 
         return ValueTask.CompletedTask;
     }

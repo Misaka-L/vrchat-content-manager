@@ -8,6 +8,13 @@ namespace VRChatContentManager.Core.Services;
 public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionStorage> sessionsStorage)
     : ISessionStorageService
 {
+    public event EventHandler? SessionsChanged;
+
+    public List<RpcClientSession> GetAllSessions()
+    {
+        return [..sessionsStorage.Value.Sessions];
+    }
+
     public RpcClientSession? GetSessionByClientId(string clientId)
     {
         return sessionsStorage.Value.Sessions.Find(session => session.ClientId == clientId);
@@ -16,6 +23,8 @@ public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionSt
     public async ValueTask AddSessionAsync(RpcClientSession session)
     {
         await sessionsStorage.UpdateAsync(sessions => { sessions.Sessions.Add(session); });
+
+        SessionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public async ValueTask RemoveSessionByClientIdAsync(string clientId)
@@ -24,6 +33,8 @@ public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionSt
         {
             sessions.Sessions.RemoveAll(session => session.ClientId == clientId);
         });
+
+        SessionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public async ValueTask RemoveExpiredSessionsAsync()
@@ -33,6 +44,8 @@ public sealed class RpcClientSessionStorageService(IWritableOptions<RpcSessionSt
             var now = DateTimeOffset.UtcNow;
             sessions.Sessions.RemoveAll(session => session.Expires < now);
         });
+
+        SessionsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public async ValueTask<string> GetIssuerAsync()

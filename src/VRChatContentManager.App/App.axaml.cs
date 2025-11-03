@@ -13,6 +13,7 @@ using VRChatContentManager.App.Pages.GettingStarted;
 using VRChatContentManager.App.Pages.HomeTab;
 using VRChatContentManager.App.Pages.Settings;
 using VRChatContentManager.App.ViewModels;
+using VRChatContentManager.App.ViewModels.Data.Connect;
 using VRChatContentManager.App.ViewModels.Data.PublishTasks;
 using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
@@ -21,6 +22,7 @@ using VRChatContentManager.App.ViewModels.Pages.HomeTab;
 using VRChatContentManager.App.ViewModels.Pages.Settings;
 using VRChatContentManager.App.ViewModels.Settings;
 using VRChatContentManager.App.Views;
+using VRChatContentManager.App.Views.Data.Connect;
 using VRChatContentManager.App.Views.Data.PublishTasks;
 using VRChatContentManager.App.Views.Settings;
 using VRChatContentManager.Core;
@@ -83,10 +85,13 @@ public partial class App : Application
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
         ViewLocator.Register<PublishTaskViewModel, PublishTaskView>();
+
+        ViewLocator.Register<RpcClientSessionViewModel, RpcClientSessionView>();
         
         // Settings Section
         ViewLocator.Register<ConnectSettingsViewModel, ConnectSettingsView>();
         ViewLocator.Register<AccountsSettingsViewModel, AccountsSettingsView>();
+        ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
 
         AvaloniaXamlLoader.Load(this);
 
