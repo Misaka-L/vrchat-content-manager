@@ -49,7 +49,15 @@ internal sealed class Program
 
         var app = builder.Build();
 
-        app.RunAvaloniauiApplication(args);
+        try
+        {
+            app.RunAvaloniauiApplication(args);
+        }
+        catch (Exception ex)
+        {
+            Log.Logger.Error(ex, "Oops, the application has crashed!");
+            throw;
+        }
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.
