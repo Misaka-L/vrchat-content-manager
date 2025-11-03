@@ -28,6 +28,9 @@
             <Expander Header="Connect">
                 <ContentControl Content="{Binding ConnectSettingsViewModel}" />
             </Expander>
+            <Expander Header="Sessions">
+                <ContentControl Content="{Binding SessionsSettingsViewModel}" />
+            </Expander>
         </StackPanel>
     </Grid>
 </UserControl>

@@ -2,6 +2,7 @@
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels;
 using VRChatContentManager.App.ViewModels.Data;
+using VRChatContentManager.App.ViewModels.Data.Connect;
 using VRChatContentManager.App.ViewModels.Data.PublishTasks;
 using VRChatContentManager.App.ViewModels.Dialogs;
 using VRChatContentManager.App.ViewModels.Pages;
@@ -43,6 +44,8 @@ public static class ServicesExtenstion
         services.AddTransient<PublishTaskViewModelFactory>();
         services.AddTransient<PublishTaskManagerViewModelFactory>();
 
+        services.AddTransient<RpcClientSessionViewModelFactory>();
+
         // HomePage Tabs
         services.AddTransient<HomeTasksPageViewModel>();
         services.AddTransient<HomeContentsPageViewModel>();
@@ -59,6 +62,7 @@ public static class ServicesExtenstion
         // Settings Sections
         services.AddTransient<AccountsSettingsViewModel>();
         services.AddTransient<ConnectSettingsViewModel>();
+        services.AddTransient<SessionsSettingsViewModel>();
 
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();

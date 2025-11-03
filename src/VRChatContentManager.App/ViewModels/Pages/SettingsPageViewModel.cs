@@ -15,10 +15,12 @@ namespace VRChatContentManager.App.ViewModels.Pages;
 public sealed partial class SettingsPageViewModel(
     NavigationService navigationService,
     AccountsSettingsViewModel accountsSettingsViewModel,
-    ConnectSettingsViewModel connectSettingsViewModel) : PageViewModelBase
+    ConnectSettingsViewModel connectSettingsViewModel,
+    SessionsSettingsViewModel sessionsSettingsViewModel) : PageViewModelBase
 {
     public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
     public ConnectSettingsViewModel ConnectSettingsViewModel { get; } = connectSettingsViewModel;
+    public SessionsSettingsViewModel SessionsSettingsViewModel { get; } = sessionsSettingsViewModel;
     
     [RelayCommand]
     private void NavigateToHome()

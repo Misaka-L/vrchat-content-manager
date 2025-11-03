@@ -65,6 +65,8 @@ public sealed class ClientSessionService(
         await CleanupExpiredSessionsAsync();
 
         logger.LogInformation("Creating challenge for client {ClientId}", clientId);
+        await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
+        
         var code = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant();
 
         lock (_challengeSessionLock)
@@ -86,6 +88,7 @@ public sealed class ClientSessionService(
     public async ValueTask<string> CreateSessionAsync(string code, string clientId, string identityPrompt)
     {
         await CleanupExpiredSessionsAsync();
+        await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
 
         logger.LogInformation("Creating session for client {ClientId}", clientId);
         lock (_challengeSessionLock)
