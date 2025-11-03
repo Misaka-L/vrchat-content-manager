@@ -22,12 +22,20 @@ public sealed class AvatarContentPublisher(
     public string GetContentName() => name;
     public string GetContentPlatform() => platform;
 
+    private const long MaxBundleFileSizeBytes = 209715200; // 200 MB
+
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {
         if (!bundleFileStream.CanRead || !bundleFileStream.CanSeek)
             throw new ArgumentException("The provided stream must be readable and seekable.",
                 nameof(bundleFileStream));
-        
+
+        if (bundleFileStream.Length > MaxBundleFileSizeBytes)
+        {
+            throw new ArgumentException("The provided bundle file exceeds the maximum allowed size of 200 MB.",
+                nameof(bundleFileStream));
+        }
+
         var apiClient = userSessionService.GetApiClient();
 
         // Step 1. Try to get the asset file for this platform, if not create a new one.
@@ -80,7 +88,8 @@ public sealed class AvatarContentPublisher(
         UpdateProgress("Avatar Published", 1, ContentPublishTaskStatus.Completed);
     }
 
-    private void UpdateProgress(string text, double? value, ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
+    private void UpdateProgress(string text, double? value,
+        ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
