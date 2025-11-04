@@ -24,10 +24,18 @@ public sealed class WorldContentPublisher(
     public string GetContentName() => worldName;
     public string GetContentPlatform() => platform;
 
+    private const long MaxBundleFileSizeForMobileBytes = 104857600; // 100 MB
+
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {
         if (!bundleFileStream.CanRead || !bundleFileStream.CanSeek)
             throw new ArgumentException("The provided stream must be readable and seekable.",
+                nameof(bundleFileStream));
+
+        if (!UnityBuildTargetUtils.IsStandalonePlatform(platform) &&
+            bundleFileStream.Length > MaxBundleFileSizeForMobileBytes)
+            throw new ArgumentException(
+                "The provided bundle file exceeds the maximum allowed size of 100 MB for this platform.",
                 nameof(bundleFileStream));
 
         var apiClient = userSessionService.GetApiClient();
@@ -83,7 +91,8 @@ public sealed class WorldContentPublisher(
         UpdateProgress("World Published", 1, ContentPublishTaskStatus.Completed);
     }
 
-    private void UpdateProgress(string text, double? value, ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
+    private void UpdateProgress(string text, double? value,
+        ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
