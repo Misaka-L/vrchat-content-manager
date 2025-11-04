@@ -22,7 +22,8 @@ public sealed class AvatarContentPublisher(
     public string GetContentName() => name;
     public string GetContentPlatform() => platform;
 
-    private const long MaxBundleFileSizeBytes = 209715200; // 200 MB
+    private const long MaxBundleFileSizeForDesktopBytes = 209715200; // 200 MB
+    private const long MaxBundleFileSizeForMobileBytes = 10485760; // 10 MB
 
     public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
     {
@@ -30,10 +31,19 @@ public sealed class AvatarContentPublisher(
             throw new ArgumentException("The provided stream must be readable and seekable.",
                 nameof(bundleFileStream));
 
-        if (bundleFileStream.Length > MaxBundleFileSizeBytes)
+        if (UnityBuildTargetUtils.IsStandalonePlatform(platform))
         {
-            throw new ArgumentException("The provided bundle file exceeds the maximum allowed size of 200 MB.",
-                nameof(bundleFileStream));
+            if (bundleFileStream.Length > MaxBundleFileSizeForDesktopBytes)
+                throw new ArgumentException(
+                    "The provided bundle file exceeds the maximum allowed size of 200 MB for this platform.",
+                    nameof(bundleFileStream));
+        }
+        else
+        {
+            if (bundleFileStream.Length > MaxBundleFileSizeForMobileBytes)
+                throw new ArgumentException(
+                    "The provided bundle file exceeds the maximum allowed size of 10 MB for this platform.",
+                    nameof(bundleFileStream));
         }
 
         var apiClient = userSessionService.GetApiClient();
