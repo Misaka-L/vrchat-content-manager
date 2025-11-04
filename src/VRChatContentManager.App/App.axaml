@@ -12,6 +12,7 @@
         <converters:ContentTypeIconConverter x:Key="ContentTypeIconConverter" />
         <converters:ContentPublishTaskStatusForegroundConverter x:Key="ContentPublishTaskStatusForegroundConverter" />
         <converters:ContentPublishTaskStatusBackgroundConverter x:Key="ContentPublishTaskStatusBackgroundConverter" />
+        <converters:IsContentPublishTaskInProgressConverter x:Key="IsContentPublishTaskInProgressConverter" />
     </Application.Resources>
 
     <Application.DataTemplates>

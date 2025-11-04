@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
-using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Files;
 
@@ -13,7 +12,8 @@ public sealed class ConcurrentMultipartUploader(
     Stream fileStream,
     string fileId,
     int fileVersion,
-    VRChatApiFileType fileType)
+    VRChatApiFileType fileType,
+    CancellationToken cancellationToken)
 {
     public event EventHandler<double>? ProgressChanged;
 
@@ -25,16 +25,20 @@ public sealed class ConcurrentMultipartUploader(
     private readonly List<UploadChunk> _chunks = [];
     private readonly Dictionary<int, string> _eTags = [];
 
+    private bool _isTaskBroken;
+
     private readonly ConcurrentDictionary<int, long> _uploadProgress = [];
 
     private readonly TaskCompletionSource<string[]> _allChunksUploadedTcs = new();
 
     public async Task<string[]> UploadAsync()
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         logger.LogInformation("Starting upload of file {FileId} version {FileVersion} in chunks of {ChunkSize} bytes",
             fileId, fileVersion, ChunkSize);
 
-        _ = Task.Factory.StartNew(CreateChunks);
+        _ = Task.Factory.StartNew(CreateChunks, cancellationToken);
         return await _allChunksUploadedTcs.Task;
     }
 
@@ -42,34 +46,58 @@ public sealed class ConcurrentMultipartUploader(
     {
         lock (_chunkCreationLock)
         {
-            var completedChunks = _chunks.Where(c => c.IsCompleted).ToArray();
-            if (completedChunks.Length > 0)
+            if (cancellationToken.IsCancellationRequested)
             {
-                foreach (var uploadChunk in _chunks)
-                {
-                    _eTags[uploadChunk.PartNumber] = uploadChunk.ETag;
-                }
-
-                _chunks.RemoveAll(chunk => chunk.IsCompleted);
+                _allChunksUploadedTcs.TrySetException(new OperationCanceledException(cancellationToken));
+                return;
             }
 
-            while (_chunks.Count < 3)
+            if (_isTaskBroken)
+                return;
+
+            try
             {
-                var chunk = CreateChunk();
-                if (chunk is null)
+                var completedChunks = _chunks.Where(c => c.IsCompleted).ToArray();
+                if (completedChunks.Length > 0)
                 {
-                    logger.LogInformation("All chunks created for file {FileId} version {FileVersion}", fileId,
-                        fileVersion);
+                    foreach (var uploadChunk in _chunks)
+                    {
+                        _eTags[uploadChunk.PartNumber] = uploadChunk.ETag;
+                    }
 
-                    if (_chunks.Count != 0 && _chunks.Any(c => !c.IsCompleted))
-                        return;
-
-                    var eTags = _eTags.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToArray();
-                    _allChunksUploadedTcs.SetResult(eTags);
-                    return;
+                    _chunks.RemoveAll(chunk => chunk.IsCompleted);
                 }
 
-                _chunks.Add(chunk);
+                while (_chunks.Count < 3)
+                {
+                    var chunk = CreateChunk();
+                    if (chunk is null)
+                    {
+                        logger.LogInformation("All chunks created for file {FileId} version {FileVersion}", fileId,
+                            fileVersion);
+
+                        if (_chunks.Count != 0 && _chunks.Any(c => !c.IsCompleted))
+                            return;
+
+                        var eTags = _eTags.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToArray();
+                        _allChunksUploadedTcs.SetResult(eTags);
+                        return;
+                    }
+
+                    _chunks.Add(chunk);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    return;
+
+                logger.LogError(ex,
+                    "Error occurred while creating upload chunks for file {FileId} version {FileVersion}", fileId,
+                    fileVersion);
+
+                _isTaskBroken = true;
+                _allChunksUploadedTcs.TrySetException(ex);
             }
         }
     }
@@ -94,14 +122,14 @@ public sealed class ConcurrentMultipartUploader(
             (uploaded, partNumber) =>
             {
                 _uploadProgress[partNumber] = uploaded;
-                
+
                 var totalUploaded = _uploadProgress.Values.Sum();
                 var totalSize = fileStream.Length;
                 var progress = (double)totalUploaded / totalSize;
-                
+
                 ProgressChanged?.Invoke(null, progress);
-            });
-        
+            }, cancellationToken);
+
         _ = Task.Factory.StartNew(async () =>
         {
             try
@@ -125,7 +153,8 @@ public sealed class ConcurrentMultipartUploader(
         string uploadUrl,
         HttpClient awsClient,
         Action completedCallback,
-        Action<long, int> uploadProgressCallback)
+        Action<long, int> uploadProgressCallback,
+        CancellationToken cancellationToken)
     {
         public int PartNumber => partNumber;
         public bool IsCompleted { get; private set; }
@@ -134,12 +163,10 @@ public sealed class ConcurrentMultipartUploader(
         public async Task UploadAsync()
         {
             using var stream = new MemoryStream(buffer, 0, bufferSize);
-            using var content = new ProgressStreamContent(stream, uploaded =>
-            {
-                uploadProgressCallback(uploaded, partNumber);
-            });
+            using var content =
+                new ProgressStreamContent(stream, uploaded => { uploadProgressCallback(uploaded, partNumber); });
 
-            var response = await awsClient.PutAsync(uploadUrl, content);
+            var response = await awsClient.PutAsync(uploadUrl, content, cancellationToken);
 
             response.EnsureSuccessStatusCode();
             IsCompleted = true;
@@ -157,8 +184,10 @@ public sealed class ConcurrentMultipartUploader(
 public sealed class ConcurrentMultipartUploaderFactory(ILogger<ConcurrentMultipartUploader> logger)
 {
     public ConcurrentMultipartUploader Create(Stream fileStream, string fileId, int fileVersion,
-        VRChatApiFileType fileType, VRChatApiClient apiClient, HttpClient awsClient)
+        VRChatApiFileType fileType, VRChatApiClient apiClient, HttpClient awsClient,
+        CancellationToken cancellationToken = default)
     {
-        return new ConcurrentMultipartUploader(apiClient, awsClient, logger, fileStream, fileId, fileVersion, fileType);
+        return new ConcurrentMultipartUploader(apiClient, awsClient, logger, fileStream, fileId, fileVersion, fileType,
+            cancellationToken);
     }
 }

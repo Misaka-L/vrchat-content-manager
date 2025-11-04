@@ -25,7 +25,7 @@ public class WorldPublishTaskService(
             contentPublisherFactory.Create(userSession, worldId, worldName, platform, unityVersion, worldSignature);
 
         var task = await taskManager.CreateTask(worldId, worldBundleFileId, contentPublisher);
-        _ = task.StartTaskAsync().AsTask();
+        task.Start();
 
         return "task-id";
     }

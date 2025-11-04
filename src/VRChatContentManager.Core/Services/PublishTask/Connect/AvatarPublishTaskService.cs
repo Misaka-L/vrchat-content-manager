@@ -25,7 +25,7 @@ public sealed class AvatarPublishTaskService(
             contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
 
         var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, contentPublisher);
-        _ = task.StartTaskAsync().AsTask();
+        task.Start();
     }
 
     public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(string avatarId)

@@ -2,7 +2,10 @@
 
 public enum ContentPublishTaskStatus
 {
+    Pending,
     InProgress,
     Completed,
-    Failed
+    Failed,
+    Cancelling,
+    Canceled
 }

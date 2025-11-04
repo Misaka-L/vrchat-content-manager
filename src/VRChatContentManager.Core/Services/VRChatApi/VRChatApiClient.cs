@@ -113,32 +113,36 @@ public sealed partial class VRChatApiClient(
 
     #region Avatars
 
-    public async ValueTask<VRChatApiAvatar> GetAvatarAsync(string avatarId)
+    public async ValueTask<VRChatApiAvatar> GetAvatarAsync(string avatarId,
+        CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.GetAsync($"avatars/{avatarId}");
+        var response = await httpClient.GetAsync($"avatars/{avatarId}", cancellationToken);
 
         await HandleErrorResponseAsync(response);
 
-        var avatar = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiAvatar);
+        var avatar =
+            await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiAvatar, cancellationToken);
         if (avatar is null)
             throw new UnexpectedApiBehaviourException("The API returned a null avatar object.");
 
         return avatar;
     }
-    
+
     public async ValueTask<VRChatApiAvatar> CreateAvatarVersionAsync(string avatarId,
-        CreateAvatarVersionRequest createRequest)
+        CreateAvatarVersionRequest createRequest, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request = new HttpRequestMessage(HttpMethod.Put, $"avatars/{avatarId}")
         {
             Content = JsonContent.Create(createRequest, ApiJsonContext.Default.CreateAvatarVersionRequest)
         };
 
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
 
-        var world = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiAvatar);
+        var world = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiAvatar, cancellationToken);
         if (world is null)
             throw new UnexpectedApiBehaviourException("The API returned a null avatar object.");
 
@@ -163,18 +167,20 @@ public sealed partial class VRChatApiClient(
     }
 
     public async ValueTask<VRChatApiWorld> CreateWorldVersionAsync(string worldId,
-        CreateWorldVersionRequest createRequest)
+        CreateWorldVersionRequest createRequest, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request = new HttpRequestMessage(HttpMethod.Put, $"worlds/{worldId}")
         {
             Content = JsonContent.Create(createRequest, ApiJsonContext.Default.CreateWorldVersionRequest)
         };
 
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
 
-        var world = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiWorld);
+        var world = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiWorld, cancellationToken);
         if (world is null)
             throw new UnexpectedApiBehaviourException("The API returned a null world object.");
 
@@ -185,12 +191,15 @@ public sealed partial class VRChatApiClient(
 
     #region Files
 
-    public async ValueTask<VRChatApiFile> GetFileAsync(string fileId)
+    public async ValueTask<VRChatApiFile> GetFileAsync(string fileId, CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.GetAsync($"file/{fileId}");
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var response = await httpClient.GetAsync($"file/{fileId}", cancellationToken);
         await HandleErrorResponseAsync(response);
 
-        var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile);
+        var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile,
+            cancellationToken: cancellationToken);
         if (file is null)
             throw new UnexpectedApiBehaviourException("The API returned a null file.");
 
@@ -202,8 +211,11 @@ public sealed partial class VRChatApiClient(
         string fileMd5,
         long fileSizeInBytes,
         string signatureMd5,
-        long signatureSizeInBytes)
+        long signatureSizeInBytes,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request = new HttpRequestMessage(HttpMethod.Post, "file/" + fileId)
         {
             Content = JsonContent.Create(
@@ -211,10 +223,11 @@ public sealed partial class VRChatApiClient(
                 ApiJsonContext.Default.CreateFileVersionRequest)
         };
 
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
         await HandleErrorResponseAsync(response);
 
-        var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile);
+        var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile,
+            cancellationToken: cancellationToken);
         if (file is null)
             throw new UnexpectedApiBehaviourException("The API returned a null file.");
 
@@ -229,9 +242,12 @@ public sealed partial class VRChatApiClient(
         return latestVersion;
     }
 
-    public async ValueTask DeleteFileVersionAsync(string fileId, long versionId)
+    public async ValueTask DeleteFileVersionAsync(string fileId, long versionId,
+        CancellationToken cancellationToken = default)
     {
-        var response = await httpClient.DeleteAsync($"file/{fileId}/{versionId}");
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var response = await httpClient.DeleteAsync($"file/{fileId}/{versionId}", cancellationToken);
         await HandleErrorResponseAsync(response);
     }
 
@@ -250,14 +266,17 @@ public sealed partial class VRChatApiClient(
     }
 
     public async ValueTask<string> GetSimpleUploadUrlAsync(string fileId, int version,
-        VRChatApiFileType fileType = VRChatApiFileType.File)
+        VRChatApiFileType fileType = VRChatApiFileType.File, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request = new HttpRequestMessage(HttpMethod.Put, $"file/{fileId}/{version}/{fileType.ToApiString()}/start");
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
 
-        var uploadUrl = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.FileUploadUrlResponse);
+        var uploadUrl =
+            await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.FileUploadUrlResponse, cancellationToken);
 
         if (uploadUrl is null)
             throw new UnexpectedApiBehaviourException("The API returned a null file upload url object.");
@@ -283,19 +302,24 @@ public sealed partial class VRChatApiClient(
     }
 
     public async ValueTask CompleteSimpleFileUploadAsync(string fileId, int version,
-        VRChatApiFileType fileType = VRChatApiFileType.File)
+        VRChatApiFileType fileType = VRChatApiFileType.File, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request =
             new HttpRequestMessage(HttpMethod.Put, $"file/{fileId}/{version}/{fileType.ToApiString()}/finish");
 
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
     }
 
     public async ValueTask CompleteFilePartUploadAsync(string fileId, int version,
-        string[]? eTags = null, VRChatApiFileType fileType = VRChatApiFileType.File)
+        string[]? eTags = null, VRChatApiFileType fileType = VRChatApiFileType.File,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request =
             new HttpRequestMessage(HttpMethod.Put, $"file/{fileId}/{version}/{fileType.ToApiString()}/finish");
 
@@ -308,7 +332,7 @@ public sealed partial class VRChatApiClient(
                 ApiJsonContext.Default.CompleteFileUploadRequest);
         }
 
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
     }

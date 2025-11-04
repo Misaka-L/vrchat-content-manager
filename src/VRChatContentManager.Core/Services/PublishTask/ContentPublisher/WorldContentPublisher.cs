@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Models.VRChatApi;
+using VRChatContentManager.Core.Models.VRChatApi.Rest.UnityPackages;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Worlds;
 using VRChatContentManager.Core.Services.UserSession;
 using VRChatContentManager.Core.Utils;
@@ -26,7 +27,8 @@ public sealed class WorldContentPublisher(
 
     private const long MaxBundleFileSizeForMobileBytes = 104857600; // 100 MB
 
-    public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient)
+    public async ValueTask PublishAsync(Stream bundleFileStream, HttpClient awsClient,
+        CancellationToken cancellationToken = default)
     {
         if (!bundleFileStream.CanRead || !bundleFileStream.CanSeek)
             throw new ArgumentException("The provided stream must be readable and seekable.",
@@ -38,6 +40,8 @@ public sealed class WorldContentPublisher(
                 "The provided bundle file exceeds the maximum allowed size of 100 MB for this platform.",
                 nameof(bundleFileStream));
 
+        cancellationToken.ThrowIfCancellationRequested();
+
         var apiClient = userSessionService.GetApiClient();
 
         // Step 1. Try to get the asset file for this platform, if not create a new one.
@@ -48,11 +52,7 @@ public sealed class WorldContentPublisher(
 
         var world = await apiClient.GetWorldAsync(worldId);
         // Find the latest unity package for the specified platform (to get the file id)
-        var platformApiUnityPackage = world.UnityPackages
-            .Where(package => package.Platform == platform)
-            .GroupBy(package => package.UnityVersion)
-            .MaxBy(group => UnityVersion.TryParse(group.Key))!
-            .MaxBy(package => package.AssetVersion);
+        var platformApiUnityPackage = TryGetUnityPackageForPlatform(world);
 
         if (platformApiUnityPackage is null)
         {
@@ -68,12 +68,13 @@ public sealed class WorldContentPublisher(
         logger.LogInformation("Using file id {FileId} for world {WorldId}", fileId, worldId);
         UpdateProgress("Preparing for upload bundle file...", null);
 
+        // Step 2. Create and upload a new file version
         var fileVersion = await apiClient.CreateAndUploadFileVersionAsync(bundleFileStream, fileId, awsClient,
-            arg => { UpdateProgress(arg.ProgressText, arg.ProgressValue); });
+            arg => { UpdateProgress(arg.ProgressText, arg.ProgressValue); }, cancellationToken);
         if (fileVersion.File is null)
             throw new UnexpectedApiBehaviourException("Api did not return file info for created file version.");
 
-        // Step 6. Update World
+        // Step 3. Update World
         logger.LogInformation("Updating world {WorldId} to use new file version {Version}", worldId,
             fileVersion.Version);
         UpdateProgress("Updating world to latest asset version...", null);
@@ -85,10 +86,19 @@ public sealed class WorldContentPublisher(
             platform,
             unityVersion,
             worldSignature
-        ));
+        ), cancellationToken);
 
         logger.LogInformation("Successfully published world {WorldId}", worldId);
         UpdateProgress("World Published", 1, ContentPublishTaskStatus.Completed);
+    }
+
+    private VRChatApiUnityPackage? TryGetUnityPackageForPlatform(VRChatApiWorld world)
+    {
+        return world.UnityPackages
+            .Where(package => package.Platform == platform)
+            .GroupBy(package => package.UnityVersion)
+            .MaxBy(group => UnityVersion.TryParse(group.Key))!
+            .MaxBy(package => package.AssetVersion);
     }
 
     private void UpdateProgress(string text, double? value,
