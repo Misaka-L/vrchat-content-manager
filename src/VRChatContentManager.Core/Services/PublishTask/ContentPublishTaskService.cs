@@ -1,9 +1,7 @@
-﻿using AssetsTools.NET;
-using AssetsTools.NET.Extra;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.Core.Models;
-using VRChatContentManager.Core.Services.App;
+using VRChatContentManager.Core.Services.PublishTask.BundleProcesser;
 using VRChatContentManager.Core.Services.PublishTask.ContentPublisher;
 
 namespace VRChatContentManager.Core.Services.PublishTask;
@@ -12,16 +10,24 @@ public sealed class ContentPublishTaskService
 {
     private readonly HttpClient _awsHttpClient;
     private readonly IFileService _tempFileService;
-    private readonly IContentPublisher _contentPublisher;
 
     private readonly ILogger<ContentPublishTaskService> _logger;
+
+    private readonly IContentPublisher _contentPublisher;
+    private readonly IBundleProcesser _bundleProcesser;
+
+    private readonly PublishStageProgressReporter _progressReporter;
+
+    #region Content Information
 
     public string ContentId { get; }
     public string ContentName { get; }
     public string ContentType { get; }
     public string ContentPlatform { get; }
 
-    private readonly string _bundleFileId;
+    #endregion
+
+    #region Progress
 
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
 
@@ -29,68 +35,117 @@ public sealed class ContentPublishTaskService
     public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.Pending;
     public double? ProgressValue { get; private set; }
 
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
+    #endregion
+
+    #region Task Inner State
+
+    private PublishTaskStage _currentStage = PublishTaskStage.BundleProcessing;
+    private readonly string _rawBundleFileId;
+
+    private string _bundleFileId;
+
+    private CancellationTokenSource _cancellationTokenSource = new();
+
+    #endregion
 
     internal ContentPublishTaskService(
-        string contentId, string bundleFileId,
-        HttpClient awsHttpClient, IFileService tempFileService,
-        IContentPublisher contentPublisher, ILogger<ContentPublishTaskService> logger)
+        string contentId, string rawBundleFileId, HttpClient awsHttpClient,
+        IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
+        IContentPublisher contentPublisher, IBundleProcesser bundleProcesser)
     {
         ContentId = contentId;
         ContentName = contentPublisher.GetContentName();
         ContentType = contentPublisher.GetContentType();
         ContentPlatform = contentPublisher.GetContentPlatform();
 
-        _bundleFileId = bundleFileId;
+        _rawBundleFileId = rawBundleFileId;
+        _bundleFileId = rawBundleFileId;
 
         _awsHttpClient = awsHttpClient;
         _tempFileService = tempFileService;
         _contentPublisher = contentPublisher;
+        _bundleProcesser = bundleProcesser;
         _logger = logger;
+
+        _progressReporter = new PublishStageProgressReporter((text, progress) => UpdateProgress(text, progress));
     }
 
     public void Start()
     {
-        if (Status != ContentPublishTaskStatus.Pending)
-            throw new InvalidOperationException("Cannot start a task that is not in pending state.");
+        if (Status is
+            ContentPublishTaskStatus.Completed or
+            ContentPublishTaskStatus.Cancelling or
+            ContentPublishTaskStatus.InProgress)
+            throw new InvalidOperationException("Cannot start a task that in completed, cancelling or in progress state.");
 
-        _ = Task.Factory.StartNew(async () =>
+        _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
+
+        _ = Task.Factory.StartNew(StartTaskCoreAsync, TaskCreationOptions.LongRunning);
+    }
+
+    private async Task StartTaskCoreAsync()
+    {
+        if (_currentStage == PublishTaskStage.Done)
         {
-            try
+            UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
+            return;
+        }
+
+        _cancellationTokenSource = new CancellationTokenSource();
+        var cancellationToken = _cancellationTokenSource.Token;
+
+        try
+        {
+            if (_currentStage == PublishTaskStage.BundleProcessing)
             {
-                var cancellationToken = _cancellationTokenSource.Token;
-
-                _contentPublisher.ProgressChanged +=
-                    (_, args) => UpdateProgress(args.ProgressText, args.ProgressValue, args.Status);
-
-                // Step 1: Decompress (if needed) and recompress the bundle file.
-                _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
                 UpdateProgress("Preparing to process bundle file...", null);
 
-                var tempBundleFilePath = GetTempBundleFilePath();
-                await using var tempBundleFileStream =
-                    File.Create(tempBundleFilePath, 81920, FileOptions.DeleteOnClose | FileOptions.Asynchronous);
+                await ProcessBundleAsync(cancellationToken);
+                _currentStage = PublishTaskStage.ContentPublishing;
+            }
 
-                await ProcessBundleAsync(_bundleFileId, tempBundleFileStream, cancellationToken);
-                await _tempFileService.DeleteFileAsync(_bundleFileId);
-
-                // Step 2: Publish the content using the provided content publisher.
+            if (_currentStage == PublishTaskStage.ContentPublishing)
+            {
                 UpdateProgress("Preparing for publish...", null);
-                _logger.LogInformation("Compression completed, preparing to publish.");
 
-                await _contentPublisher.PublishAsync(tempBundleFileStream, _awsHttpClient, cancellationToken);
+                await PublishAsync(cancellationToken);
+                _currentStage = PublishTaskStage.Done;
             }
-            catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
-            {
-                _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", ContentId);
-                UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
-                UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
-            }
-        }, TaskCreationOptions.LongRunning);
+
+            UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
+        }
+        catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
+        {
+            _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", ContentId);
+            UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _rawBundleFileId);
+            UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
+        }
+    }
+
+    private async ValueTask ProcessBundleAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation(
+            "Processing bundle file {BundleFileId} for content ({ContentId}) {ContentPlatform} {ContentName}",
+            _rawBundleFileId, ContentId, ContentPlatform, ContentName);
+
+        _bundleFileId =
+            await _bundleProcesser.ProcessBundleAsync(_rawBundleFileId, _progressReporter, cancellationToken);
+        if (_bundleFileId != _rawBundleFileId)
+            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+    }
+
+    private async ValueTask PublishAsync(CancellationToken cancellationToken)
+    {
+        _logger.LogInformation(
+            "Bundle processing for content ({ContentId}) {ContentPlatform} {ContentName} completed, preparing to publish.",
+            ContentId, ContentPlatform, ContentName);
+
+        await _contentPublisher.PublishAsync(_bundleFileId, _awsHttpClient, _progressReporter, cancellationToken);
+        await _tempFileService.DeleteFileAsync(_bundleFileId);
     }
 
     public async ValueTask CancelAsync()
@@ -102,64 +157,6 @@ public sealed class ContentPublishTaskService
         await _cancellationTokenSource.CancelAsync();
     }
 
-    private async ValueTask ProcessBundleAsync(string bundleFileId, Stream targetStream,
-        CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        _logger.LogInformation("Getting stream of bundle file {BundleFileId}", _bundleFileId);
-        await using var fileStream = await _tempFileService.GetFileAsync(_bundleFileId);
-        if (fileStream is null)
-            throw new InvalidOperationException("Bundle file with provided id is not found.");
-
-        _logger.LogInformation("Compressing bundle file {FileId} to temporary path", bundleFileId);
-
-        await CompressBundleAsync(fileStream, targetStream, cancellationToken);
-    }
-
-    private Task CompressBundleAsync(Stream bundleStream, Stream outputStream,
-        CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        return Task.Factory.StartNew(() =>
-        {
-            UpdateProgress("Reading bundle file...", null);
-            var bundleFile = new AssetBundleFile();
-
-            // Do no dispose reader, or it will dispose the bundle file stream.
-            var bundleReader = new AssetsFileReader(bundleStream);
-            bundleFile.Read(bundleReader);
-
-            if (bundleFile.DataIsCompressed)
-            {
-                UpdateProgress("Decompress bundle file for recompress bundle file...", null);
-                var newBundleFile = BundleHelper.UnpackBundle(bundleFile, cancellationToken: cancellationToken);
-                bundleFile.Close();
-                bundleFile = newBundleFile;
-            }
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            UpdateProgress("Compress bundle file...", null);
-            // Do no dispose writer, or it will dispose the bundle file stream.
-            var writer = new AssetsFileWriter(outputStream);
-            bundleFile.Pack(writer, AssetBundleCompressionType.LZMA, cancellationToken: cancellationToken);
-            bundleFile.Close();
-
-            outputStream.Position = 0;
-        }, TaskCreationOptions.LongRunning);
-    }
-
-    private string GetTempBundleFilePath()
-    {
-        var tempBundlePath = Path.Combine(AppStorageService.GetTempPath(), "temp-bundle");
-        if (!Directory.Exists(tempBundlePath))
-            Directory.CreateDirectory(tempBundlePath);
-
-        return Path.Combine(tempBundlePath, $"{ContentId}-{Guid.NewGuid():N}");
-    }
-
     private void UpdateProgress(string text, double? value,
         ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
@@ -168,12 +165,20 @@ public sealed class ContentPublishTaskService
         Status = status;
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
+
+    private enum PublishTaskStage
+    {
+        BundleProcessing,
+        ContentPublishing,
+        Done
+    }
 }
 
 public sealed class ContentPublishTaskFactory(
     HttpClient awsHttpClient,
     IFileService tempFileService,
-    ILogger<ContentPublishTaskService> logger)
+    ILogger<ContentPublishTaskService> logger,
+    BundleCompressProcesser bundleCompressProcesser)
 {
     public ValueTask<ContentPublishTaskService> Create(string contentId, string bundleFileId,
         IContentPublisher contentPublisher)
@@ -183,8 +188,9 @@ public sealed class ContentPublishTaskFactory(
             bundleFileId,
             awsHttpClient,
             tempFileService,
+            logger,
             contentPublisher,
-            logger
+            bundleCompressProcesser
         );
 
         return ValueTask.FromResult(publishTask);

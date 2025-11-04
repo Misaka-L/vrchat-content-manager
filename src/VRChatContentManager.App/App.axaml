@@ -13,6 +13,7 @@
         <converters:ContentPublishTaskStatusForegroundConverter x:Key="ContentPublishTaskStatusForegroundConverter" />
         <converters:ContentPublishTaskStatusBackgroundConverter x:Key="ContentPublishTaskStatusBackgroundConverter" />
         <converters:IsContentPublishTaskInProgressConverter x:Key="IsContentPublishTaskInProgressConverter" />
+        <converters:CanContentPublishTaskRetryConverter x:Key="CanContentPublishTaskRetryConverter" />
     </Application.Resources>
 
     <Application.DataTemplates>
