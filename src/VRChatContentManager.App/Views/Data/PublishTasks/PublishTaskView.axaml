@@ -27,7 +27,9 @@
                              Foreground="{Binding Status, Converter={StaticResource ContentPublishTaskStatusForegroundConverter}}" />
             </StackPanel>
         </StackPanel>
-        <Button Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
+        <Button Command="{Binding CancelCommand}"
+                IsVisible="{Binding Status, Converter={StaticResource IsContentPublishTaskInProgressConverter}}"
+                Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
                 Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
     </Grid>
 </UserControl>

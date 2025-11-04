@@ -1,10 +1,12 @@
-﻿using Avalonia.Threading;
+﻿using System.Threading.Tasks;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
 using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Services.PublishTask;
 
 namespace VRChatContentManager.App.ViewModels.Data.PublishTasks;
 
-public sealed class PublishTaskViewModel : ViewModelBase
+public sealed partial class PublishTaskViewModel : ViewModelBase
 {
     public string ContentId => _publishTaskService.ContentId;
     public string ContentName => _publishTaskService.ContentName;
@@ -33,6 +35,12 @@ public sealed class PublishTaskViewModel : ViewModelBase
                 OnPropertyChanged(nameof(Status));
             });
         };
+    }
+    
+    [RelayCommand]
+    public async Task Cancel()
+    {
+        await _publishTaskService.CancelAsync();
     }
 }
 

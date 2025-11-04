@@ -26,8 +26,10 @@ public sealed class ContentPublishTaskService
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
 
     public string ProgressText { get; private set; } = "Waiting for task started...";
-    public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.InProgress;
+    public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.Pending;
     public double? ProgressValue { get; private set; }
+
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     internal ContentPublishTaskService(
         string contentId, string bundleFileId,
@@ -47,39 +49,64 @@ public sealed class ContentPublishTaskService
         _logger = logger;
     }
 
-    public async ValueTask StartTaskAsync()
+    public void Start()
     {
-        try
+        if (Status != ContentPublishTaskStatus.Pending)
+            throw new InvalidOperationException("Cannot start a task that is not in pending state.");
+
+        _ = Task.Factory.StartNew(async () =>
         {
-            _contentPublisher.ProgressChanged +=
-                (_, args) => UpdateProgress(args.ProgressText, args.ProgressValue, args.Status);
+            try
+            {
+                var cancellationToken = _cancellationTokenSource.Token;
 
-            // Step 1: Decompress (if needed) and recompress the bundle file.
-            _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
-            UpdateProgress("Preparing to process bundle file...", null);
+                _contentPublisher.ProgressChanged +=
+                    (_, args) => UpdateProgress(args.ProgressText, args.ProgressValue, args.Status);
 
-            var tempBundleFilePath = GetTempBundleFilePath();
-            await using var tempBundleFileStream =
-                File.Create(tempBundleFilePath, 81920, FileOptions.DeleteOnClose | FileOptions.Asynchronous);
+                // Step 1: Decompress (if needed) and recompress the bundle file.
+                _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
+                UpdateProgress("Preparing to process bundle file...", null);
 
-            await ProcessBundleAsync(_bundleFileId, tempBundleFileStream);
-            await _tempFileService.DeleteFileAsync(_bundleFileId);
+                var tempBundleFilePath = GetTempBundleFilePath();
+                await using var tempBundleFileStream =
+                    File.Create(tempBundleFilePath, 81920, FileOptions.DeleteOnClose | FileOptions.Asynchronous);
 
-            // Step 2: Publish the content using the provided content publisher.
-            UpdateProgress("Preparing for publish...", null);
-            _logger.LogInformation("Compression completed, preparing to publish.");
+                await ProcessBundleAsync(_bundleFileId, tempBundleFileStream, cancellationToken);
+                await _tempFileService.DeleteFileAsync(_bundleFileId);
 
-            await _contentPublisher.PublishAsync(tempBundleFileStream, _awsHttpClient);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
-            UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
-        }
+                // Step 2: Publish the content using the provided content publisher.
+                UpdateProgress("Preparing for publish...", null);
+                _logger.LogInformation("Compression completed, preparing to publish.");
+
+                await _contentPublisher.PublishAsync(tempBundleFileStream, _awsHttpClient, cancellationToken);
+            }
+            catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
+            {
+                _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", ContentId);
+                UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _bundleFileId);
+                UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
+            }
+        }, TaskCreationOptions.LongRunning);
     }
 
-    private async ValueTask ProcessBundleAsync(string bundleFileId, Stream targetStream)
+    public async ValueTask CancelAsync()
     {
+        if (Status != ContentPublishTaskStatus.InProgress)
+            throw new InvalidOperationException("Cannot cancel a task that is not in progress.");
+
+        UpdateProgress("Cancelling task...", null, ContentPublishTaskStatus.Cancelling);
+        await _cancellationTokenSource.CancelAsync();
+    }
+
+    private async ValueTask ProcessBundleAsync(string bundleFileId, Stream targetStream,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
         _logger.LogInformation("Getting stream of bundle file {BundleFileId}", _bundleFileId);
         await using var fileStream = await _tempFileService.GetFileAsync(_bundleFileId);
         if (fileStream is null)
@@ -87,11 +114,14 @@ public sealed class ContentPublishTaskService
 
         _logger.LogInformation("Compressing bundle file {FileId} to temporary path", bundleFileId);
 
-        await CompressBundleAsync(fileStream, targetStream);
+        await CompressBundleAsync(fileStream, targetStream, cancellationToken);
     }
 
-    private Task CompressBundleAsync(Stream bundleStream, Stream outputStream)
+    private Task CompressBundleAsync(Stream bundleStream, Stream outputStream,
+        CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return Task.Factory.StartNew(() =>
         {
             UpdateProgress("Reading bundle file...", null);
@@ -104,15 +134,17 @@ public sealed class ContentPublishTaskService
             if (bundleFile.DataIsCompressed)
             {
                 UpdateProgress("Decompress bundle file for recompress bundle file...", null);
-                var newBundleFile = BundleHelper.UnpackBundle(bundleFile);
+                var newBundleFile = BundleHelper.UnpackBundle(bundleFile, cancellationToken: cancellationToken);
                 bundleFile.Close();
                 bundleFile = newBundleFile;
             }
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             UpdateProgress("Compress bundle file...", null);
             // Do no dispose writer, or it will dispose the bundle file stream.
             var writer = new AssetsFileWriter(outputStream);
-            bundleFile.Pack(writer, AssetBundleCompressionType.LZMA);
+            bundleFile.Pack(writer, AssetBundleCompressionType.LZMA, cancellationToken: cancellationToken);
             bundleFile.Close();
 
             outputStream.Position = 0;
