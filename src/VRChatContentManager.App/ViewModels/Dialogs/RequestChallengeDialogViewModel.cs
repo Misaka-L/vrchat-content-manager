@@ -9,11 +9,13 @@ namespace VRChatContentManager.App.ViewModels.Dialogs;
 public sealed partial class RequestChallengeDialogViewModel(
     string code,
     string clientId,
-    string identityPrompt) : DialogViewModelBase
+    string identityPrompt,
+    string clientName) : DialogViewModelBase
 {
     public string Code { get; } = code;
     public string ClientId { get; } = clientId;
     public string IdentityPrompt { get; } = identityPrompt;
+    public string ClientName { get; } = clientName;
 
     [RelayCommand]
     private void Load()
@@ -38,8 +40,8 @@ public sealed partial class RequestChallengeDialogViewModel(
 
 public sealed class RequestChallengeDialogViewModelFactory
 {
-    public RequestChallengeDialogViewModel Create(string code, string clientId, string identityPrompt)
+    public RequestChallengeDialogViewModel Create(string code, string clientId, string identityPrompt, string clientName)
     {
-        return new RequestChallengeDialogViewModel(code, clientId, identityPrompt);
+        return new RequestChallengeDialogViewModel(code, clientId, identityPrompt, clientName);
     }
 }

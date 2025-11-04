@@ -33,7 +33,8 @@
         </StackPanel>
         <StackPanel>
             <TextBlock Text="Challenge request from Client" TextAlignment="Center" />
-            <TextBlock Text="{Binding ClientId}" TextAlignment="Center" />
+            <TextBlock Text="{Binding ClientName}" TextAlignment="Center" FontWeight="Black" />
+            <TextBlock Text="{Binding ClientId}" TextAlignment="Center" FontSize="12" Opacity="0.7" />
         </StackPanel>
         <Button Content="Close" Command="{Binding RequestCloseCommand}" />
     </StackPanel>

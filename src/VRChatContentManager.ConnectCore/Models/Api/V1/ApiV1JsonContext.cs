@@ -11,6 +11,7 @@ namespace VRChatContentManager.ConnectCore.Models.Api.V1;
 [JsonSerializable(typeof(ApiV1MetadataResponse))]
 [JsonSerializable(typeof(ApiV1AuthChallengeRequest))]
 [JsonSerializable(typeof(ApiV1ChallengeResponse))]
+[JsonSerializable(typeof(ApiV1RefreshTokenRequest))]
 [JsonSerializable(typeof(ApiV1RequestChallengeRequest))]
 [JsonSerializable(typeof(ApiV1AuthMetadataResponse))]
 [JsonSerializable(typeof(ApiV1UploadFileResponse))]

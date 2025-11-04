@@ -60,7 +60,7 @@ public sealed class ClientSessionService(
         return result;
     }
 
-    public async ValueTask<string> CreateChallengeAsync(string clientId, string identityPrompt)
+    public async ValueTask<string> CreateChallengeAsync(string clientId, string identityPrompt, string clientName)
     {
         await CleanupExpiredSessionsAsync();
 
@@ -76,11 +76,11 @@ public sealed class ClientSessionService(
 
             var expires = DateTimeOffset.UtcNow.AddMinutes(5);
 
-            var challengeSession = new ChallengeSession(code, clientId, identityPrompt, expires);
+            var challengeSession = new ChallengeSession(code, clientId, identityPrompt, clientName, expires);
             _challengeSessions.Add(challengeSession);
         }
 
-        await requestChallengeService.RequestChallengeAsync(code, clientId, identityPrompt);
+        await requestChallengeService.RequestChallengeAsync(code, clientId, identityPrompt, clientName);
 
         return code;
     }
@@ -91,30 +91,21 @@ public sealed class ClientSessionService(
         await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
 
         logger.LogInformation("Creating session for client {ClientId}", clientId);
-        lock (_challengeSessionLock)
-        {
-            if (_challengeSessions.FirstOrDefault(session => session.Code == code &&
-                                                             session.IdentityPrompt == identityPrompt &&
-                                                             session.ClientId == clientId
-                ) is not { } challengeSession)
-            {
-                throw new InvalidOperationException("Invalid challenge code.");
-            }
-
-            _challengeSessions.Remove(challengeSession);
-        }
+        if (TryGetChallengeSession(code, clientId, identityPrompt) is not { } challengeSession)
+            throw new InvalidOperationException("Challenge session not found");
 
         await requestChallengeService.CompleteChallengeAsync(clientId);
 
+        var clientName = challengeSession.ClientName;
         var expires = DateTimeOffset.UtcNow + _expiry;
 
-        var session = new RpcClientSession(clientId, expires);
+        var session = new RpcClientSession(clientId, expires, clientName);
         await sessionStorageService.AddSessionAsync(session);
 
         return await GenerateJwtAsync(clientId);
     }
 
-    public async ValueTask<string> RefreshSessionAsync(string clientId)
+    public async ValueTask<string> RefreshSessionAsync(string clientId, string? clientName)
     {
         await CleanupExpiredSessionsAsync();
 
@@ -127,10 +118,21 @@ public sealed class ClientSessionService(
         await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
 
         var expires = DateTimeOffset.UtcNow + _expiry;
-        var newSession = new RpcClientSession(clientId, expires);
+        var newSession = new RpcClientSession(clientId, expires, clientName ?? existingSession.ClientName);
         await sessionStorageService.AddSessionAsync(newSession);
 
         return await GenerateJwtAsync(clientId);
+    }
+
+    private ChallengeSession? TryGetChallengeSession(string code, string clientId, string identityPrompt)
+    {
+        lock (_challengeSessionLock)
+        {
+            return _challengeSessions.FirstOrDefault(session =>
+                session.Code == code &&
+                session.ClientId == clientId &&
+                session.IdentityPrompt == identityPrompt);
+        }
     }
 
     private async Task CleanupExpiredSessionsAsync()
