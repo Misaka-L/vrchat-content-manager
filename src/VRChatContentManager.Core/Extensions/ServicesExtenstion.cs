@@ -12,6 +12,7 @@ using VRChatContentManager.ConnectCore.Services.PublishTask;
 using VRChatContentManager.Core.Services;
 using VRChatContentManager.Core.Services.App;
 using VRChatContentManager.Core.Services.PublishTask;
+using VRChatContentManager.Core.Services.PublishTask.BundleProcesser;
 using VRChatContentManager.Core.Services.PublishTask.Connect;
 using VRChatContentManager.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentManager.Core.Services.UserSession;
@@ -38,6 +39,8 @@ public static class ServicesExtension
         
         services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
         services.AddTransient<AvatarContentPublisherFactory>();
+
+        services.AddTransient<BundleCompressProcesser>();
         
         services.AddMemoryCache();
 

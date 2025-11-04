@@ -12,11 +12,11 @@ public sealed partial class PublishTaskViewModel : ViewModelBase
     public string ContentName => _publishTaskService.ContentName;
     public string ContentType => _publishTaskService.ContentType;
     public string ContentPlatform => _publishTaskService.ContentPlatform;
-    
+
     public string ProgressText => _publishTaskService.ProgressText;
     public double? ProgressValue => _publishTaskService.ProgressValue * 100;
     public bool IsIndeterminate => !ProgressValue.HasValue;
-    
+
     public ContentPublishTaskStatus Status => _publishTaskService.Status;
 
     private readonly ContentPublishTaskService _publishTaskService;
@@ -36,11 +36,17 @@ public sealed partial class PublishTaskViewModel : ViewModelBase
             });
         };
     }
-    
+
     [RelayCommand]
-    public async Task Cancel()
+    private async Task Cancel()
     {
         await _publishTaskService.CancelAsync();
+    }
+
+    [RelayCommand]
+    private void Start()
+    {
+        _publishTaskService.Start();
     }
 }
 
