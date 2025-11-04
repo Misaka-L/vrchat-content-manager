@@ -1,8 +1,12 @@
-﻿using VRChatContentManager.Core.Services.UserSession;
+﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
+using VRChatContentManager.Core.Services.UserSession;
 
 namespace VRChatContentManager.App.ViewModels.Data;
 
-public sealed partial class UserSessionViewModel(UserSessionService userSessionService) : ViewModelBase
+public sealed partial class UserSessionViewModel(
+    UserSessionService userSessionService,
+    UserSessionManagerService userSessionManagerService) : ViewModelBase
 {
     public string? UserId => userSessionService.UserId;
     public string UserNameOrEmail => userSessionService.UserNameOrEmail;
@@ -19,12 +23,18 @@ public sealed partial class UserSessionViewModel(UserSessionService userSessionS
     }
 
     public string? DisplayName => userSessionService.CurrentUser?.DisplayName;
+
+    [RelayCommand]
+    private async Task Remove()
+    {
+        await userSessionManagerService.RemoveSessionAsync(userSessionService);
+    }
 }
 
-public sealed class UserSessionViewModelFactory
+public sealed class UserSessionViewModelFactory(UserSessionManagerService userSessionManagerService)
 {
     public UserSessionViewModel Create(UserSessionService userSessionService)
     {
-        return new UserSessionViewModel(userSessionService);
+        return new UserSessionViewModel(userSessionService, userSessionManagerService);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Microsoft.Extensions.Logging;
 using VRChatContentManager.Core.Settings;
 using VRChatContentManager.Core.Settings.Models;
 
@@ -6,10 +7,14 @@ namespace VRChatContentManager.Core.Services.UserSession;
 
 public sealed class UserSessionManagerService(
     UserSessionFactory sessionFactory,
-    IWritableOptions<UserSessionStorage> userSessionStorage)
+    IWritableOptions<UserSessionStorage> userSessionStorage,
+    ILogger<UserSessionManagerService> logger)
 {
     private readonly List<UserSessionService> _sessions = [];
     public IReadOnlyList<UserSessionService> Sessions => _sessions.AsReadOnly();
+
+    public event EventHandler<UserSessionService>? SessionCreated;
+    public event EventHandler<UserSessionService>? SessionRemoved;
 
     public async Task RestoreSessionsAsync()
     {
@@ -28,7 +33,8 @@ public sealed class UserSessionManagerService(
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                logger.LogError(ex, "Failed to restore session for user ({UserId}) {UserName}", userId,
+                    sessionItem.UserName);
             }
         }
     }
@@ -65,7 +71,55 @@ public sealed class UserSessionManagerService(
             });
 
         _sessions.Add(session);
+        OnSessionCreated(session);
 
         return session;
+    }
+
+    public async ValueTask RemoveSessionAsync(UserSessionService session)
+    {
+        logger.LogInformation("Removing session for user ({UserId}) {UserName}", session.UserId,
+            session.UserNameOrEmail);
+
+        if (!_sessions.Contains(session))
+        {
+            logger.LogError("Tried to remove a session that does not exist for user ({UserId}) {UserName}",
+                session.UserId, session.UserNameOrEmail);
+            throw new InvalidOperationException("Session does not exist.");
+        }
+
+        _sessions.Remove(session);
+        OnSessionRemoved(session);
+
+        try
+        {
+            await session.LogoutAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to logout session for user ({UserId}) {UserName}", session.UserId,
+                session.UserNameOrEmail);
+        }
+
+        await session.DisposeAsync();
+
+        await userSessionStorage.UpdateAsync(storage =>
+        {
+            if (session.UserId is { } userId)
+                storage.Sessions.Remove(userId);
+        });
+
+        logger.LogInformation("Session removed for user ({UserId}) {UserName}", session.UserId,
+            session.UserNameOrEmail);
+    }
+
+    private void OnSessionCreated(UserSessionService e)
+    {
+        SessionCreated?.Invoke(this, e);
+    }
+
+    private void OnSessionRemoved(UserSessionService e)
+    {
+        SessionRemoved?.Invoke(this, e);
     }
 }

@@ -106,6 +106,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         return await _apiClient.LoginAsync(UserNameOrEmail, password);
     }
 
+    public async ValueTask LogoutAsync()
+    {
+        await _apiClient.LogoutAsync();
+    }
+
     public async ValueTask<CurrentUser> GetCurrentUserAsync()
     {
         CurrentUser = await _apiClient.GetCurrentUser();
