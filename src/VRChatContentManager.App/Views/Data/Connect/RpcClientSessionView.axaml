@@ -10,9 +10,10 @@
 
     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
         <StackPanel Spacing="2">
-            <TextBlock Text="{Binding ClientId}" />
+            <TextBlock Text="{Binding ClientId}" FontSize="12" Opacity="0.7" />
+            <TextBlock Text="{Binding ClientName}" />
             <TextBlock Opacity="0.7" FontSize="12">
-                <Run Text="Will expire at"/>
+                <Run Text="Will expire at" />
                 <Run Text="{Binding ExpiresLocal, StringFormat=G}" />
             </TextBlock>
         </StackPanel>

@@ -2,5 +2,6 @@
 
 public record RpcClientSession(
     string ClientId,
-    DateTimeOffset Expires
+    DateTimeOffset Expires,
+    string ClientName = "Unknown Client"
 );

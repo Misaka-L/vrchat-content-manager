@@ -2,6 +2,6 @@
 
 public interface IRequestChallengeService
 {
-    Task RequestChallengeAsync(string code, string clientId, string identityPrompt);
+    Task RequestChallengeAsync(string code, string clientId, string identityPrompt, string clientName);
     Task CompleteChallengeAsync(string clientId);
 }

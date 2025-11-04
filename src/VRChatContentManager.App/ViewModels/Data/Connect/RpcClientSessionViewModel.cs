@@ -11,6 +11,7 @@ public sealed partial class RpcClientSessionViewModel(
     ISessionStorageService sessionStorageService) : ViewModelBase
 {
     public string ClientId => clientSession.ClientId;
+    public string ClientName => clientSession.ClientName;
     public DateTimeOffset Expires => clientSession.Expires;
     public DateTime ExpiresLocal => clientSession.Expires.LocalDateTime;
 
