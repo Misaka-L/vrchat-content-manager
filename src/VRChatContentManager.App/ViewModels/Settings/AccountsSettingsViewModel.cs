@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentManager.App.Services;
@@ -13,22 +15,37 @@ public sealed partial class AccountsSettingsViewModel(
     UserSessionManagerService userSessionManagerService,
     UserSessionViewModelFactory userSessionViewModelFactory,
     NavigationService navigationService
-    ) : ViewModelBase
+) : ViewModelBase
 {
-    [ObservableProperty]
-    public partial ObservableCollection<UserSessionViewModel> UserSessions { get; private set; } = [];
+    [ObservableProperty] public partial AvaloniaList<UserSessionViewModel> UserSessions { get; private set; } = [];
 
     [RelayCommand]
-    private Task Load()
+    private void Load()
+    {
+        UpdateSessions();
+
+        userSessionManagerService.SessionCreated += OnSessionCreated;
+        userSessionManagerService.SessionRemoved += OnSessionRemoved;
+    }
+
+    [RelayCommand]
+    private void Unload()
+    {
+        userSessionManagerService.SessionCreated -= OnSessionCreated;
+        userSessionManagerService.SessionRemoved -= OnSessionRemoved;
+    }
+
+    private void OnSessionRemoved(object? sender, UserSessionService e) => UpdateSessions();
+    private void OnSessionCreated(object? sender, UserSessionService e) => UpdateSessions();
+
+    private void UpdateSessions()
     {
         UserSessions.Clear();
-        foreach (var session in userSessionManagerService.Sessions)
-        {
-            var vm = userSessionViewModelFactory.Create(session);
-            UserSessions.Add(vm);
-        }
+        var viewModels = userSessionManagerService.Sessions
+            .Select(userSessionViewModelFactory.Create)
+            .ToArray();
 
-        return Task.CompletedTask;
+        UserSessions.AddRange(viewModels);
     }
 
     [RelayCommand]

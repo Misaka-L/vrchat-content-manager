@@ -14,6 +14,9 @@
         <EventTriggerBehavior EventName="Loaded">
             <InvokeCommandAction Command="{Binding LoadCommand}" />
         </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
     </Interaction.Behaviors>
 
     <StackPanel>
@@ -38,6 +41,9 @@
                             <TextBlock Text="{Binding UserNameOrEmail}" />
                             <TextBlock Text="{Binding DisplayName}" />
                         </StackPanel>
+                        <Button Command="{Binding RemoveCommand}"
+                                Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
+                                Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
                     </Grid>
                 </DataTemplate>
             </ItemsControl.DataTemplates>
