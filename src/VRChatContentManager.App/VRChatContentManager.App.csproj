@@ -8,6 +8,7 @@
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
         <LangVersion>preview</LangVersion>
         <IsAotCompatible>true</IsAotCompatible>
+        <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'!='Debug'">
