@@ -8,6 +8,8 @@ namespace VRChatContentManager.Core.Services.PublishTask;
 
 public sealed class ContentPublishTaskService
 {
+    public string TaskId { get; }
+
     private readonly HttpClient _awsHttpClient;
     private readonly IFileService _tempFileService;
 
@@ -49,10 +51,13 @@ public sealed class ContentPublishTaskService
     #endregion
 
     internal ContentPublishTaskService(
+        string taskId,
         string contentId, string rawBundleFileId, HttpClient awsHttpClient,
         IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
         IContentPublisher contentPublisher, IBundleProcesser bundleProcesser)
     {
+        TaskId = taskId;
+
         ContentId = contentId;
         ContentName = contentPublisher.GetContentName();
         ContentType = contentPublisher.GetContentType();
@@ -76,7 +81,8 @@ public sealed class ContentPublishTaskService
             ContentPublishTaskStatus.Completed or
             ContentPublishTaskStatus.Cancelling or
             ContentPublishTaskStatus.InProgress)
-            throw new InvalidOperationException("Cannot start a task that in completed, cancelling or in progress state.");
+            throw new InvalidOperationException(
+                "Cannot start a task that in completed, cancelling or in progress state.");
 
         _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
 
@@ -180,10 +186,14 @@ public sealed class ContentPublishTaskFactory(
     ILogger<ContentPublishTaskService> logger,
     BundleCompressProcesser bundleCompressProcesser)
 {
-    public ValueTask<ContentPublishTaskService> Create(string contentId, string bundleFileId,
+    public ValueTask<ContentPublishTaskService> Create(
+        string taskId,
+        string contentId,
+        string bundleFileId,
         IContentPublisher contentPublisher)
     {
         var publishTask = new ContentPublishTaskService(
+            taskId,
             contentId,
             bundleFileId,
             awsHttpClient,

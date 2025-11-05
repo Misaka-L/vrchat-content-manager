@@ -6,52 +6,70 @@ using VRChatContentManager.Core.Services.PublishTask;
 
 namespace VRChatContentManager.App.ViewModels.Data.PublishTasks;
 
-public sealed partial class PublishTaskViewModel : ViewModelBase
+public sealed partial class PublishTaskViewModel(
+    ContentPublishTaskService publishTaskService,
+    TaskManagerService taskManagerService)
+    : ViewModelBase
 {
-    public string ContentId => _publishTaskService.ContentId;
-    public string ContentName => _publishTaskService.ContentName;
-    public string ContentType => _publishTaskService.ContentType;
-    public string ContentPlatform => _publishTaskService.ContentPlatform;
+    public string TaskId => publishTaskService.TaskId;
 
-    public string ProgressText => _publishTaskService.ProgressText;
-    public double? ProgressValue => _publishTaskService.ProgressValue * 100;
+    public string ContentId => publishTaskService.ContentId;
+    public string ContentName => publishTaskService.ContentName;
+    public string ContentType => publishTaskService.ContentType;
+    public string ContentPlatform => publishTaskService.ContentPlatform;
+
+    public string ProgressText => publishTaskService.ProgressText;
+    public double? ProgressValue => publishTaskService.ProgressValue * 100;
     public bool IsIndeterminate => !ProgressValue.HasValue;
 
-    public ContentPublishTaskStatus Status => _publishTaskService.Status;
+    public ContentPublishTaskStatus Status => publishTaskService.Status;
 
-    private readonly ContentPublishTaskService _publishTaskService;
-
-    public PublishTaskViewModel(ContentPublishTaskService publishTaskService)
+    [RelayCommand]
+    private void Load()
     {
-        _publishTaskService = publishTaskService;
+        publishTaskService.ProgressChanged += OnTaskProgressChanged;
+    }
 
-        _publishTaskService.ProgressChanged += (_, _) =>
-        {
-            Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                OnPropertyChanged(nameof(ProgressText));
-                OnPropertyChanged(nameof(ProgressValue));
-                OnPropertyChanged(nameof(IsIndeterminate));
-                OnPropertyChanged(nameof(Status));
-            });
-        };
+    [RelayCommand]
+    private void Unload()
+    {
+        publishTaskService.ProgressChanged -= OnTaskProgressChanged;
     }
 
     [RelayCommand]
     private async Task Cancel()
     {
-        await _publishTaskService.CancelAsync();
+        await publishTaskService.CancelAsync();
+    }
+
+    [RelayCommand]
+    private void Remove()
+    {
+        taskManagerService.RemoveTask(publishTaskService.TaskId);
     }
 
     [RelayCommand]
     private void Start()
     {
-        _publishTaskService.Start();
+        publishTaskService.Start();
+    }
+
+    private void OnTaskProgressChanged(object? o, PublishTaskProgressEventArg publishTaskProgressEventArg)
+    {
+        Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            OnPropertyChanged(nameof(ProgressText));
+            OnPropertyChanged(nameof(ProgressValue));
+            OnPropertyChanged(nameof(IsIndeterminate));
+            OnPropertyChanged(nameof(Status));
+        });
     }
 }
 
 public sealed class PublishTaskViewModelFactory
 {
-    public PublishTaskViewModel Create(ContentPublishTaskService publishTaskService)
-        => new(publishTaskService);
+    public PublishTaskViewModel Create(
+        ContentPublishTaskService publishTaskService,
+        TaskManagerService taskManagerService)
+        => new(publishTaskService, taskManagerService);
 }

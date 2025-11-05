@@ -3,14 +3,42 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:publishTasks="clr-namespace:VRChatContentManager.App.ViewModels.Data.PublishTasks"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="publishTasks:PublishTaskManagerViewModel"
              x:Class="VRChatContentManager.App.Views.Data.PublishTasks.PublishTaskManagerView">
 
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
     <StackPanel>
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4" Margin="8,8,8,0">
-            <TextBlock Text="{Binding UserDisplayName}" />
+        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="4" Margin="8,8,8,0">
+            <TextBlock Text="{Binding UserDisplayName}" VerticalAlignment="Center" />
             <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Padding="0">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuItem Header="Completed tasks" Command="{Binding RemoveCompletedTasksCommand}" />
+                            <MenuItem Header="Failed tasks" Command="{Binding RemoveFailedTasksCommand}" />
+                            <MenuItem Header="Cancelled tasks" Command="{Binding RemoveCancelledTasksCommand}" />
+                            <MenuItem Header="All removable tasks" Command="{Binding RemoveAllRemovableTasksCommand}" />
+                        </MenuFlyout>
+                    </Button.Flyout>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Remove..." />
+                        <avalonia:MaterialIcon Kind="ChevronDown" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
         </Grid>
         <ItemsControl ItemsSource="{Binding Tasks}">
             <ItemsControl.ItemsPanel>

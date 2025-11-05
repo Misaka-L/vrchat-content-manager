@@ -14,6 +14,7 @@
         <converters:ContentPublishTaskStatusBackgroundConverter x:Key="ContentPublishTaskStatusBackgroundConverter" />
         <converters:IsContentPublishTaskInProgressConverter x:Key="IsContentPublishTaskInProgressConverter" />
         <converters:CanContentPublishTaskRetryConverter x:Key="CanContentPublishTaskRetryConverter" />
+        <converters:CanContentPublishTaskRemoveConverter x:Key="CanContentPublishTaskRemoveConverter" />
 
         <DrawingImage x:Key="AppIcon">
             <DrawingImage.Drawing>
