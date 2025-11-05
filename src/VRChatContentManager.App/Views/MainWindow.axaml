@@ -10,7 +10,7 @@
         ExtendClientAreaToDecorationsHint="True" SystemDecorations="BorderOnly"
         ExtendClientAreaChromeHints="NoChrome" ShowInTaskbar="False" Topmost="True"
         Opened="TopLevel_OnOpened" Width="420" Height="680"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/AppIcon.ico"
         Title="VRChatContentManager.App">
 
     <dialogHostAvalonia:DialogHost Identifier="{Binding DialogHostId}">

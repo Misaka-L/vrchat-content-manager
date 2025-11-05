@@ -21,7 +21,7 @@
         </Border>
         <StackPanel Grid.Row="1" Spacing="24" HorizontalAlignment="Center">
             <StackPanel Orientation="Horizontal" Spacing="4">
-                <avalonia:MaterialIcon Kind="Cube" Height="64" Width="64" />
+                <Image Source="{StaticResource AppIcon}" Height="64" Width="64" />
                 <StackPanel VerticalAlignment="Center">
                     <TextBlock Text="VRChat Content Manager" FontWeight="SemiBold" FontSize="18" />
                     <TextBlock Text="snapshot" />
