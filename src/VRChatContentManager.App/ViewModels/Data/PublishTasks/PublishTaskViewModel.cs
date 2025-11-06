@@ -28,6 +28,9 @@ public sealed partial class PublishTaskViewModel(
     private void Load()
     {
         publishTaskService.ProgressChanged += OnTaskProgressChanged;
+
+        // to fix some kind of initial state not updated
+        NotifyTaskChanged();
     }
 
     [RelayCommand]
@@ -56,13 +59,15 @@ public sealed partial class PublishTaskViewModel(
 
     private void OnTaskProgressChanged(object? o, PublishTaskProgressEventArg publishTaskProgressEventArg)
     {
-        Dispatcher.UIThread.InvokeAsync(() =>
-        {
-            OnPropertyChanged(nameof(ProgressText));
-            OnPropertyChanged(nameof(ProgressValue));
-            OnPropertyChanged(nameof(IsIndeterminate));
-            OnPropertyChanged(nameof(Status));
-        });
+        Dispatcher.UIThread.Invoke(NotifyTaskChanged);
+    }
+
+    private void NotifyTaskChanged()
+    {
+        OnPropertyChanged(nameof(ProgressText));
+        OnPropertyChanged(nameof(ProgressValue));
+        OnPropertyChanged(nameof(IsIndeterminate));
+        OnPropertyChanged(nameof(Status));
     }
 }
 
