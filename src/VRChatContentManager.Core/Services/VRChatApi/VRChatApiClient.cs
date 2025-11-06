@@ -340,6 +340,21 @@ public sealed partial class VRChatApiClient(
         await HandleErrorResponseAsync(response);
     }
 
+    public static async ValueTask<bool> CleanupIncompleteFileVersionsAsync(VRChatApiFile file, VRChatApiClient apiClient,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var incompleteVersions = file.Versions.Where(version => version.Status != "complete")
+            .ToArray();
+        foreach (var version in incompleteVersions)
+        {
+            await apiClient.DeleteFileVersionAsync(file.Id, version.Version, cancellationToken);
+        }
+
+        return incompleteVersions.Length == 0;
+    }
+
     #endregion
 
     private static async Task HandleErrorResponseAsync(HttpResponseMessage response)
