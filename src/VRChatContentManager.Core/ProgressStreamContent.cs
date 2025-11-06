@@ -16,13 +16,11 @@ public class ProgressStreamContent(
         _source.Position = 0;
         
         var buffer = new byte[bufferSize];
-        long uploaded = 0;
         int read;
         while ((read = await _source.ReadAsync(buffer.AsMemory(0, buffer.Length))) > 0)
         {
             await stream.WriteAsync(buffer.AsMemory(0, read));
-            uploaded += read;
-            progressCallback?.Invoke(uploaded);
+            progressCallback?.Invoke(read);
         }
     }
 
