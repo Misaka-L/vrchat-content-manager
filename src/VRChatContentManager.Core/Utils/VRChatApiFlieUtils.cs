@@ -53,16 +53,4 @@ public static partial class VRChatApiFlieUtils
         stream.Position = 0;
         return hash;
     }
-
-    public static async ValueTask CleanupIncompleteFileVersionsAsync(VRChatApiFile file, VRChatApiClient apiClient,
-        CancellationToken cancellationToken = default)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var incompleteVersions = file.Versions.Where(version => version.Status != "complete");
-        foreach (var version in incompleteVersions)
-        {
-            await apiClient.DeleteFileVersionAsync(file.Id, version.Version, cancellationToken);
-        }
-    }
 }

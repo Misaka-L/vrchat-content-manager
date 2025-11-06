@@ -20,7 +20,10 @@ public partial class VRChatApiClient
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Cleanup all incomplete file versions...", null,
             ContentPublishTaskStatus.InProgress));
 
-        await VRChatApiFlieUtils.CleanupIncompleteFileVersionsAsync(currentAssetFile, this, cancellationToken);
+        if (!await CleanupIncompleteFileVersionsAsync(currentAssetFile, this, cancellationToken))
+        {
+            currentAssetFile = await GetFileAsync(fileId, cancellationToken);
+        }
 
         // Step 2.Caulate bundle file md5 and check is same file exists.
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating MD5 for bundle file...", null,
