@@ -285,15 +285,18 @@ public sealed partial class VRChatApiClient(
     }
 
     public async ValueTask<string> GetFilePartUploadUrlAsync(string fileId, int version, int partNumber = 1,
-        VRChatApiFileType fileType = VRChatApiFileType.File)
+        VRChatApiFileType fileType = VRChatApiFileType.File, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var request = new HttpRequestMessage(HttpMethod.Put,
             $"file/{fileId}/{version}/{fileType.ToApiString()}/start?partNumber={partNumber}");
-        var response = await httpClient.SendAsync(request);
+        var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
 
-        var uploadUrl = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.FileUploadUrlResponse);
+        var uploadUrl = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.FileUploadUrlResponse,
+            cancellationToken: cancellationToken);
 
         if (uploadUrl is null)
             throw new UnexpectedApiBehaviourException("The API returned a null file upload url object.");

@@ -17,167 +17,119 @@ public sealed class ConcurrentMultipartUploader(
 {
     public event EventHandler<double>? ProgressChanged;
 
-    private const long ChunkSize = 50 * 1024 * 1024; // 50 MB
+    // The size of each part uploaded to S3. 50MB is a reasonable default.
+    private const long ChunkSize = 50 * 1024 * 1024;
 
-    private readonly Lock _chunkCreationLock = new();
-    private int _lastPartNumber;
+    // Controls how many chunks are uploaded in parallel.
+    private const int MaxConcurrentUploads = 3;
 
-    private readonly List<UploadChunk> _chunks = [];
-    private readonly Dictionary<int, string> _eTags = [];
-
-    private bool _isTaskBroken;
-
-    private readonly ConcurrentDictionary<int, long> _uploadProgress = [];
-
-    private readonly TaskCompletionSource<string[]> _allChunksUploadedTcs = new();
+    private readonly ConcurrentDictionary<int, string> _eTags = new();
+    private long _totalBytesUploaded;
 
     public async Task<string[]> UploadAsync()
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        logger.LogInformation("Starting upload of file {FileId} version {FileVersion} in chunks of {ChunkSize} bytes",
-            fileId, fileVersion, ChunkSize);
-
-        _ = Task.Factory.StartNew(CreateChunks, cancellationToken);
-        return await _allChunksUploadedTcs.Task;
-    }
-
-    private void CreateChunks()
-    {
-        lock (_chunkCreationLock)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _allChunksUploadedTcs.TrySetException(new OperationCanceledException(cancellationToken));
-                return;
-            }
-
-            if (_isTaskBroken)
-                return;
-
-            try
-            {
-                var completedChunks = _chunks.Where(c => c.IsCompleted).ToArray();
-                if (completedChunks.Length > 0)
-                {
-                    foreach (var uploadChunk in _chunks)
-                    {
-                        _eTags[uploadChunk.PartNumber] = uploadChunk.ETag;
-                    }
-
-                    _chunks.RemoveAll(chunk => chunk.IsCompleted);
-                }
-
-                while (_chunks.Count < 3)
-                {
-                    var chunk = CreateChunk();
-                    if (chunk is null)
-                    {
-                        logger.LogInformation("All chunks created for file {FileId} version {FileVersion}", fileId,
-                            fileVersion);
-
-                        if (_chunks.Count != 0 && _chunks.Any(c => !c.IsCompleted))
-                            return;
-
-                        var eTags = _eTags.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToArray();
-                        _allChunksUploadedTcs.SetResult(eTags);
-                        return;
-                    }
-
-                    _chunks.Add(chunk);
-                }
-            }
-            catch (Exception ex)
-            {
-                if (cancellationToken.IsCancellationRequested)
-                    return;
-
-                logger.LogError(ex,
-                    "Error occurred while creating upload chunks for file {FileId} version {FileVersion}", fileId,
-                    fileVersion);
-
-                _isTaskBroken = true;
-                _allChunksUploadedTcs.TrySetException(ex);
-            }
-        }
-    }
-
-    private UploadChunk? CreateChunk()
-    {
-        var buffer = new byte[ChunkSize];
-        var bytesRead = fileStream.Read(buffer);
-
-        if (bytesRead == 0)
-            return null;
-
-        _lastPartNumber++;
-        Thread.Sleep(TimeSpan.FromSeconds(Random.Shared.Next(2, 5)));
-        var uploadUrl = apiClient.GetFilePartUploadUrlAsync(fileId, fileVersion, _lastPartNumber, fileType)
-            .AsTask().GetAwaiter().GetResult();
-
         logger.LogInformation(
-            "Creating upload chunk {PartNumber} Size {Size}MiB for file {FileId} version {FileVersion}",
-            _lastPartNumber, bytesRead / 1024d / 1024d, fileId, fileVersion);
-        var chunk = new UploadChunk(_lastPartNumber, buffer, bytesRead, uploadUrl, awsClient, CreateChunks,
-            (uploaded, partNumber) =>
-            {
-                _uploadProgress[partNumber] = uploaded;
+            "Starting concurrent upload for file {FileId} version {FileVersion} with chunk size {ChunkSize}MB and concurrency {MaxConcurrency}",
+            fileId, fileVersion, ChunkSize / 1024 / 1024, MaxConcurrentUploads);
 
-                var totalUploaded = _uploadProgress.Values.Sum();
-                var totalSize = fileStream.Length;
-                var progress = (double)totalUploaded / totalSize;
+        using var concurrencySemaphore = new SemaphoreSlim(MaxConcurrentUploads);
+        var uploadTasks = new List<Task>();
+        var partNumber = 0;
 
-                ProgressChanged?.Invoke(null, progress);
-            }, cancellationToken);
-
-        _ = Task.Factory.StartNew(async () =>
+        try
         {
-            try
+            while (fileStream.Position < fileStream.Length)
             {
-                await chunk.UploadAsync();
-            }
-            catch (Exception e)
-            {
-                _allChunksUploadedTcs.SetException(e);
-                throw;
-            }
-        }, TaskCreationOptions.LongRunning);
+                cancellationToken.ThrowIfCancellationRequested();
 
-        return chunk;
+                partNumber++;
+                var currentPartNumber = partNumber;
+
+                var buffer = new byte[ChunkSize];
+                var bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
+
+                // Wait for a free slot to begin the next upload.
+                await concurrencySemaphore.WaitAsync(cancellationToken);
+
+                // Start the upload task for the current chunk.
+                var uploadTask = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await UploadChunkAsync(currentPartNumber, buffer, bytesRead, cancellationToken);
+                    }
+                    finally
+                    {
+                        // Release the semaphore slot once the upload is complete or has failed.
+                        // ReSharper disable once AccessToDisposedClosure
+                        concurrencySemaphore.Release();
+                    }
+                }, cancellationToken);
+
+                uploadTasks.Add(uploadTask);
+            }
+
+            // Wait for all initiated upload tasks to complete.
+            await Task.WhenAll(uploadTasks);
+        }
+        catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
+        {
+            logger.LogWarning(ex, "Upload for file {FileId} version {FileVersion} was canceled", fileId,
+                fileVersion);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred during the upload of file {FileId} version {FileVersion}", fileId,
+                fileVersion);
+            // Rethrow to allow the caller to handle the failure.
+            throw;
+        }
+
+        logger.LogInformation("Successfully uploaded all parts for file {FileId} version {FileVersion}", fileId,
+            fileVersion);
+
+        // Return the ETag for each part, ordered by part number.
+        return _eTags.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value).ToArray();
     }
 
-    private sealed class UploadChunk(
-        int partNumber,
-        byte[] buffer,
-        int bufferSize,
-        string uploadUrl,
-        HttpClient awsClient,
-        Action completedCallback,
-        Action<long, int> uploadProgressCallback,
-        CancellationToken cancellationToken)
+    private async Task UploadChunkAsync(int partNumber, byte[] buffer, int bytesRead, CancellationToken ct)
     {
-        public int PartNumber => partNumber;
-        public bool IsCompleted { get; private set; }
-        public string ETag { get; private set; } = string.Empty;
+        logger.LogInformation(
+            "Creating upload chunk {PartNumber} (Size: {Size:F2} MiB) for file {FileId}",
+            partNumber, (double)bytesRead / 1024 / 1024, fileId);
 
-        public async Task UploadAsync()
+        // 1. Get the pre-signed URL for this part from the VRChat API.
+        var uploadUrl = await apiClient.GetFilePartUploadUrlAsync(fileId, fileVersion, partNumber, fileType, ct);
+
+        // 2. Upload the data to the provided URL.
+        using var stream = new MemoryStream(buffer, 0, bytesRead);
+        using var progressStream = new ProgressStreamContent(stream, OnUploadProgress);
+
+        var response = await awsClient.PutAsync(uploadUrl, progressStream, ct);
+        response.EnsureSuccessStatusCode();
+
+        // 3. Extract the ETag from the response headers. This is required by S3 to complete the multipart upload.
+        var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
+        if (string.IsNullOrEmpty(eTag))
         {
-            using var stream = new MemoryStream(buffer, 0, bufferSize);
-            using var content =
-                new ProgressStreamContent(stream, uploaded => { uploadProgressCallback(uploaded, partNumber); });
-
-            var response = await awsClient.PutAsync(uploadUrl, content, cancellationToken);
-
-            response.EnsureSuccessStatusCode();
-            IsCompleted = true;
-
-            if (response.Headers.ETag is null)
-                throw new UnexpectedApiBehaviourException("Api did not return an ETag header.");
-
-            ETag = response.Headers.ETag.Tag.Trim('\"', '\'');
-
-            completedCallback();
+            throw new InvalidOperationException($"S3 did not return an ETag for part {partNumber} of file {fileId}.");
         }
+
+        _eTags[partNumber] = eTag;
+        logger.LogInformation("Completed upload for chunk {PartNumber} for file {FileId}", partNumber, fileId);
+    }
+
+    private void OnUploadProgress(long uploadedBytes)
+    {
+        Interlocked.Add(ref _totalBytesUploaded, uploadedBytes);
+
+        if (fileStream.Length == 0) return;
+
+        var progress = (double)_totalBytesUploaded / fileStream.Length;
+        ProgressChanged?.Invoke(this, progress);
     }
 }
 
