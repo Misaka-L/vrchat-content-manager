@@ -43,6 +43,10 @@ public sealed class ContentPublishTaskService
 
     private PublishTaskStage _currentStage = PublishTaskStage.BundleProcessing;
     private readonly string _rawBundleFileId;
+    private readonly string? _thumbnailFileId;
+    private readonly string? _description;
+    private readonly string[]? _tags;
+    private readonly string? _releaseStatus;
 
     private string _bundleFileId;
 
@@ -52,8 +56,9 @@ public sealed class ContentPublishTaskService
 
     internal ContentPublishTaskService(
         string taskId,
-        string contentId, string rawBundleFileId, HttpClient awsHttpClient,
-        IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
+        string contentId, string rawBundleFileId,
+        string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
+        HttpClient awsHttpClient, IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
         IContentPublisher contentPublisher, IBundleProcesser bundleProcesser)
     {
         TaskId = taskId;
@@ -64,6 +69,10 @@ public sealed class ContentPublishTaskService
         ContentPlatform = contentPublisher.GetContentPlatform();
 
         _rawBundleFileId = rawBundleFileId;
+        _thumbnailFileId = thumbnailFileId;
+        _description = description;
+        _tags = tags;
+        _releaseStatus = releaseStatus;
         _bundleFileId = rawBundleFileId;
 
         _awsHttpClient = awsHttpClient;
@@ -127,7 +136,7 @@ public sealed class ContentPublishTaskService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error publishing bundle file {BundleFileId}", _rawBundleFileId);
+            _logger.LogError(ex, "Error publishing content {ContentId}", ContentId);
             UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
         }
     }
@@ -150,7 +159,9 @@ public sealed class ContentPublishTaskService
             "Bundle processing for content ({ContentId}) {ContentPlatform} {ContentName} completed, preparing to publish.",
             ContentId, ContentPlatform, ContentName);
 
-        await _contentPublisher.PublishAsync(_bundleFileId, _awsHttpClient, _progressReporter, cancellationToken);
+        await _contentPublisher.PublishAsync(
+            _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus
+            , _awsHttpClient, _progressReporter, cancellationToken);
         await _tempFileService.DeleteFileAsync(_bundleFileId);
     }
 
@@ -190,12 +201,20 @@ public sealed class ContentPublishTaskFactory(
         string taskId,
         string contentId,
         string bundleFileId,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus,
         IContentPublisher contentPublisher)
     {
         var publishTask = new ContentPublishTaskService(
             taskId,
             contentId,
             bundleFileId,
+            thumbnailFileId,
+            description,
+            tags,
+            releaseStatus,
             awsHttpClient,
             tempFileService,
             logger,

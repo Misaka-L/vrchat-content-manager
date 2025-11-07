@@ -186,6 +186,28 @@ public sealed partial class VRChatApiClient(
 
         return world;
     }
+    
+    public async ValueTask<VRChatApiWorld> CreateWorldAsync(
+        CreateWorldRequest createRequest,
+        CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var request = new HttpRequestMessage(HttpMethod.Post, "worlds")
+        {
+            Content = JsonContent.Create(createRequest, ApiJsonContext.Default.CreateWorldRequest)
+        };
+
+        var response = await httpClient.SendAsync(request, cancellationToken);
+
+        await HandleErrorResponseAsync(response);
+
+        var world = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiWorld, cancellationToken);
+        if (world is null)
+            throw new UnexpectedApiBehaviourException("The API returned a null world object.");
+
+        return world;
+    }
 
     #endregion
 
@@ -196,6 +218,32 @@ public sealed partial class VRChatApiClient(
         cancellationToken.ThrowIfCancellationRequested();
 
         var response = await httpClient.GetAsync($"file/{fileId}", cancellationToken);
+        await HandleErrorResponseAsync(response);
+
+        var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile,
+            cancellationToken: cancellationToken);
+        if (file is null)
+            throw new UnexpectedApiBehaviourException("The API returned a null file.");
+
+        return file;
+    }
+
+    public async ValueTask<VRChatApiFile> CreateFileAsync(
+        string fileName,
+        string mimeType,
+        string extension,
+        CancellationToken cancellationToken = default
+    )
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        var request = new HttpRequestMessage(HttpMethod.Post, "file")
+        {
+            Content = JsonContent.Create(
+                new CreateFileRequest(fileName, mimeType, extension),
+                ApiJsonContext.Default.CreateFileRequest)
+        };
+
+        var response = await httpClient.SendAsync(request, cancellationToken);
         await HandleErrorResponseAsync(response);
 
         var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile,
@@ -340,7 +388,8 @@ public sealed partial class VRChatApiClient(
         await HandleErrorResponseAsync(response);
     }
 
-    public static async ValueTask<bool> CleanupIncompleteFileVersionsAsync(VRChatApiFile file, VRChatApiClient apiClient,
+    public static async ValueTask<bool> CleanupIncompleteFileVersionsAsync(VRChatApiFile file,
+        VRChatApiClient apiClient,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();

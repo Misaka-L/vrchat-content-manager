@@ -53,4 +53,32 @@ public static partial class VRChatApiFlieUtils
         stream.Position = 0;
         return hash;
     }
+
+    public static string GetMimeTypeFromExtension(string extension)
+    {
+        switch (extension)
+        {
+            case ".vrcw":
+                return "application/x-world";
+            case ".vrca":
+                return "application/x-avatar";
+            case ".vrcp":
+                return "application/x-prop";
+            case ".dll":
+                return "application/x-msdownload";
+            case ".unitypackage":
+            case ".gz":
+                return "application/gzip";
+            case ".jpg":
+                return "image/jpg";
+            case ".png":
+                return "image/png";
+            case ".sig":
+                return "application/x-rsync-signature";
+            case ".delta":
+                return "application/x-rsync-delta";
+            default:
+                return "application/octet-stream";
+        }
+    }
 }

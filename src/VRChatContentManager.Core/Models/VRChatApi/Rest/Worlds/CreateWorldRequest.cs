@@ -2,9 +2,9 @@
 
 namespace VRChatContentManager.Core.Models.VRChatApi.Rest.Worlds;
 
-public record CreateWorldVersionRequest(
-    [property: JsonPropertyName("name")]
-    string Name,
+public record CreateWorldRequest(
+    [property: JsonPropertyName("id")] string Id,
+    [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("assetUrl")]
     string AssetUrl,
     [property: JsonPropertyName("assetVersion")]
