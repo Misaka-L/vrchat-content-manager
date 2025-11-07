@@ -27,8 +27,13 @@ public sealed class WorldContentPublisher(
 
     private const long MaxBundleFileSizeForMobileBytes = 104857600; // 100 MB
 
+    // TODO: Implement thumbnail, description, tags, release status handling
     public async ValueTask PublishAsync(
         string bundleFileId,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus,
         HttpClient awsClient,
         PublishStageProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default)
@@ -75,7 +80,9 @@ public sealed class WorldContentPublisher(
         var fileVersion = await apiClient.CreateAndUploadFileVersionAsync(
             bundleFileStream,
             fileId,
+            VRChatApiFlieUtils.GetMimeTypeFromExtension(".vrcw"),
             awsClient,
+            "World Bundle",
             arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue)
             , cancellationToken
         );

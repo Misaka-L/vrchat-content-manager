@@ -9,13 +9,16 @@ public class WorldPublishTaskService(
     UserSessionManagerService userSessionManagerService,
     WorldContentPublisherFactory contentPublisherFactory) : IWorldPublishTaskService
 {
-    public async ValueTask<string> CreatePublishTaskAsync(
-        string worldId,
+    public async ValueTask<string> CreatePublishTaskAsync(string worldId,
         string worldBundleFileId,
         string worldName,
         string platform,
         string unityVersion,
-        string? worldSignature)
+        string? worldSignature,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus)
     {
         var userSession = await GetUserSessionByWorldIdAsync(worldId);
         var scope = await userSession.CreateOrGetSessionScopeAsync();
@@ -24,7 +27,14 @@ public class WorldPublishTaskService(
         var contentPublisher =
             contentPublisherFactory.Create(userSession, worldId, worldName, platform, unityVersion, worldSignature);
 
-        var task = await taskManager.CreateTask(worldId, worldBundleFileId, contentPublisher);
+        var task = await taskManager.CreateTask(
+            worldId,
+            worldBundleFileId,
+            thumbnailFileId,
+            description,
+            tags,
+            releaseStatus,
+            contentPublisher);
         task.Start();
 
         return "task-id";

@@ -22,5 +22,6 @@ namespace VRChatContentManager.Core.Models.VRChatApi.Rest;
 [JsonSerializable(typeof(CreateWorldVersionRequest))]
 [JsonSerializable(typeof(VRChatApiAvatar))]
 [JsonSerializable(typeof(CreateAvatarVersionRequest))]
+[JsonSerializable(typeof(CreateFileRequest))]
 [JsonSerializable(typeof(Requires2FA))]
 public sealed partial class ApiJsonContext : JsonSerializerContext;

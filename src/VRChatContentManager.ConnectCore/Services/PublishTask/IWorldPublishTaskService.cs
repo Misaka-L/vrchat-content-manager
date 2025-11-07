@@ -8,6 +8,10 @@ public interface IWorldPublishTaskService
         string worldName,
         string platform,
         string unityVersion,
-        string? worldSignature
+        string? worldSignature,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus
     );
 }

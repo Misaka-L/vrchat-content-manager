@@ -30,9 +30,13 @@ public static class TaskEndpoint
             request.Name,
             request.Platform,
             request.UnityVersion,
-            request.WorldSignature);
+            request.WorldSignature, 
+            request.ThumbnailFileId,
+            request.Description,
+            request.Tags,
+            request.ReleaseStatus);
     }
-    
+
     private static async Task CreateAvatarPublishTask(HttpContext context, IServiceProvider services)
     {
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.CreateAvatarPublishTaskRequest) is not
@@ -45,6 +49,10 @@ public static class TaskEndpoint
             request.AvatarBundleFileId,
             request.Name,
             request.Platform,
-            request.UnityVersion);
+            request.UnityVersion,
+            request.ThumbnailFileId,
+            request.Description,
+            request.Tags,
+            request.ReleaseStatus);
     }
 }

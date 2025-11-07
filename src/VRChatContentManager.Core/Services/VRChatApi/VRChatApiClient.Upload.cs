@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Net.Http.Headers;
+using Microsoft.Extensions.Logging;
 using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Files;
@@ -8,8 +9,9 @@ namespace VRChatContentManager.Core.Services.VRChatApi;
 
 public partial class VRChatApiClient
 {
-    public async ValueTask<VRChatApiFileVersion> CreateAndUploadFileVersionAsync(Stream fileStream, string fileId,
-        HttpClient awsClient, Action<PublishTaskProgressEventArg>? progressCallback = null,
+    public async ValueTask<VRChatApiFileVersion> CreateAndUploadFileVersionAsync(
+        Stream fileStream, string fileId, string contentType,
+        HttpClient awsClient, string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -26,7 +28,7 @@ public partial class VRChatApiClient
         }
 
         // Step 2.Caulate bundle file md5 and check is same file exists.
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating MD5 for bundle file...", null,
+        progressCallback?.Invoke(new PublishTaskProgressEventArg($"Calculating MD5 for {userFileType} file...", null,
             ContentPublishTaskStatus.InProgress));
 
         var fileMd5 = await VRChatApiFlieUtils.GetMd5FromStreamForVRChatAsync(fileStream, cancellationToken);
@@ -51,7 +53,7 @@ public partial class VRChatApiClient
         }
 
         // Step 3. Caulate file signature
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Calculating (Blake2b) Signature for bundle file...",
+        progressCallback?.Invoke(new PublishTaskProgressEventArg($"Calculating (Blake2b) Signature for {userFileType} file...",
             null, ContentPublishTaskStatus.InProgress));
 
         var signatureStream =
@@ -75,20 +77,20 @@ public partial class VRChatApiClient
 
         // Step 5. Upload bundle file and signature to aws s3
         logger.LogInformation("Uploading file version {Version} for file {FileId}", fileVersion.Version, fileId);
-        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload bundle file...", null,
+        progressCallback?.Invoke(new PublishTaskProgressEventArg($"Preparing for Upload {userFileType} file...", null,
             ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
-            fileVersion.File.Category == "simple", VRChatApiFileType.File, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading bundle file...",
+            fileVersion.File.Category == "simple", VRChatApiFileType.File, contentType, awsClient,
+            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg($"Uploading {userFileType} file...",
                 progress, ContentPublishTaskStatus.InProgress)), cancellationToken);
 
-        logger.LogInformation("Uploading signature for world {FileId}", fileId);
+        logger.LogInformation("Uploading signature for {FileId}", fileId);
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null,
             ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
-            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, awsClient,
+            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, contentType, awsClient,
             progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading signature...", progress,
                 ContentPublishTaskStatus.InProgress)), cancellationToken);
 
@@ -112,7 +114,8 @@ public partial class VRChatApiClient
     }
 
     private async ValueTask UploadFileVersionAsync(Stream fileStream, string fileId, int version, string md5,
-        bool isSimpleUpload, VRChatApiFileType fileType, HttpClient awsClient, Action<double?>? progressCallback = null,
+        bool isSimpleUpload, VRChatApiFileType fileType, string? contentType,
+        HttpClient awsClient, Action<double?>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -121,7 +124,7 @@ public partial class VRChatApiClient
         if (isSimpleUpload)
         {
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType, cancellationToken);
-            await UploadFileToS3Async(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload, cancellationToken);
+            await PutFileAsync(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload, contentType, cancellationToken);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType, cancellationToken);
 
             progressCallback?.Invoke(1);
@@ -140,8 +143,9 @@ public partial class VRChatApiClient
         progressCallback?.Invoke(1);
     }
 
-    private async ValueTask<string> UploadFileToS3Async(string uploadUrl, Stream stream, HttpClient awsClient,
-        string? md5 = null, bool isSimpleUpload = false, CancellationToken cancellationToken = default)
+    private async ValueTask<string> PutFileAsync(string uploadUrl, Stream stream, HttpClient awsClient,
+        string? md5 = null, bool isSimpleUpload = false, string? contentType = null,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -151,7 +155,11 @@ public partial class VRChatApiClient
             if (md5 is null)
                 throw new ArgumentNullException(nameof(md5), "MD5 should be provided for simple upload.");
 
+            if (contentType is null)
+                throw new ArgumentNullException(nameof(contentType), "Content type should be provided for simple upload.");
+
             content.Headers.ContentMD5 = Convert.FromBase64String(md5);
+            content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
         }
 
         var request = new HttpRequestMessage(HttpMethod.Put, uploadUrl)

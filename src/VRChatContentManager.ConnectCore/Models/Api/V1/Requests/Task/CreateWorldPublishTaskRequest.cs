@@ -8,4 +8,8 @@ public sealed class CreateWorldPublishTaskRequest
     public required string Platform { get; set; }
     public required string UnityVersion { get; set; }
     public string? WorldSignature { get; set; }
+    public string? ThumbnailFileId { get; set; }
+    public string? Description { get; set; }
+    public string[] Tags { get; set; } = [];
+    public string? ReleaseStatus { get; set; }
 }

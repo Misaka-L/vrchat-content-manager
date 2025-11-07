@@ -14,11 +14,17 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
     public async ValueTask<ContentPublishTaskService> CreateTask(
         string contentId,
         string bundleFileId,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus,
         IContentPublisher contentPublisher
     )
     {
         var taskId = Guid.NewGuid().ToString("D");
-        var task = await contentPublishTaskFactory.Create(taskId, contentId, bundleFileId, contentPublisher);
+        var task = await contentPublishTaskFactory.Create(taskId,
+            contentId, bundleFileId, thumbnailFileId, description, tags, releaseStatus,
+            contentPublisher);
 
         _tasks.Add(taskId, task);
         TaskCreated?.Invoke(this, task);

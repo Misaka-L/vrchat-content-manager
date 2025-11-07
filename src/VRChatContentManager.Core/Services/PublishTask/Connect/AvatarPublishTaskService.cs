@@ -10,12 +10,15 @@ public sealed class AvatarPublishTaskService(
     UserSessionManagerService userSessionManagerService)
     : IAvatarPublishTaskService
 {
-    public async Task CreatePublishTaskAsync(
-        string avatarId,
+    public async Task CreatePublishTaskAsync(string avatarId,
         string avatarBundleFileId,
         string name,
         string platform,
-        string unityVersion)
+        string unityVersion,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus)
     {
         var userSession = await GetUserSessionByAvatarIdAsync(avatarId);
         var scope = await userSession.CreateOrGetSessionScopeAsync();
@@ -24,7 +27,8 @@ public sealed class AvatarPublishTaskService(
         var contentPublisher =
             contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
 
-        var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, contentPublisher);
+        var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, thumbnailFileId, description, tags,
+            releaseStatus, contentPublisher);
         task.Start();
     }
 
