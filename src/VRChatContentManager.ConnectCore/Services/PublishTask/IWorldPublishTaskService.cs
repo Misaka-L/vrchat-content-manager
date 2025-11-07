@@ -8,10 +8,15 @@ public interface IWorldPublishTaskService
         string worldName,
         string platform,
         string unityVersion,
+        string? authorId,
         string? worldSignature,
         string? thumbnailFileId,
         string? description,
         string[]? tags,
-        string? releaseStatus
+        string? releaseStatus,
+        int? capacity,
+        int? recommendedCapacity,
+        string? previewYoutubeId,
+        string[]? udonProducts
     );
 }

@@ -7,5 +7,6 @@ public record VRChatApiWorld(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("unityPackages")] VRChatApiUnityPackage[] UnityPackages,
-    [property: JsonPropertyName("authorId")] string AuthorId
+    [property: JsonPropertyName("authorId")] string AuthorId,
+    [property: JsonPropertyName("imageUrl")] string? ImageUrl
 );

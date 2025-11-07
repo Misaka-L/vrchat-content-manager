@@ -30,11 +30,17 @@ public static class TaskEndpoint
             request.Name,
             request.Platform,
             request.UnityVersion,
-            request.WorldSignature, 
+            request.AuthorId,
+            request.WorldSignature,
             request.ThumbnailFileId,
             request.Description,
             request.Tags,
-            request.ReleaseStatus);
+            request.ReleaseStatus,
+            request.Capacity,
+            request.RecommendedCapacity,
+            request.PreviewYoutubeId,
+            request.UdonProducts
+        );
     }
 
     private static async Task CreateAvatarPublishTask(HttpContext context, IServiceProvider services)
