@@ -11,7 +11,7 @@ public sealed partial class PublishTaskManagerViewModel(
     TaskManagerService taskManagerService,
     PublishTaskViewModelFactory taskFactory,
     string userDisplayName)
-    : ViewModelBase
+    : ViewModelBase, IPublishTaskManagerViewModel
 {
     public string UserDisplayName { get; } = userDisplayName;
     public AvaloniaList<PublishTaskViewModel> Tasks { get; } = [];

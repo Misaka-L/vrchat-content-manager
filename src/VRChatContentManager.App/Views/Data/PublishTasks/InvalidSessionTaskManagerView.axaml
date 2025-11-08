@@ -1,0 +1,24 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:publishTasks="clr-namespace:VRChatContentManager.App.ViewModels.Data.PublishTasks"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="publishTasks:InvalidSessionTaskManagerViewModel"
+             x:Class="VRChatContentManager.App.Views.Data.PublishTasks.InvalidSessionTaskManagerView">
+
+    <StackPanel Margin="8,8,8,0" Spacing="4">
+        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
+            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
+            <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
+        </Grid>
+        <StackPanel>
+            <TextBlock Text="Failed to get task manager for this user session:"
+                       Opacity="0.8" TextWrapping="Wrap" />
+            <TextBlock ToolTip.Tip="{Binding ExceptionString}"
+                       Text="{Binding ExceptionMessage}"
+                       FontSize="12"
+                       Opacity="0.8" TextWrapping="Wrap" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>
