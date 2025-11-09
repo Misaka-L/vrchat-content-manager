@@ -37,7 +37,15 @@ public sealed partial class SettingsFixAccountPageViewModel(
 
             if (!result)
             {
-                await userSessionService.LogoutAsync();
+                try
+                {
+                    await userSessionService.LogoutAsync();
+                }
+                catch
+                {
+                    // ignored
+                }
+
                 return;
             }
         }
