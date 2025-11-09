@@ -131,11 +131,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         if (_sessionScope is { } scope)
             return scope;
 
-        CurrentUser = await _apiClient.GetCurrentUser();
-        UserId = CurrentUser.Id;
-        UserNameOrEmail = CurrentUser.UserName;
-
-        await _saveFunc(_cookieContainer, UserId, UserNameOrEmail);
+        CurrentUser = await GetCurrentUserAsync();
 
         return await CreateSessionScopeAsyncCore();
     }
