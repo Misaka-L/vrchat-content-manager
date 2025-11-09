@@ -40,7 +40,7 @@ jobs:
           name: vrchat-content-manager-app-${{ matrix.rid }}
           path: |
             ${{ env.OUTPUT_DIR }}
-            \!${{ env.OUTPUT_DIR }}/**/*.pdb
+            !${{ env.OUTPUT_DIR }}/**/*.pdb
 
       - name: Upload PDB
         uses: actions/upload-artifact@v4
