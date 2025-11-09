@@ -1,7 +1,10 @@
 ﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels.Pages.Settings;
+using VRChatContentManager.Core.Services.PublishTask;
 using VRChatContentManager.Core.Services.UserSession;
 
 namespace VRChatContentManager.App.ViewModels.Data;
@@ -15,6 +18,8 @@ public sealed partial class UserSessionViewModel(
     public string? UserId => userSessionService.UserId;
     public string UserNameOrEmail => userSessionService.UserNameOrEmail;
     public bool IsSessionRequiringReauthentication => userSessionService.State != UserSessionState.LoggedIn;
+
+    [ObservableProperty] public partial bool CanRemove { get; private set; }
 
     public string? ProfilePictureUrl
     {
@@ -30,9 +35,21 @@ public sealed partial class UserSessionViewModel(
     public string? DisplayName => userSessionService.CurrentUser?.DisplayName;
 
     [RelayCommand]
-    private void Load()
+    private async Task Load()
     {
         userSessionService.StateChanged += OnUserSessionStateChanged;
+
+        try
+        {
+            var scope = await userSessionService.CreateOrGetSessionScopeAsync();
+            var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+
+            CanRemove = taskManager.Tasks.Count == 0;
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     [RelayCommand]
