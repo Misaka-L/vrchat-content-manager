@@ -59,6 +59,7 @@ internal sealed class Program
         catch (Exception ex)
         {
             Log.Logger.Fatal(ex, "Oops, the application has crashed!");
+            Environment.ExitCode = -1;
         }
         finally
         {
