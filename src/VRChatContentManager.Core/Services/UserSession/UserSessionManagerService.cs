@@ -39,6 +39,14 @@ public sealed class UserSessionManagerService(
         }
     }
 
+    public bool IsSessionExists(string userNameOrEmail)
+    {
+        return _sessions.Any(session =>
+            session.UserNameOrEmail == userNameOrEmail ||
+            session.CurrentUser?.UserName == userNameOrEmail
+        );
+    }
+
     public UserSessionService CreateOrGetSession(string userNameOrEmail, string? userId = null, CookieContainer?
         cookieContainer = null)
     {
@@ -76,7 +84,56 @@ public sealed class UserSessionManagerService(
         return session;
     }
 
-    public async ValueTask RemoveSessionAsync(UserSessionService session)
+    public async ValueTask<UserSessionService> HandleSessionAfterLogin(UserSessionService session)
+    {
+        if (Sessions.All(s => s != session))
+            throw new InvalidOperationException("Session no exists in manager.");
+
+        var user = await session.GetCurrentUserAsync();
+        // Replace existing session if try login with same user
+        if (Sessions.FirstOrDefault(existSession =>
+                existSession != session && existSession.UserId == user.Id)
+            is not { } existingSession)
+            return session;
+
+        logger.LogWarning("Replacing existing session for user ({UserId}) {UserName}", user.Id, user.UserName);
+        logger.LogInformation("Logging out existing session for user ({UserId}) {UserName}", existingSession.UserId,
+            existingSession.UserNameOrEmail);
+        try
+        {
+            await existingSession.LogoutAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to logout existing session for user ({UserId}) {UserName}",
+                existingSession.UserId, existingSession.UserNameOrEmail);
+        }
+
+        logger.LogInformation("Transferring cookies to existing session for user ({UserId}) {UserName}",
+            existingSession.UserId, existingSession.UserNameOrEmail);
+        foreach (Cookie cookie in existingSession.CookieContainer.GetAllCookies())
+        {
+            cookie.Expired = true;
+        }
+
+        var cookies = session.CookieContainer.GetAllCookies();
+        foreach (Cookie cookie in cookies)
+        {
+            existingSession.CookieContainer.Add(cookie);
+        }
+
+        logger.LogInformation("Refreshing existing session for user ({UserId}) {UserName}", existingSession.UserId,
+            existingSession.UserNameOrEmail);
+        await existingSession.GetCurrentUserAsync();
+
+        logger.LogInformation("Removing temporary session for user ({UserId}) {UserName}", session.UserId,
+            session.UserNameOrEmail);
+        await RemoveSessionAsync(session, false);
+
+        return existingSession;
+    }
+
+    public async ValueTask RemoveSessionAsync(UserSessionService session, bool logout = true)
     {
         logger.LogInformation("Removing session for user ({UserId}) {UserName}", session.UserId,
             session.UserNameOrEmail);
@@ -91,14 +148,19 @@ public sealed class UserSessionManagerService(
         _sessions.Remove(session);
         OnSessionRemoved(session);
 
-        try
+        if (logout)
         {
-            await session.LogoutAsync();
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to logout session for user ({UserId}) {UserName}", session.UserId,
+            logger.LogInformation("Logging out session for user ({UserId}) {UserName}", session.UserId,
                 session.UserNameOrEmail);
+            try
+            {
+                await session.LogoutAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.LogWarning(ex, "Failed to logout session for user ({UserId}) {UserName}", session.UserId,
+                    session.UserNameOrEmail);
+            }
         }
 
         await session.DisposeAsync();

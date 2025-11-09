@@ -19,9 +19,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     private readonly Func<CookieContainer, string?, string?, Task> _saveFunc;
 
     private readonly HttpClient _sessionHttpClient;
-    private readonly CookieContainer _cookieContainer;
-
     private readonly VRChatApiClient _apiClient;
+
+    public CookieContainer CookieContainer { get; }
 
     public event EventHandler<UserSessionState>? StateChanged;
     public UserSessionState State { get; set; } = UserSessionState.Pending;
@@ -48,7 +48,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
         UserNameOrEmail = userNameOrEmail;
 
-        _cookieContainer = cookieContainer ?? new CookieContainer();
+        CookieContainer = cookieContainer ?? new CookieContainer();
 
         if (cookieContainer is null || userId is null)
         {
@@ -57,7 +57,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
         var socketHttpHandler = new SocketsHttpHandler
         {
-            CookieContainer = _cookieContainer,
+            CookieContainer = CookieContainer,
             UseCookies = true,
             ConnectTimeout = TimeSpan.FromSeconds(5)
         };
@@ -90,7 +90,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             .Build();
 
         _sessionHttpClient = new HttpClient(
-            new InspectorHttpHandler(async () => await _saveFunc(_cookieContainer, UserId, UserNameOrEmail))
+            new InspectorHttpHandler(async () => await _saveFunc(CookieContainer, UserId, UserNameOrEmail))
             {
                 InnerHandler = new ResilienceHandler(retryPipeline)
                 {
@@ -141,6 +141,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             throw;
         }
 
+        await _saveFunc(CookieContainer, UserId, UserNameOrEmail);
         OnStateChanged(UserSessionState.LoggedIn);
 
         return CurrentUser;

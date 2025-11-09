@@ -3,7 +3,9 @@ using VRChatContentManager.App.Services;
 
 namespace VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 
-public sealed partial class GuideWelcomePageViewModel(NavigationService navigationService) : PageViewModelBase
+public sealed partial class GuideWelcomePageViewModel(
+    NavigationService navigationService,
+    AddAccountPageViewModelFactory addAccountPageViewModelFactory) : PageViewModelBase
 {
     [RelayCommand]
     private void NavigateToHomePage()
@@ -14,6 +16,10 @@ public sealed partial class GuideWelcomePageViewModel(NavigationService navigati
     [RelayCommand]
     private void NextPage()
     {
-        navigationService.Navigate<GuideAccountPageViewModel>();
+        var addAccountPageViewModel = addAccountPageViewModelFactory.Create(
+            navigationService.Navigate<GuideWelcomePageViewModel>,
+            navigationService.Navigate<GuideSetupUnityPageViewModel>);
+
+        navigationService.Navigate(addAccountPageViewModel);
     }
 }

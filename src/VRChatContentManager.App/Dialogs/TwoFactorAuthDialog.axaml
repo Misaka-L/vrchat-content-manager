@@ -15,13 +15,27 @@
                 Theme="{StaticResource MaterialFlatButton}"
                 Command="{Binding RequestCloseCommand}"
                 HorizontalAlignment="Left" VerticalAlignment="Top" />
-        <StackPanel Spacing="36" VerticalAlignment="Center" HorizontalAlignment="Center">
+        <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
             <StackPanel HorizontalAlignment="Center">
                 <avalonia:MaterialIcon Kind="Lock" Height="64" Width="64" HorizontalAlignment="Center"
                                        Margin="0,0,0,12" />
                 <TextBlock Text="One Time Password Required" HorizontalAlignment="Center"
                            FontSize="22" FontWeight="SemiBold" />
-                <TextBlock Text="Please check your email" HorizontalAlignment="Center" />
+                <TextBlock IsVisible="{Binding IsEmailOtp}" Text="Please check your email" HorizontalAlignment="Center" />
+                <TextBlock IsVisible="{Binding !IsEmailOtp}" Text="Please check your totp App" HorizontalAlignment="Center" />
+                <Border IsVisible="{Binding HasError}"
+                        Background="#d50000" Margin="0,8,0,0"
+                        CornerRadius="8">
+                    <StackPanel Margin="8" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                                   Foreground="White" />
+                            <TextBlock Text="Failed to Verify your code" FontWeight="Bold" FontSize="18"
+                                       Foreground="White" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="White" />
+                    </StackPanel>
+                </Border>
             </StackPanel>
             <TextBox Text="{Binding Code}"
                      MaxLength="6" AcceptsReturn="False" AcceptsTab="False"
