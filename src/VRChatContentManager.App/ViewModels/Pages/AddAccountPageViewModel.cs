@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels.Dialogs;
-using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Services.UserSession;
 
@@ -34,6 +34,12 @@ public sealed partial class AddAccountPageViewModel(
     [RelayCommand]
     private async Task Login()
     {
+        if (userSessionManagerService.IsSessionExists(Username))
+        {
+            SetError("An account with this username/email already exists.");
+            return;
+        }
+
         var session = userSessionManagerService.CreateOrGetSession(Username);
 
         LoginResult loginResult;
@@ -75,6 +81,35 @@ public sealed partial class AddAccountPageViewModel(
 
                 return;
             }
+        }
+
+        var user = await session.GetCurrentUserAsync();
+        // Replace existing session if try login with same user
+        if (userSessionManagerService.Sessions.FirstOrDefault(existSession =>
+                existSession != session && existSession.UserId == user.Id)
+            is { } existingSession)
+        {
+            try
+            {
+                await existingSession.LogoutAsync();
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            foreach (Cookie cookie in existingSession.CookieContainer.GetAllCookies())
+            {
+                cookie.Expired = true;
+            }
+
+            var cookies = session.CookieContainer.GetAllCookies();
+            foreach (Cookie cookie in cookies)
+            {
+                existingSession.CookieContainer.Add(cookie);
+            }
+
+            await userSessionManagerService.RemoveSessionAsync(session, false);
         }
 
         onRequestDone();
