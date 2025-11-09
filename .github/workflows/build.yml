@@ -1,0 +1,49 @@
+name: Build
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            rid: win-x64
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      REPO_DIR: ${{ github.workspace }}/repo
+      SRC_DIR: ${{ github.workspace }}/repo/src
+      OUTPUT_DIR: ${{ github.workspace }}/output
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          path: ${{ env.REPO_DIR }}
+          submodules: recursive
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Build
+        run: dotnet publish -c Release VRChatContentManager.App -r ${{ matrix.rid }} -o ${{ env.OUTPUT_DIR }}
+        working-directory: ${{ env.SRC_DIR }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vrchat-content-manager-app-${{ matrix.rid }}
+          path: |
+            ${{ env.OUTPUT_DIR }}
+            !${{ env.OUTPUT_DIR }}/**/*.pdb
+
+      - name: Upload PDB
+        uses: actions/upload-artifact@v4
+        with:
+          name: vrchat-content-manager-app-${{ matrix.rid }}-pdb
+          path: ${{ env.OUTPUT_DIR }}/**/*.pdb
