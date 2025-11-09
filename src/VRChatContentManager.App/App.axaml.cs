@@ -29,6 +29,7 @@ using VRChatContentManager.App.Views.Data.Settings;
 using VRChatContentManager.App.Views.Settings;
 using VRChatContentManager.Core;
 using VRChatContentManager.Core.Services.App;
+using AddAccountPageViewModel = VRChatContentManager.App.ViewModels.Pages.AddAccountPageViewModel;
 
 namespace VRChatContentManager.App;
 
@@ -73,13 +74,12 @@ public partial class App : Application
 
         // Getting Started Pages
         ViewLocator.Register<GuideWelcomePageViewModel, GuideWelcomePage>();
-        ViewLocator.Register<GuideAccountPageViewModel, GuideAccountPage>();
         ViewLocator.Register<GuideSetupUnityPageViewModel, GuideSetupUnityPage>();
         ViewLocator.Register<GuideFinishSetupPageViewModel, GuideFinishPage>();
 
         // Settings Pages
-        ViewLocator.Register<SettingsAddAccountPageViewModel, SettingsAddAccountPage>();
         ViewLocator.Register<SettingsFixAccountPageViewModel, SettingsFixAccountPage>();
+        ViewLocator.Register<AddAccountPageViewModel, AddAccountPage>();
 
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();

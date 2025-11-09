@@ -2,21 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:settings="clr-namespace:VRChatContentManager.App.ViewModels.Pages.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:pages="clr-namespace:VRChatContentManager.App.ViewModels.Pages"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="settings:SettingsAddAccountPageViewModel"
-             x:Class="VRChatContentManager.App.Pages.Settings.SettingsAddAccountPage">
+             x:DataType="pages:AddAccountPageViewModel"
+             x:Class="VRChatContentManager.App.Pages.AddAccountPage">
 
     <StackPanel>
-        <Border>
+        <Border Height="140">
             <Border.Background>
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
                 <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
-                        Command="{Binding BackToSettingsCommand}"
+                        Command="{Binding BackCommand}"
                         Padding="0" Margin="0,0,0,5" Foreground="White"
                         Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
                 <TextBlock Text="Login to your" FontSize="16" Foreground="White" Opacity="0.7" />
@@ -25,6 +25,19 @@
         </Border>
         <StackPanel Spacing="24" Margin="18">
             <StackPanel>
+                <Border IsVisible="{Binding HasError}"
+                        Background="#d50000" Margin="0,0,0,8"
+                        CornerRadius="8">
+                    <StackPanel Margin="8" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                                   Foreground="White" />
+                            <TextBlock Text="Failed to Login" FontWeight="Bold" FontSize="18"
+                                       Foreground="White" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="White" />
+                    </StackPanel>
+                </Border>
                 <TextBox assists:TextFieldAssist.Label="Username/Email" Classes="outline" UseFloatingWatermark="True"
                          Theme="{StaticResource OutlineTextBox}"
                          Text="{Binding Username}" />
