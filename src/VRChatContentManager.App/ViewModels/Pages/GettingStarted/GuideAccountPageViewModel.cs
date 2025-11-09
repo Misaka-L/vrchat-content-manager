@@ -32,17 +32,28 @@ public sealed partial class GuideAccountPageViewModel(
         var session = userSessionManagerService.CreateOrGetSession(Username);
 
         var loginResult = await session.LoginAsync(Password);
-        
+
         if (loginResult.Requires2Fa.Length != 0 && (loginResult.Requires2Fa.Contains(Requires2FA.Totp) ||
                                                     loginResult.Requires2Fa.Contains(Requires2FA.EmailOtp)))
         {
             var isEmailOtp = loginResult.Requires2Fa.Contains(Requires2FA.EmailOtp);
             var result = await OpenTwoFactorAuthDialog(session, isEmailOtp);
-        
+
             if (!result)
+            {
+                try
+                {
+                    await session.LogoutAsync();
+                }
+                catch
+                {
+                    // ignored
+                }
+
                 return;
+            }
         }
-        
+
         navigationService.Navigate<GuideSetupUnityPageViewModel>();
     }
 

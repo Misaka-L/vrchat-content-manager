@@ -39,7 +39,18 @@ public sealed partial class SettingsAddAccountPageViewModel(
             var result = await OpenTwoFactorAuthDialog(session, isEmailOtp);
 
             if (!result)
+            {
+                try
+                {
+                    await session.LogoutAsync();
+                }
+                catch
+                {
+                    // ignored
+                }
+
                 return;
+            }
         }
 
         navigationService.Navigate<SettingsPageViewModel>();
