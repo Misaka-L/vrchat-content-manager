@@ -23,6 +23,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private readonly VRChatApiClient _apiClient;
 
+    public event EventHandler<UserSessionState>? StateChanged;
+    public UserSessionState State { get; set; } = UserSessionState.Pending;
+
     public string UserNameOrEmail { get; private set; }
     public string? UserId { get; private set; }
     public CurrentUser? CurrentUser { get; private set; }
@@ -31,13 +34,13 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     internal UserSessionService(
         string userNameOrEmail,
-        IServiceScopeFactory scopeFactory,
         string? userId,
+        Func<CookieContainer, string?, string?, Task> saveFunc,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
+        IServiceScopeFactory scopeFactory,
         ILogger<UserSessionService> logger,
-        ILoggerFactory loggerFactory,
-        Func<CookieContainer, string?, string?, Task> saveFunc)
+        ILoggerFactory loggerFactory)
     {
         _scopeFactory = scopeFactory;
         _saveFunc = saveFunc;
@@ -46,6 +49,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         UserNameOrEmail = userNameOrEmail;
 
         _cookieContainer = cookieContainer ?? new CookieContainer();
+
+        if (cookieContainer is null || userId is null)
+        {
+            OnStateChanged(UserSessionState.LoggedOut);
+        }
 
         var socketHttpHandler = new SocketsHttpHandler
         {
@@ -107,21 +115,33 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     public async ValueTask<LoginResult> LoginAsync(string password)
     {
-        return await _apiClient.LoginAsync(UserNameOrEmail, password);
+        var result = await _apiClient.LoginAsync(UserNameOrEmail, password);
+        OnStateChanged(result.IsSuccess ? UserSessionState.LoggedIn : UserSessionState.LoggedOut);
+
+        return result;
     }
 
     public async ValueTask LogoutAsync()
     {
+        OnStateChanged(UserSessionState.LoggedOut);
         await _apiClient.LogoutAsync();
     }
 
     public async ValueTask<CurrentUser> GetCurrentUserAsync()
     {
-        CurrentUser = await _apiClient.GetCurrentUser();
-        UserId = CurrentUser.Id;
-        UserNameOrEmail = CurrentUser.UserName;
+        try
+        {
+            CurrentUser = await _apiClient.GetCurrentUser();
+            UserId = CurrentUser.Id;
+            UserNameOrEmail = CurrentUser.UserName;
+        }
+        catch (ApiErrorException ex) when (ex.StatusCode == 401)
+        {
+            OnStateChanged(UserSessionState.InvalidSession);
+            throw;
+        }
 
-        await _saveFunc(_cookieContainer, UserId, UserNameOrEmail);
+        OnStateChanged(UserSessionState.LoggedIn);
 
         return CurrentUser;
     }
@@ -131,11 +151,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         if (_sessionScope is { } scope)
             return scope;
 
-        CurrentUser = await _apiClient.GetCurrentUser();
-        UserId = CurrentUser.Id;
-        UserNameOrEmail = CurrentUser.UserName;
-
-        await _saveFunc(_cookieContainer, UserId, UserNameOrEmail);
+        CurrentUser = await GetCurrentUserAsync();
 
         return await CreateSessionScopeAsyncCore();
     }
@@ -165,6 +181,12 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     }
 
     #endregion
+
+    private void OnStateChanged(UserSessionState e)
+    {
+        State = e;
+        StateChanged?.Invoke(this, e);
+    }
 }
 
 public sealed class UserSessionFactory(
@@ -176,7 +198,22 @@ public sealed class UserSessionFactory(
     public UserSessionService Create(string userNameOrEmail, string? userId, CookieContainer? cookieContainer,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
-        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, apiClientFactory, logger,
-            loggerFactory, saveFunc);
+        return new UserSessionService(
+            userNameOrEmail,
+            userId,
+            saveFunc,
+            cookieContainer,
+            apiClientFactory,
+            scopeFactory,
+            logger,
+            loggerFactory);
     }
+}
+
+public enum UserSessionState
+{
+    Pending,
+    LoggedOut,
+    LoggedIn,
+    InvalidSession
 }

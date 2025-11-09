@@ -4,8 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentManager.App.ViewModels.Settings"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:data="clr-namespace:VRChatContentManager.App.ViewModels.Data"
-             xmlns:controls="clr-namespace:VRChatContentManager.App.Controls"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:AccountsSettingsViewModel"
              x:Class="VRChatContentManager.App.Views.Settings.AccountsSettingsView">
@@ -28,25 +26,6 @@
                 <TextBlock Grid.Column="1" Text="Add New Account" VerticalAlignment="Center" />
             </Grid>
         </Button>
-        <ItemsControl ItemsSource="{Binding UserSessions}" Margin="8">
-            <ItemsControl.DataTemplates>
-                <DataTemplate x:DataType="data:UserSessionViewModel">
-                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                        <Border CornerRadius="100" Height="40" Width="40" ClipToBounds="True">
-                            <Image controls:AsyncImageLoader.Source="{Binding ProfilePictureUrl}"
-                                   Stretch="UniformToFill" />
-                        </Border>
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="{Binding UserId}" />
-                            <TextBlock Text="{Binding UserNameOrEmail}" />
-                            <TextBlock Text="{Binding DisplayName}" />
-                        </StackPanel>
-                        <Button Command="{Binding RemoveCommand}"
-                                Grid.Column="2" Theme="{StaticResource MaterialFlatButton}"
-                                Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.DataTemplates>
-        </ItemsControl>
+        <ItemsControl ItemsSource="{Binding UserSessions}" Margin="8" />
     </StackPanel>
 </UserControl>
