@@ -83,33 +83,14 @@ public sealed partial class AddAccountPageViewModel(
             }
         }
 
-        var user = await session.GetCurrentUserAsync();
-        // Replace existing session if try login with same user
-        if (userSessionManagerService.Sessions.FirstOrDefault(existSession =>
-                existSession != session && existSession.UserId == user.Id)
-            is { } existingSession)
+        try
         {
-            try
-            {
-                await existingSession.LogoutAsync();
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            foreach (Cookie cookie in existingSession.CookieContainer.GetAllCookies())
-            {
-                cookie.Expired = true;
-            }
-
-            var cookies = session.CookieContainer.GetAllCookies();
-            foreach (Cookie cookie in cookies)
-            {
-                existingSession.CookieContainer.Add(cookie);
-            }
-
-            await userSessionManagerService.RemoveSessionAsync(session, false);
+            await userSessionManagerService.HandleSessionAfterLogin(session);
+        }
+        catch (Exception ex)
+        {
+            SetError(ex.Message);
+            return;
         }
 
         onRequestDone();
@@ -133,6 +114,17 @@ public sealed partial class AddAccountPageViewModel(
     {
         ErrorMessage = message;
         HasError = true;
+    }
+
+    private async ValueTask TryLogout(UserSessionService sessionService)
+    {
+        try
+        {
+            await sessionService.LogoutAsync();
+        }
+        catch
+        {
+        }
     }
 }
 

@@ -141,6 +141,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             throw;
         }
 
+        await _saveFunc(CookieContainer, UserId, UserNameOrEmail);
         OnStateChanged(UserSessionState.LoggedIn);
 
         return CurrentUser;
