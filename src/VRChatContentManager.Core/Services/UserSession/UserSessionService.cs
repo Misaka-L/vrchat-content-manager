@@ -55,6 +55,10 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         };
 
         var retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
+            {
+                Name = "VRChatApiClient",
+                InstanceName = UserId ?? userNameOrEmail
+            }
             .AddRetry(new HttpRetryStrategyOptions
             {
                 ShouldHandle = args => ValueTask.FromResult(
