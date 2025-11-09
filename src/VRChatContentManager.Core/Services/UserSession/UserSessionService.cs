@@ -31,13 +31,13 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     internal UserSessionService(
         string userNameOrEmail,
-        IServiceScopeFactory scopeFactory,
         string? userId,
+        Func<CookieContainer, string?, string?, Task> saveFunc,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
+        IServiceScopeFactory scopeFactory,
         ILogger<UserSessionService> logger,
-        ILoggerFactory loggerFactory,
-        Func<CookieContainer, string?, string?, Task> saveFunc)
+        ILoggerFactory loggerFactory)
     {
         _scopeFactory = scopeFactory;
         _saveFunc = saveFunc;
@@ -172,7 +172,14 @@ public sealed class UserSessionFactory(
     public UserSessionService Create(string userNameOrEmail, string? userId, CookieContainer? cookieContainer,
         Func<CookieContainer, string?, string?, Task> saveFunc)
     {
-        return new UserSessionService(userNameOrEmail, scopeFactory, userId, cookieContainer, apiClientFactory, logger,
-            loggerFactory, saveFunc);
+        return new UserSessionService(
+            userNameOrEmail,
+            userId,
+            saveFunc,
+            cookieContainer,
+            apiClientFactory,
+            scopeFactory,
+            logger,
+            loggerFactory);
     }
 }
