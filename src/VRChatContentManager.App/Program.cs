@@ -58,8 +58,12 @@ internal sealed class Program
         }
         catch (Exception ex)
         {
-            Log.Logger.Error(ex, "Oops, the application has crashed!");
-            throw;
+            Log.Logger.Fatal(ex, "Oops, the application has crashed!");
+        }
+        finally
+        {
+            app.Dispose();
+            Log.CloseAndFlush();
         }
     }
 
