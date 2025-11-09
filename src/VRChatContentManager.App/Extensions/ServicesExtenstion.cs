@@ -58,6 +58,7 @@ public static class ServicesExtenstion
 
         // Settings Pages
         services.AddTransient<SettingsAddAccountPageViewModel>();
+        services.AddTransient<SettingsFixAccountPageViewModelFactory>();
 
         // Settings Sections
         services.AddTransient<AccountsSettingsViewModel>();

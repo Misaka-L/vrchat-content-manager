@@ -13,6 +13,7 @@ using VRChatContentManager.App.Pages.GettingStarted;
 using VRChatContentManager.App.Pages.HomeTab;
 using VRChatContentManager.App.Pages.Settings;
 using VRChatContentManager.App.ViewModels;
+using VRChatContentManager.App.ViewModels.Data;
 using VRChatContentManager.App.ViewModels.Data.Connect;
 using VRChatContentManager.App.ViewModels.Data.PublishTasks;
 using VRChatContentManager.App.ViewModels.Dialogs;
@@ -24,6 +25,7 @@ using VRChatContentManager.App.ViewModels.Settings;
 using VRChatContentManager.App.Views;
 using VRChatContentManager.App.Views.Data.Connect;
 using VRChatContentManager.App.Views.Data.PublishTasks;
+using VRChatContentManager.App.Views.Data.Settings;
 using VRChatContentManager.App.Views.Settings;
 using VRChatContentManager.Core;
 using VRChatContentManager.Core.Services.App;
@@ -77,6 +79,7 @@ public partial class App : Application
 
         // Settings Pages
         ViewLocator.Register<SettingsAddAccountPageViewModel, SettingsAddAccountPage>();
+        ViewLocator.Register<SettingsFixAccountPageViewModel, SettingsFixAccountPage>();
 
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
@@ -88,6 +91,7 @@ public partial class App : Application
         ViewLocator.Register<PublishTaskViewModel, PublishTaskView>();
 
         ViewLocator.Register<RpcClientSessionViewModel, RpcClientSessionView>();
+        ViewLocator.Register<UserSessionViewModel, UserSessionView>();
         
         // Settings Section
         ViewLocator.Register<ConnectSettingsViewModel, ConnectSettingsView>();
