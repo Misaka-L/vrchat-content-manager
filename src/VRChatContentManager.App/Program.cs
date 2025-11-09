@@ -27,13 +27,16 @@ internal sealed class Program
     {
         var builder = new HostApplicationBuilder();
 
-        var logPath = Path.Combine(AppStorageService.GetStoragePath(), "logs", "log-.json");
+        var jsonLogPath = Path.Combine(AppStorageService.GetStoragePath(), "logs", "log-.json");
+        var plainTextLogPath = Path.Combine(AppStorageService.GetStoragePath(), "logs", "log-.log");
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
             .WriteTo.Async(writer =>
-                writer.File(new CompactJsonFormatter(), logPath,
+                writer.File(new CompactJsonFormatter(), jsonLogPath,
                     rollingInterval: RollingInterval.Day))
+            .WriteTo.Async(writer => 
+                writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
             .CreateLogger();
 
