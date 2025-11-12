@@ -21,16 +21,21 @@
                 <TextBlock Text="Settings" FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
-        <StackPanel Grid.Row="1" Spacing="8" Margin="18">
-            <Expander Header="Accounts">
-                <ContentControl Content="{Binding AccountsSettingsViewModel}" />
-            </Expander>
-            <Expander Header="Connect">
-                <ContentControl Content="{Binding ConnectSettingsViewModel}" />
-            </Expander>
-            <Expander Header="Sessions">
-                <ContentControl Content="{Binding SessionsSettingsViewModel}" />
-            </Expander>
-        </StackPanel>
+        <ScrollViewer Grid.Row="1">
+            <StackPanel Spacing="8" Margin="18">
+                <Expander Header="Accounts">
+                    <ContentControl Content="{Binding AccountsSettingsViewModel}" />
+                </Expander>
+                <Expander Header="Connect">
+                    <ContentControl Content="{Binding ConnectSettingsViewModel}" />
+                </Expander>
+                <Expander Header="Sessions">
+                    <ContentControl Content="{Binding SessionsSettingsViewModel}" />
+                </Expander>
+                <Expander Header="About">
+                    <ContentControl Content="{Binding AboutSettingsViewModel}" />
+                </Expander>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

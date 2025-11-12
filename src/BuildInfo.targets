@@ -1,0 +1,22 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="SetSourceRevisionId" BeforeTargets="InitializeSourceControlInformation">
+        <Exec
+                Command="git describe --always --dirty --exclude=* --abbrev=0"
+                ConsoleToMsBuild="True"
+                IgnoreExitCode="False"
+        >
+            <Output PropertyName="SourceRevisionId" TaskParameter="ConsoleOutput"/>
+        </Exec>
+        <Exec Command="git describe --always --dirty --exclude=* --abbrev=0" ConsoleToMsBuild="true" IgnoreExitCode="false">
+            <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash"/>
+        </Exec>
+        <ItemGroup>
+            <AssemblyAttribute Include="VRChatContentManager.Core.Attributes.BuildDateTimeAttribute">
+                <_Parameter1>$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</_Parameter1>
+            </AssemblyAttribute>
+            <AssemblyAttribute Include="VRChatContentManager.Core.Attributes.GitCommitHashAttribute">
+                <_Parameter1>$(SourceRevisionId)</_Parameter1>
+            </AssemblyAttribute>
+        </ItemGroup>
+    </Target>
+</Project>

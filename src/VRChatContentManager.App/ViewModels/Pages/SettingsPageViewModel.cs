@@ -16,11 +16,13 @@ public sealed partial class SettingsPageViewModel(
     NavigationService navigationService,
     AccountsSettingsViewModel accountsSettingsViewModel,
     ConnectSettingsViewModel connectSettingsViewModel,
-    SessionsSettingsViewModel sessionsSettingsViewModel) : PageViewModelBase
+    SessionsSettingsViewModel sessionsSettingsViewModel,
+    AboutSettingsViewModel aboutSettingsViewModel) : PageViewModelBase
 {
     public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
     public ConnectSettingsViewModel ConnectSettingsViewModel { get; } = connectSettingsViewModel;
     public SessionsSettingsViewModel SessionsSettingsViewModel { get; } = sessionsSettingsViewModel;
+    public AboutSettingsViewModel AboutSettingsViewModel { get; } = aboutSettingsViewModel;
     
     [RelayCommand]
     private void NavigateToHome()
