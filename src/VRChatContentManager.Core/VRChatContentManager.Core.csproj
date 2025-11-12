@@ -6,6 +6,8 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible>true</IsAotCompatible>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+        <Version>0.1.0</Version>
+        <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,4 +29,5 @@
       <ProjectReference Include="..\VRChatContentManager.ConnectCore\VRChatContentManager.ConnectCore.csproj" />
     </ItemGroup>
 
+    <Import Project="../BuildInfo.targets" />
 </Project>

@@ -64,6 +64,7 @@ public static class ServicesExtenstion
         services.AddTransient<AccountsSettingsViewModel>();
         services.AddTransient<ConnectSettingsViewModel>();
         services.AddTransient<SessionsSettingsViewModel>();
+        services.AddTransient<AboutSettingsViewModel>();
 
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();

@@ -97,6 +97,7 @@ public partial class App : Application
         ViewLocator.Register<ConnectSettingsViewModel, ConnectSettingsView>();
         ViewLocator.Register<AccountsSettingsViewModel, AccountsSettingsView>();
         ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
+        ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();
 
         AvaloniaXamlLoader.Load(this);
 

@@ -1,12 +1,15 @@
 ﻿using System.Net.Http.Headers;
+using VRChatContentManager.Core.Utils;
 
 namespace VRChatContentManager.Core;
 
 public static class HttpClientProperties
 {
+    private static string GetAppVersion() => AppVersionUtils.GetAppVersion() + "+" + AppVersionUtils.GetAppCommitHash();
+    
     public static ProductInfoHeaderValue GetUserAgent()
     {
-        return new ProductInfoHeaderValue(new ProductHeaderValue("VRChatContentManager", "snapshot"));
+        return new ProductInfoHeaderValue(new ProductHeaderValue("VRChatContentManager", GetAppVersion()));
     }
 
     public static ProductInfoHeaderValue GetUserAgentComment()

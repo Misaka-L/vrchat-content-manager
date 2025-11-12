@@ -1,4 +1,7 @@
 ﻿<Solution>
+  <Folder Name="/SolutionFolder/">
+    <File Path="BuildInfo.targets" />
+  </Folder>
   <Project Path="AssetsTools.NET\AssetTools.NET\AssetsTools.NET.csproj" />
   <Project Path="VRChatContentManager.App\VRChatContentManager.App.csproj" Type="Classic C#" />
   <Project Path="VRChatContentManager.ConnectCore\VRChatContentManager.ConnectCore.csproj" Type="Classic C#" />
