@@ -2,13 +2,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:homeTab="clr-namespace:VRChatContentManager.App.ViewModels.Pages.HomeTab"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:DataType="homeTab:HomeContentsPageViewModel"
-             x:Class="VRChatContentManager.App.Pages.HomeTab.HomeContentsPage">
+             x:Class="VRChatContentManager.App.Pages.ContentManager.Avatar.ContentManagerAvatarRootPage">
 
     <StackPanel>
-        <TextBox/>
-        <Button Command="{Binding OpenContentManagerWindowCommand}" Content="Open Window" />
+        <controls:Card>
+            <StackPanel>
+                <TextBox Watermark="Search avatar by name or description..." />
+            </StackPanel>
+        </controls:Card>
     </StackPanel>
 </UserControl>
