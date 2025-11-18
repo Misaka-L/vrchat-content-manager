@@ -19,7 +19,6 @@
 
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
-        <AvaloniaResource Remove="Assets\AppIcon.ico" />
     </ItemGroup>
 
     <ItemGroup>
