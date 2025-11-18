@@ -10,6 +10,12 @@
              x:DataType="contentManager:ContentManagerViewModel"
              x:Class="VRChatContentManager.App.Views.ContentManager.ContentManagerMainView">
 
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
     <dialogHostAvalonia:DialogHost Identifier="{Binding DialogHostId}">
         <controls:NavigationDrawer>
             <controls:NavigationDrawer.LeftDrawerContent>

@@ -109,6 +109,7 @@ public partial class App : Application
         ViewLocator.Register<ContentManagerViewModel, ContentManagerMainView>();
         ViewLocator.Register<ContentManagerHomePageViewModel, ContentManagerHomePage>();
         ViewLocator.Register<ContentManagerAvatarRootPageViewModel, ContentManagerAvatarRootPage>();
+        ViewLocator.Register<ContentManagerAvatarQueryFilterPageViewModel, ContentManagerAvatarQueryFilterPage>();
 
         AvaloniaXamlLoader.Load(this);
 

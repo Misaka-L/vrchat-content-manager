@@ -20,6 +20,13 @@ public sealed class AvatarContentManagementService(SqlSugarClient sqlSugarClient
             .Where(e => ids.Contains(e.Id))
             .ToListAsync();
     }
+    
+    public async ValueTask<List<AvatarContentQueryFilterEntity>> GetAllQueryFiltersAsync()
+    {
+        return await sqlSugarClient
+            .Queryable<AvatarContentQueryFilterEntity>()
+            .ToListAsync();
+    }
 
     public async ValueTask<List<AvatarContentTagEntity>> GetAllTagsAsync()
     {

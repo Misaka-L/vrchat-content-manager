@@ -60,9 +60,12 @@ public static class ServicesExtenstion
         services.AddTransient<ContentManagerHomePageViewModel>();
         services.AddTransient<ContentManagerAvatarRootPageViewModel>();
 
+        services.AddTransient<ContentManagerAvatarQueryFilterPageViewModelFactory>();
+
         // Content Manager Navigation
         services.AddTransient<TreeNavigationItemViewModelFactory>();
         services.AddTransient<AvatarRootNavigationItemViewModel>();
+        services.AddTransient<AvatarQueryFilterNavigationItemViewModelFactory>();
 
         #endregion
 

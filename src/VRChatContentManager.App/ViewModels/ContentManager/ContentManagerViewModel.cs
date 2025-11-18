@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels.ContentManager.Data.Navigation;
@@ -13,6 +15,8 @@ namespace VRChatContentManager.App.ViewModels.ContentManager;
 
 public sealed partial class ContentManagerViewModel : ViewModelBase, INavigationHost
 {
+    private readonly AvatarRootNavigationItemViewModel _avatarRootNavigationItemViewModel;
+
     public string DialogHostId { get; } = Guid.NewGuid().ToString("D");
 
     [ObservableProperty] public partial PageViewModelBase? CurrentPage { get; private set; }
@@ -48,6 +52,8 @@ public sealed partial class ContentManagerViewModel : ViewModelBase, INavigation
         AvatarRootNavigationItemViewModel avatarRootNavigationItemViewModel
     )
     {
+        _avatarRootNavigationItemViewModel = avatarRootNavigationItemViewModel;
+
         navigationService.Register(this);
 
         NavigationItems =
@@ -55,6 +61,12 @@ public sealed partial class ContentManagerViewModel : ViewModelBase, INavigation
             navigationItemFactory.Create<ContentManagerHomePageViewModel>("Welcome"),
             avatarRootNavigationItemViewModel
         ];
+    }
+
+    [RelayCommand]
+    private async Task Load()
+    {
+        await _avatarRootNavigationItemViewModel.LoadChildrenAsync();
     }
 
     public void Navigate(PageViewModelBase pageViewModel)
