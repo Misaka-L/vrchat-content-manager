@@ -5,10 +5,8 @@ namespace VRChatContentManager.App.ContentManagement.Views;
 
 public partial class ContentManagerWindow : Window
 {
-    public ContentManagerWindow(ContentManagerWindowViewModel viewModel)
+    public ContentManagerWindow()
     {
-        DataContext = viewModel;
-
         InitializeComponent();
     }
 

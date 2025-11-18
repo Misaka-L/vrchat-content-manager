@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using VRChatContentManager.App.ContentManagement.Services;
 using VRChatContentManager.App.ContentManagement.ViewModels;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.Navigation;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.Navigation.Avatar;
@@ -14,6 +15,8 @@ public static class ServicesExtenstion
 {
     public static IServiceCollection AddAppContentManagement(this IServiceCollection services)
     {
+        services.AddSingleton<ContentManagerWindowService>();
+
         // ViewModels
         services.AddKeyedSingleton<NavigationService>(ServicesKeys.ContentManagerWindows);
 
