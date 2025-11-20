@@ -1,15 +1,9 @@
 ﻿using System;
 using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
-using VRChatContentManager.App.Pages.GettingStarted;
-using VRChatContentManager.App.Services;
 using VRChatContentManager.App.Shared.Services;
 using VRChatContentManager.App.Shared.ViewModels;
 using VRChatContentManager.App.Shared.ViewModels.Pages;
 using VRChatContentManager.App.ViewModels.Pages;
-using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
-using VRChatContentManager.Core.Settings;
-using VRChatContentManager.Core.Settings.Models;
 
 namespace VRChatContentManager.App.ViewModels;
 

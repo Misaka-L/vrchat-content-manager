@@ -25,6 +25,6 @@ public sealed class DialogService
             DialogHost.Close(_dialogHostId, e);
         };
 
-        return await DialogHost.Show(dialogViewModel);
+        return await DialogHost.Show(dialogViewModel, _dialogHostId);
     }
 }
