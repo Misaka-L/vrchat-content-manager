@@ -1,7 +1,7 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using FreeSql;
+using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SqlSugar;
 using VRChatContentManager.Core.Management.Services;
 using VRChatContentManager.Core.Management.Services.Database;
 using VRChatContentManager.Core.Services.App;
@@ -12,10 +12,7 @@ public static class ServicesExtenstion
 {
     public static IServiceCollection AddManagementCoreServices(this IServiceCollection services)
     {
-        // Have no choice
-        StaticConfig.EnableAot = true;
-
-        services.AddTransient<SqlSugarClient>(serviceProvider =>
+        services.AddSingleton<IFreeSql>(serviceProvider =>
         {
             var dbPath = Path.Combine(AppStorageService.GetStoragePath(), "content-manager.db");
             var connectionStringBuilder = new SqliteConnectionStringBuilder
@@ -23,28 +20,23 @@ public static class ServicesExtenstion
                 DataSource = dbPath
             };
 
-            var connectionString = connectionStringBuilder.ToString();
-
-            var logger = serviceProvider.GetRequiredService<ILogger<SqlSugarClient>>();
-
-            return new SqlSugarClient(new ConnectionConfig
-            {
-                IsAutoCloseConnection = true,
-                DbType = DbType.Sqlite,
-                ConnectionString = connectionString,
-            }, db =>
-            {
-                db.Aop.OnLogExecuting = (sql, parameters) =>
+            var freeSql = new FreeSqlBuilder()
+                .UseConnectionString(DataType.Sqlite, connectionStringBuilder.ToString())
+                .UseAdoConnectionPool(true)
+                .UseMonitorCommand(command =>
                 {
-                    var fullSql = UtilMethods.GetNativeSql(sql, parameters);
-                    logger.LogInformation("Executing SQL: {Sql}", fullSql);
-                };
-                db.Aop.OnError = exception => { logger.LogError(exception, "SQL Error: {Sql}", exception.Sql); };
-            });
+                    var logger = serviceProvider.GetRequiredService<ILogger<IFreeSql>>();
+                    logger.LogInformation("Executing SQL: {Sql}", command.CommandText);
+                })
+                .Build();
+
+            return freeSql;
         });
 
         services.AddTransient<DatabaseManagementService>();
         services.AddHostedService<DatabaseManagementHostedService>();
+
+        services.AddTransient<AggregatedVRChatApiService>();
 
         services.AddTransient<AvatarContentManagementService>();
 

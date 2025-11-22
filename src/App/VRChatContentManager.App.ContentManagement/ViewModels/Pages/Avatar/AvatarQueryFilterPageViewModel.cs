@@ -6,7 +6,7 @@ namespace VRChatContentManager.App.ContentManagement.ViewModels.Pages.Avatar;
 public sealed partial class AvatarQueryFilterPageViewModel(
     AvatarContentQueryFilterEntity avatarContentQueryFilterEntity) : PageViewModelBase
 {
-    public int Id => avatarContentQueryFilterEntity.Id;
+    public Guid Id => avatarContentQueryFilterEntity.Id;
     public string Name => avatarContentQueryFilterEntity.Name;
 }
 

@@ -1,27 +1,30 @@
-﻿using SqlSugar;
+﻿using FreeSql.DataAnnotations;
 
-// https://www.donet5.com/Home/Doc?typeId=1182
 #pragma warning disable CS8618
 
 namespace VRChatContentManager.Core.Management.Models.Entity.Avatar;
 
-[SugarTable("avatar_content_tags")]
-[SugarIndex("unique_avatar_content_tags_tag", nameof(Tag), OrderByType.Asc, true)]
+[Table(Name = "avatar_content_tags")]
+[Index("uk_tag", nameof(Tag), true)]
 public sealed class AvatarContentTagEntity
 {
-    [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
-    public int Id { get; set; }
+    [Column(IsPrimary = true)] public Guid Id { get; set; }
 
     public string Tag { get; set; }
 
-    [Navigate(typeof(AvatarContentTagMappingEntity),
-        nameof(AvatarContentTagMappingEntity.AvatarContentTagEntityId),
-        nameof(AvatarContentTagMappingEntity.AvatarContentEntityId))]
-    public List<AvatarContentEntity> TagContents { get; set; }
+    [Navigate(ManyToMany = typeof(AvatarContentTagMappingEntity))]
+    public List<AvatarContentEntity> Avatars { get; set; }
 }
 
 public sealed class AvatarContentTagMappingEntity
 {
-    [SugarColumn(IsPrimaryKey = true)] public int AvatarContentEntityId { get; set; }
-    [SugarColumn(IsPrimaryKey = true)] public int AvatarContentTagEntityId { get; set; }
+    public string AvatarContentEntityId { get; set; }
+
+    [Navigate(nameof(AvatarContentEntityId))]
+    public AvatarContentEntity AvatarContentEntity { get; set; }
+
+    public Guid AvatarContentTagEntityId { get; set; }
+
+    [Navigate(nameof(AvatarContentTagEntityId))]
+    public AvatarContentTagEntity AvatarContentTagEntity { get; set; }
 }

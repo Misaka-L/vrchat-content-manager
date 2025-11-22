@@ -1,19 +1,16 @@
-﻿using SqlSugar;
-using VRChatContentManager.Core.Management.Models.Entity.Avatar;
+﻿using VRChatContentManager.Core.Management.Models.Entity.Avatar;
 
 namespace VRChatContentManager.Core.Management.Services.Database;
 
-public sealed class DatabaseManagementService(SqlSugarClient sqlSugarClient)
+public sealed class DatabaseManagementService(IFreeSql freeSql)
 {
     public void InitializeDatabase()
     {
-        sqlSugarClient.DbMaintenance.CreateDatabase();
+        freeSql.CodeFirst.SyncStructure<AvatarContentEntity>();
+        freeSql.CodeFirst.SyncStructure<AvatarContentTagEntity>();
+        freeSql.CodeFirst.SyncStructure<AvatarContentTagMappingEntity>();
 
-        sqlSugarClient.CodeFirst.InitTables<AvatarContentEntity>();
-        sqlSugarClient.CodeFirst.InitTables<AvatarContentTagEntity>();
-        sqlSugarClient.CodeFirst.InitTables<AvatarContentTagMappingEntity>();
-        sqlSugarClient.CodeFirst.InitTables<AvatarContentSupportedPlatformEntity>();
-        sqlSugarClient.CodeFirst.InitTables<AvatarContentSupportedPlatformMappingEntity>();
-        sqlSugarClient.CodeFirst.InitTables<AvatarContentQueryFilterEntity>();
+        freeSql.CodeFirst.SyncStructure<AvatarContentSupportedPlatformEntity>();
+        freeSql.CodeFirst.SyncStructure<AvatarContentQueryFilterEntity>();
     }
 }

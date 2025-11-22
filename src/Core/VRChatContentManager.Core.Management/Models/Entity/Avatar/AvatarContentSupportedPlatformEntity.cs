@@ -1,27 +1,30 @@
-﻿using SqlSugar;
+﻿using FreeSql.DataAnnotations;
 
-// https://www.donet5.com/Home/Doc?typeId=1182
 #pragma warning disable CS8618
 
 namespace VRChatContentManager.Core.Management.Models.Entity.Avatar;
 
-[SugarTable("avatar_content_supported_platforms")]
-[SugarIndex("unique_avatar_content_supported_platforms_platform", nameof(Platform), OrderByType.Asc, true)]
+[Table(Name = "avatar_content_supported_platforms")]
+[Index("uk_platform", nameof(Platform), true)]
 public sealed class AvatarContentSupportedPlatformEntity
 {
-    [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
-    public int Id { get; set; }
+    [Column(IsPrimary = true)] public Guid Id { get; set; }
 
     public string Platform { get; set; }
 
-    [Navigate(typeof(AvatarContentSupportedPlatformMappingEntity),
-        nameof(AvatarContentSupportedPlatformMappingEntity.AvatarContentSupportedPlatformEntityId),
-        nameof(AvatarContentSupportedPlatformMappingEntity.AvatarContentEntityId))]
-    public List<AvatarContentEntity> Entities { get; set; }
+    [Navigate(ManyToMany = typeof(AvatarContentSupportedPlatformMappingEntity))]
+    public List<AvatarContentEntity> Avatars { get; set; }
 }
 
 public sealed class AvatarContentSupportedPlatformMappingEntity
 {
-    [SugarColumn(IsPrimaryKey = true)] public int AvatarContentEntityId { get; set; }
-    [SugarColumn(IsPrimaryKey = true)] public int AvatarContentSupportedPlatformEntityId { get; set; }
+    public string AvatarContentEntityId { get; set; }
+
+    [Navigate(nameof(AvatarContentEntityId))]
+    public AvatarContentEntity AvatarContentEntity { get; set; }
+
+    public Guid AvatarContentSupportedPlatformEntityId { get; set; }
+
+    [Navigate(nameof(AvatarContentSupportedPlatformEntityId))]
+    public AvatarContentSupportedPlatformEntity AvatarContentSupportedPlatformEntity { get; set; }
 }
