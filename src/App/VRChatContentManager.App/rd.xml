@@ -5,7 +5,5 @@
         </Assembly>
         <Assembly Name="VRChatContentManager.Core.Management" Dynamic="Required All">
         </Assembly>
-        <Assembly Name="SqlSugar" Dynamic="Required All">
-        </Assembly>
     </Application>
 </Directives>
