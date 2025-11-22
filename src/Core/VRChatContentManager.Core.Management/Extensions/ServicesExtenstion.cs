@@ -36,8 +36,6 @@ public static class ServicesExtenstion
         services.AddTransient<DatabaseManagementService>();
         services.AddHostedService<DatabaseManagementHostedService>();
 
-        services.AddTransient<AggregatedVRChatApiService>();
-
         services.AddTransient<AvatarContentManagementService>();
 
         return services;
