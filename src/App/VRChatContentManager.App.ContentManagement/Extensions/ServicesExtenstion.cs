@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.ContentManagement.Services;
 using VRChatContentManager.App.ContentManagement.ViewModels;
+using VRChatContentManager.App.ContentManagement.ViewModels.Data.List;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.Navigation;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.Navigation.Avatar;
 using VRChatContentManager.App.ContentManagement.ViewModels.Pages;
@@ -35,6 +36,9 @@ public static class ServicesExtenstion
         services.AddTransient<TreeNavigationItemViewModelFactory>();
         services.AddTransient<AvatarRootNavigationItemViewModel>();
         services.AddTransient<AvatarQueryFilterNavigationItemViewModelFactory>();
+
+        // List
+        services.AddTransient<AvatarListItemViewModelFactory>();
 
         return services;
     }

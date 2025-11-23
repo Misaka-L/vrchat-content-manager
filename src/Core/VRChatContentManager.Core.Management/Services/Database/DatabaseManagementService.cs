@@ -11,6 +11,8 @@ public sealed class DatabaseManagementService(IFreeSql freeSql)
         freeSql.CodeFirst.SyncStructure<AvatarContentTagMappingEntity>();
 
         freeSql.CodeFirst.SyncStructure<AvatarContentSupportedPlatformEntity>();
+        freeSql.CodeFirst.SyncStructure<AvatarContentSupportedPlatformMappingEntity>();
+
         freeSql.CodeFirst.SyncStructure<AvatarContentQueryFilterEntity>();
     }
 }

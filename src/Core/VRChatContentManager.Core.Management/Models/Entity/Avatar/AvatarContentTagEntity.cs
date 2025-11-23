@@ -8,7 +8,7 @@ namespace VRChatContentManager.Core.Management.Models.Entity.Avatar;
 [Index("uk_tag", nameof(Tag), true)]
 public sealed class AvatarContentTagEntity
 {
-    [Column(IsPrimary = true)] public Guid Id { get; set; }
+    [Column(IsPrimary = true)] public Guid Id { get; set; } = Guid.CreateVersion7();
 
     public string Tag { get; set; }
 

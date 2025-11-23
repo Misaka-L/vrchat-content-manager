@@ -8,7 +8,7 @@ namespace VRChatContentManager.Core.Management.Models.Entity.Avatar;
 [Index("uk_platform", nameof(Platform), true)]
 public sealed class AvatarContentSupportedPlatformEntity
 {
-    [Column(IsPrimary = true)] public Guid Id { get; set; }
+    [Column(IsPrimary = true)] public Guid Id { get; set; } = Guid.CreateVersion7();
 
     public string Platform { get; set; }
 
