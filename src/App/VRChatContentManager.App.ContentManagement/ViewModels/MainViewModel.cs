@@ -48,10 +48,14 @@ public sealed partial class MainViewModel : ViewModelBase, INavigationHost
     public MainViewModel(
         [FromKeyedServices(ServicesKeys.ContentManagerWindows)]
         NavigationService navigationService,
+        [FromKeyedServices(ServicesKeys.ContentManagerWindows)]
+        DialogService dialogService,
         TreeNavigationItemViewModelFactory navigationItemFactory,
         AvatarRootNavigationItemViewModel avatarRootNavigationItemViewModel
     )
     {
+        dialogService.SetDialogHostId(DialogHostId);
+
         _avatarRootNavigationItemViewModel = avatarRootNavigationItemViewModel;
 
         navigationService.Register(this);

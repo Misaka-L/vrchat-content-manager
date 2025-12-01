@@ -1,6 +1,8 @@
-﻿using VRChatContentManager.App.ContentManagement.Pages;
+﻿using VRChatContentManager.App.ContentManagement.Dialogs.Data.Avatar;
+using VRChatContentManager.App.ContentManagement.Pages;
 using VRChatContentManager.App.ContentManagement.Pages.Avatar;
 using VRChatContentManager.App.ContentManagement.ViewModels;
+using VRChatContentManager.App.ContentManagement.ViewModels.Dialogs.Data.Avatar;
 using VRChatContentManager.App.ContentManagement.ViewModels.Pages;
 using VRChatContentManager.App.ContentManagement.ViewModels.Pages.Avatar;
 using VRChatContentManager.App.ContentManagement.Views;
@@ -21,6 +23,9 @@ public static class ViewLocatorExtenstion
 
             ViewLocator.Register<AvatarRootPageViewModel, AvatarRootPage>();
             ViewLocator.Register<AvatarQueryFilterPageViewModel, AvatarQueryFilterPage>();
+            
+            // Dialogs
+            ViewLocator.Register<EditAvatarLocalTagsDialogViewModel, EditAvatarLocalTagsDialog>();
         }
     }
 }

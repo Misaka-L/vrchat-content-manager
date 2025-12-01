@@ -1,4 +1,5 @@
-﻿using VRChatContentManager.Core.Management.Mappers;
+﻿using FreeSql;
+using VRChatContentManager.Core.Management.Mappers;
 using VRChatContentManager.Core.Management.Models.Entity.Avatar;
 
 namespace VRChatContentManager.Core.Management.Services;
@@ -7,6 +8,9 @@ public sealed class AvatarContentManagementService(
     IFreeSql freeSql,
     AggregatedVRChatApiService aggregatedApiService)
 {
+    private readonly IBaseRepository<AvatarContentEntity> _avatarRepository =
+        freeSql.GetAggregateRootRepository<AvatarContentEntity>();
+
     public async ValueTask RefreshAllAvatarsAsync()
     {
         var supportedPlatformEntities = await GetAllSupportedPlatformsAsync();
@@ -57,8 +61,7 @@ public sealed class AvatarContentManagementService(
 
     public async ValueTask<List<AvatarContentEntity>> GetAllAvatarsAsync()
     {
-        return await freeSql
-            .Select<AvatarContentEntity>()
+        return await _avatarRepository.Select
             .IncludeMany(avatar => avatar.LocalTags)
             .IncludeMany(avatar => avatar.SupportedPlatform)
             .ToListAsync();
@@ -74,6 +77,20 @@ public sealed class AvatarContentManagementService(
             .ToListAsync();
     }
 
+    public async ValueTask UpdateAvatarAsync(string id, Action<AvatarContentEntity> action)
+    {
+        var entity = await _avatarRepository.Select
+            .Where(e => e.Id == id)
+            .FirstAsync<AvatarContentEntity>();
+        
+        if (entity is null)
+            throw new InvalidOperationException("Avatar not found");
+        
+        action(entity);
+
+        await _avatarRepository.UpdateAsync(entity);
+    }
+
     public async ValueTask<List<AvatarContentQueryFilterEntity>> GetAllQueryFiltersAsync()
     {
         return await freeSql
@@ -86,6 +103,17 @@ public sealed class AvatarContentManagementService(
         return await freeSql
             .Select<AvatarContentTagEntity>()
             .ToListAsync();
+    }
+
+    public async ValueTask<AvatarContentTagEntity> AddTagAsync(string tag)
+    {
+        var entity = new AvatarContentTagEntity
+        {
+            Tag = tag
+        };
+
+        await freeSql.Insert(entity).ExecuteAffrowsAsync();
+        return entity;
     }
 
     public async ValueTask<List<AvatarContentSupportedPlatformEntity>> GetAllSupportedPlatformsAsync()

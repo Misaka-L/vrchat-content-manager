@@ -18,7 +18,7 @@ public sealed partial class AvatarRootPageViewModel(
     private async Task Load()
     {
         var avatars = await avatarContentManagementService.GetAllAvatarsAsync();
-        var viewModels = avatars.Select(avatar => new AvatarListItemViewModel(avatar)).ToList();
+        var viewModels = avatars.Select(itemViewModelFactory.Create).ToList();
 
         Avatars.Clear();
         Avatars.AddRange(viewModels);

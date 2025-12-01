@@ -4,6 +4,7 @@ using VRChatContentManager.App.ContentManagement.ViewModels;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.List;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.Navigation;
 using VRChatContentManager.App.ContentManagement.ViewModels.Data.Navigation.Avatar;
+using VRChatContentManager.App.ContentManagement.ViewModels.Dialogs.Data.Avatar;
 using VRChatContentManager.App.ContentManagement.ViewModels.Pages;
 using VRChatContentManager.App.ContentManagement.ViewModels.Pages.Avatar;
 using VRChatContentManager.App.ContentManagement.Views;
@@ -31,6 +32,11 @@ public static class ServicesExtenstion
         services.AddTransient<AvatarRootPageViewModel>();
 
         services.AddTransient<ContentManagerAvatarQueryFilterPageViewModelFactory>();
+        
+        // Dialogs
+        services.AddKeyedSingleton<DialogService>(ServicesKeys.ContentManagerWindows);
+        
+        services.AddTransient<EditAvatarLocalTagsDialogViewModelFactory>();
 
         // Navigation
         services.AddTransient<TreeNavigationItemViewModelFactory>();
