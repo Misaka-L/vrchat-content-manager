@@ -1,7 +1,6 @@
 using System;
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using VRChatContentManager.App.ViewModels;
 
 namespace VRChatContentManager.App.Views;
@@ -12,10 +11,22 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        if (!OperatingSystem.IsWindows())
+        {
+            ShowInTaskbar = true;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ExtendClientAreaChromeHints = Avalonia.Platform.ExtendClientAreaChromeHints.PreferSystemChrome;
+            ExtendClientAreaToDecorationsHint = false;
+            SystemDecorations = SystemDecorations.Full;
+            Topmost = false;
+
+            return;
+        }
+
 #if DEBUG
         ShowInTaskbar = true;
 #endif
-        
+
         Activate();
 
         Closing += (_, arg) =>
@@ -41,20 +52,24 @@ public partial class MainWindow : Window
         Top,
         Bottom,
         Left,
-        Right
+        Right,
+        Unknown
     }
 
     private TaskBarLocation GetTaskBarLocation()
     {
-        var taskBarOnTopOrBottom = Screens.Primary.WorkingArea.Width == Screens.Primary.Bounds.Width;
+        if (Screens.Primary is not { } primaryScreen)
+            return TaskBarLocation.Unknown;
+
+        var taskBarOnTopOrBottom = primaryScreen.WorkingArea.Width == primaryScreen.Bounds.Width;
         if (taskBarOnTopOrBottom)
         {
-            if (Screens.Primary.WorkingArea.TopLeft.Y > 0)
+            if (primaryScreen.WorkingArea.TopLeft.Y > 0)
                 return TaskBarLocation.Top;
         }
         else
         {
-            return Screens.Primary.WorkingArea.TopLeft.X > 0 ? TaskBarLocation.Left : TaskBarLocation.Right;
+            return primaryScreen.WorkingArea.TopLeft.X > 0 ? TaskBarLocation.Left : TaskBarLocation.Right;
         }
 
         return TaskBarLocation.Bottom;
@@ -62,16 +77,19 @@ public partial class MainWindow : Window
 
     private int GetTaskBarHeight()
     {
+        if (Screens.Primary is not { } primaryScreen)
+            return -1;
+
         var taskbarHeight = GetTaskBarLocation() switch
         {
-            TaskBarLocation.Top => Screens.Primary.WorkingArea.Height,
-            TaskBarLocation.Bottom => Screens.Primary.Bounds.Height - Screens.Primary.WorkingArea.Height,
-            TaskBarLocation.Left => Screens.Primary.Bounds.Width - Screens.Primary.WorkingArea.Width,
-            TaskBarLocation.Right => Screens.Primary.Bounds.Height - Screens.Primary.WorkingArea.Height,
+            TaskBarLocation.Top => primaryScreen.WorkingArea.Height,
+            TaskBarLocation.Bottom => primaryScreen.Bounds.Height - primaryScreen.WorkingArea.Height,
+            TaskBarLocation.Left => primaryScreen.Bounds.Width - primaryScreen.WorkingArea.Width,
+            TaskBarLocation.Right => primaryScreen.Bounds.Height - primaryScreen.WorkingArea.Height,
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        return (int)(taskbarHeight / Screens.Primary.Scaling);
+        return (int)(taskbarHeight / primaryScreen.Scaling);
     }
 
     private void TopLevel_OnOpened(object? sender, EventArgs e)
@@ -81,10 +99,15 @@ public partial class MainWindow : Window
 
     private void UpdateWindowPosition()
     {
+        if (!OperatingSystem.IsWindows())
+            return;
+
+        if (Screens.Primary is not { } primaryScreen)
+            return;
+
         var taskBarLocation = GetTaskBarLocation();
         var taskBarHeight = GetTaskBarHeight();
 
-        var primaryScreen = Screens.Primary;
         var screenBoundsWithDpi = new PixelPoint(primaryScreen.Bounds.Width, primaryScreen.Bounds.Height);
         var windowBoundsWithDpi =
             PixelPoint.FromPoint(new Point((int)Bounds.Size.Width, (int)Bounds.Size.Height), primaryScreen.Scaling);
