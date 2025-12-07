@@ -68,7 +68,7 @@ public static class ServicesExtension
             .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
             {
                 UseCookies = false,
-                MaxConnectionsPerServer = 10,
+                MaxConnectionsPerServer = 256,
                 PooledConnectionLifetime = TimeSpan.Zero,
                 EnableMultipleHttp2Connections = true,
                 EnableMultipleHttp3Connections = true,
@@ -80,9 +80,9 @@ public static class ServicesExtension
                 {
                     UseJitter = true,
                     ShouldRetryAfterHeader = true,
-                    MaxRetryAttempts = 3,
-                    Delay = TimeSpan.FromSeconds(2),
-                    BackoffType = DelayBackoffType.Linear
+                    MaxRetryAttempts = 5,
+                    Delay = TimeSpan.FromSeconds(3),
+                    BackoffType = DelayBackoffType.Exponential
                 });
             });
 
