@@ -62,7 +62,7 @@ jobs:
         with:
           tags: csproj.Version
           version: ${{ inputs.new-version}}
-          file: ${{ env.repo_dir }}/src/VRChatContentManager.App/VRChatContentManager.App.csproj
+          file: ${{ env.repo_dir }}/src/VRChatContentManager.App/VRChatContentManager.App.csproj, ${{ env.repo_dir }}/src/VRChatContentManager.App/VRChatContentManager.Core.csproj
 
       - name: Extact Release Note and Update Changelog
         working-directory: ${{ env.repo_dir }}
