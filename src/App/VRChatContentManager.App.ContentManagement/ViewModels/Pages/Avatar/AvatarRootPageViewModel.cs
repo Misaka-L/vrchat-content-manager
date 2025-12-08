@@ -14,6 +14,8 @@ public sealed partial class AvatarRootPageViewModel(
 {
     [ObservableProperty] public partial AvaloniaList<AvatarListItemViewModel> Avatars { get; private set; } = [];
 
+    [ObservableProperty] public partial string SearchKeyword { get; set; } = "";
+
     [RelayCommand]
     private async Task Load()
     {
@@ -22,6 +24,15 @@ public sealed partial class AvatarRootPageViewModel(
 
         Avatars.Clear();
         Avatars.AddRange(viewModels);
+    }
+
+    [RelayCommand]
+    private async Task Search()
+    {
+        var results = await avatarContentManagementService.SearchAvatarsAsync(SearchKeyword);
+        Avatars = new AvaloniaList<AvatarListItemViewModel>(
+            results.Select(itemViewModelFactory.Create).ToList()
+        );
     }
 
     [RelayCommand]

@@ -77,15 +77,26 @@ public sealed class AvatarContentManagementService(
             .ToListAsync();
     }
 
+    public async ValueTask<List<AvatarContentEntity>> SearchAvatarsAsync(string keyword)
+    {
+        return await _avatarRepository.Select
+            .WhereIf(!string.IsNullOrWhiteSpace(keyword), e =>
+                e.Name.Contains(keyword, StringComparison.InvariantCultureIgnoreCase) ||
+                e.Description.Contains(keyword, StringComparison.InvariantCultureIgnoreCase))
+            .IncludeMany(avatar => avatar.LocalTags)
+            .IncludeMany(avatar => avatar.SupportedPlatform)
+            .ToListAsync();
+    }
+
     public async ValueTask UpdateAvatarAsync(string id, Action<AvatarContentEntity> action)
     {
         var entity = await _avatarRepository.Select
             .Where(e => e.Id == id)
             .FirstAsync<AvatarContentEntity>();
-        
+
         if (entity is null)
             throw new InvalidOperationException("Avatar not found");
-        
+
         action(entity);
 
         await _avatarRepository.UpdateAsync(entity);

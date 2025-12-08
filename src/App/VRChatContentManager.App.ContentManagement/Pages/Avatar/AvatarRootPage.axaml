@@ -19,7 +19,11 @@
     <Grid RowDefinitions="Auto,*">
         <controls:Card>
             <StackPanel>
-                <TextBox Watermark="Search avatar by name or description..." />
+                <TextBox Watermark="Search avatar by name or description..." Text="{Binding SearchKeyword}">
+                    <Interaction.Behaviors>
+                        <ExecuteCommandOnKeyDownBehavior Key="Enter" Command="{Binding SearchCommand}" />
+                    </Interaction.Behaviors>
+                </TextBox>
                 <Button Content="Refresh All Avatars" Command="{Binding RefreshAllAvatarsCommand}" />
             </StackPanel>
         </controls:Card>
