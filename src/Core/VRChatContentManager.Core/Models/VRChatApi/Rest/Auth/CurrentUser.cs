@@ -7,5 +7,5 @@ public record CurrentUser(
     [property: JsonPropertyName("displayName")] string DisplayName,
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("currentAvatarThumbnailImageUrl")] string AvatarThumbnailImageUrl,
-    [property: JsonPropertyName("profilePicOverrideThumbnail")] string? ProfilePictureThumbnailUrl
+    [property: JsonPropertyName("profilePicOverrideThumbnail")] string? ProfilePictureThumbnailUrl = null
 );

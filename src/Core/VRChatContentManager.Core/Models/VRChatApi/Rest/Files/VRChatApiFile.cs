@@ -13,9 +13,9 @@ public record VRChatApiFileVersion(
     [property: JsonPropertyName("status")]
     string Status,
     [property: JsonPropertyName("file")]
-    VRChatApiFileVersionEntity? File,
+    VRChatApiFileVersionEntity? File = null,
     [property: JsonPropertyName("signature")]
-    VRChatApiFileVersionEntity? Signature
+    VRChatApiFileVersionEntity? Signature = null
 );
 
 public record VRChatApiFileVersionEntity(
