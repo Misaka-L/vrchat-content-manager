@@ -10,7 +10,7 @@
         <IsAotCompatible>true</IsAotCompatible>
         <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
         <Version>1.0.0-rc.1</Version>
-        <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'!='Debug'">
