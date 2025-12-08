@@ -8,7 +8,7 @@ public static class AppVersionUtils
     public static string GetAppVersion()
     {
         var assembly = Assembly.GetExecutingAssembly();
-        return assembly.GetName().Version?.ToString() ?? "snapshot";
+        return assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "snapshot";
     }
 
     public static string GetAppCommitHash()

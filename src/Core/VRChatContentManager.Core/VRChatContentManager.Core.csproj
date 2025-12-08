@@ -6,8 +6,8 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible>true</IsAotCompatible>
         <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
-        <Version>0.1.0</Version>
-        <SourceControlInformationFeatureSupported>true</SourceControlInformationFeatureSupported>
+        <Version>0.1.0-rc.1</Version>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
     <ItemGroup>

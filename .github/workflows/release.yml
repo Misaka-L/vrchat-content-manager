@@ -62,14 +62,15 @@ jobs:
         with:
           tags: csproj.Version
           version: ${{ inputs.new-version}}
-          file: ${{ env.repo_dir }}/src/VRChatContentManager.App/VRChatContentManager.App.csproj
+          file: "\"${{ env.repo_dir }}/src/VRChatContentManager.App/VRChatContentManager.App.csproj\", \"${{ env.repo_dir }}/src/VRChatContentManager.Core/VRChatContentManager.Core.csproj\""
 
       - name: Extact Release Note and Update Changelog
         working-directory: ${{ env.repo_dir }}
         env:
           NEW_VERSION: ${{ inputs.new-version }}
           RELEASE_NOTE_PATH: ${{ env.path_to_release_note }}
-        run: dotnet run dev/scripts/release-changelog.cs -- CHANGELOG.md $NEW_VERSION --print-changes-to-stdout ${{ inputs.pre-release && '--keep-unreleased-changes' || '' }} > $RELEASE_NOTE_PATH
+          GITHUB_REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: dotnet run dev/scripts/release-changelog.cs -- CHANGELOG.md $NEW_VERSION $GITHUB_REPO_URL --print-changes-to-stdout ${{ inputs.pre-release && '--keep-unreleased-changes' || '' }} > $RELEASE_NOTE_PATH
         shell: bash
 
       - name: Upload CHANGELOG.md

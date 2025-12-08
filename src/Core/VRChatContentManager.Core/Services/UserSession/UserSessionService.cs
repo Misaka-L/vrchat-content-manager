@@ -76,9 +76,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
                     args.Outcome.Exception is not ApiErrorException),
                 UseJitter = true,
                 ShouldRetryAfterHeader = true,
-                MaxRetryAttempts = 3,
-                Delay = TimeSpan.FromSeconds(2),
-                BackoffType = DelayBackoffType.Linear
+                MaxRetryAttempts = 5,
+                Delay = TimeSpan.FromSeconds(5),
+                BackoffType = DelayBackoffType.Exponential
             })
             .AddConcurrencyLimiter(new ConcurrencyLimiterOptions
             {
