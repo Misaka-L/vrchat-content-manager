@@ -1,13 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net10.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <LangVersion>preview</LangVersion>
-        <IsAotCompatible>true</IsAotCompatible>
         <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
         <Version>1.0.0</Version>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -18,58 +14,53 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <AvaloniaResource Include="Assets\**" />
+        <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia" Version="11.3.8" />
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
-        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
-        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
-        <!--Condition
-        below is needed to remove Avalonia.Diagnostics package from build output in Release
-        configuration.-->
-        <!--        <PackageReference Include="Avalonia.Diagnostics" Version="11.3.6">-->
-        <!--            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>-->
-        <!--            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>-->
-        <!--        </PackageReference>-->
-        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.0" />
-        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="DialogHost.Avalonia" Version="0.9.3" />
+        <!--Avalonia Framekwork-->
+        <PackageReference Include="Avalonia"/>
+        <PackageReference Include="Avalonia.Desktop"/>
+        <PackageReference Include="Avalonia.Fonts.Inter"/>
 
-        <PackageReference Include="HotAvalonia" Version="3.0.0" PrivateAssets="All" Publish="True" />
-        <PackageReference Include="Lemon.Hosting.AvaloniauiDesktop" Version="1.0.3-beta" />
+        <!--DevTools Suppport-->
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport"/>
 
-        <PackageReference Include="Material.Avalonia" Version="3.13.3" />
-        <PackageReference Include="Material.Icons.Avalonia" Version="2.4.1" />
+        <!--Hot Reload Support-->
+        <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True"/>
 
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+        <!--Mvvm-->
+        <PackageReference Include="CommunityToolkit.Mvvm"/>
+        <PackageReference Include="DialogHost.Avalonia"/>
 
-        <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6" />
+        <!--UI-->
+        <PackageReference Include="Material.Avalonia"/>
+        <PackageReference Include="Material.Icons.Avalonia"/>
 
-        <PackageReference Include="Serilog" Version="4.3.0" />
+        <!--App Host-->
+        <PackageReference Include="Lemon.Hosting.AvaloniauiDesktop"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting"/>
 
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+        <PackageReference Include="Avalonia.Xaml.Behaviors"/>
 
-        <PackageReference Include="Serilog.Formatting.Compact" Version="3.0.0" />
-
-        <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
-
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-
-        <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
-
-        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+        <!--Serilog Logging-->
+        <PackageReference Include="Serilog"/>
+        <PackageReference Include="Serilog.Extensions.Hosting"/>
+        <PackageReference Include="Serilog.Formatting.Compact"/>
+        <PackageReference Include="Serilog.Sinks.Async"/>
+        <PackageReference Include="Serilog.Sinks.Console"/>
+        <PackageReference Include="Serilog.Sinks.Debug"/>
+        <PackageReference Include="Serilog.Sinks.File"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Core\VRChatContentManager.Core\VRChatContentManager.Core.csproj" />
+        <ProjectReference Include="..\..\Core\VRChatContentManager.Core\VRChatContentManager.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <!-- Preserve Avalonia types for reflection -->
-        <TrimmerRootAssembly Include="Avalonia.Controls" />
+        <TrimmerRootAssembly Include="Avalonia.Controls"/>
     </ItemGroup>
 
-    <Import Project="../../BuildInfo.targets" />
+    <Import Project="../../BuildInfo.targets"/>
 </Project>
