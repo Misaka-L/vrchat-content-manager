@@ -63,7 +63,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\VRChatContentManager.Core\VRChatContentManager.Core.csproj" />
+        <ProjectReference Include="..\..\Core\VRChatContentManager.Core\VRChatContentManager.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -71,5 +71,5 @@
         <TrimmerRootAssembly Include="Avalonia.Controls" />
     </ItemGroup>
 
-    <Import Project="../BuildInfo.targets" />
+    <Import Project="../../BuildInfo.targets" />
 </Project>
