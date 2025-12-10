@@ -96,8 +96,11 @@ public sealed partial class PublishTaskManagerViewModel(
     {
         Dispatcher.UIThread.Invoke(() =>
         {
+            if (Tasks.Any(t => t.TaskId == task.TaskId))
+                return;
+
             var viewModel = taskFactory.Create(task, taskManagerService);
-            Tasks.Add(viewModel);
+            Tasks.Insert(0, viewModel);
         });
     }
 
