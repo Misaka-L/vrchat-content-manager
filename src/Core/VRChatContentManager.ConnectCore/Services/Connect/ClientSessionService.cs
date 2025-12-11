@@ -90,6 +90,8 @@ public sealed class ClientSessionService(
         await CleanupExpiredSessionsAsync();
         await sessionStorageService.RemoveSessionByClientIdAsync(clientId);
 
+        code = code.ToUpperInvariant();
+
         logger.LogInformation("Creating session for client {ClientId}", clientId);
         if (TryGetChallengeSession(code, clientId, identityPrompt) is not { } challengeSession)
             throw new InvalidOperationException("Challenge session not found");
