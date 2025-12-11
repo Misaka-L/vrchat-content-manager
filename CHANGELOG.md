@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - Insert new task to the beginning of the task list. [`#89`](https://github.com/project-vrcz/content-manager/pull/89)
+- Challenge Code will Always uppercase. [`#93`](https://github.com/project-vrcz/content-manager/pull/93)
+- Allow copy challenge code in request challenge dialog. [`#94`](https://github.com/project-vrcz/content-manager/pull/94)
 
 ## [1.0.0] - 2025-12-08
 
