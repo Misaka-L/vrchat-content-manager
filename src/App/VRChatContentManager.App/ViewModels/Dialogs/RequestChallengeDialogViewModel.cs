@@ -40,7 +40,8 @@ public sealed partial class RequestChallengeDialogViewModel(
 
 public sealed class RequestChallengeDialogViewModelFactory
 {
-    public RequestChallengeDialogViewModel Create(string code, string clientId, string identityPrompt, string clientName)
+    public RequestChallengeDialogViewModel Create(string code, string clientId, string identityPrompt,
+        string clientName)
     {
         return new RequestChallengeDialogViewModel(code, clientId, identityPrompt, clientName);
     }

@@ -25,6 +25,15 @@
                        FontSize="18" />
             <TextBlock Text="{Binding Code}" FontWeight="SemiBold" FontSize="36"
                        TextAlignment="Center" />
+            <Button Content="{avalonia:MaterialIconTextExt Kind=ContentCopy, Text=Copy}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    HorizontalAlignment="Center">
+                <Interaction.Behaviors>
+                    <ButtonClickEventTriggerBehavior>
+                        <SetClipboardTextAction Text="{Binding Code}" />
+                    </ButtonClickEventTriggerBehavior>
+                </Interaction.Behaviors>
+            </Button>
         </StackPanel>
         <StackPanel Spacing="4">
             <avalonia:MaterialIcon Kind="Warning" Height="30" Width="30" />
