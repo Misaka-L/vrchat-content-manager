@@ -56,6 +56,10 @@ public sealed class BundleCompressProcesser(
 
                 using var writer = new AssetsFileWriter(outputBundleFileStream);
                 bundleFile.Pack(writer, AssetBundleCompressionType.LZMA, cancellationToken: cancellationToken);
+
+                var compressRatio = (double)outputBundleFileStream.Length / rawBundleFileStream.Length * 100;
+                logger.LogInformation("Bundle file {BundleFileId} compressed with ratio {CompressRatio}%",
+                    bundleFileId, compressRatio);
                 bundleFile.Close();
             }, TaskCreationOptions.LongRunning);
 

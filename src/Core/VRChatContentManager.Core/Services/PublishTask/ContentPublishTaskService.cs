@@ -3,6 +3,7 @@ using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.Core.Models;
 using VRChatContentManager.Core.Services.PublishTask.BundleProcesser;
 using VRChatContentManager.Core.Services.PublishTask.ContentPublisher;
+using VRChatContentManager.Core.Utils;
 
 namespace VRChatContentManager.Core.Services.PublishTask;
 
@@ -147,8 +148,14 @@ public sealed class ContentPublishTaskService
             "Processing bundle file {BundleFileId} for content ({ContentId}) {ContentPlatform} {ContentName}",
             _rawBundleFileId, ContentId, ContentPlatform, ContentName);
 
-        _bundleFileId =
-            await _bundleProcesser.ProcessBundleAsync(_rawBundleFileId, _progressReporter, cancellationToken);
+        using (StopwatchScope.Enter(watch => _logger.LogInformation(
+                   "Bundle file {BundleFileId} processing for content ({ContentId}) {ContentPlatform} {ContentName} took {ElapsedMilliseconds} ms",
+                   _rawBundleFileId, ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
+        {
+            _bundleFileId =
+                await _bundleProcesser.ProcessBundleAsync(_rawBundleFileId, _progressReporter, cancellationToken);
+        }
+
         if (_bundleFileId != _rawBundleFileId)
             await _tempFileService.DeleteFileAsync(_rawBundleFileId);
     }
@@ -159,9 +166,15 @@ public sealed class ContentPublishTaskService
             "Bundle processing for content ({ContentId}) {ContentPlatform} {ContentName} completed, preparing to publish.",
             ContentId, ContentPlatform, ContentName);
 
-        await _contentPublisher.PublishAsync(
-            _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus
-            , _awsHttpClient, _progressReporter, cancellationToken);
+        using (StopwatchScope.Enter(watch => _logger.LogInformation(
+                   "Publish content ({ContentId}) {ContentPlatform} {ContentName} took {ElapsedMilliseconds} ms",
+                   ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
+        {
+            await _contentPublisher.PublishAsync(
+                _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus
+                , _awsHttpClient, _progressReporter, cancellationToken);
+        }
+
         await _tempFileService.DeleteFileAsync(_bundleFileId);
     }
 
