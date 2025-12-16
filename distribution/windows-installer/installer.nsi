@@ -99,7 +99,7 @@ Section "Install Files"
     SetOutPath $INSTDIR
     !insertmacro UNINSTALL.LOG_OPEN_INSTALL
 
-    File "${PathToBundle}\*.*"
+    File /r "${PathToBundle}\*.*"
 
     WriteRegStr "${INSTDIR_REG_ROOT}" "${INSTDIR_REG_KEY}" "DisplayName" "${ProductName}"
     WriteRegStr "${INSTDIR_REG_ROOT}" "${INSTDIR_REG_KEY}" "DisplayVersion" "${DisplayVersion}"
