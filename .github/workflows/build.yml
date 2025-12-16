@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.ref }}
           path: ${{ env.repo_dir }}
@@ -48,7 +48,7 @@ jobs:
         working-directory: ${{ env.src_dir }}
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: vrchat-content-manager-app-${{ matrix.rid }}
           path: |
@@ -56,7 +56,62 @@ jobs:
             !${{ env.output_dir }}/**/*.pdb
 
       - name: Upload PDB
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: vrchat-content-manager-app-${{ matrix.rid }}-pdb
           path: ${{ env.output_dir }}/**/*.pdb
+
+  make-nsis-windows-installer:
+    needs: build
+    runs-on: windows-latest
+
+    env:
+      repo_dir: ${{ github.workspace }}/repo
+      installer_working_dir: ${{ github.workspace }}/repo/distribution/windows-installer
+      installer_script: installer.nsi
+      installer_output_name: vrchat-content-manager-installer.exe
+      artifact_dir: ${{ github.workspace }}/artifacts
+      executable_name: VRChatContentManager.App.exe
+      installer_product_version: ""
+      installer_file_version: ""
+
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v7
+        with:
+          name: vrchat-content-manager-app-win-x64
+          path: ${{ env.artifact_dir }}
+
+      - name: Get Version Info
+        id: get-version-info
+        shell: powershell
+        working-directory: ${{ env.artifact_dir }}
+        run: |
+          "installer_product_version=" + (Get-Item ${{ env.executable_name }} | Select-Object -ExpandProperty VersionInfo | Select-Object -ExpandProperty ProductVersion) >> $Env:GITHUB_ENV
+          "installer_file_version=" + (Get-Item ${{ env.executable_name }} | Select-Object -ExpandProperty VersionInfo | Select-Object -ExpandProperty FileVersion) >> $Env:GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          path: ${{ env.repo_dir }}
+
+      - name: Install NSIS
+        uses: repolevedavaj/install-nsis@618f596b61aeb0254a327cceba89036242b79758
+        with:
+          nsis-version: 3.11
+
+      - name: Create NSIS Installer
+        shell: powershell
+        working-directory: ${{ env.installer_working_dir }}
+        env:
+          INSTALLER_DISPLAY_VERSION: ${{ env.installer_product_version }}
+          INSTALLER_OLD_CLASSIC_VERSION: ${{ env.installer_file_version }}
+          INSTALLER_PATH_TO_BUNDLE: ${{ env.artifact_dir }}
+        run: makensis ${{ env.installer_script }}
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: vrchat-content-manager-app-win-x64-installer
+          path: ${{ env.installer_working_dir }}/${{ env.installer_output_name }}
