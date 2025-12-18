@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Windows Installer (NSIS). [`#101`](https://github.com/project-vrcz/content-manager/pull/101)
+- Single Instance. (`#103`)[https://github.com/project-vrcz/content-manager/pull/103]
+  - Prevent launch new instance when another intance already exist.
+  - Bring up existing instance's main window.
 
 ## [1.1.0] - 2025-12-11
 

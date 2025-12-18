@@ -11,6 +11,7 @@ using VRChatContentManager.App.ViewModels.Pages.HomeTab;
 using VRChatContentManager.App.ViewModels.Pages.Settings;
 using VRChatContentManager.App.ViewModels.Settings;
 using VRChatContentManager.ConnectCore.Services.Connect.Challenge;
+using VRChatContentManager.IpcCore.Services;
 using AddAccountPageViewModel = VRChatContentManager.App.ViewModels.Pages.AddAccountPageViewModel;
 
 namespace VRChatContentManager.App.Extensions;
@@ -22,6 +23,7 @@ public static class ServicesExtenstion
         services.AddSingleton<AppWebImageLoader>();
 
         services.AddSingleton<AppWindowService>();
+        services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
 
         // Dialog
         services.AddSingleton<DialogService>();

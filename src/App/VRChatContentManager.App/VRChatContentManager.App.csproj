@@ -55,6 +55,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Core\VRChatContentManager.Core\VRChatContentManager.Core.csproj"/>
+        <ProjectReference Include="..\..\Core\VRChatContentManager.IpcCore\VRChatContentManager.IpcCore.csproj" />
     </ItemGroup>
 
     <ItemGroup>

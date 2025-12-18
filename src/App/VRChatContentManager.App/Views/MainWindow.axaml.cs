@@ -1,6 +1,6 @@
-using System;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Interactivity;
 using VRChatContentManager.App.ViewModels;
 
 namespace VRChatContentManager.App.Views;
@@ -127,5 +127,27 @@ public partial class MainWindow : Window
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private void Window_OnLoaded(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+            return;
+
+        viewModel.RequestActivate += RequestActive;
+    }
+
+    private void Window_OnUnloaded(object? sender, RoutedEventArgs e)
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+            return;
+
+        viewModel.RequestActivate -= RequestActive;
+    }
+
+    private void RequestActive(object? sender, EventArgs e)
+    {
+        Show();
+        Activate();
     }
 }

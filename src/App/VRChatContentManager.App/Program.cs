@@ -11,6 +11,10 @@ using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentManager.App.Extensions;
 using VRChatContentManager.Core.Extensions;
 using VRChatContentManager.Core.Services.App;
+using VRChatContentManager.IpcCore;
+using VRChatContentManager.IpcCore.Exceptions;
+using VRChatContentManager.IpcCore.Extensions;
+using VRChatContentManager.IpcCore.Models;
 
 namespace VRChatContentManager.App;
 
@@ -35,35 +39,63 @@ internal sealed class Program
             .WriteTo.Async(writer =>
                 writer.File(new CompactJsonFormatter(), jsonLogPath,
                     rollingInterval: RollingInterval.Day))
-            .WriteTo.Async(writer => 
+            .WriteTo.Async(writer =>
                 writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
             .CreateLogger();
 
-        builder.Services.AddSerilog();
-
-        builder.UseAppCore();
-        builder.Services.AddAppServices();
-        builder.Services.AddAvaloniauiDesktopApplication<App>(appBuilder => appBuilder
-            .UseHotReload()
-            .UsePlatformDetect()
-            .WithInterFont()
-            .LogToTrace());
-
-        var app = builder.Build();
-
         try
         {
+            using var appMutex = new AppMutex();
+
+            try
+            {
+                appMutex.OwnMutex();
+            }
+            catch (AbandonedMutexException ex)
+            {
+                Log.Warning(ex,
+                    "The previous instance of the application did not release the mutex properly. " +
+                    "Continuing to run this instance.");
+            }
+
+            builder.Services.AddSerilog();
+
+            builder.UseAppCore();
+            builder.Services.AddAppServices();
+            builder.Services.AddIpcCore();
+            builder.Services.AddAvaloniauiDesktopApplication<App>(appBuilder => appBuilder
+                .UseHotReload()
+                .UsePlatformDetect()
+                .WithInterFont()
+                .LogToTrace());
+
+            using var app = builder.Build();
+
             app.RunAvaloniauiApplication(args);
+        }
+        catch (MutexOwnedByAnotherInstanceException)
+        {
+            Log.Information("Another instance is already running. Exiting this instance.");
+            Environment.ExitCode = -1;
+
+            try
+            {
+                var ipcClient = new IpcClient();
+                ipcClient.SendIpcCommand(IpcCommand.ActivateWindow);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to send IPC command to the existing instance.");
+            }
         }
         catch (Exception ex)
         {
-            Log.Logger.Fatal(ex, "Oops, the application has crashed!");
+            Log.Fatal(ex, "Oops, the application has crashed!");
             Environment.ExitCode = -1;
         }
         finally
         {
-            app.Dispose();
             Log.CloseAndFlush();
         }
     }
