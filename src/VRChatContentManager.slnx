@@ -5,12 +5,13 @@
   </Folder>
   <Folder Name="/App/">
     <File Path="App/Directory.Packages.props" />
-    <Project Path="App/VRChatContentManager.App/VRChatContentManager.App.csproj" Type="C#" />
+    <Project Path="App/VRChatContentManager.App/VRChatContentManager.App.csproj" />
   </Folder>
   <Folder Name="/Core/">
     <File Path="Core/Directory.Packages.props" />
-    <Project Path="Core/VRChatContentManager.ConnectCore/VRChatContentManager.ConnectCore.csproj" Type="C#" />
-    <Project Path="Core/VRChatContentManager.Core/VRChatContentManager.Core.csproj" Type="C#" />
+    <Project Path="Core/VRChatContentManager.ConnectCore/VRChatContentManager.ConnectCore.csproj" />
+    <Project Path="Core/VRChatContentManager.Core/VRChatContentManager.Core.csproj" />
+    <Project Path="Core/VRChatContentManager.IpcCore/VRChatContentManager.IpcCore.csproj" />
   </Folder>
   <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />
 </Solution>
