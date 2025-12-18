@@ -32,6 +32,7 @@ public sealed class NamedPipeService(ILogger<NamedPipeService> logger, IpcComman
         {
             await _loopCts.CancelAsync();
             _loopCts.Dispose();
+            _loopCts = null;
         }
     }
 
