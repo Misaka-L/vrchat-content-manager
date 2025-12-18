@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Support `ready-for-publish` health check endpoint for RPC. [`104`](https://github.com/project-vrcz/content-manager/pull/105)
 - Launch App by URL protocol `vrchat-content-manager://launch`. (Windows-only for now) [`#104`](https://github.com/project-vrcz/content-manager/pull/104)
 - Windows Installer (NSIS). [`#101`](https://github.com/project-vrcz/content-manager/pull/101)
 - Single Instance. [`#103`](https://github.com/project-vrcz/content-manager/pull/103)
