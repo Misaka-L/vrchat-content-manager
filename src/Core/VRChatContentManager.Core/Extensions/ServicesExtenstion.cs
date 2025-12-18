@@ -8,6 +8,7 @@ using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Services;
 using VRChatContentManager.ConnectCore.Services.Connect.Metadata;
 using VRChatContentManager.ConnectCore.Services.Connect.SessionStorage;
+using VRChatContentManager.ConnectCore.Services.Health;
 using VRChatContentManager.ConnectCore.Services.PublishTask;
 using VRChatContentManager.Core.Services;
 using VRChatContentManager.Core.Services.App;
@@ -36,12 +37,14 @@ public static class ServicesExtension
         // Connect Publish Service
         services.AddTransient<IWorldPublishTaskService, WorldPublishTaskService>();
         services.AddTransient<WorldContentPublisherFactory>();
-        
+
         services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
         services.AddTransient<AvatarContentPublisherFactory>();
 
+        services.AddTransient<IHealthService, RpcHealthService>();
+
         services.AddTransient<BundleCompressProcesser>();
-        
+
         services.AddMemoryCache();
 
         services.AddTransient<ConcurrentMultipartUploaderFactory>();
@@ -50,7 +53,7 @@ public static class ServicesExtension
         services.AddHttpClient<RemoteImageService>(client => { client.AddUserAgent(); });
 
         services.AddTransient<VRChatApiClientFactory>();
-        
+
         services.AddSingleton<UserSessionManagerService>();
 
         services.AddScoped<UserSessionScopeService>();
@@ -92,24 +95,24 @@ public static class ServicesExtension
     public static IHostApplicationBuilder UseAppCore(this IHostApplicationBuilder builder)
     {
         builder.Services.AddAppCore();
-        
+
         const string sessionsFileName = "sessions.json";
         builder.Configuration.AddAppJsonFile(sessionsFileName);
-        
+
         var sessionsSection = builder.Configuration.GetSection("Sessions");
         builder.Services.Configure<UserSessionStorage>(sessionsSection);
         builder.Services.AddWriteableOptions<UserSessionStorage>(sessionsSection.Key, sessionsFileName);
-        
+
         const string appSettingsFileName = "settings.json";
         builder.Configuration.AddAppJsonFile(appSettingsFileName);
-        
+
         var appSettingsSection = builder.Configuration.GetSection("Settings");
         builder.Services.Configure<AppSettings>(appSettingsSection);
         builder.Services.AddWriteableOptions<AppSettings>(appSettingsSection.Key, appSettingsFileName);
-        
+
         const string rpcSessionsFileName = "rpc-sessions.json";
         builder.Configuration.AddAppJsonFile(rpcSessionsFileName);
-        
+
         var rpcSessionsSection = builder.Configuration.GetSection("RpcSessions");
         builder.Services.Configure<RpcSessionStorage>(rpcSessionsSection);
         builder.Services.AddWriteableOptions<RpcSessionStorage>(rpcSessionsSection.Key, rpcSessionsFileName);
@@ -125,7 +128,7 @@ public static class ServicesExtension
         {
             if (provider.GetRequiredService<IConfiguration>() is not IConfigurationRoot configuration)
                 throw new InvalidOperationException("Configuration is not an IConfigurationRoot");
-            
+
             filePath = useStoragePath ? Path.Combine(AppStorageService.GetStoragePath(), filePath) : filePath;
 
             var options = provider.GetRequiredService<IOptionsMonitor<T>>();
@@ -136,7 +139,7 @@ public static class ServicesExtension
 
         return services;
     }
-    
+
     public static IConfigurationManager AddAppJsonFile(this IConfigurationManager configurationManager, string fileName)
     {
         var appSettingsPath = Path.Combine(AppStorageService.GetStoragePath(), fileName);
