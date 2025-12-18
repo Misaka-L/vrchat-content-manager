@@ -18,6 +18,7 @@ Unicode True
 !define PathToBundle "$%INSTALLER_PATH_TO_BUNDLE%"
 
 !define AppExecutable "VRChatContentManager.App.exe"
+!define AppProtocol "vrchat-content-manager"
 
 !define /date InstallDate "%Y%m%d"
 
@@ -123,7 +124,15 @@ Section "Install Files"
     !insertmacro UNINSTALL.LOG_CLOSE_INSTALL
 SectionEnd
 
-Section "-Create Shoartcuts"
+Section "-Create URL protocol"
+    WriteRegStr HKCR "${AppProtocol}" "" "URL:URL:VRChat Content Publisher Protocol"
+    WriteRegStr HKCR "${AppProtocol}" "URL Protocol" ""
+    WriteRegExpandStr HKCR "${AppProtocol}\DefaultIcon" "" "$INSTDIR\${AppExecutable},1"
+
+    WriteRegStr HKCR "${AppProtocol}\shell\open\command" "" '"$INSTDIR\${AppExecutable}" --url "%1"'
+SectionEnd
+
+Section "-Create Shortcuts"
     !insertmacro MUI_STARTMENU_WRITE_BEGIN $START_MENU_PAGE_ID
       CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
       CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${ProductName}.lnk" "$INSTDIR\${AppExecutable}"
@@ -145,6 +154,7 @@ Section "uninstall"
     ${EndIf}
 
     DeleteRegKey "${INSTDIR_REG_ROOT}" "${INSTDIR_REG_KEY}"
+    DeleteRegKey HKCR "${AppProtocol}"
 SectionEnd
 
 ; onInit
