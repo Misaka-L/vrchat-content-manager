@@ -14,6 +14,8 @@ public sealed class ClientSessionService(
     ISessionStorageService sessionStorageService,
     ITokenSecretKeyProvider tokenSecretKeyProvider)
 {
+    public event EventHandler<string>? SessionCreated;
+
     private const string IssuerPrefix = "vrchat-content-manager";
     private const string Subject = "content-manager-build-pipeline-rpc";
 
@@ -103,6 +105,8 @@ public sealed class ClientSessionService(
 
         var session = new RpcClientSession(clientId, expires, clientName);
         await sessionStorageService.AddSessionAsync(session);
+
+        SessionCreated?.Invoke(this, session.ClientId);
 
         return await GenerateJwtAsync(clientId);
     }

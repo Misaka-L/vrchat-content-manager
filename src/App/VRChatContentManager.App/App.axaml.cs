@@ -75,7 +75,8 @@ public partial class App : Application
         // Getting Started Pages
         ViewLocator.Register<GuideWelcomePageViewModel, GuideWelcomePage>();
         ViewLocator.Register<GuideSetupUnityPageViewModel, GuideSetupUnityPage>();
-        ViewLocator.Register<GuideFinishSetupPageViewModel, GuideFinishPage>();
+        ViewLocator.Register<GuideOpenConnectSettingsPageViewModel, GuideOpenConnectSettingsPage>();
+        ViewLocator.Register<GuideConnectUnityPageViewModel, GuideConnectUnityPage>();
 
         // Settings Pages
         ViewLocator.Register<SettingsFixAccountPageViewModel, SettingsFixAccountPage>();

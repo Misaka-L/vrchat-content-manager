@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 using VRChatContentManager.Core.Services.UserSession;
@@ -17,7 +16,7 @@ public sealed partial class BootstrapPageViewModel(
     private async Task Load()
     {
         await sessionManagerService.RestoreSessionsAsync();
-        
+
         if (!appSettings.Value.SkipFirstSetup)
         {
             navigationService.Navigate<GuideWelcomePageViewModel>();

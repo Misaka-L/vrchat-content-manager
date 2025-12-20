@@ -41,7 +41,7 @@
         <PackageReference Include="Lemon.Hosting.AvaloniauiDesktop"/>
         <PackageReference Include="Microsoft.Extensions.Hosting"/>
 
-        <PackageReference Include="Avalonia.Xaml.Behaviors"/>
+        <PackageReference Include="Xaml.Behaviors.Avalonia"/>
 
         <!--Serilog Logging-->
         <PackageReference Include="Serilog"/>

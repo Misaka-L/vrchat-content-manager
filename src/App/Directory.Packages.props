@@ -25,7 +25,7 @@
         <!--App Host-->
         <PackageVersion Include="Lemon.Hosting.AvaloniauiDesktop" Version="1.0.3-beta"/>
         <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0"/>
-        <PackageVersion Include="Avalonia.Xaml.Behaviors" Version="11.3.0.6"/>
+        <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="11.3.9" />
     
         <!--Serilog Logging-->
         <PackageVersion Include="Serilog" Version="4.3.0"/>

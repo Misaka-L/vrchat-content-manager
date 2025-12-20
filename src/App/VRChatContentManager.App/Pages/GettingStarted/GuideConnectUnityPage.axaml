@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:gettingStarted="clr-namespace:VRChatContentManager.App.ViewModels.Pages.GettingStarted"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="680"
+             x:DataType="gettingStarted:GuideConnectUnityPageViewModel"
+             x:Class="VRChatContentManager.App.Pages.GettingStarted.GuideConnectUnityPage">
+
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Border Height="90">
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <TextBlock Text="Finish setup by" FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock Text="Connect Unity to App" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="1" Margin="18" Spacing="12">
+            <StackPanel Spacing="8">
+                <Border BorderBrush="{DynamicResource MaterialDesignBodyLight}"
+                        BorderThickness="2,0,0,0"
+                        Padding="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Classes="Caption" Text="Step.2" Opacity="0.8" />
+                        <TextBlock Classes="Headline6" Text="Connect to App" TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+                <TextBlock Text="Enter following host address in Connect Settings in Unity, then press Connect."
+                           TextWrapping="Wrap" />
+                <TextBox UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                         assists:TextFieldAssist.Label="Host URL"
+                         IsReadOnly="True" Text="{Binding HostUri}" />
+
+                <Button Content="{avalonia:MaterialIconTextExt Kind=ContentCopy, Text=Copy}">
+                    <Interaction.Behaviors>
+                        <ButtonClickEventTriggerBehavior>
+                            <SetClipboardTextAction Text="{Binding HostUri}" />
+                        </ButtonClickEventTriggerBehavior>
+                    </Interaction.Behaviors>
+                </Button>
+                <Image Source="/Assets/Setup/UnitySetup/ConnectSettingsHost.png" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Margin="18 14" Spacing="8">
+            <Button Theme="{StaticResource MaterialOutlineButton}"
+                    Foreground="{DynamicResource MaterialDesignBody}"
+                    BorderBrush="{DynamicResource MaterialDesignBodyLight}"
+                    Content="Skip" Command="{Binding SkipCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

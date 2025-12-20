@@ -1,13 +1,12 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using CommunityToolkit.Mvvm.Input;
 
 namespace VRChatContentManager.App.Pages.GettingStarted;
 
-public partial class GuideSetupUnityPage : UserControl
+public partial class GuideOpenConnectSettingsPage : UserControl
 {
-    public GuideSetupUnityPage()
+    public GuideOpenConnectSettingsPage()
     {
         InitializeComponent();
     }
