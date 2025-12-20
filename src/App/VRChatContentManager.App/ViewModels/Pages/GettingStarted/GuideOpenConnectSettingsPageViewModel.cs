@@ -1,21 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentManager.App.Services;
 using VRChatContentManager.ConnectCore.Services.Connect;
-using VRChatContentManager.Core.Services.UserSession;
 
 namespace VRChatContentManager.App.ViewModels.Pages.GettingStarted;
 
-public partial class GuideSetupUnityPageViewModel(
+public sealed partial class GuideOpenConnectSettingsPageViewModel(
     NavigationService navigationService,
     ClientSessionService clientSessionService
 ) : PageViewModelBase
 {
-    public string VpmRepositoryUrl => "https://project-vrcz.github.io/vpm-listing/index.json";
-    public string PackageManagerUrl => "vcc://vpm/addRepo?url=" + Uri.EscapeDataString(VpmRepositoryUrl);
-
     [RelayCommand]
     private void Load()
     {
@@ -42,6 +35,6 @@ public partial class GuideSetupUnityPageViewModel(
     [RelayCommand]
     private void Next()
     {
-        navigationService.Navigate<GuideOpenConnectSettingsPageViewModel>();
+        navigationService.Navigate<GuideConnectUnityPageViewModel>();
     }
 }

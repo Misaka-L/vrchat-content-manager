@@ -12,7 +12,6 @@ using VRChatContentManager.App.ViewModels.Pages.Settings;
 using VRChatContentManager.App.ViewModels.Settings;
 using VRChatContentManager.ConnectCore.Services.Connect.Challenge;
 using VRChatContentManager.IpcCore.Services;
-using AddAccountPageViewModel = VRChatContentManager.App.ViewModels.Pages.AddAccountPageViewModel;
 
 namespace VRChatContentManager.App.Extensions;
 
@@ -56,7 +55,8 @@ public static class ServicesExtenstion
         // Getting Started Pages
         services.AddTransient<GuideWelcomePageViewModel>();
         services.AddTransient<GuideSetupUnityPageViewModel>();
-        services.AddTransient<GuideFinishSetupPageViewModel>();
+        services.AddTransient<GuideOpenConnectSettingsPageViewModel>();
+        services.AddTransient<GuideConnectUnityPageViewModel>();
 
         // Settings Pages
         services.AddTransient<AddAccountPageViewModelFactory>();
