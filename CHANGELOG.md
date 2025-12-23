@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-12-23
+
 ### Added
 
 - Add Unity Setup Guide [`#110`](https://github.com/project-vrcz/content-manager/pull/110)
@@ -71,7 +73,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-manager/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/project-vrcz/content-manager/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/project-vrcz/content-manager/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/project-vrcz/content-manager/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/project-vrcz/content-manager/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/project-vrcz/content-manager/compare/v1.0.0-rc.1...v1.0.0
