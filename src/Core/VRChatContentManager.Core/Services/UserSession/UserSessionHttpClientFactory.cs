@@ -31,13 +31,7 @@ public sealed class UserSessionHttpClientFactory(ILoggerFactory loggerFactory, A
             }
             .AddRetry(new HttpRetryStrategyOptions
             {
-                ShouldHandle = args => ValueTask.FromResult(
-                    args.Outcome.Exception is not null &&
-                    args.Outcome.Exception is not UnexpectedApiBehaviourException &&
-                    args.Outcome.Exception is not HttpRequestException &&
-                    args.Outcome.Exception is not ApiErrorException),
                 UseJitter = true,
-                ShouldRetryAfterHeader = true,
                 MaxRetryAttempts = 5,
                 Delay = TimeSpan.FromSeconds(5),
                 BackoffType = DelayBackoffType.Exponential
