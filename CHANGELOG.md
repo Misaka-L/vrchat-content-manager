@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - HttpClient no longer follow `Retry-After` header. [`#118`](https://github.com/project-vrcz/content-publisher/pull/118)
+- Rename to `VRChat Content Publisher`. [`#119`](https://github.com/project-vrcz/content-publisher/pull/119)
 
 ## [1.3.0] - 2025-12-23
 
