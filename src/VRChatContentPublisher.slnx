@@ -1,0 +1,17 @@
+﻿<Solution>
+  <Folder Name="/SolutionFolder/">
+    <File Path="BuildInfo.targets" />
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/App/">
+    <File Path="App/Directory.Packages.props" />
+    <Project Path="App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj" />
+  </Folder>
+  <Folder Name="/Core/">
+    <File Path="Core/Directory.Packages.props" />
+    <Project Path="Core/VRChatContentPublisher.ConnectCore/VRChatContentPublisher.ConnectCore.csproj" />
+    <Project Path="Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj" />
+    <Project Path="Core/VRChatContentPublisher.IpcCore/VRChatContentPublisher.IpcCore.csproj" />
+  </Folder>
+  <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />
+</Solution>

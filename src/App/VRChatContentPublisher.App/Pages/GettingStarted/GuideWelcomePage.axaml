@@ -1,0 +1,37 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="gettingStarted:GuideWelcomePageViewModel"
+             x:Class="VRChatContentPublisher.App.Pages.GettingStarted.GuideWelcomePage">
+
+    <Grid RowDefinitions="240,*" RowSpacing="48">
+        <Border>
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" />
+            </Border.Background>
+            <StackPanel VerticalAlignment="Center" Spacing="2" HorizontalAlignment="Center">
+                <TextBlock Text="A More Efficient Way" Margin="0,12,0,0" FontSize="36"
+                           FontWeight="Black" Foreground="White" />
+                <TextBlock Text="to publish your VRChat contents" Foreground="White" />
+            </StackPanel>
+        </Border>
+        <StackPanel Grid.Row="1" Spacing="24" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <Image Source="{StaticResource AppIcon}" Height="64" Width="64" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="VRChat Content Publisher" FontWeight="SemiBold" FontSize="18" />
+                    <TextBlock Text="snapshot" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="8">
+                <Button Content="Next" Command="{Binding NextPageCommand}" />
+                <Button Content="Just take me to the Home!" Command="{Binding NavigateToHomePageCommand}"
+                        Theme="{StaticResource MaterialFlatButton}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -49,14 +49,14 @@ jobs:
         env:
           RID: ${{ matrix.rid }}
           BUILD_OUTPUT_DIR: ${{ env.output_dir }}
-        run: dotnet publish -c Release App/VRChatContentManager.App -r $RID -o $BUILD_OUTPUT_DIR
+        run: dotnet publish -c Release App/VRChatContentPublisher.App -r $RID -o $BUILD_OUTPUT_DIR
         shell: bash
         working-directory: ${{ env.src_dir }}
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v6
         with:
-          name: vrchat-content-manager-app-${{ matrix.rid }}
+          name: vrchat-content-publisher-app-${{ matrix.rid }}
           path: |
             ${{ env.output_dir }}
             !${{ env.output_dir }}/**/*.pdb
@@ -64,7 +64,7 @@ jobs:
       - name: Upload PDB
         uses: actions/upload-artifact@v6
         with:
-          name: vrchat-content-manager-app-${{ matrix.rid }}-pdb
+          name: vrchat-content-publisher-app-${{ matrix.rid }}-pdb
           path: ${{ env.output_dir }}/**/*.pdb
 
   make-nsis-windows-installer:
@@ -75,9 +75,9 @@ jobs:
       repo_dir: ${{ github.workspace }}/repo
       installer_working_dir: ${{ github.workspace }}/repo/distribution/windows-installer
       installer_script: installer.nsi
-      installer_output_name: vrchat-content-manager-installer.exe
+      installer_output_name: vrchat-content-publisher-installer.exe
       artifact_dir: ${{ github.workspace }}/artifacts
-      executable_name: VRChatContentManager.App.exe
+      executable_name: VRChatContentPublisher.App.exe
       installer_product_version: ""
       installer_file_version: ""
 
@@ -85,7 +85,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v7
         with:
-          name: vrchat-content-manager-app-win-x64
+          name: vrchat-content-publisher-app-win-x64
           path: ${{ env.artifact_dir }}
 
       - name: Get Version Info
@@ -119,5 +119,5 @@ jobs:
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v6
         with:
-          name: vrchat-content-manager-app-win-x64-installer
+          name: vrchat-content-publisher-app-win-x64-installer
           path: ${{ env.installer_working_dir }}/${{ env.installer_output_name }}

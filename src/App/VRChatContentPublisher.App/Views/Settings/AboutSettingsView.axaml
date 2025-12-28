@@ -1,0 +1,36 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:AboutSettingsViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Settings.AboutSettingsView">
+
+    <StackPanel Margin="8" Spacing="8">
+        <StackPanel Spacing="8" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Border Background="Black" CornerRadius="8"
+                        Padding="8">
+                    <Image Height="32" Width="32" Source="{StaticResource AppIcon}" />
+                </Border>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="VRChat Content Publisher" FontWeight="Bold" />
+                    <SelectableTextBlock Text="{Binding AppVersion}" />
+                </StackPanel>
+            </StackPanel>
+            <TextBlock Text="A More Efficient Way to publish your VRChat Contents"
+                       Opacity="0.8" TextWrapping="Wrap" />
+        </StackPanel>
+        <StackPanel Spacing="2">
+            <StackPanel>
+                <TextBlock Text="Build Commit" Opacity="0.8" />
+                <SelectableTextBlock Text="{Binding AppCommitHash}" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="Build at" Opacity="0.8" />
+                <SelectableTextBlock Text="{Binding AppBuildDate}" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,55 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.Settings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:SettingsFixAccountPageViewModel"
+             x:Class="VRChatContentPublisher.App.Pages.Settings.SettingsFixAccountPage">
+
+    <StackPanel>
+        <Border>
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
+                        Command="{Binding BackToSettingsCommand}"
+                        Padding="0" Margin="0,0,0,5" Foreground="White"
+                        Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
+                <TextBlock Text="Login to your" FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock Text="VRChat Account" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
+        <StackPanel Spacing="24" Margin="18">
+            <StackPanel>
+                <TextBox assists:TextFieldAssist.Label="Username/Email" Classes="outline" UseFloatingWatermark="True"
+                         Theme="{StaticResource OutlineTextBox}"
+                         Text="{Binding Username}"
+                         IsReadOnly="True" IsEnabled="False" />
+                <TextBox PasswordChar="*" assists:TextFieldAssist.Label="Password" Classes="outline"
+                         UseFloatingWatermark="True" Theme="{StaticResource OutlineTextBox}"
+                         Text="{Binding Password}" />
+            </StackPanel>
+            <Button Content="Login" Command="{Binding LoginCommand}" />
+            <StackPanel Spacing="12">
+                <Border Height="1" Background="{DynamicResource MaterialDesignBodyLight}" Opacity="0.4" />
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Using an Pico, Oculus, Steam, or Viveport account?" FontSize="16"
+                               FontWeight="SemiBold"
+                               TextWrapping="Wrap" Opacity="0.8" />
+                    <TextBlock TextWrapping="Wrap" FontSize="14" Opacity="0.8">
+                        <Span>Please link your Pico, Oculus, Steam, or Viveport account to your VRChat Account follow this</Span>
+                        <InlineUIContainer>
+                            <HyperlinkButton Content="Article"
+                                             NavigateUri="https://help.vrchat.com/hc/en-us/articles/360062659053-I-want-to-turn-my-platform-account-through-Steam-Meta-Pico-or-Viveport-into-a-VRChat-account"
+                                             Margin="0,0,0,-4" />
+                        </InlineUIContainer>
+                    </TextBlock>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

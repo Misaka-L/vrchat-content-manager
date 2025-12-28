@@ -7,17 +7,17 @@ Unicode True
 !include nsDialogs.nsh
 
 # Constant Definitions
-!define ProductName "VRChat Content Manager"
+!define ProductName "VRChat Content Publisher"
 !define Publisher "Misaka-L"
-!define HomePageUrl "https://github.com/project-vrcz/content-manager"
-!define ReleasesUrl "https://github.com/project-vrcz/content-manager/releases"
+!define HomePageUrl "https://github.com/project-vrcz/content-publisher"
+!define ReleasesUrl "https://github.com/project-vrcz/content-publisher/releases"
 
 !define DisplayVersion "$%INSTALLER_DISPLAY_VERSION%"
 !define OldClassicVersion "$%INSTALLER_OLD_CLASSIC_VERSION%"
 
 !define PathToBundle "$%INSTALLER_PATH_TO_BUNDLE%"
 
-!define AppExecutable "VRChatContentManager.App.exe"
+!define AppExecutable "VRChatContentPublisher.App.exe"
 !define AppProtocol "vrchat-content-manager"
 
 !define /date InstallDate "%Y%m%d"
@@ -36,7 +36,7 @@ Unicode True
 
 ; Attributes
 Name "${ProductName}"
-OutFile "vrchat-content-manager-installer.exe"
+OutFile "vrchat-content-publisher-installer.exe"
 RequestExecutionLevel admin
 AllowSkipFiles off
 SetCompressor /SOLID lzma

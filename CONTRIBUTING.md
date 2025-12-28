@@ -7,11 +7,11 @@
 - distribution/windows-installer # NSIS Installer source (For windows installer)
 - src
     - App
-        - VRChatContentManager.App # Entrypoint, all ViewModels, UI.
+        - VRChatContentPublisher.App # Entrypoint, all ViewModels, UI.
     - Core
-        - VRChatContentManager.ConnectCore # Handle HTTP RPC (for communication with VRChat Content Manager Connect).
-        - VRChatContentManager.Core # Stuffs like Publish Task, Storage, Settings, Api and so on.
-        - VRChatContentManager.IpcCore # Mutex and IPC named pipe server / client for single instance mode (for now).
+        - VRChatContentPublisher.ConnectCore # Handle HTTP RPC (for communication with VRChat Content Publisher Connect).
+        - VRChatContentPublisher.Core # Stuffs like Publish Task, Storage, Settings, Api and so on.
+        - VRChatContentPublisher.IpcCore # Mutex and IPC named pipe server / client for single instance mode (for now).
 ```
 
 ## Requirement
