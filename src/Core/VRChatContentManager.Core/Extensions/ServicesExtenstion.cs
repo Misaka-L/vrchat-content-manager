@@ -62,20 +62,23 @@ public static class ServicesExtension
         services.AddTransient<UserSessionFactory>();
         services.AddTransient<ContentPublishTaskFactory>();
 
+        services.AddTransient<AppWebProxy>();
+        services.AddTransient<UserSessionHttpClientFactory>();
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
         services.AddHttpClient<ContentPublishTaskFactory>(client =>
             {
                 client.AddUserAgent();
                 client.Timeout = Timeout.InfiniteTimeSpan;
             })
-            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
                 MaxConnectionsPerServer = 256,
                 PooledConnectionLifetime = TimeSpan.Zero,
                 EnableMultipleHttp2Connections = true,
                 EnableMultipleHttp3Connections = true,
-                ConnectTimeout = TimeSpan.FromSeconds(5)
+                ConnectTimeout = TimeSpan.FromSeconds(5),
+                Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
             .AddResilienceHandler("awsClient", builder =>
             {

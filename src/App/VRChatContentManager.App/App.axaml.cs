@@ -93,9 +93,10 @@ public partial class App : Application
 
         ViewLocator.Register<RpcClientSessionViewModel, RpcClientSessionView>();
         ViewLocator.Register<UserSessionViewModel, UserSessionView>();
-        
+
         // Settings Section
         ViewLocator.Register<ConnectSettingsViewModel, ConnectSettingsView>();
+        ViewLocator.Register<HttpProxySettingsViewModel, HttpProxySettingsView>();
         ViewLocator.Register<AccountsSettingsViewModel, AccountsSettingsView>();
         ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
         ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();

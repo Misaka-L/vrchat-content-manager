@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentManager.App.ViewModels.Settings"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:validation="clr-namespace:VRChatContentManager.App.Interaction.Validation"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:HttpProxySettingsViewModel"
+             x:Class="VRChatContentManager.App.Views.Settings.HttpProxySettingsView">
+
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <StackPanel Margin="8">
+        <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
+                  assists:ComboBoxAssist.Label="Proxy Mode"
+                  ItemsSource="{Binding HttpProxyModes}"
+                  SelectedItem="{Binding SelectedHttpProxyMode}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="settings:HttpProxyModeItemViewModel">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+
+            <Interaction.Behaviors>
+                <ValueChangedTriggerBehavior Binding="{Binding SelectedHttpProxyMode}">
+                    <InvokeCommandAction Command="{Binding ApplyHttpProxySettingsCommand}" />
+                </ValueChangedTriggerBehavior>
+            </Interaction.Behaviors>
+        </ComboBox>
+        <TextBox UseFloatingWatermark="True" Classes="outline dense" Theme="{StaticResource OutlineTextBox}"
+                 assists:TextFieldAssist.Label="Custom Http Proxy URI"
+                 Text="{Binding ProxyUri}"
+                 IsVisible="{Binding IsCustomProxySelected}">
+
+            <Interaction.Behaviors>
+                <TextBoxValidationBehavior>
+                    <validation:HttpValidationRule ErrorMessage="Http Proxy URI must be a http or https URI." />
+                </TextBoxValidationBehavior>
+                <LostFocusTrigger>
+                    <InvokeCommandAction Command="{Binding ApplyHttpProxySettingsCommand}" />
+                </LostFocusTrigger>
+            </Interaction.Behaviors>
+        </TextBox>
+    </StackPanel>
+</UserControl>
