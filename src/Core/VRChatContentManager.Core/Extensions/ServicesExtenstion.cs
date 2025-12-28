@@ -85,7 +85,6 @@ public static class ServicesExtension
                 builder.AddRetry(new HttpRetryStrategyOptions
                 {
                     UseJitter = true,
-                    ShouldRetryAfterHeader = true,
                     MaxRetryAttempts = 5,
                     Delay = TimeSpan.FromSeconds(3),
                     BackoffType = DelayBackoffType.Exponential
