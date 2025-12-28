@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using VRChatContentManager.ConnectCore.Exceptions;
 using VRChatContentManager.ConnectCore.Extensions;
 using VRChatContentManager.ConnectCore.Models.Api.V1;
 using VRChatContentManager.ConnectCore.Services.Connect;
@@ -24,23 +25,50 @@ public static class TaskEndpoint
             return;
 
         var worldPublishTaskService = services.GetRequiredService<IWorldPublishTaskService>();
-        await worldPublishTaskService.CreatePublishTaskAsync(
-            request.WorldId,
-            request.WorldBundleFileId,
-            request.Name,
-            request.Platform,
-            request.UnityVersion,
-            request.AuthorId,
-            request.WorldSignature,
-            request.ThumbnailFileId,
-            request.Description,
-            request.Tags,
-            request.ReleaseStatus,
-            request.Capacity,
-            request.RecommendedCapacity,
-            request.PreviewYoutubeId,
-            request.UdonProducts
-        );
+        try
+        {
+            await worldPublishTaskService.CreatePublishTaskAsync(
+                request.WorldId,
+                request.WorldBundleFileId,
+                request.Name,
+                request.Platform,
+                request.UnityVersion,
+                request.AuthorId,
+                request.WorldSignature,
+                request.ThumbnailFileId,
+                request.Description,
+                request.Tags,
+                request.ReleaseStatus,
+                request.Capacity,
+                request.RecommendedCapacity,
+                request.PreviewYoutubeId,
+                request.UdonProducts
+            );
+        }
+        catch (NoUserSessionAvailableException ex)
+        {
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status503ServiceUnavailable,
+                ex.Message
+            );
+        }
+        catch (ContentOwnerUserSessionNotFoundException ex)
+        {
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status400BadRequest,
+                ex.Message
+            );
+        }
+        catch (ArgumentException ex)
+        {
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status400BadRequest,
+                ex.Message
+            );
+        }
     }
 
     private static async Task CreateAvatarPublishTask(HttpContext context, IServiceProvider services)
@@ -50,15 +78,42 @@ public static class TaskEndpoint
             return;
 
         var avatarPublishTaskService = services.GetRequiredService<IAvatarPublishTaskService>();
-        await avatarPublishTaskService.CreatePublishTaskAsync(
-            request.AvatarId,
-            request.AvatarBundleFileId,
-            request.Name,
-            request.Platform,
-            request.UnityVersion,
-            request.ThumbnailFileId,
-            request.Description,
-            request.Tags,
-            request.ReleaseStatus);
+        try
+        {
+            await avatarPublishTaskService.CreatePublishTaskAsync(
+                request.AvatarId,
+                request.AvatarBundleFileId,
+                request.Name,
+                request.Platform,
+                request.UnityVersion,
+                request.ThumbnailFileId,
+                request.Description,
+                request.Tags,
+                request.ReleaseStatus);
+        }
+        catch (NoUserSessionAvailableException ex)
+        {
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status503ServiceUnavailable,
+                ex.Message
+            );
+        }
+        catch (ContentOwnerUserSessionNotFoundException ex)
+        {
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status400BadRequest,
+                ex.Message
+            );
+        }
+        catch (ArgumentException ex)
+        {
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status400BadRequest,
+                ex.Message
+            );
+        }
     }
 }

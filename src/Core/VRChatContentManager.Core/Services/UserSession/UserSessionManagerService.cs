@@ -16,6 +16,9 @@ public sealed class UserSessionManagerService(
     public event EventHandler<UserSessionService>? SessionCreated;
     public event EventHandler<UserSessionService>? SessionRemoved;
 
+    public bool IsAnySessionAvailable =>
+        _sessions.Count > 0 && _sessions.Any(session => session.State == UserSessionState.LoggedIn);
+
     public async Task RestoreSessionsAsync()
     {
         foreach (var (userId, sessionItem) in userSessionStorage.Value.Sessions)
