@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Custom Http Proxy. [`#113`](https://github.com/project-vrcz/content-manager/pull/113)
 - Report create publish task error to rpc client. [`#115`](https://github.com/project-vrcz/content-manager/pull/115)
 
+### Fixed
+
+- Unable to remove invalid user session in settings. [`#116`](https://github.com/project-vrcz/content-manager/pull/116)
+
 ## [1.3.0] - 2025-12-23
 
 ### Added
