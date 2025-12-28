@@ -1,10 +1,6 @@
 ﻿using System.Net;
-using System.Threading.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Http.Logging;
-using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Logging;
-using Polly;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Auth;
 using VRChatContentManager.Core.Services.VRChatApi;
@@ -16,7 +12,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     private readonly IServiceScopeFactory _scopeFactory;
 
     // Cookies, UserId, UserName
-    private readonly Func<CookieContainer, string?, string?, Task> _saveFunc;
+    private readonly SaveCookiesDelegate _saveFunc;
 
     private readonly HttpClient _sessionHttpClient;
     private readonly VRChatApiClient _apiClient;
@@ -35,12 +31,12 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     internal UserSessionService(
         string userNameOrEmail,
         string? userId,
-        Func<CookieContainer, string?, string?, Task> saveFunc,
+        SaveCookiesDelegate saveFunc,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
         IServiceScopeFactory scopeFactory,
-        ILogger<UserSessionService> logger,
-        ILoggerFactory loggerFactory)
+        UserSessionHttpClientFactory httpClientFactory,
+        ILogger<UserSessionService> logger)
     {
         _scopeFactory = scopeFactory;
         _saveFunc = saveFunc;
@@ -55,57 +51,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             OnStateChanged(UserSessionState.LoggedOut);
         }
 
-        var socketHttpHandler = new SocketsHttpHandler
-        {
-            CookieContainer = CookieContainer,
-            UseCookies = true,
-            ConnectTimeout = TimeSpan.FromSeconds(5)
-        };
-
-        var retryPipeline = new ResiliencePipelineBuilder<HttpResponseMessage>()
-            {
-                Name = "VRChatApiClient",
-                InstanceName = UserId ?? userNameOrEmail
-            }
-            .AddRetry(new HttpRetryStrategyOptions
-            {
-                ShouldHandle = args => ValueTask.FromResult(
-                    args.Outcome.Exception is not null &&
-                    args.Outcome.Exception is not UnexpectedApiBehaviourException &&
-                    args.Outcome.Exception is not HttpRequestException &&
-                    args.Outcome.Exception is not ApiErrorException),
-                UseJitter = true,
-                ShouldRetryAfterHeader = true,
-                MaxRetryAttempts = 5,
-                Delay = TimeSpan.FromSeconds(5),
-                BackoffType = DelayBackoffType.Exponential
-            })
-            .AddConcurrencyLimiter(new ConcurrencyLimiterOptions
-            {
-                PermitLimit = 1,
-                QueueLimit = 120,
-                QueueProcessingOrder = QueueProcessingOrder.OldestFirst
-            })
-            .ConfigureTelemetry(loggerFactory)
-            .Build();
-
-        _sessionHttpClient = new HttpClient(
-            new InspectorHttpHandler(async () => await _saveFunc(CookieContainer, UserId, UserNameOrEmail))
-            {
-                InnerHandler = new ResilienceHandler(retryPipeline)
-                {
-                    InnerHandler = new LoggingScopeHttpMessageHandler(logger)
-                    {
-                        InnerHandler = socketHttpHandler
-                    }
-                }
-            })
-        {
-            BaseAddress = new Uri("https://api.vrchat.cloud/api/1/"),
-            Timeout = TimeSpan.FromSeconds(30)
-        };
-
-        _sessionHttpClient.AddUserAgent();
+        _sessionHttpClient = httpClientFactory.Create(CookieContainer, userId ?? userNameOrEmail, logger,
+            async () => await _saveFunc(CookieContainer, UserId, UserNameOrEmail)
+        );
 
         _apiClient = apiClientFactory.Create(_sessionHttpClient);
     }
@@ -193,11 +141,15 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 public sealed class UserSessionFactory(
     IServiceScopeFactory scopeFactory,
     VRChatApiClientFactory apiClientFactory,
-    ILogger<UserSessionService> logger,
-    ILoggerFactory loggerFactory)
+    UserSessionHttpClientFactory httpClientFactory,
+    ILogger<UserSessionService> logger)
 {
-    public UserSessionService Create(string userNameOrEmail, string? userId, CookieContainer? cookieContainer,
-        Func<CookieContainer, string?, string?, Task> saveFunc)
+    public UserSessionService Create(
+        string userNameOrEmail,
+        string? userId,
+        CookieContainer? cookieContainer,
+        SaveCookiesDelegate saveFunc
+    )
     {
         return new UserSessionService(
             userNameOrEmail,
@@ -206,8 +158,8 @@ public sealed class UserSessionFactory(
             cookieContainer,
             apiClientFactory,
             scopeFactory,
-            logger,
-            loggerFactory);
+            httpClientFactory,
+            logger);
     }
 }
 
@@ -218,3 +170,5 @@ public enum UserSessionState
     LoggedIn,
     InvalidSession
 }
+
+public delegate Task SaveCookiesDelegate(CookieContainer cookies, string? userId, string? userNameOrEmail);

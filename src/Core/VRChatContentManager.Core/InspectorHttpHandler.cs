@@ -1,11 +1,16 @@
 ﻿namespace VRChatContentManager.Core;
 
-public class InspectorHttpHandler(Func<Task> inspectorFunc) : DelegatingHandler
+public class InspectorHttpHandler(InspectorHttpHandlerDelegate inspectorFunc) : DelegatingHandler
 {
-    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken
+    )
     {
         var response = await base.SendAsync(request, cancellationToken);
         await inspectorFunc();
         return response;
     }
 }
+
+public delegate Task InspectorHttpHandlerDelegate();

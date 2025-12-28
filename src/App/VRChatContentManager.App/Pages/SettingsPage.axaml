@@ -32,6 +32,9 @@
                 <Expander Header="Sessions">
                     <ContentControl Content="{Binding SessionsSettingsViewModel}" />
                 </Expander>
+                <Expander Header="Http Proxy">
+                    <ContentControl Content="{Binding HttpProxySettingsViewModel}" />
+                </Expander>
                 <Expander Header="About">
                     <ContentControl Content="{Binding AboutSettingsViewModel}" />
                 </Expander>

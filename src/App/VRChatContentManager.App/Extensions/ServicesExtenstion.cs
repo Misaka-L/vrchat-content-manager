@@ -65,6 +65,7 @@ public static class ServicesExtenstion
         // Settings Sections
         services.AddTransient<AccountsSettingsViewModel>();
         services.AddTransient<ConnectSettingsViewModel>();
+        services.AddTransient<HttpProxySettingsViewModel>();
         services.AddTransient<SessionsSettingsViewModel>();
         services.AddTransient<AboutSettingsViewModel>();
 
