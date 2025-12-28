@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Unable to remove invalid user session in settings. [`#116`](https://github.com/project-vrcz/content-manager/pull/116)
+- VRChat Api HttpClient won't retry in some case. [`#118`](https://github.com/project-vrcz/content-manager/pull/118)
+
+### Changed
+
+- HttpClient no longer follow `Retry-After` header. [`#118`](https://github.com/project-vrcz/content-manager/pull/118)
 
 ## [1.3.0] - 2025-12-23
 
