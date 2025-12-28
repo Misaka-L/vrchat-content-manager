@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using VRChatContentManager.ConnectCore.Exceptions;
 using VRChatContentManager.ConnectCore.Services.PublishTask;
 using VRChatContentManager.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentManager.Core.Services.UserSession;
@@ -7,7 +9,8 @@ namespace VRChatContentManager.Core.Services.PublishTask.Connect;
 
 public sealed class AvatarPublishTaskService(
     AvatarContentPublisherFactory contentPublisherFactory,
-    UserSessionManagerService userSessionManagerService)
+    UserSessionManagerService userSessionManagerService,
+    ILogger<AvatarPublishTaskService> logger)
     : IAvatarPublishTaskService
 {
     public async Task CreatePublishTaskAsync(string avatarId,
@@ -20,20 +23,31 @@ public sealed class AvatarPublishTaskService(
         string[]? tags,
         string? releaseStatus)
     {
-        var userSession = await GetUserSessionByAvatarIdAsync(avatarId);
-        var scope = await userSession.CreateOrGetSessionScopeAsync();
+        try
+        {
+            var userSession = await GetUserSessionByAvatarIdAsync(avatarId);
+            var scope = await userSession.CreateOrGetSessionScopeAsync();
 
-        var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
-        var contentPublisher =
-            contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
+            var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+            var contentPublisher =
+                contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
 
-        var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, thumbnailFileId, description, tags,
-            releaseStatus, contentPublisher);
-        task.Start();
+            var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, thumbnailFileId, description, tags,
+                releaseStatus, contentPublisher);
+            task.Start();
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to create avatar publish task for avatar {AvatarId}", avatarId);
+            throw;
+        }
     }
 
     public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(string avatarId)
     {
+        if (!userSessionManagerService.IsAnySessionAvailable)
+            throw new NoUserSessionAvailableException();
+
         foreach (var session in userSessionManagerService.Sessions)
         {
             try
@@ -50,6 +64,6 @@ public sealed class AvatarPublishTaskService(
             }
         }
 
-        throw new Exception("User session not found for the given avatar ID");
+        throw new ContentOwnerUserSessionNotFoundException();
     }
 }

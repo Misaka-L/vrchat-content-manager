@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VRChatContentManager.ConnectCore.Exceptions;
 using VRChatContentManager.ConnectCore.Services.PublishTask;
 using VRChatContentManager.Core.Models.VRChatApi;
 using VRChatContentManager.Core.Models.VRChatApi.Rest.Worlds;
@@ -11,7 +12,8 @@ namespace VRChatContentManager.Core.Services.PublishTask.Connect;
 public class WorldPublishTaskService(
     UserSessionManagerService userSessionManagerService,
     WorldContentPublisherFactory contentPublisherFactory,
-    ILogger<WorldPublishTaskService> logger) : IWorldPublishTaskService
+    ILogger<WorldPublishTaskService> logger
+) : IWorldPublishTaskService
 {
     public async ValueTask<string> CreatePublishTaskAsync(
         string worldId,
@@ -30,42 +32,53 @@ public class WorldPublishTaskService(
         string? previewYoutubeId,
         string[]? udonProducts)
     {
-        var userSession = await GetUserSessionByWorldIdAsync(worldId, authorId);
+        try
+        {
+            var userSession = await GetUserSessionByWorldIdAsync(worldId, authorId);
 
-        var scope = await userSession.CreateOrGetSessionScopeAsync();
+            var scope = await userSession.CreateOrGetSessionScopeAsync();
 
-        var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
-        var contentPublisher =
-            contentPublisherFactory.Create(
-                userSession,
+            var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+            var contentPublisher =
+                contentPublisherFactory.Create(
+                    userSession,
+                    worldId,
+                    worldName,
+                    platform,
+                    unityVersion,
+                    worldSignature,
+                    capacity,
+                    recommendedCapacity,
+                    previewYoutubeId,
+                    udonProducts
+                );
+
+            var task = await taskManager.CreateTask(
                 worldId,
-                worldName,
-                platform,
-                unityVersion,
-                worldSignature,
-                capacity,
-                recommendedCapacity,
-                previewYoutubeId,
-                udonProducts
+                worldBundleFileId,
+                thumbnailFileId,
+                description,
+                tags,
+                releaseStatus,
+                contentPublisher
             );
+            task.Start();
 
-        var task = await taskManager.CreateTask(
-            worldId,
-            worldBundleFileId,
-            thumbnailFileId,
-            description,
-            tags,
-            releaseStatus,
-            contentPublisher
-        );
-        task.Start();
-
-        return task.TaskId;
+            return task.TaskId;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to create world publish task for world {WorldId}", worldId);
+            throw;
+        }
     }
 
     private async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(string worldId,
         string? requestUserId = null)
     {
+        if (!userSessionManagerService.IsAnySessionAvailable)
+            throw new NoUserSessionAvailableException();
+
         if (requestUserId is not null)
         {
             if (userSessionManagerService.Sessions
@@ -90,9 +103,6 @@ public class WorldPublishTaskService(
             return requestSession;
         }
 
-        if (userSessionManagerService.Sessions.Count == 0)
-            throw new InvalidOperationException("No user sessions are available.");
-
         var initialSession = userSessionManagerService.Sessions[0];
 
         VRChatApiWorld world;
@@ -109,7 +119,7 @@ public class WorldPublishTaskService(
             .FirstOrDefault(session => session.UserId == world.AuthorId);
 
         if (ownerSession is null)
-            throw new InvalidOperationException("The owner of the world does not have an active user session");
+            throw new ContentOwnerUserSessionNotFoundException();
 
         return ownerSession;
     }
