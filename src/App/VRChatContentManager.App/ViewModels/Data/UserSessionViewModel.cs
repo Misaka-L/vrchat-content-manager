@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentManager.App.Services;
@@ -38,6 +37,12 @@ public sealed partial class UserSessionViewModel(
     private async Task Load()
     {
         userSessionService.StateChanged += OnUserSessionStateChanged;
+
+        if (userSessionService.State != UserSessionState.LoggedIn)
+        {
+            CanRemove = true;
+            return;
+        }
 
         try
         {
