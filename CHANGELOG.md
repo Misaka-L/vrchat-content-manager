@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Custom Http Proxy. [`#113`](https://github.com/project-vrcz/content-publisher/pull/113)
 - Report create publish task error to rpc client. [`#115`](https://github.com/project-vrcz/content-publisher/pull/115)
 - New Error Report Window for debug publish task failed. [`#122`](https://github.com/project-vrcz/content-publisher/pull/122)
+- Allow open logs folder in tray icon context menu. [`#122`](https://github.com/project-vrcz/content-publisher/pull/122)
 
 ### Fixed
 
