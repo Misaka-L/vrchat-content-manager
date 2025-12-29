@@ -21,7 +21,7 @@ env:
   changelog_artifact_name: changelog
   release_note_artifact_name: release-note
   release_note_file_name: release-note
-  assets_to_release_artifact_pattern: vrchat-content-manager-app-*
+  assets_to_release_artifact_pattern: vrchat-content-publisher-app-*
   release_git_tag: v${{ inputs.new-version }}
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
         with:
           tags: csproj.Version
           version: ${{ inputs.new-version}}
-          file: "\"${{ env.repo_dir }}/src/App/VRChatContentManager.App/VRChatContentManager.App.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentManager.Core/VRChatContentManager.Core.csproj\""
+          file: "\"${{ env.repo_dir }}/src/App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj\""
 
       - name: Extact Release Note and Update Changelog
         working-directory: ${{ env.repo_dir }}
@@ -147,7 +147,7 @@ jobs:
           mkdir $OUTPUT_PATH
           cd $ARTIFACT_PATH
 
-          for f in vrchat-content-manager-app-*; do
+          for f in vrchat-content-publisher-app-*; do
             [ -e "$f" ] || continue
             zip -r "$OUTPUT_PATH/${f}.zip" "$f"
           done

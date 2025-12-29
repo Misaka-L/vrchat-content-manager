@@ -1,0 +1,55 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:publishTasks="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.PublishTasks"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="publishTasks:PublishTaskViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Data.PublishTasks.PublishTaskView">
+
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">
+        <avalonia:MaterialIcon Kind="{Binding ContentType, Converter={StaticResource ContentTypeIconConverter}}"
+                               Height="32" Width="32" />
+        <StackPanel Grid.Column="1" Spacing="2">
+            <StackPanel Spacing="2">
+                <TextBlock Text="{Binding ContentPlatform}" FontSize="12" Opacity="0.7" />
+                <TextBlock Text="{Binding ContentName}" FontSize="18" />
+            </StackPanel>
+            <StackPanel>
+                <TextBlock Text="{Binding ProgressText}"
+                           ToolTip.Tip="{Binding ProgressText}"
+                           ToolTip.Placement="Bottom"
+                           FontSize="12" Opacity="0.8" />
+                <ProgressBar IsIndeterminate="{Binding IsIndeterminate}"
+                             Value="{Binding ProgressValue, FallbackValue=0}"
+                             Background="{Binding Status, Converter={StaticResource ContentPublishTaskStatusBackgroundConverter}}"
+                             Foreground="{Binding Status, Converter={StaticResource ContentPublishTaskStatusForegroundConverter}}" />
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Button Command="{Binding RemoveCommand}"
+                    IsVisible="{Binding Status, Converter={StaticResource CanContentPublishTaskRemoveConverter}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Delete, Size=24}" Width="32" Height="32" />
+            <Button Command="{Binding StartCommand}"
+                    IsVisible="{Binding Status, Converter={StaticResource CanContentPublishTaskRetryConverter}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Refresh, Size=24}" Width="32" Height="32" />
+            <Button Command="{Binding CancelCommand}"
+                    IsVisible="{Binding Status, Converter={StaticResource IsContentPublishTaskInProgressConverter}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
+        </StackPanel>
+
+    </Grid>
+</UserControl>

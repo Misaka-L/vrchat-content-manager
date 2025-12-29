@@ -1,0 +1,31 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:AccountsSettingsViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Settings.AccountsSettingsView">
+
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <StackPanel>
+        <Button Command="{Binding AddNewAccountCommand}"
+                Theme="{StaticResource MaterialFlatButton}" HorizontalContentAlignment="Stretch"
+                Padding="8,4">
+            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                <avalonia:MaterialIcon Height="24" Width="24" Kind="Add" />
+                <TextBlock Grid.Column="1" Text="Add New Account" VerticalAlignment="Center" />
+            </Grid>
+        </Button>
+        <ItemsControl ItemsSource="{Binding UserSessions}" Margin="8" />
+    </StackPanel>
+</UserControl>

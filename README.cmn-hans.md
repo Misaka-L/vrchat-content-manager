@@ -1,4 +1,4 @@
-# VRChat Content Manager
+# VRChat Content Publisher
 
 [English](README.md)
 
@@ -9,11 +9,11 @@
 
 ## 使用方法
 
-1. 从 [GitHub Releases](https://github.com/project-vrcz/content-manager/releases) 下载最新版本。
+1. 从 [GitHub Releases](https://github.com/project-vrcz/content-publisher/releases) 下载最新版本。
 2. 安装并运行 App。
 3. 登录你的 VRChat 账户。
-4. 从 [vpm 仓库](https://project-vrcz.github.io/vpm-listing/) 安装 [VRChat Content Manager Connect](https://github.com/project-vrcz/content-manager-connect) 到你的 Unity 项目。
-5. 打开你的 Unity 项目并连接到 App。（工具栏 > 工具 > VRChat Content Manager Connect > 设置）
+4. 从 [vpm 仓库](https://project-vrcz.github.io/vpm-listing/) 安装 [VRChat Content Publisher Connect](https://github.com/project-vrcz/content-publisher-connect) 到你的 Unity 项目。
+5. 打开你的 Unity 项目并连接到 App。（工具栏 > 工具 > VRChat Content Publisher Connect > 设置）
 6. 直接构建和上传。
 
 ## 贡献
@@ -22,4 +22,4 @@
 
 ## 致谢
 
-VRChat Content Manager 未经 VRChat 认可，不代表 VRChat 或任何官方人员的观点或意见。VRChat 及所有相关资产是 VRChat Inc. 的商标或注册商标。VRChat © VRChat Inc.
+VRChat Content Publisher 未经 VRChat 认可，不代表 VRChat 或任何官方人员的观点或意见。VRChat 及所有相关资产是 VRChat Inc. 的商标或注册商标。VRChat © VRChat Inc.

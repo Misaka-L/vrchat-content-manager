@@ -8,23 +8,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Custom Http Proxy. [`#113`](https://github.com/project-vrcz/content-manager/pull/113)
-- Report create publish task error to rpc client. [`#115`](https://github.com/project-vrcz/content-manager/pull/115)
+- Custom Http Proxy. [`#113`](https://github.com/project-vrcz/content-publisher/pull/113)
+- Report create publish task error to rpc client. [`#115`](https://github.com/project-vrcz/content-publisher/pull/115)
 
 ### Fixed
 
-- Unable to remove invalid user session in settings. [`#116`](https://github.com/project-vrcz/content-manager/pull/116)
-- VRChat Api HttpClient won't retry in some case. [`#118`](https://github.com/project-vrcz/content-manager/pull/118)
+- Unable to remove invalid user session in settings. [`#116`](https://github.com/project-vrcz/content-publisher/pull/116)
+- VRChat Api HttpClient won't retry in some case. [`#118`](https://github.com/project-vrcz/content-publisher/pull/118)
 
 ### Changed
 
-- HttpClient no longer follow `Retry-After` header. [`#118`](https://github.com/project-vrcz/content-manager/pull/118)
+- HttpClient no longer follow `Retry-After` header. [`#118`](https://github.com/project-vrcz/content-publisher/pull/118)
+- Rename to `VRChat Content Publisher`. [`#119`](https://github.com/project-vrcz/content-publisher/pull/119)
+  - You must uninstall old version to install new version. (You can keep your user data)
 
 ## [1.3.0] - 2025-12-23
 
 ### Added
 
-- Add Unity Setup Guide [`#110`](https://github.com/project-vrcz/content-manager/pull/110)
+- Add Unity Setup Guide [`#110`](https://github.com/project-vrcz/content-publisher/pull/110)
   - Include install connect package, connect unity to app.
   - You can directly jump to home page if you connect unity to app during guide.
 
@@ -32,10 +34,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Support `ready-for-publish` health check endpoint for RPC. [`104`](https://github.com/project-vrcz/content-manager/pull/105)
-- Launch App by URL protocol `vrchat-content-manager://launch`. (Windows-only for now) [`#104`](https://github.com/project-vrcz/content-manager/pull/104)
-- Windows Installer (NSIS). [`#101`](https://github.com/project-vrcz/content-manager/pull/101)
-- Single Instance. [`#103`](https://github.com/project-vrcz/content-manager/pull/103)
+- Support `ready-for-publish` health check endpoint for RPC. [`104`](https://github.com/project-vrcz/content-publisher/pull/105)
+- Launch App by URL protocol `vrchat-content-manager://launch`. (Windows-only for now) [`#104`](https://github.com/project-vrcz/content-publisher/pull/104)
+- Windows Installer (NSIS). [`#101`](https://github.com/project-vrcz/content-publisher/pull/101)
+- Single Instance. [`#103`](https://github.com/project-vrcz/content-publisher/pull/103)
   - Prevent launch new instance when another intance already exist.
   - Bring up existing instance's main window.
 
@@ -43,16 +45,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Insert new task to the beginning of the task list. [`#89`](https://github.com/project-vrcz/content-manager/pull/89)
-- Challenge Code will Always uppercase. [`#93`](https://github.com/project-vrcz/content-manager/pull/93)
-- Allow copy challenge code in request challenge dialog. [`#94`](https://github.com/project-vrcz/content-manager/pull/94)
+- Insert new task to the beginning of the task list. [`#89`](https://github.com/project-vrcz/content-publisher/pull/89)
+- Challenge Code will Always uppercase. [`#93`](https://github.com/project-vrcz/content-publisher/pull/93)
+- Allow copy challenge code in request challenge dialog. [`#94`](https://github.com/project-vrcz/content-publisher/pull/94)
 
 ## [1.0.0] - 2025-12-08
 
 ### Added
 
-- Show App version, commit hash and build date in App settings page [`#70`](https://github.com/project-vrcz/content-manager/pull/70).
-- Basic Linux Support [`#76`](https://github.com/project-vrcz/content-manager/pull/76)
+- Show App version, commit hash and build date in App settings page [`#70`](https://github.com/project-vrcz/content-publisher/pull/70).
+- Basic Linux Support [`#76`](https://github.com/project-vrcz/content-publisher/pull/76)
 
 ### Changed
 
@@ -68,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
     - Use environment variable `TMPDIR` if exist.
     - If not, use `/tmp/vrchat-content-manager-81b7bca3`
   - see [Path.GetTempPath()](https://learn.microsoft.com/en-us/dotnet/api/System.IO.Path.GetTempPath?view=net-10.0) for more information.
-- Adjust http rqeuest pipeline [`#80`](https://github.com/project-vrcz/content-manager/pull/80)
+- Adjust http rqeuest pipeline [`#80`](https://github.com/project-vrcz/content-publisher/pull/80)
   - Use DecorrelatedJitterV2 as http request retry strategy
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
@@ -77,19 +79,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Show App version, commit hash and build date in App settings page [`#70`](https://github.com/project-vrcz/content-manager/pull/70).
-- Basic Linux Support [`#76`](https://github.com/project-vrcz/content-manager/pull/76)
+- Show App version, commit hash and build date in App settings page [`#70`](https://github.com/project-vrcz/content-publisher/pull/70).
+- Basic Linux Support [`#76`](https://github.com/project-vrcz/content-publisher/pull/76)
 
 ### Changed
 
-- Adjust http rqeuest pipeline [`#80`](https://github.com/project-vrcz/content-manager/pull/80)
+- Adjust http rqeuest pipeline [`#80`](https://github.com/project-vrcz/content-publisher/pull/80)
   - Use DecorrelatedJitterV2 as http request retry strategy
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-manager/compare/v1.3.0...HEAD
-[1.3.0]: https://github.com/project-vrcz/content-manager/compare/v1.2.0...v1.3.0
-[1.2.0]: https://github.com/project-vrcz/content-manager/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/project-vrcz/content-manager/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/project-vrcz/content-manager/compare/v1.0.0-rc.1...v1.0.0
-[1.0.0-rc.1]: https://github.com/project-vrcz/content-manager/releases/tag/v1.0.0-rc.1
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/project-vrcz/content-publisher/compare/v1.2.0...v1.3.0
+[1.2.0]: https://github.com/project-vrcz/content-publisher/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/project-vrcz/content-publisher/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/project-vrcz/content-publisher/compare/v1.0.0-rc.1...v1.0.0
+[1.0.0-rc.1]: https://github.com/project-vrcz/content-publisher/releases/tag/v1.0.0-rc.1

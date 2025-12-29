@@ -11,10 +11,10 @@
             <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash"/>
         </Exec>
         <ItemGroup>
-            <AssemblyAttribute Include="VRChatContentManager.Core.Attributes.BuildDateTimeAttribute">
+            <AssemblyAttribute Include="VRChatContentPublisher.Core.Attributes.BuildDateTimeAttribute">
                 <_Parameter1>$([System.DateTimeOffset]::UtcNow.ToUnixTimeSeconds())</_Parameter1>
             </AssemblyAttribute>
-            <AssemblyAttribute Include="VRChatContentManager.Core.Attributes.GitCommitHashAttribute">
+            <AssemblyAttribute Include="VRChatContentPublisher.Core.Attributes.GitCommitHashAttribute">
                 <_Parameter1>$(SourceRevisionId)</_Parameter1>
             </AssemblyAttribute>
         </ItemGroup>

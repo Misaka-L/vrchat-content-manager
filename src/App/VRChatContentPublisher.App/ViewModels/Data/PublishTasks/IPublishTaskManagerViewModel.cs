@@ -1,0 +1,3 @@
+﻿namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
+
+public interface IPublishTaskManagerViewModel;
