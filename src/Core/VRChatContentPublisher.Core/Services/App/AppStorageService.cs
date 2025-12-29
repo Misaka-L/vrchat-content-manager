@@ -14,6 +14,15 @@ public static class AppStorageService
         return appDataPath;
     }
 
+    public static string GetLogsPath()
+    {
+        var logsPath = Path.Combine(GetStoragePath(), "logs");
+        if (!Directory.Exists(logsPath))
+            Directory.CreateDirectory(logsPath);
+
+        return logsPath;
+    }
+
     public static string GetTempPath()
     {
         var tempPath = Path.Combine(Path.GetTempPath(), AppDataFolderName);

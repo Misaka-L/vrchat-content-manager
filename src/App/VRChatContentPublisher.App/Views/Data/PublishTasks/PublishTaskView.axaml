@@ -37,6 +37,10 @@
             </StackPanel>
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Button Command="{Binding OpenErrorReportCommand}"
+                    IsVisible="{Binding Status, Converter={StaticResource IsContentPublishTaskFailedConverter}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Bug, Size=24}" Width="32" Height="32" />
             <Button Command="{Binding RemoveCommand}"
                     IsVisible="{Binding Status, Converter={StaticResource CanContentPublishTaskRemoveConverter}}"
                     Theme="{StaticResource MaterialFlatButton}"

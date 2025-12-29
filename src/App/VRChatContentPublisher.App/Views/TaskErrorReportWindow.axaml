@@ -1,0 +1,75 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:VRChatContentPublisher.App.ViewModels"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:DataType="viewModels:TaskErrorReportWindowViewModel"
+        x:Class="VRChatContentPublisher.App.Views.TaskErrorReportWindow">
+
+    <Window.Title>
+        <MultiBinding StringFormat="Publish Task Error Report - {0}">
+            <Binding Path="ContentName" />
+        </MultiBinding>
+    </Window.Title>
+
+    <Window.Styles>
+        <Style Selector="TextBlock.item-header">
+            <Setter Property="Opacity" Value="0.7" />
+        </Style>
+
+        <Style Selector="SelectableTextBlock.item-content">
+            <Setter Property="FontSize" Value="16" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="14" RowSpacing="8">
+        <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource MaterialDesignDivider}" Padding="0,0,0,8">
+            <StackPanel Spacing="8">
+                <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource MaterialDesignDivider}"
+                        Padding="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock Text="Error Report" Classes="item-header" />
+                        <SelectableTextBlock Text="{Binding ContentName}" FontSize="24" />
+                    </StackPanel>
+                </Border>
+
+                <UniformGrid>
+                    <StackPanel>
+                        <TextBlock Text="Content Type" Classes="item-header" />
+                        <SelectableTextBlock Text="{Binding ContentType}" Classes="item-content" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Target Platform" Classes="item-header" />
+                        <SelectableTextBlock Text="{Binding ContentPlatform}" Classes="item-content" />
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Task Stage" Classes="item-header" />
+                        <SelectableTextBlock Text="{Binding PublishStage}" Classes="item-content" />
+                    </StackPanel>
+                </UniformGrid>
+            </StackPanel>
+        </Border>
+        <Grid Grid.Row="1" RowDefinitions="Auto,*">
+            <TextBlock Text="Exception Information" Classes="item-header" />
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                <SelectableTextBlock Classes="item-content" TextWrapping="Wrap"
+                                     Text="{Binding ExceptionText}" />
+            </ScrollViewer>
+        </Grid>
+        <!-- <TextBox Grid.Row="1" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Exception Information" -->
+        <!--          TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Top" AcceptsReturn="True" -->
+        <!--          Text="{Binding ExceptionText}" /> -->
+        <StackPanel Grid.Row="2">
+            <Button Content="Open Logs Folder">
+                <Interaction.Behaviors>
+                    <ButtonClickEventTriggerBehavior>
+                        <interaction:LaunchDirectoryAction DirectoryPath="{Binding LogFolderPath}" />
+                    </ButtonClickEventTriggerBehavior>
+                </Interaction.Behaviors>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>
