@@ -1,7 +1,9 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform.Storage;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Dialogs;
@@ -143,5 +145,21 @@ public partial class App : Application
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
 
         desktop.Shutdown();
+    }
+
+    private void OpenLogsFolderClicked(object? sender, EventArgs e)
+    {
+        var directoryPath = AppStorageService.GetLogsPath();
+        if (!Directory.Exists(directoryPath))
+            return;
+
+        var directoryInfo = new DirectoryInfo(directoryPath);
+
+        var topLevel = TopLevel.GetTopLevel((ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+        if (topLevel?.Launcher is { } launcher)
+        {
+            // Fire and forget
+            _ = launcher.LaunchDirectoryInfoAsync(directoryInfo);
+        }
     }
 }

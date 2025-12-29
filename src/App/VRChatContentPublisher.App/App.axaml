@@ -46,6 +46,8 @@
                       Clicked="ShowWindowClicked">
                 <TrayIcon.Menu>
                     <NativeMenu>
+                        <NativeMenuItem Header="Open Logs Folder" Click="OpenLogsFolderClicked" />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Header="Show Window" Click="ShowWindowClicked" />
                         <NativeMenuItem Header="Exit" Click="ExitAppClicked" />
                     </NativeMenu>
