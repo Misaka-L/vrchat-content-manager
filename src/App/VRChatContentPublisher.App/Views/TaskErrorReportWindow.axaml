@@ -59,9 +59,6 @@
                                      Text="{Binding ExceptionText}" />
             </ScrollViewer>
         </Grid>
-        <!-- <TextBox Grid.Row="1" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Exception Information" -->
-        <!--          TextWrapping="Wrap" IsReadOnly="True" VerticalContentAlignment="Top" AcceptsReturn="True" -->
-        <!--          Text="{Binding ExceptionText}" /> -->
         <StackPanel Grid.Row="2">
             <Button Content="Open Logs Folder">
                 <Interaction.Behaviors>
