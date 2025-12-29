@@ -33,6 +33,7 @@ public static class ServicesExtenstion
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
+        services.AddTransient<TaskErrorReportWindowViewModel>();
 
         services.AddSingleton<NavigationService>();
 

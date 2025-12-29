@@ -29,8 +29,8 @@ internal sealed class Program
     {
         var builder = new HostApplicationBuilder();
 
-        var jsonLogPath = Path.Combine(AppStorageService.GetStoragePath(), "logs", "log-.json");
-        var plainTextLogPath = Path.Combine(AppStorageService.GetStoragePath(), "logs", "log-.log");
+        var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
+        var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)

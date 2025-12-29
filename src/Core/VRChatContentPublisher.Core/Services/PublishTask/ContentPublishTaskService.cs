@@ -37,12 +37,13 @@ public sealed class ContentPublishTaskService
     public string ProgressText { get; private set; } = "Waiting for task started...";
     public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.Pending;
     public double? ProgressValue { get; private set; }
+    public Exception? LastError { get; private set; }
 
     #endregion
 
     #region Task Inner State
 
-    private PublishTaskStage _currentStage = PublishTaskStage.BundleProcessing;
+    public PublishTaskStage CurrentStage { get; private set; } = PublishTaskStage.BundleProcessing;
     private readonly string _rawBundleFileId;
     private readonly string? _thumbnailFileId;
     private readonly string? _description;
@@ -101,7 +102,8 @@ public sealed class ContentPublishTaskService
 
     private async Task StartTaskCoreAsync()
     {
-        if (_currentStage == PublishTaskStage.Done)
+        LastError = null;
+        if (CurrentStage == PublishTaskStage.Done)
         {
             UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
             return;
@@ -112,23 +114,24 @@ public sealed class ContentPublishTaskService
 
         try
         {
-            if (_currentStage == PublishTaskStage.BundleProcessing)
+            if (CurrentStage == PublishTaskStage.BundleProcessing)
             {
                 UpdateProgress("Preparing to process bundle file...", null);
 
                 await ProcessBundleAsync(cancellationToken);
-                _currentStage = PublishTaskStage.ContentPublishing;
+                CurrentStage = PublishTaskStage.ContentPublishing;
             }
 
-            if (_currentStage == PublishTaskStage.ContentPublishing)
+            if (CurrentStage == PublishTaskStage.ContentPublishing)
             {
                 UpdateProgress("Preparing for publish...", null);
 
                 await PublishAsync(cancellationToken);
-                _currentStage = PublishTaskStage.Done;
+                CurrentStage = PublishTaskStage.Done;
             }
 
             UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
+            LastError = null;
         }
         catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
         {
@@ -138,6 +141,7 @@ public sealed class ContentPublishTaskService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error publishing content {ContentId}", ContentId);
+            LastError = ex;
             UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
         }
     }
@@ -195,13 +199,13 @@ public sealed class ContentPublishTaskService
         Status = status;
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
+}
 
-    private enum PublishTaskStage
-    {
-        BundleProcessing,
-        ContentPublishing,
-        Done
-    }
+public enum PublishTaskStage
+{
+    BundleProcessing,
+    ContentPublishing,
+    Done
 }
 
 public sealed class ContentPublishTaskFactory(

@@ -1,5 +1,6 @@
 ﻿using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Views;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 
@@ -36,6 +37,18 @@ public sealed partial class PublishTaskViewModel(
     private void Unload()
     {
         publishTaskService.ProgressChanged -= OnTaskProgressChanged;
+    }
+
+    [RelayCommand]
+    private void OpenErrorReport()
+    {
+        var errorReportWindow = new TaskErrorReportWindowViewModel(publishTaskService);
+        var window = new TaskErrorReportWindow
+        {
+            DataContext = errorReportWindow
+        };
+        
+        window.Show();
     }
 
     [RelayCommand]
