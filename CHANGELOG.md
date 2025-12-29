@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2025-12-29
+
 ### Added
 
 - Custom Http Proxy. [`#113`](https://github.com/project-vrcz/content-publisher/pull/113)
@@ -91,7 +93,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v1.3.0...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/project-vrcz/content-publisher/compare/v1.3.0...v2.0.0
 [1.3.0]: https://github.com/project-vrcz/content-publisher/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/project-vrcz/content-publisher/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/project-vrcz/content-publisher/compare/v1.0.0...v1.1.0
