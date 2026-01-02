@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-01-02
+
 ### Fixed
 
 - Won't retry when connect timeout error occurred. [`#125`](https://github.com/project-vrcz/content-publisher/pull/125)
@@ -101,7 +103,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.0.0...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/project-vrcz/content-publisher/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/project-vrcz/content-publisher/compare/v1.3.0...v2.0.0
 [1.3.0]: https://github.com/project-vrcz/content-publisher/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/project-vrcz/content-publisher/compare/v1.1.0...v1.2.0
