@@ -77,7 +77,7 @@ public static class ServicesExtension
                 PooledConnectionLifetime = TimeSpan.Zero,
                 EnableMultipleHttp2Connections = true,
                 EnableMultipleHttp3Connections = true,
-                ConnectTimeout = TimeSpan.FromMilliseconds(1),
+                ConnectTimeout = TimeSpan.FromSeconds(5),
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
             .AddResilienceHandler("awsClient", builder =>
