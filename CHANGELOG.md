@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-01-02
+
 ### Fixed
 
 - Content Publish will always failed due to forget to remove test code. [`#127`](https://github.com/project-vrcz/content-publisher/pull/127)
@@ -107,7 +109,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.0.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/project-vrcz/content-publisher/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/project-vrcz/content-publisher/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/project-vrcz/content-publisher/compare/v1.3.0...v2.0.0
 [1.3.0]: https://github.com/project-vrcz/content-publisher/compare/v1.2.0...v1.3.0
