@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
 using Polly;
 using VRChatContentPublisher.ConnectCore.Extensions;
@@ -10,6 +9,7 @@ using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
 using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentPublisher.ConnectCore.Services.Health;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Core.Services.PublishTask;
@@ -77,12 +77,12 @@ public static class ServicesExtension
                 PooledConnectionLifetime = TimeSpan.Zero,
                 EnableMultipleHttp2Connections = true,
                 EnableMultipleHttp3Connections = true,
-                ConnectTimeout = TimeSpan.FromSeconds(5),
+                ConnectTimeout = TimeSpan.FromMilliseconds(1),
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
             .AddResilienceHandler("awsClient", builder =>
             {
-                builder.AddRetry(new HttpRetryStrategyOptions
+                builder.AddRetry(new AppHttpRetryStrategyOptions
                 {
                     UseJitter = true,
                     MaxRetryAttempts = 5,

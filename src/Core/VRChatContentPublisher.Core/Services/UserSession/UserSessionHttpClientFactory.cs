@@ -4,6 +4,7 @@ using Microsoft.Extensions.Http.Logging;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Logging;
 using Polly;
+using VRChatContentPublisher.Core.Resilience;
 
 namespace VRChatContentPublisher.Core.Services.UserSession;
 
@@ -28,7 +29,7 @@ public sealed class UserSessionHttpClientFactory(ILoggerFactory loggerFactory, A
                 Name = "VRChatApiClient",
                 InstanceName = instanceName
             }
-            .AddRetry(new HttpRetryStrategyOptions
+            .AddRetry(new AppHttpRetryStrategyOptions
             {
                 UseJitter = true,
                 MaxRetryAttempts = 5,
