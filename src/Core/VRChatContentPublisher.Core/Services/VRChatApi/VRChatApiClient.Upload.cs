@@ -45,15 +45,19 @@ public partial class VRChatApiClient
             {
                 logger.LogInformation("Existing file version {Version} is already complete for file {FileId}",
                     completeVersion.Version, fileId);
-                // TODO: What will happen? I don't know.
-                throw new NotImplementedException();
+
+                throw new InvalidOperationException(
+                    "One or more file version with the same md5 already exists and is complete.");
             }
 
-            throw new NotImplementedException();
+            throw new UnexpectedApiBehaviourException(
+                "One or more file version with the same md5 already exists but is not complete. " +
+                "Which should not happen since we have cleaned up incomplete file versions.");
         }
 
         // Step 3. Caulate file signature
-        progressCallback?.Invoke(new PublishTaskProgressEventArg($"Calculating (Blake2b) Signature for {userFileType} file...",
+        progressCallback?.Invoke(new PublishTaskProgressEventArg(
+            $"Calculating (Blake2b) Signature for {userFileType} file...",
             null, ContentPublishTaskStatus.InProgress));
 
         var signatureStream =
@@ -124,7 +128,8 @@ public partial class VRChatApiClient
         if (isSimpleUpload)
         {
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType, cancellationToken);
-            await PutFileAsync(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload, contentType, cancellationToken);
+            await PutFileAsync(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload, contentType,
+                cancellationToken);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType, cancellationToken);
 
             progressCallback?.Invoke(1);
@@ -156,7 +161,8 @@ public partial class VRChatApiClient
                 throw new ArgumentNullException(nameof(md5), "MD5 should be provided for simple upload.");
 
             if (contentType is null)
-                throw new ArgumentNullException(nameof(contentType), "Content type should be provided for simple upload.");
+                throw new ArgumentNullException(nameof(contentType),
+                    "Content type should be provided for simple upload.");
 
             content.Headers.ContentMD5 = Convert.FromBase64String(md5);
             content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
