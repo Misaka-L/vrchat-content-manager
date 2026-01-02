@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Won't retry when connect timeout error occurred. [`#125`](https://github.com/project-vrcz/content-publisher/pull/125)
 
+### Changed
+
+- Will give more detail information when upload process found file version with same md5. [`#126`](https://github.com/project-vrcz/content-publisher/pull/126)
+
 ## [2.0.0] - 2025-12-29
 
 ### Added
