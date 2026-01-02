@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Won't retry when connect timeout error occurred. [`#125`](https://github.com/project-vrcz/content-publisher/pull/125)
+
 ## [2.0.0] - 2025-12-29
 
 ### Added
