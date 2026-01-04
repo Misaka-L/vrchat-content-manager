@@ -3,9 +3,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:AboutSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.AboutSettingsView">
+
+    <UserControl.Styles>
+        <Style Selector="HyperlinkButton > AccessText">
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}" />
+        </Style>
+    </UserControl.Styles>
 
     <StackPanel Margin="8" Spacing="8">
         <StackPanel Spacing="8" HorizontalAlignment="Center">
@@ -31,6 +38,46 @@
                 <TextBlock Text="Build at" Opacity="0.8" />
                 <SelectableTextBlock Text="{Binding AppBuildDate}" />
             </StackPanel>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
+            <avalonia:MaterialIcon Kind="Heart" Height="24" Width="24" />
+            <TextBlock Text="Acknowledgement" VerticalAlignment="Center" FontSize="18" />
+        </StackPanel>
+
+        <StackPanel Spacing="2">
+            <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+                <TextBlock Text="Thanks to those" />
+                <HyperlinkButton Content="Open source software" Margin="0" Padding="0">
+                    <Interaction.Behaviors>
+                        <ButtonClickEventTriggerBehavior>
+                            <LaunchUriOrFileAction Path="{Binding ThirdPartNoticePath}" />
+                        </ButtonClickEventTriggerBehavior>
+                    </Interaction.Behaviors>
+                </HyperlinkButton>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Text="Special thanks to our early adopters" HorizontalAlignment="Center" />
+                <WrapPanel ItemSpacing="2" HorizontalAlignment="Center">
+                    <HyperlinkButton Content="@小川糸" />
+                    <HyperlinkButton Content="@ColorlessColor" NavigateUri="https://github.com/ColorlessColor" />
+                    <HyperlinkButton Content="@flower-elf" NavigateUri="https://github.com/flower-elf" />
+                    <HyperlinkButton Content="@Anteness" NavigateUri="https://github.com/Anteness" />
+                    <HyperlinkButton Content="@SKPloft" NavigateUri="https://github.com/SKPloft" />
+                </WrapPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel>
+            <TextBlock Text="Please consider support development by" HorizontalAlignment="Center" />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" HorizontalAlignment="Center">
+                <HyperlinkButton Content="Donate" NavigateUri="https://afdian.com/a/Misaka-L" />
+                <HyperlinkButton Grid.Column="1" Content="Feedback"
+                                 NavigateUri="https://github.com/project-vrcz/content-publisher/issues/new/choose" />
+                <HyperlinkButton Grid.Column="2" Content="Contribute"
+                                 NavigateUri="https://github.com/project-vrcz/content-publisher/blob/main/CONTRIBUTING.md" />
+            </Grid>
         </StackPanel>
     </StackPanel>
 </UserControl>
