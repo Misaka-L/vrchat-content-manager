@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
@@ -24,6 +25,9 @@ public static class TaskEndpoint
             { } request)
             return;
 
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger(nameof(TaskEndpoint));
+
         var worldPublishTaskService = services.GetRequiredService<IWorldPublishTaskService>();
         try
         {
@@ -47,6 +51,7 @@ public static class TaskEndpoint
         }
         catch (NoUserSessionAvailableException ex)
         {
+            logger.LogError(ex, "Failed to create world publish task due to no user session available.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status503ServiceUnavailable,
@@ -55,6 +60,7 @@ public static class TaskEndpoint
         }
         catch (ContentOwnerUserSessionNotFoundException ex)
         {
+            logger.LogError(ex, "Failed to create world publish task due to content owner user session not found.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
@@ -63,11 +69,17 @@ public static class TaskEndpoint
         }
         catch (ArgumentException ex)
         {
+            logger.LogError(ex, "Failed to create world publish task due to invalid argument.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
             );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to create world publish task.");
+            throw;
         }
     }
 
@@ -76,6 +88,9 @@ public static class TaskEndpoint
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.CreateAvatarPublishTaskRequest) is not
             { } request)
             return;
+
+        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger(nameof(TaskEndpoint));
 
         var avatarPublishTaskService = services.GetRequiredService<IAvatarPublishTaskService>();
         try
@@ -93,6 +108,7 @@ public static class TaskEndpoint
         }
         catch (NoUserSessionAvailableException ex)
         {
+            logger.LogError(ex, "Failed to create avatar publish task due to no user session available.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status503ServiceUnavailable,
@@ -101,6 +117,7 @@ public static class TaskEndpoint
         }
         catch (ContentOwnerUserSessionNotFoundException ex)
         {
+            logger.LogError(ex, "Failed to create avatar publish task due to content owner user session not found.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
@@ -109,11 +126,16 @@ public static class TaskEndpoint
         }
         catch (ArgumentException ex)
         {
+            logger.LogError(ex, "Failed to create avatar publish task due to invalid argument.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
             );
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to create avatar publish task.");
         }
     }
 }
