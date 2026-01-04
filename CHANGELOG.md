@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Logging when create publish task failed. [`#128`](https://github.com/project-vrcz/content-publisher/pull/128)
+
 ## [2.0.2] - 2026-01-02
 
 ### Fixed
