@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.Settings"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:LicensePageViewModel"
+             x:Class="VRChatContentPublisher.App.Pages.Settings.LicensePage">
+
+    <Grid RowDefinitions="Auto,*">
+        <Border>
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Settings}"
+                        Command="{Binding NavigateToSettingsCommand}"
+                        Padding="0" Margin="0,0,0,5" Foreground="White"
+                        Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
+                <TextBlock Text="License" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
+        <ScrollViewer Grid.Row="1">
+            <SelectableTextBlock Text="{Binding LicenseText}" TextWrapping="Wrap"
+                                 Margin="8" />
+        </ScrollViewer>
+    </Grid>
+</UserControl>

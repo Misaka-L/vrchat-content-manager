@@ -6,8 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Show Build Datetime in local time zone. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129)
+
 ### Added
 
+- Acknowledgement for early adopters and open source softwares in Settings Page. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129)
+  - Also the software license.
 - Logging when create publish task failed. [`#128`](https://github.com/project-vrcz/content-publisher/pull/128)
 
 ## [2.0.2] - 2026-01-02
