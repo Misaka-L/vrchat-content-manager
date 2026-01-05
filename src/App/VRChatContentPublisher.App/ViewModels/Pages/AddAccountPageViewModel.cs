@@ -111,17 +111,6 @@ public sealed partial class AddAccountPageViewModel(
         ErrorMessage = message;
         HasError = true;
     }
-
-    private async ValueTask TryLogout(UserSessionService sessionService)
-    {
-        try
-        {
-            await sessionService.LogoutAsync();
-        }
-        catch
-        {
-        }
-    }
 }
 
 public sealed class AddAccountPageViewModelFactory(
