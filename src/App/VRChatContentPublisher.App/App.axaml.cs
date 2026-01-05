@@ -78,6 +78,7 @@ public partial class App : Application
         // Settings Pages
         ViewLocator.Register<SettingsFixAccountPageViewModel, SettingsFixAccountPage>();
         ViewLocator.Register<AddAccountPageViewModel, AddAccountPage>();
+        ViewLocator.Register<LicensePageViewModel, LicensePage>();
 
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();

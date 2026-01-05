@@ -26,8 +26,12 @@
                     <SelectableTextBlock Text="{Binding AppVersion}" />
                 </StackPanel>
             </StackPanel>
-            <TextBlock Text="A More Efficient Way to publish your VRChat Contents"
-                       Opacity="0.8" TextWrapping="Wrap" />
+            <StackPanel>
+                <TextBlock Text="A More Efficient Way to publish your VRChat Contents"
+                           Opacity="0.8" TextWrapping="Wrap" HorizontalAlignment="Center" />
+                <HyperlinkButton Content="Licensed under GPL-3.0 license" HorizontalAlignment="Center"
+                                 Command="{Binding NavigateToLicenseCommand}" />
+            </StackPanel>
         </StackPanel>
         <StackPanel Spacing="2">
             <StackPanel>
