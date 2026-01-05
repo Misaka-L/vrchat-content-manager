@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.Core.Models.VRChatApi;
@@ -8,6 +9,7 @@ using VRChatContentPublisher.Core.Services.UserSession;
 namespace VRChatContentPublisher.App.ViewModels.Pages;
 
 public sealed partial class AddAccountPageViewModel(
+    ILogger<AddAccountPageViewModel> logger,
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogFactory,
     UserSessionManagerService userSessionManagerService,
     DialogService dialogService,
@@ -32,6 +34,7 @@ public sealed partial class AddAccountPageViewModel(
     {
         if (userSessionManagerService.IsSessionExists(Username))
         {
+            logger.LogWarning("Attempt to add an existing account: {Username}", Username);
             SetError("An account with this username/email already exists.");
             return;
         }
@@ -45,12 +48,14 @@ public sealed partial class AddAccountPageViewModel(
         }
         catch (ApiErrorException ex)
         {
+            logger.LogError(ex, "Api error during login for user {Username}.", Username);
             await userSessionManagerService.RemoveSessionAsync(session);
             SetError(ex.ApiErrorMessage);
             return;
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Unexpected error during login for user {Username}.", Username);
             await userSessionManagerService.RemoveSessionAsync(session);
             SetError(ex.Message);
             return;
@@ -116,13 +121,15 @@ public sealed partial class AddAccountPageViewModel(
 public sealed class AddAccountPageViewModelFactory(
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogFactory,
     UserSessionManagerService userSessionManagerService,
-    DialogService dialogService)
+    DialogService dialogService,
+    ILogger<AddAccountPageViewModel> logger)
 {
     public AddAccountPageViewModel Create(
         Action onRequestBack,
         Action onRequestDone)
     {
         return new AddAccountPageViewModel(
+            logger,
             twoFactorAuthDialogFactory,
             userSessionManagerService,
             dialogService,
