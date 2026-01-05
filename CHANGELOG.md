@@ -12,9 +12,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Check is account valid before enter account repair page. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
+  - If account is valid, the account will be mark as repaired. No further operation requested.
 - Acknowledgement for early adopters and open source softwares in Settings Page. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129)
   - Also the software license.
 - Logging when create publish task failed. [`#128`](https://github.com/project-vrcz/content-publisher/pull/128)
+
+### Fixed
+
+- App crash when any error occurred during account repair process. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
 
 ## [2.0.2] - 2026-01-02
 
