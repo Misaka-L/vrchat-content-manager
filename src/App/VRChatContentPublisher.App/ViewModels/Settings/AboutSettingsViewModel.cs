@@ -9,7 +9,7 @@ public sealed partial class AboutSettingsViewModel(NavigationService navigationS
 {
     public string AppVersion => AppVersionUtils.GetAppVersion();
     public string AppCommitHash => AppVersionUtils.GetAppCommitHash();
-    public DateTimeOffset? AppBuildDate => AppVersionUtils.GetAppBuildDate();
+    public DateTimeOffset? AppBuildDate => AppVersionUtils.GetAppBuildDate()?.ToLocalTime();
 
     public const string ThirdPartNoticeRelativePath = "THIRD-PARTY-NOTICES.TXT";
     public string ThirdPartNoticePath => Path.GetFullPath(ThirdPartNoticeRelativePath);
