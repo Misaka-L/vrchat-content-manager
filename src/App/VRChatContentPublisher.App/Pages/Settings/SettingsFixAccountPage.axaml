@@ -25,6 +25,19 @@
         </Border>
         <StackPanel Spacing="24" Margin="18">
             <StackPanel>
+                <Border IsVisible="{Binding HasError}"
+                        Background="#d50000" Margin="0,0,0,8"
+                        CornerRadius="8">
+                    <StackPanel Margin="8" Spacing="4">
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                                   Foreground="White" />
+                            <TextBlock Text="Failed to Login" FontWeight="Bold" FontSize="18"
+                                       Foreground="White" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="White" />
+                    </StackPanel>
+                </Border>
                 <TextBox assists:TextFieldAssist.Label="Username/Email" Classes="outline" UseFloatingWatermark="True"
                          Theme="{StaticResource OutlineTextBox}"
                          Text="{Binding Username}"

@@ -1,11 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Dialogs;
 
-public sealed partial class TwoFactorAuthDialogViewModel(UserSessionService userSessionService, bool isEmailOtp)
+public sealed partial class TwoFactorAuthDialogViewModel(
+    ILogger<TwoFactorAuthDialogViewModel> logger,
+    UserSessionService userSessionService,
+    bool isEmailOtp)
     : DialogViewModelBase
 {
     [ObservableProperty] public partial string Code { get; set; } = "";
@@ -26,12 +30,14 @@ public sealed partial class TwoFactorAuthDialogViewModel(UserSessionService user
         }
         catch (ApiErrorException ex)
         {
+            logger.LogError(ex, "Failed to verify OTP code.");
             HasError = true;
             ErrorMessage = ex.ApiErrorMessage;
             return;
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Failed to verify OTP code.");
             HasError = true;
             ErrorMessage = ex.Message;
             return;
@@ -39,6 +45,7 @@ public sealed partial class TwoFactorAuthDialogViewModel(UserSessionService user
 
         if (!isVerify)
         {
+            logger.LogError("Invalid OTP code.");
             HasError = true;
             ErrorMessage = "Invalid Code";
             return;
@@ -50,10 +57,10 @@ public sealed partial class TwoFactorAuthDialogViewModel(UserSessionService user
     }
 }
 
-public sealed class TwoFactorAuthDialogViewModelFactory
+public sealed class TwoFactorAuthDialogViewModelFactory(ILogger<TwoFactorAuthDialogViewModel> logger)
 {
     public TwoFactorAuthDialogViewModel Create(UserSessionService userSessionService, bool isEmailOtp)
     {
-        return new TwoFactorAuthDialogViewModel(userSessionService, isEmailOtp);
+        return new TwoFactorAuthDialogViewModel(logger, userSessionService, isEmailOtp);
     }
 }
