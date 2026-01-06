@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Better struct logging support [`#146`](https://github.com/project-vrcz/content-publisher/pull/146)
-  - Include `Application`, `ApplicationVersion`, `ApplicationBuildDate`, `ApplicationCommitHash` globally. ['#147'](https://github.com/project-vrcz/content-publisher/pull/147)
+  - Include `Application`, `ApplicationVersion`, `ApplicationBuildDate`, `ApplicationCommitHash` globally. [`#147`](https://github.com/project-vrcz/content-publisher/pull/147)
   - Include `ClientName`, `ClientId` in RPC client request related log message.
   - Include `RpcClientIp`, `RpcClientPort`, `RpcHttpMethod`, `RpcHttpPath`, `RpcHttpQuery`, `RequestId` in RPC HTTP client request related log message.
   - Include `TaskId`, `ContentType`, `ContentName`, `ContentId`, `ContentPlatform` in content publish task related log message.
