@@ -9,6 +9,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentPublisher.App.Extensions;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Services.App;
+using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.IpcCore;
 using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
@@ -33,6 +34,10 @@ internal sealed class Program
         var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
+            .Enrich.WithProperty("Application", "VRChatContentPublisher")
+            .Enrich.WithProperty("ApplicationVersion", AppVersionUtils.GetAppVersion())
+            .Enrich.WithProperty("ApplicationBuildDate", AppVersionUtils.GetAppBuildDate())
+            .Enrich.WithProperty("ApplicationCommitHash", AppVersionUtils.GetAppCommitHash())
             .WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
             .WriteTo.Async(writer =>
                 writer.File(new CompactJsonFormatter(), jsonLogPath,
@@ -41,6 +46,13 @@ internal sealed class Program
                 writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
             .CreateLogger();
+
+        Log.Information(
+            "VRChat Content Publisher v{AppVersion} built on {AppBuildDate} (commit {AppCommitHash}) starting up...",
+            AppVersionUtils.GetAppVersion(),
+            AppVersionUtils.GetAppBuildDate(),
+            AppVersionUtils.GetAppCommitHash()
+        );
 
         try
         {
