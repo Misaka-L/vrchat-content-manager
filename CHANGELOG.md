@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Show app build info (version, git commit, build date) in error report window. [`#140`](https://github.com/project-vrcz/content-publisher/pull/140)
 - Check is account valid before enter account repair page. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
   - If account is valid, the account will be mark as repaired. No further operation requested.
 - Acknowledgement for early adopters and open source softwares in Settings Page. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129)
