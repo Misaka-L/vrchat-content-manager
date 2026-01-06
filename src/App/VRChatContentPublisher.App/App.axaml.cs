@@ -88,6 +88,7 @@ public partial class App : Application
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
         ViewLocator.Register<InvalidSessionTaskManagerViewModel, InvalidSessionTaskManagerView>();
         ViewLocator.Register<PublishTaskViewModel, PublishTaskView>();
+        ViewLocator.Register<PublishTaskManagerContainerViewModel, PublishTaskManagerContainerView>();
 
         ViewLocator.Register<RpcClientSessionViewModel, RpcClientSessionView>();
         ViewLocator.Register<UserSessionViewModel, UserSessionView>();
