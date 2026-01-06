@@ -10,4 +10,6 @@ public sealed class InvalidSessionTaskManagerViewModel(Exception exception, User
     public string ExceptionString => exception.ToString();
 
     public string DisplayName => userSessionService.CurrentUser?.DisplayName ?? userSessionService.UserNameOrEmail;
+
+    public UserSessionService UserSessionService => userSessionService;
 }

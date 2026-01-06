@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -20,23 +21,72 @@ public sealed partial class HomeTasksPageViewModel(
     {
         foreach (var session in userSessionManagerService.Sessions)
         {
-            try
-            {
-                var scope = await session.CreateOrGetSessionScopeAsync();
-                var managerService = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+            await AddSessionCoreAsync(session);
+        }
 
-                var managerViewModel = managerViewModelFactory.Create(
-                    managerService,
-                    session.CurrentUser?.DisplayName ?? session.UserNameOrEmail
-                );
+        userSessionManagerService.SessionCreated += OnUserSessionCreated;
+        userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
+    }
 
-                TaskManagers.Add(managerViewModel);
-            }
-            catch (Exception ex)
+    [RelayCommand]
+    private void Unload()
+    {
+        userSessionManagerService.SessionCreated -= OnUserSessionCreated;
+        userSessionManagerService.SessionRemoved -= OnUserSessionRemoved;
+        TaskManagers.Clear();
+    }
+
+    private void OnUserSessionCreated(object? sender, UserSessionService session)
+    {
+        Dispatcher.UIThread.InvokeAsync(async () =>
+        {
+            if (TaskManagers.Any(s =>
+                    s.UserSessionService.UserNameOrEmail == session.UserNameOrEmail ||
+                    s.UserSessionService.UserId == session.UserId))
             {
-                logger.LogWarning(ex, "Failed to get task manager for user session {UserNameOrEmail}", session.UserNameOrEmail);
-                TaskManagers.Add(new InvalidSessionTaskManagerViewModel(ex, session));
+                return;
             }
+
+            await AddSessionCoreAsync(session);
+        });
+    }
+
+    private void OnUserSessionRemoved(object? sender, UserSessionService e)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            if (TaskManagers.FirstOrDefault(s =>
+                    s.UserSessionService.UserNameOrEmail == e.UserNameOrEmail ||
+                    s.UserSessionService.UserId == e.UserId)
+                is not { } matchViewModel)
+            {
+                return;
+            }
+
+            TaskManagers.Remove(matchViewModel);
+        });
+    }
+
+    private async ValueTask AddSessionCoreAsync(UserSessionService session)
+    {
+        try
+        {
+            var scope = await session.CreateOrGetSessionScopeAsync();
+            var managerService = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+
+            var managerViewModel = managerViewModelFactory.Create(
+                session,
+                managerService,
+                session.CurrentUser?.DisplayName ?? session.UserNameOrEmail
+            );
+
+            TaskManagers.Add(managerViewModel);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to get task manager for user session {UserNameOrEmail}",
+                session.UserNameOrEmail);
+            TaskManagers.Add(new InvalidSessionTaskManagerViewModel(ex, session));
         }
     }
 }

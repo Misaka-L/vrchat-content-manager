@@ -11,6 +11,9 @@
         <EventTriggerBehavior EventName="Loaded">
             <InvokeCommandAction Command="{Binding LoadCommand}" />
         </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
     </Interaction.Behaviors>
 
     <ScrollViewer>

@@ -1,3 +1,8 @@
-﻿namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
+﻿using VRChatContentPublisher.Core.Services.UserSession;
 
-public interface IPublishTaskManagerViewModel;
+namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
+
+public interface IPublishTaskManagerViewModel
+{
+    UserSessionService UserSessionService { get; }
+}
