@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Models.ClientSession;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Challenge;
 using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
@@ -24,7 +25,7 @@ public sealed class ClientSessionService(
     private readonly Lock _challengeSessionLock = new();
     private readonly List<ChallengeSession> _challengeSessions = [];
 
-    public async ValueTask<TokenValidationResult> ValidateJwtAsync(string jwt)
+    public async ValueTask<RpcTokenValidationResult> ValidateJwtAsync(string jwt)
     {
         var securityKey = await tokenSecretKeyProvider.GetSecretKeyAsync();
         var issuer = await GetIssuerAsync();
@@ -50,8 +51,8 @@ public sealed class ClientSessionService(
             {
                 foreach (var audience in audiences)
                 {
-                    if (sessionStorageService.GetSessionByClientId(audience) is { } session &&
-                        session.Expires > DateTimeOffset.UtcNow)
+                    if (sessionStorageService.GetSessionByClientId(audience) is { } clientSession &&
+                        clientSession.Expires > DateTimeOffset.UtcNow)
                         return true;
                 }
 
@@ -59,7 +60,12 @@ public sealed class ClientSessionService(
             }
         });
 
-        return result;
+        if (sessionStorageService.GetSessionByClientId((string)result.Claims["aud"]) is not { } session)
+        {
+            throw new InvalidOperationException("No existing session found for the given client ID.");
+        }
+
+        return new RpcTokenValidationResult(result, session.ClientId, session.ClientName);
     }
 
     public async ValueTask<string> CreateChallengeAsync(string clientId, string identityPrompt, string clientName)

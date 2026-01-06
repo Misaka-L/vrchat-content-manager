@@ -7,7 +7,8 @@ public sealed class PostRequestLoggingMiddleware(ILogger<PostRequestLoggingMiddl
 {
     public override Task ExecuteAsync(HttpContext context, Func<Task> next)
     {
-        logger.LogInformation("{ClientIp}:{ClientPort} {Method} {Path}{Query} => {StatusCode}",
+        logger.LogInformation("{RequestId} {ClientIp}:{ClientPort} {Method} {Path}{Query} => {StatusCode}",
+            context.TraceIdentifier,
             context.Connection.RemoteIpAddress,
             context.Connection.RemotePort,
             context.Request.Method,

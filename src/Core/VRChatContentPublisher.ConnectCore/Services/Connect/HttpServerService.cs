@@ -20,7 +20,7 @@ public sealed class HttpServerService
     private readonly List<MiddlewareBase> _postRequestMiddlewares = [];
 
     public HttpServerService(ILoggerFactory loggerFactory, ILogger<HttpServerService> logger,
-        RequestLoggingMiddleware requestLoggingMiddleware, EndpointMiddleware endpointMiddleware,
+        EndpointMiddleware endpointMiddleware,
         PostRequestLoggingMiddleware postRequestLoggingMiddleware, JwtAuthMiddleware jwtAuthMiddleware)
     {
         _logger = logger;
@@ -38,7 +38,6 @@ public sealed class HttpServerService
             new OptionsWrapper<KestrelServerOptions>(kestrelServerOptions), transportFactory, loggerFactory);
         _simpleHttpApplication = new SimpleHttpApplication(HandleRequestAsync);
 
-        _preRequestMiddlewares.Add(requestLoggingMiddleware);
         _preRequestMiddlewares.Add(jwtAuthMiddleware);
 
         _postRequestMiddlewares.Add(endpointMiddleware);
@@ -57,20 +56,42 @@ public sealed class HttpServerService
 
     private async Task HandleRequestAsync(HttpContext httpContext)
     {
-        try
-        {
-            var middlewares = new List<MiddlewareBase>();
-            middlewares.AddRange(_preRequestMiddlewares);
-            middlewares.AddRange(_postRequestMiddlewares);
+        var requestId = httpContext.TraceIdentifier;
+        httpContext.Response.Headers.Append("X-Request-Id", requestId);
 
-            await RunMiddlewaresAsync(httpContext, middlewares);
-        }
-        catch (Exception ex)
+        using (_logger.BeginScope(
+                   "{RequestId} {RpcClientIp}:{RpcClientPort} {RpcHttpMethod} {RpcHttpPath}{RpcHttpQuery}",
+                   requestId,
+                   httpContext.Connection.RemoteIpAddress,
+                   httpContext.Connection.RemotePort,
+                   httpContext.Request.Method,
+                   httpContext.Request.Path,
+                   httpContext.Request.QueryString))
         {
-            _logger.LogError(ex, "Error handling HTTP request");
-            await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
-                StatusCodes.Status500InternalServerError,
-                "Internal Server Error", "An unexpected error occurred.");
+            _logger.LogInformation(
+                "{RequestId} {RpcClientIp}:{RpcClientPort} {RpcHttpMethod} {RpcHttpPath}{RpcHttpQuery}",
+                requestId,
+                httpContext.Connection.RemoteIpAddress,
+                httpContext.Connection.RemotePort,
+                httpContext.Request.Method,
+                httpContext.Request.Path,
+                httpContext.Request.QueryString);
+
+            try
+            {
+                var middlewares = new List<MiddlewareBase>();
+                middlewares.AddRange(_preRequestMiddlewares);
+                middlewares.AddRange(_postRequestMiddlewares);
+
+                await RunMiddlewaresAsync(httpContext, middlewares);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error handling HTTP request");
+                await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
+                    StatusCodes.Status500InternalServerError,
+                    "Internal Server Error", "An unexpected error occurred.");
+            }
         }
     }
 

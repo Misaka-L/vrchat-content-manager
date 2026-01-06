@@ -18,7 +18,6 @@ public static class ServicesExtenstion
         services.AddTransient<ConnectMetadataService>();
         
         // Middlewares
-        services.AddTransient<RequestLoggingMiddleware>();
         services.AddTransient<JwtAuthMiddleware>();
         services.AddTransient<EndpointMiddleware>();
         services.AddTransient<PostRequestLoggingMiddleware>();

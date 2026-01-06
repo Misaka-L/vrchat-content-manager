@@ -95,54 +95,58 @@ public sealed class ContentPublishTaskService
             throw new InvalidOperationException(
                 "Cannot start a task that in completed, cancelling or in progress state.");
 
-        _logger.LogInformation("Starting publish task for content {ContentId}", ContentId);
-
         _ = Task.Factory.StartNew(StartTaskCoreAsync, TaskCreationOptions.LongRunning);
     }
 
     private async Task StartTaskCoreAsync()
     {
-        LastError = null;
-        if (CurrentStage == PublishTaskStage.Done)
+        using (_logger.BeginScope(
+                   "Starting publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform}",
+                   TaskId, ContentType, ContentName, ContentId, ContentPlatform)
+              )
         {
-            UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
-            return;
-        }
-
-        _cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = _cancellationTokenSource.Token;
-
-        try
-        {
-            if (CurrentStage == PublishTaskStage.BundleProcessing)
-            {
-                UpdateProgress("Preparing to process bundle file...", null);
-
-                await ProcessBundleAsync(cancellationToken);
-                CurrentStage = PublishTaskStage.ContentPublishing;
-            }
-
-            if (CurrentStage == PublishTaskStage.ContentPublishing)
-            {
-                UpdateProgress("Preparing for publish...", null);
-
-                await PublishAsync(cancellationToken);
-                CurrentStage = PublishTaskStage.Done;
-            }
-
-            UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
             LastError = null;
-        }
-        catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
-        {
-            _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", ContentId);
-            UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error publishing content {ContentId}", ContentId);
-            LastError = ex;
-            UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
+            if (CurrentStage == PublishTaskStage.Done)
+            {
+                UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
+                return;
+            }
+
+            _cancellationTokenSource = new CancellationTokenSource();
+            var cancellationToken = _cancellationTokenSource.Token;
+
+            try
+            {
+                if (CurrentStage == PublishTaskStage.BundleProcessing)
+                {
+                    UpdateProgress("Preparing to process bundle file...", null);
+
+                    await ProcessBundleAsync(cancellationToken);
+                    CurrentStage = PublishTaskStage.ContentPublishing;
+                }
+
+                if (CurrentStage == PublishTaskStage.ContentPublishing)
+                {
+                    UpdateProgress("Preparing for publish...", null);
+
+                    await PublishAsync(cancellationToken);
+                    CurrentStage = PublishTaskStage.Done;
+                }
+
+                UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
+                LastError = null;
+            }
+            catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
+            {
+                _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", ContentId);
+                UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error publishing content {ContentId}", ContentId);
+                LastError = ex;
+                UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
+            }
         }
     }
 

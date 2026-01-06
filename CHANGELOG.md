@@ -12,6 +12,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Better struct logging support [`#146`](https://github.com/project-vrcz/content-publisher/pull/146)
+  - Include `ClientName`, `ClientId` in RPC client request related log message.
+  - Include `RpcClientIp`, `RpcClientPort`, `RpcHttpMethod`, `RpcHttpPath`, `RpcHttpQuery`, `RequestId` in RPC HTTP client request related log message.
+  - Include `TaskId`, `ContentType`, `ContentName`, `ContentId`, `ContentPlatform` in content publish task related log message.
+  - Include `HttpClientInstanceName` in http request logging message sent from VRChat Api HttpClient.
 - App will mark session as expired or invalid if got http 401 when request VRChat api. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
 - Allow repair account in Tasks page if session is expired or invalid. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
 - Show tip and button to login page in Tasks page if no accounts login. [`#141`](https://github.com/project-vrcz/content-publisher/pull/141)

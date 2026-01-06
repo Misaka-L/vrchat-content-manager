@@ -8,7 +8,9 @@ using VRChatContentPublisher.Core.Resilience;
 
 namespace VRChatContentPublisher.Core.Services.UserSession;
 
-public sealed class UserSessionHttpClientFactory(ILoggerFactory loggerFactory, AppWebProxy appWebProxy)
+public sealed class UserSessionHttpClientFactory(
+    ILoggerFactory loggerFactory,
+    AppWebProxy appWebProxy)
 {
     public HttpClient Create(
         CookieContainer cookieContainer,
@@ -45,13 +47,16 @@ public sealed class UserSessionHttpClientFactory(ILoggerFactory loggerFactory, A
             .ConfigureTelemetry(loggerFactory)
             .Build();
 
-        var client = new HttpClient(new InspectorHttpHandler(inspector)
+        var client = new HttpClient(new ScopeLoggingHttpHandler(logger, instanceName)
         {
-            InnerHandler = new ResilienceHandler(retryPipeline)
+            InnerHandler = new InspectorHttpHandler(inspector)
             {
-                InnerHandler = new LoggingScopeHttpMessageHandler(logger)
+                InnerHandler = new ResilienceHandler(retryPipeline)
                 {
-                    InnerHandler = socketHttpHandler
+                    InnerHandler = new LoggingScopeHttpMessageHandler(logger)
+                    {
+                        InnerHandler = socketHttpHandler
+                    }
                 }
             }
         })

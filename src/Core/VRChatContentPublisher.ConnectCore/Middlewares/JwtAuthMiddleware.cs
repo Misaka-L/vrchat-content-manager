@@ -1,12 +1,14 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 
 namespace VRChatContentPublisher.ConnectCore.Middlewares;
 
-public class JwtAuthMiddleware(ClientSessionService clientSessionService) : MiddlewareBase
+public class JwtAuthMiddleware(ClientSessionService clientSessionService, ILogger<JwtAuthMiddleware> logger)
+    : MiddlewareBase
 {
     public override async Task ExecuteAsync(HttpContext context, Func<Task> next)
     {
@@ -27,13 +29,19 @@ public class JwtAuthMiddleware(ClientSessionService clientSessionService) : Midd
 
         var jwt = jwtHeader["Bearer ".Length..].Trim();
         var validateResult = await clientSessionService.ValidateJwtAsync(jwt);
-        if (!validateResult.IsValid)
+        if (!validateResult.TokenValidationResult.IsValid)
         {
             await WriteUnauthorizedAsync(context.Response);
             return;
         }
-        
-        context.User = new ClaimsPrincipal(validateResult.ClaimsIdentity);
+
+        logger.BeginScope(
+            "Valid JWT for {ClientName} ({ClientId})",
+            validateResult.ClientName,
+            validateResult.ClientId
+        );
+
+        context.User = new ClaimsPrincipal(validateResult.TokenValidationResult.ClaimsIdentity);
         await next();
     }
 
