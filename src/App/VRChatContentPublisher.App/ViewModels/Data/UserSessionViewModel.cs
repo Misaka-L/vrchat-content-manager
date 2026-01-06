@@ -79,15 +79,8 @@ public sealed partial class UserSessionViewModel(
     [RelayCommand]
     private async Task Repair()
     {
-        try
-        {
-            await userSessionService.GetCurrentUserAsync();
+        if (await userSessionService.TryRepairAsync())
             return;
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to check is account valid. Navigating to fix account page.");
-        }
 
         var fixPageViewModel = settingsFixAccountPageViewModelFactory.Create(userSessionService);
         navigationService.Navigate(fixPageViewModel);

@@ -1,30 +1,28 @@
 ﻿using System.Collections.ObjectModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
-using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 
 public sealed partial class HomeTasksPageViewModel(
-    PublishTaskManagerViewModelFactory managerViewModelFactory,
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
     AddAccountPageViewModelFactory addAccountPageViewModelFactory,
+    PublishTaskManagerContainerViewModelFactory containerViewModelFactory,
     ILogger<HomeTasksPageViewModel> logger) : PageViewModelBase
 {
-    public ObservableCollection<IPublishTaskManagerViewModel> TaskManagers { get; } = [];
+    public ObservableCollection<PublishTaskManagerContainerViewModel> TaskManagers { get; } = [];
 
     [RelayCommand]
-    private async Task Load()
+    private void Load()
     {
         foreach (var session in userSessionManagerService.Sessions)
         {
-            await AddSessionCoreAsync(session);
+            AddSessionCore(session);
         }
 
         userSessionManagerService.SessionCreated += OnUserSessionCreated;
@@ -36,6 +34,7 @@ public sealed partial class HomeTasksPageViewModel(
     {
         userSessionManagerService.SessionCreated -= OnUserSessionCreated;
         userSessionManagerService.SessionRemoved -= OnUserSessionRemoved;
+
         TaskManagers.Clear();
     }
 
@@ -52,7 +51,7 @@ public sealed partial class HomeTasksPageViewModel(
 
     private void OnUserSessionCreated(object? sender, UserSessionService session)
     {
-        Dispatcher.UIThread.InvokeAsync(async () =>
+        Dispatcher.UIThread.Invoke(() =>
         {
             if (TaskManagers.Any(s =>
                     s.UserSessionService.UserNameOrEmail == session.UserNameOrEmail ||
@@ -61,7 +60,7 @@ public sealed partial class HomeTasksPageViewModel(
                 return;
             }
 
-            await AddSessionCoreAsync(session);
+            AddSessionCore(session);
         });
     }
 
@@ -81,26 +80,9 @@ public sealed partial class HomeTasksPageViewModel(
         });
     }
 
-    private async ValueTask AddSessionCoreAsync(UserSessionService session)
+    private void AddSessionCore(UserSessionService session)
     {
-        try
-        {
-            var scope = await session.CreateOrGetSessionScopeAsync();
-            var managerService = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
-
-            var managerViewModel = managerViewModelFactory.Create(
-                session,
-                managerService,
-                session.CurrentUser?.DisplayName ?? session.UserNameOrEmail
-            );
-
-            TaskManagers.Add(managerViewModel);
-        }
-        catch (Exception ex)
-        {
-            logger.LogWarning(ex, "Failed to get task manager for user session {UserNameOrEmail}",
-                session.UserNameOrEmail);
-            TaskManagers.Add(new InvalidSessionTaskManagerViewModel(ex, session));
-        }
+        var containerViewModel = containerViewModelFactory.Create(session);
+        TaskManagers.Add(containerViewModel);
     }
 }

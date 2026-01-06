@@ -1,6 +1,8 @@
 ﻿using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -11,11 +13,15 @@ public sealed partial class PublishTaskManagerViewModel(
     UserSessionService userSessionService,
     TaskManagerService taskManagerService,
     PublishTaskViewModelFactory taskFactory,
+    SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory,
+    NavigationService navigationService,
     string userDisplayName)
     : ViewModelBase, IPublishTaskManagerViewModel
 {
     public string UserDisplayName { get; } = userDisplayName;
     public AvaloniaList<PublishTaskViewModel> Tasks { get; } = [];
+
+    public bool IsInteractionAllowed => UserSessionService.State == UserSessionState.LoggedIn;
 
     public UserSessionService UserSessionService => userSessionService;
 
@@ -29,8 +35,12 @@ public sealed partial class PublishTaskManagerViewModel(
         Tasks.Clear();
         Tasks.AddRange(viewModels);
 
+        OnPropertyChanged(nameof(IsInteractionAllowed));
+
         taskManagerService.TaskCreated += OnTaskCreated;
         taskManagerService.TaskRemoved += OnTaskRemoved;
+
+        userSessionService.StateChanged += OnUserSessionStateChanged;
     }
 
     [RelayCommand]
@@ -38,6 +48,8 @@ public sealed partial class PublishTaskManagerViewModel(
     {
         taskManagerService.TaskCreated -= OnTaskCreated;
         taskManagerService.TaskRemoved -= OnTaskRemoved;
+
+        userSessionService.StateChanged -= OnUserSessionStateChanged;
     }
 
     [RelayCommand]
@@ -95,6 +107,16 @@ public sealed partial class PublishTaskManagerViewModel(
         }
     }
 
+    [RelayCommand]
+    private async Task RepairSessionAsync()
+    {
+        if (await userSessionService.TryRepairAsync())
+            return;
+
+        var page = fixAccountPageViewModelFactory.Create(userSessionService);
+        navigationService.Navigate(page);
+    }
+
     private void OnTaskCreated(object? _, ContentPublishTaskService task)
     {
         Dispatcher.UIThread.Invoke(() =>
@@ -116,13 +138,27 @@ public sealed partial class PublishTaskManagerViewModel(
                 Tasks.Remove(viewModel);
         });
     }
+
+    private void OnUserSessionStateChanged(object? sender, UserSessionState e)
+    {
+        OnPropertyChanged(nameof(IsInteractionAllowed));
+    }
 }
 
-public sealed class PublishTaskManagerViewModelFactory(PublishTaskViewModelFactory taskFactory)
+public sealed class PublishTaskManagerViewModelFactory(
+    PublishTaskViewModelFactory taskFactory,
+    SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory,
+    NavigationService navigationService)
 {
     public PublishTaskManagerViewModel Create(
         UserSessionService userSessionService,
         TaskManagerService taskManagerService,
         string userDisplayName
-    ) => new(userSessionService, taskManagerService, taskFactory, userDisplayName);
+    ) => new(
+        userSessionService,
+        taskManagerService,
+        taskFactory,
+        fixAccountPageViewModelFactory,
+        navigationService,
+        userDisplayName);
 }

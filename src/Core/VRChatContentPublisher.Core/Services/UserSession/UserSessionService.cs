@@ -10,6 +10,7 @@ namespace VRChatContentPublisher.Core.Services.UserSession;
 public sealed class UserSessionService : IAsyncDisposable, IDisposable
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<UserSessionService> _logger;
 
     // Cookies, UserId, UserName
     private readonly SaveCookiesDelegate _saveFunc;
@@ -39,6 +40,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         ILogger<UserSessionService> logger)
     {
         _scopeFactory = scopeFactory;
+        _logger = logger;
         _saveFunc = saveFunc;
         UserId = userId;
 
@@ -51,8 +53,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             OnStateChanged(UserSessionState.LoggedOut);
         }
 
-        _sessionHttpClient = httpClientFactory.Create(CookieContainer, userId ?? userNameOrEmail, logger,
-            async () => await _saveFunc(CookieContainer, UserId, UserNameOrEmail)
+        _sessionHttpClient = httpClientFactory.Create(
+            CookieContainer,
+            userId ?? userNameOrEmail,
+            logger,
+            AfterHttpResponseAsync
         );
 
         _apiClient = apiClientFactory.Create(_sessionHttpClient);
@@ -73,6 +78,24 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     {
         OnStateChanged(UserSessionState.LoggedOut);
         await _apiClient.LogoutAsync();
+    }
+
+    public async ValueTask<bool> TryRepairAsync()
+    {
+        try
+        {
+            await GetCurrentUserAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Failed to auto repair (check is session really invalid) user session for {UserNameOrEmail}",
+                UserNameOrEmail);
+            return false;
+        }
+
+        return true;
     }
 
     public async ValueTask<CurrentUser> GetCurrentUserAsync()
@@ -114,6 +137,18 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         _sessionScope = scope;
 
         return ValueTask.FromResult(scope);
+    }
+
+    private async Task AfterHttpResponseAsync(HttpResponseMessage response)
+    {
+        await _saveFunc(CookieContainer, UserId, UserNameOrEmail);
+
+        if (State == UserSessionState.LoggedIn &&
+            response.RequestMessage?.RequestUri?.Host == "api.vrchat.cloud" &&
+            response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            OnStateChanged(UserSessionState.InvalidSession);
+        }
     }
 
     #region Dispose

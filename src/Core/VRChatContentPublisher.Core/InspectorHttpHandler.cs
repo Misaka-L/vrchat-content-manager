@@ -8,9 +8,9 @@ public class InspectorHttpHandler(InspectorHttpHandlerDelegate inspectorFunc) : 
     )
     {
         var response = await base.SendAsync(request, cancellationToken);
-        await inspectorFunc();
+        await inspectorFunc(response);
         return response;
     }
 }
 
-public delegate Task InspectorHttpHandlerDelegate();
+public delegate Task InspectorHttpHandlerDelegate(HttpResponseMessage response);

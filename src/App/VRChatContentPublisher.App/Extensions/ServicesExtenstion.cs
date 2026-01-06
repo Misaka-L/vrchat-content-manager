@@ -46,6 +46,8 @@ public static class ServicesExtenstion
         services.AddTransient<UserSessionViewModelFactory>();
         services.AddTransient<PublishTaskViewModelFactory>();
         services.AddTransient<PublishTaskManagerViewModelFactory>();
+        services.AddTransient<InvalidSessionTaskManagerViewModelFactory>();
+        services.AddTransient<PublishTaskManagerContainerViewModelFactory>();
 
         services.AddTransient<RpcClientSessionViewModelFactory>();
 

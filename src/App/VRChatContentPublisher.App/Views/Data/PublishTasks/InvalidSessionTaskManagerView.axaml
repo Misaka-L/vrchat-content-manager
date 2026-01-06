@@ -20,5 +20,9 @@
                        FontSize="12"
                        Opacity="0.8" TextWrapping="Wrap" />
         </StackPanel>
+
+        <TextBlock Text="It may case by session expired or invalid. You can try to fix this by click Repair button."
+                   Opacity="0.8" TextWrapping="Wrap" />
+        <Button Content="Repair" HorizontalAlignment="Left" Command="{Binding RepairCommand}" />
     </StackPanel>
 </UserControl>
