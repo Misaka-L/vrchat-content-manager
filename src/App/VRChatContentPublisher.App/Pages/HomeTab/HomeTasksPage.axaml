@@ -3,23 +3,42 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:homeTab="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.HomeTab"
+             xmlns:converters="clr-namespace:VRChatContentPublisher.App.Converters"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="homeTab:HomeTasksPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.HomeTab.HomeTasksPage">
+
+    <UserControl.Resources>
+        <converters:IsEqualZeroConverter x:Key="IsEqualZeroConverter" />
+    </UserControl.Resources>
 
     <Interaction.Behaviors>
         <EventTriggerBehavior EventName="Loaded">
             <InvokeCommandAction Command="{Binding LoadCommand}" />
         </EventTriggerBehavior>
+        <EventTriggerBehavior EventName="Unloaded">
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </EventTriggerBehavior>
     </Interaction.Behaviors>
 
-    <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding TaskManagers}">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-    </ScrollViewer>
+    <Panel>
+        <ScrollViewer IsVisible="{Binding !TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}">
+            <ItemsControl ItemsSource="{Binding TaskManagers}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+        <StackPanel IsVisible="{Binding TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}"
+                    Spacing="12" Margin="0,24,0,0">
+            <avalonia:MaterialIcon Kind="QuestionBoxMultiple" Height="64" Width="64" />
+            <TextBlock Text="You didn't login any VRChat accounts" HorizontalAlignment="Center"
+                       FontSize="18" />
+            <Button Content="Login" HorizontalAlignment="Center" MinWidth="200"
+                    Command="{Binding LoginCommand}" />
+        </StackPanel>
+    </Panel>
 </UserControl>

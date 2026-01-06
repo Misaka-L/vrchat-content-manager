@@ -3,10 +3,12 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
+using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 
 public sealed partial class PublishTaskManagerViewModel(
+    UserSessionService userSessionService,
     TaskManagerService taskManagerService,
     PublishTaskViewModelFactory taskFactory,
     string userDisplayName)
@@ -14,6 +16,8 @@ public sealed partial class PublishTaskManagerViewModel(
 {
     public string UserDisplayName { get; } = userDisplayName;
     public AvaloniaList<PublishTaskViewModel> Tasks { get; } = [];
+
+    public UserSessionService UserSessionService => userSessionService;
 
     [RelayCommand]
     private void Load()
@@ -116,6 +120,9 @@ public sealed partial class PublishTaskManagerViewModel(
 
 public sealed class PublishTaskManagerViewModelFactory(PublishTaskViewModelFactory taskFactory)
 {
-    public PublishTaskManagerViewModel Create(TaskManagerService taskManagerService, string userDisplayName) =>
-        new(taskManagerService, taskFactory, userDisplayName);
+    public PublishTaskManagerViewModel Create(
+        UserSessionService userSessionService,
+        TaskManagerService taskManagerService,
+        string userDisplayName
+    ) => new(userSessionService, taskManagerService, taskFactory, userDisplayName);
 }
