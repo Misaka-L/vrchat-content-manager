@@ -27,3 +27,19 @@
 3. Push your changes.
 4. Describe your changes in `CHANGELOG.md` following [Keep a changelog guide](https://keepachangelog.com/en/1.1.0/).
 5. Make a pull request.
+
+## If you modify dependencies
+
+Install [ThirdLicense](https://codeberg.org/pleonex/ThirdLicense) Tool.
+
+```bash
+dotnet tool install --global ThirdLicense
+```
+
+Run following command from project root folder.
+
+```bash
+thirdlicense --project ./src/App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj --output ./src/App/VRChatContentPublisher.App/THIRD-PARTY-NOTICES.TXT
+```
+
+Commit and push new `THIRD-PARTY-NOTICES.TXT`.
