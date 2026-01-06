@@ -63,5 +63,11 @@
         <TrimmerRootAssembly Include="Avalonia.Controls"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="THIRD-PARTY-NOTICES.TXT">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
     <Import Project="../../BuildInfo.targets"/>
 </Project>
