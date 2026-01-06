@@ -3,6 +3,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -12,6 +13,8 @@ namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 public sealed partial class HomeTasksPageViewModel(
     PublishTaskManagerViewModelFactory managerViewModelFactory,
     UserSessionManagerService userSessionManagerService,
+    NavigationService navigationService,
+    AddAccountPageViewModelFactory addAccountPageViewModelFactory,
     ILogger<HomeTasksPageViewModel> logger) : PageViewModelBase
 {
     public ObservableCollection<IPublishTaskManagerViewModel> TaskManagers { get; } = [];
@@ -34,6 +37,17 @@ public sealed partial class HomeTasksPageViewModel(
         userSessionManagerService.SessionCreated -= OnUserSessionCreated;
         userSessionManagerService.SessionRemoved -= OnUserSessionRemoved;
         TaskManagers.Clear();
+    }
+
+    [RelayCommand]
+    private void Login()
+    {
+        var addAccountPage = addAccountPageViewModelFactory.Create(
+            navigationService.Navigate<HomePageViewModel>,
+            navigationService.Navigate<HomePageViewModel>
+        );
+
+        navigationService.Navigate(addAccountPage);
     }
 
     private void OnUserSessionCreated(object? sender, UserSessionService session)
