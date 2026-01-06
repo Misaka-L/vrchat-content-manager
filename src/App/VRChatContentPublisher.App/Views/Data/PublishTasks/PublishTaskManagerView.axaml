@@ -23,6 +23,9 @@
             <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button
+                    IsEnabled="{Binding IsInteractionAllowed}"
+                    ToolTip.ShowOnDisabled="True"
+                    ToolTip.Tip="No further interactions are allowed when session is expired or invalid."
                     Theme="{StaticResource MaterialFlatButton}"
                     Padding="0">
                     <Button.Flyout>
@@ -40,7 +43,31 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <ItemsControl ItemsSource="{Binding Tasks}">
+        <StackPanel>
+            <Border IsVisible="{Binding !IsInteractionAllowed}"
+                    Background="#d50000" Margin="8,8,8,0"
+                    CornerRadius="8">
+                <StackPanel Margin="8" Spacing="4">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                               Foreground="White" />
+                        <TextBlock Text="Session is expired or invalid" FontWeight="Bold" FontSize="18"
+                                   Foreground="White" />
+                    </StackPanel>
+                    <TextBlock
+                        Text="This session is expired or invalid and no further interactions are allowed before repair."
+                        Foreground="White" TextWrapping="Wrap" />
+                    <Button Theme="{StaticResource MaterialFlatButton}" Foreground="White"
+                            Command="{Binding RepairSessionCommand}"
+                            Content="Repair"
+                            HorizontalAlignment="Right" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Tasks}"
+                      IsEnabled="{Binding IsInteractionAllowed}"
+                      ToolTip.ShowOnDisabled="True"
+                      ToolTip.Tip="No further interactions are allowed when session is expired or invalid.">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <VirtualizingStackPanel />
