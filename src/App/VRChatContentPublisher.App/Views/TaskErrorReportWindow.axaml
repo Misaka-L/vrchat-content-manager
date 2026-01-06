@@ -36,7 +36,25 @@
                     </StackPanel>
                 </Border>
 
-                <UniformGrid>
+                <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource MaterialDesignDivider}"
+                        Padding="0,0,0,8">
+                    <UniformGrid Columns="3">
+                        <StackPanel>
+                            <TextBlock Text="App Version" Classes="item-header" />
+                            <SelectableTextBlock Text="{Binding AppVersion}" Classes="item-content" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="App Commit" Classes="item-header" />
+                            <SelectableTextBlock Text="{Binding AppCommitHash}" Classes="item-content" />
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="App Build Datetime" Classes="item-header" />
+                            <SelectableTextBlock Text="{Binding AppBuildDate}" Classes="item-content" />
+                        </StackPanel>
+                    </UniformGrid>
+                </Border>
+
+                <UniformGrid Columns="3">
                     <StackPanel>
                         <TextBlock Text="Content Type" Classes="item-header" />
                         <SelectableTextBlock Text="{Binding ContentType}" Classes="item-content" />
