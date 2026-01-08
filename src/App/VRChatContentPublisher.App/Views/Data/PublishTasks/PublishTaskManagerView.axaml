@@ -79,7 +79,7 @@
                             HorizontalAlignment="Right" />
                 </StackPanel>
             </Border>
-            <Border IsVisible="False"
+            <Border IsVisible="{Binding !IsContentPublishAllowed}"
                     Background="#FF6D00" Margin="8,8,8,0"
                     CornerRadius="8">
                 <StackPanel Margin="8" Spacing="4">

@@ -30,6 +30,9 @@ public sealed partial class PublishTaskManagerViewModel(
         t.Status is ContentPublishTaskStatus.InProgress or ContentPublishTaskStatus.Pending);
 
     public bool IsInteractionAllowed => UserSessionService.State == UserSessionState.LoggedIn;
+    public bool IsContentPublishAllowed => 
+        UserSessionService.CurrentUser?.CanPublishAvatar() == true && 
+        UserSessionService.CurrentUser?.CanPublishWorld() == true;
 
     public UserSessionService UserSessionService => userSessionService;
 
@@ -43,7 +46,7 @@ public sealed partial class PublishTaskManagerViewModel(
         Tasks.Clear();
         Tasks.AddRange(viewModels);
 
-        OnPropertyChanged(nameof(IsInteractionAllowed));
+        NotifyUserSessionChanged();
         NotifyTaskCountsChanged();
 
         taskManagerService.TaskCreated += OnTaskCreated;
@@ -160,7 +163,13 @@ public sealed partial class PublishTaskManagerViewModel(
 
     private void OnUserSessionStateChanged(object? sender, UserSessionState e)
     {
+        Dispatcher.UIThread.Invoke(NotifyUserSessionChanged);
+    }
+    
+    private void NotifyUserSessionChanged()
+    {
         OnPropertyChanged(nameof(IsInteractionAllowed));
+        OnPropertyChanged(nameof(IsContentPublishAllowed));
     }
 
     private void NotifyTaskCountsChanged()
