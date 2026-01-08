@@ -21,7 +21,19 @@ public sealed partial class PublishTaskManagerViewModel(
     public string UserDisplayName { get; } = userDisplayName;
     public AvaloniaList<PublishTaskViewModel> Tasks { get; } = [];
 
+    public bool IsAnyTaskExisting => Tasks.Count > 0;
+    public int TotalTaskCount => Tasks.Count;
+    public int CompletedTaskCount => Tasks.Count(t => t.Status is ContentPublishTaskStatus.Completed);
+    public int FailedTaskCount => Tasks.Count(t => t.Status is ContentPublishTaskStatus.Failed);
+    public int CanceledTaskCount => Tasks.Count(t => t.Status is ContentPublishTaskStatus.Canceled);
+
+    public int InProgressTaskCount => Tasks.Count(t =>
+        t.Status is ContentPublishTaskStatus.InProgress or ContentPublishTaskStatus.Pending);
+
     public bool IsInteractionAllowed => UserSessionService.State == UserSessionState.LoggedIn;
+    public bool IsContentPublishAllowed => 
+        UserSessionService.CurrentUser?.CanPublishAvatar() == true && 
+        UserSessionService.CurrentUser?.CanPublishWorld() == true;
 
     public UserSessionService UserSessionService => userSessionService;
 
@@ -35,10 +47,12 @@ public sealed partial class PublishTaskManagerViewModel(
         Tasks.Clear();
         Tasks.AddRange(viewModels);
 
-        OnPropertyChanged(nameof(IsInteractionAllowed));
+        NotifyUserSessionChanged();
+        NotifyTaskCountsChanged();
 
         taskManagerService.TaskCreated += OnTaskCreated;
         taskManagerService.TaskRemoved += OnTaskRemoved;
+        taskManagerService.TaskUpdated += OnTaskUpdated;
 
         userSessionService.StateChanged += OnUserSessionStateChanged;
     }
@@ -48,6 +62,7 @@ public sealed partial class PublishTaskManagerViewModel(
     {
         taskManagerService.TaskCreated -= OnTaskCreated;
         taskManagerService.TaskRemoved -= OnTaskRemoved;
+        taskManagerService.TaskUpdated -= OnTaskUpdated;
 
         userSessionService.StateChanged -= OnUserSessionStateChanged;
     }
@@ -126,6 +141,7 @@ public sealed partial class PublishTaskManagerViewModel(
 
             var viewModel = taskFactory.Create(task, taskManagerService);
             Tasks.Insert(0, viewModel);
+            NotifyTaskCountsChanged();
         });
     }
 
@@ -136,12 +152,35 @@ public sealed partial class PublishTaskManagerViewModel(
             var viewModel = Tasks.FirstOrDefault(t => t.TaskId == e.TaskId);
             if (viewModel != null)
                 Tasks.Remove(viewModel);
+
+            NotifyTaskCountsChanged();
         });
+    }
+
+    private void OnTaskUpdated(object? sender, ContentPublishTaskUpdateEventArg e)
+    {
+        Dispatcher.UIThread.Invoke(NotifyTaskCountsChanged);
     }
 
     private void OnUserSessionStateChanged(object? sender, UserSessionState e)
     {
+        Dispatcher.UIThread.Invoke(NotifyUserSessionChanged);
+    }
+    
+    private void NotifyUserSessionChanged()
+    {
         OnPropertyChanged(nameof(IsInteractionAllowed));
+        OnPropertyChanged(nameof(IsContentPublishAllowed));
+    }
+
+    private void NotifyTaskCountsChanged()
+    {
+        OnPropertyChanged(nameof(TotalTaskCount));
+        OnPropertyChanged(nameof(CompletedTaskCount));
+        OnPropertyChanged(nameof(FailedTaskCount));
+        OnPropertyChanged(nameof(CanceledTaskCount));
+        OnPropertyChanged(nameof(InProgressTaskCount));
+        OnPropertyChanged(nameof(IsAnyTaskExisting));
     }
 }
 

@@ -11,6 +11,8 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
     public event EventHandler<ContentPublishTaskService>? TaskCreated;
     public event EventHandler<ContentPublishTaskService>? TaskRemoved;
 
+    public event EventHandler<ContentPublishTaskUpdateEventArg>? TaskUpdated;
+
     public async ValueTask<ContentPublishTaskService> CreateTask(
         string contentId,
         string bundleFileId,
@@ -28,6 +30,8 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
 
         _tasks.Add(taskId, task);
         TaskCreated?.Invoke(this, task);
+
+        task.ProgressChanged += TaskOnProgressChanged;
         return task;
     }
 
@@ -45,4 +49,16 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
         TaskRemoved?.Invoke(this, task);
         return true;
     }
+
+    private void TaskOnProgressChanged(object? sender, PublishTaskProgressEventArg e)
+    {
+        if (sender is not ContentPublishTaskService task)
+            return;
+
+        TaskUpdated?.Invoke(this, new ContentPublishTaskUpdateEventArg(task, e));
+    }
 }
+
+public record ContentPublishTaskUpdateEventArg(
+    ContentPublishTaskService Task,
+    PublishTaskProgressEventArg ProgressEventArg);

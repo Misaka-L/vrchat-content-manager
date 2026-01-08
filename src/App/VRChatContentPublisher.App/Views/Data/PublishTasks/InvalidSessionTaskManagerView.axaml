@@ -3,26 +3,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:publishTasks="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.PublishTasks"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="publishTasks:InvalidSessionTaskManagerViewModel"
              x:Class="VRChatContentPublisher.App.Views.Data.PublishTasks.InvalidSessionTaskManagerView">
 
-    <StackPanel Margin="8,8,8,0" Spacing="4">
-        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
-            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
-            <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
-        </Grid>
+    <StackPanel Margin="8,8,8,0" Spacing="8" VerticalAlignment="Center">
         <StackPanel>
-            <TextBlock Text="Failed to get task manager for this user session:"
-                       Opacity="0.8" TextWrapping="Wrap" />
+            <avalonia:MaterialIcon Kind="Error" Height="64" Width="64" />
+            <TextBlock Text="Failed to get task manager for this user session"
+                       TextWrapping="Wrap" Classes="Headline6" TextAlignment="Center" />
             <TextBlock ToolTip.Tip="{Binding ExceptionString}"
-                       Text="{Binding ExceptionMessage}"
-                       FontSize="12"
-                       Opacity="0.8" TextWrapping="Wrap" />
+                       Classes="Body2" Text="{Binding ExceptionMessage}"
+                       Opacity="0.8" TextAlignment="Center" TextWrapping="Wrap" />
         </StackPanel>
 
-        <TextBlock Text="It may case by session expired or invalid. You can try to fix this by click Repair button."
-                   Opacity="0.8" TextWrapping="Wrap" />
-        <Button Content="Repair" HorizontalAlignment="Left" Command="{Binding RepairCommand}" />
+        <StackPanel Spacing="4">
+            <TextBlock Text="It may case by session expired or invalid. You can try to fix this by click Repair button."
+                       Opacity="0.8" TextWrapping="Wrap" TextAlignment="Center" />
+            <Button Content="Repair" HorizontalAlignment="Center"
+                    Command="{Binding RepairCommand}" />
+        </StackPanel>
     </StackPanel>
 </UserControl>

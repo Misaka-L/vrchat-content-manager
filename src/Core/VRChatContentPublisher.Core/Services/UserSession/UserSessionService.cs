@@ -21,6 +21,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     public CookieContainer CookieContainer { get; }
 
     public event EventHandler<UserSessionState>? StateChanged;
+    public event EventHandler<CurrentUser?>? CurrentUserUpdated;
     public UserSessionState State { get; set; } = UserSessionState.Pending;
 
     public string UserNameOrEmail { get; private set; }
@@ -115,6 +116,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         await _saveFunc(CookieContainer, UserId, UserNameOrEmail);
         OnStateChanged(UserSessionState.LoggedIn);
 
+        CurrentUserUpdated?.Invoke(this, CurrentUser);
         return CurrentUser;
     }
 
@@ -168,6 +170,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private void OnStateChanged(UserSessionState e)
     {
+        if (e == State)
+            return;
+
         State = e;
         StateChanged?.Invoke(this, e);
     }

@@ -17,17 +17,36 @@
         </EventTriggerBehavior>
     </Interaction.Behaviors>
 
-    <StackPanel>
+    <Grid RowDefinitions="Auto,Auto,*">
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="4" Margin="8,8,8,0">
-            <TextBlock Text="{Binding UserDisplayName}" VerticalAlignment="Center" />
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <avalonia:MaterialIcon Kind="ProgressUpload" Foreground="#7986CB" />
+                <TextBlock Text="{Binding InProgressTaskCount}"
+                           ToolTip.Tip="Tasks in progress" Foreground="#7986CB" />
+                <avalonia:MaterialIcon Kind="ProgressCheck" Foreground="#00c853" />
+                <TextBlock Text="{Binding CompletedTaskCount}"
+                           ToolTip.Tip="Tasks completed" Foreground="#00c853" />
+                <avalonia:MaterialIcon Kind="ProgressAlert" Foreground="#EF5350" />
+                <TextBlock Text="{Binding FailedTaskCount}"
+                           ToolTip.Tip="Tasks failed" Foreground="#EF5350" />
+                <avalonia:MaterialIcon Kind="ProgressClose" />
+                <TextBlock Text="{Binding CanceledTaskCount}"
+                           ToolTip.Tip="Tasks canceled" />
+            </StackPanel>
             <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button
-                    IsEnabled="{Binding IsInteractionAllowed}"
+                    ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
                     ToolTip.ShowOnDisabled="True"
                     ToolTip.Tip="No further interactions are allowed when session is expired or invalid."
                     Theme="{StaticResource MaterialFlatButton}"
                     Padding="0">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="IsInteractionAllowed" />
+                            <Binding Path="IsAnyTaskExisting" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
                     <Button.Flyout>
                         <MenuFlyout>
                             <MenuItem Header="Completed tasks" Command="{Binding RemoveCompletedTasksCommand}" />
@@ -43,17 +62,20 @@
                 </Button>
             </StackPanel>
         </Grid>
-        <StackPanel>
+        <StackPanel Grid.Row="1">
             <Border IsVisible="{Binding !IsInteractionAllowed}"
                     Background="#d50000" Margin="8,8,8,0"
                     CornerRadius="8">
                 <StackPanel Margin="8" Spacing="4">
-                    <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
                         <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
-                                               Foreground="White" />
-                        <TextBlock Text="Session is expired or invalid" FontWeight="Bold" FontSize="18"
+                                               Foreground="White" VerticalAlignment="Top"
+                                               Margin="0,2,0,0" />
+                        <TextBlock Grid.Column="1"
+                                   Text="Session is expired or invalid" FontWeight="Bold" FontSize="18"
+                                   TextWrapping="Wrap"
                                    Foreground="White" />
-                    </StackPanel>
+                    </Grid>
                     <TextBlock
                         Text="This session is expired or invalid and no further interactions are allowed before repair."
                         Foreground="White" TextWrapping="Wrap" />
@@ -63,16 +85,61 @@
                             HorizontalAlignment="Right" />
                 </StackPanel>
             </Border>
+            <Border IsVisible="{Binding !IsContentPublishAllowed}"
+                    Background="#FF6D00" Margin="8,8,8,0"
+                    CornerRadius="8">
+                <StackPanel Margin="8" Spacing="4">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
+                        <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                               Foreground="White" VerticalAlignment="Top"
+                                               Margin="0,2,0,0" />
+                        <TextBlock Grid.Column="1"
+                                   Text="This account doesn't have permission to publish content" FontWeight="Bold"
+                                   FontSize="18"
+                                   Foreground="White" TextWrapping="Wrap" />
+                    </Grid>
+                    <TextBlock
+                        Foreground="White" TextWrapping="Wrap">
+                        <Run>Your VRChat account must have a trust rank of &quot;New User&quot; or higher to publish content.</Run>
+                        <LineBreak /><LineBreak />
+                        <Run>VRChat Content Publisher won't prevent you from publish content for this account, but it will likely fail.</Run>
+                        <LineBreak /><LineBreak />
+                        <Run>If you still saw this when you have meet the requirement.</Run>
+                        <LineBreak /><LineBreak />
+                        <Run>Please try again using VRChat SDK, if fail, contact VRChat Support, if not, create a issues on github report this.</Run>
+                    </TextBlock>
+                    <Button Theme="{StaticResource MaterialFlatButton}" Foreground="White"
+                            Content="Learn more"
+                            HorizontalAlignment="Right">
+                        <Interaction.Behaviors>
+                            <ButtonClickEventTriggerBehavior>
+                                <LaunchUriAction Uri="https://docs.vrchat.com/docs/vrchat-safety-and-trust-system" />
+                            </ButtonClickEventTriggerBehavior>
+                        </Interaction.Behaviors>
+                    </Button>
+                </StackPanel>
+            </Border>
         </StackPanel>
-        <ItemsControl ItemsSource="{Binding Tasks}"
-                      IsEnabled="{Binding IsInteractionAllowed}"
-                      ToolTip.ShowOnDisabled="True"
-                      ToolTip.Tip="No further interactions are allowed when session is expired or invalid.">
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-    </StackPanel>
+        <Panel Grid.Row="2">
+            <StackPanel IsVisible="{Binding !TotalTaskCount}"
+                        VerticalAlignment="Center" Spacing="8">
+                <avalonia:MaterialIcon Kind="HeadQuestionOutline" Height="36" Width="36" />
+                <TextBlock Text="No tasks for this account for now" TextAlignment="Center"
+                           Classes="Headline6" Opacity="0.8" />
+            </StackPanel>
+            <ScrollViewer IsVisible="{Binding TotalTaskCount}">
+                <ItemsControl ItemsSource="{Binding Tasks}"
+                              IsEnabled="{Binding IsInteractionAllowed}"
+                              ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
+                              ToolTip.ShowOnDisabled="True"
+                              ToolTip.Tip="No further interactions are allowed when session is expired or invalid.">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Panel>
+    </Grid>
 </UserControl>

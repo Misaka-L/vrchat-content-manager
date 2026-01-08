@@ -12,6 +12,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- New Task Page UI [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
+  - Show accounts in tabs.
+  - Show warning if account doesn't permission to publish content.
+  - Show placeholder if no tasks exist for selected account.
+  - Allow repair account in Tasks page if session is expired or invalid. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
+  - Show tip and button to login page in Tasks page if no accounts login. [`#141`](https://github.com/project-vrcz/content-publisher/pull/141)
 - Better struct logging support [`#146`](https://github.com/project-vrcz/content-publisher/pull/146)
   - Include `Application`, `ApplicationVersion`, `ApplicationBuildDate`, `ApplicationCommitHash` globally. [`#147`](https://github.com/project-vrcz/content-publisher/pull/147)
   - Include `ClientName`, `ClientId` in RPC client request related log message.
@@ -19,8 +25,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Include `TaskId`, `ContentType`, `ContentName`, `ContentId`, `ContentPlatform` in content publish task related log message.
   - Include `HttpClientInstanceName` in http request logging message sent from VRChat Api HttpClient.
 - App will mark session as expired or invalid if got http 401 when request VRChat api. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
-- Allow repair account in Tasks page if session is expired or invalid. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
-- Show tip and button to login page in Tasks page if no accounts login. [`#141`](https://github.com/project-vrcz/content-publisher/pull/141)
 - Show app build info (version, git commit, build date) in error report window. [`#140`](https://github.com/project-vrcz/content-publisher/pull/140)
 - Check is account valid before enter account repair page. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
   - If account is valid, the account will be mark as repaired. No further operation requested.
@@ -31,6 +35,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - App crash when any error occurred during account repair process. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
+- Unable to scroll in Tasks page. (Fix by replace with new ui) [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
+- App keep trying get current user in some case, which trigger api rate limit. [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
 
 ## [2.0.2] - 2026-01-02
 

@@ -5,6 +5,9 @@
              xmlns:homeTab="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.HomeTab"
              xmlns:converters="clr-namespace:VRChatContentPublisher.App.Converters"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:publishTasks="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.PublishTasks"
+             xmlns:controls="clr-namespace:VRChatContentPublisher.App.Controls"
+             xmlns:controls1="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="homeTab:HomeTasksPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.HomeTab.HomeTasksPage">
@@ -23,15 +26,56 @@
     </Interaction.Behaviors>
 
     <Panel>
-        <ScrollViewer IsVisible="{Binding !TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}">
-            <ItemsControl ItemsSource="{Binding TaskManagers}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </ScrollViewer>
+        <Grid RowDefinitions="Auto,*"
+              IsVisible="{Binding !TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}">
+            <controls1:ColorZone>
+                <Grid ColumnDefinitions="*,Auto">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                        <Interaction.Behaviors>
+                            <HorizontalScrollViewerBehavior RequireShiftKey="False" ScrollChangeSize="Line" />
+                        </Interaction.Behaviors>
+                        <ListBox ItemsSource="{Binding TaskManagers}"
+                                 SelectedItem="{Binding SelectedTaskManagerContainerViewModel}"
+                                 SelectionMode="Single">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                </Style>
+                                <Style Selector="ListBoxItem:selected">
+                                    <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignBodyLight}" />
+                                </Style>
+                            </ListBox.Styles>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate x:DataType="publishTasks:PublishTaskManagerContainerViewModel">
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <Border
+                                            IsVisible="{Binding AvatarUri, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                            CornerRadius="100" Height="18" Width="18" ClipToBounds="True">
+                                            <Image controls:AsyncImageLoader.Source="{Binding AvatarUri}"
+                                                   Stretch="UniformToFill" />
+                                        </Border>
+                                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </ScrollViewer>
+                    <Button Grid.Column="1"
+                            Name="AddAccountButton"
+                            Theme="{StaticResource MaterialFlatButton}"
+                            Command="{Binding LoginCommand}"
+                            Content="{avalonia:MaterialIconExt Kind=Add, Size=24}"
+                            Width="{Binding #AddAccountButton.Bounds.Height}"
+                            ToolTip.Tip="Add New Account" />
+                </Grid>
+            </controls1:ColorZone>
+            <TransitioningContentControl Grid.Row="1" Content="{Binding SelectedTaskManagerContainerViewModel}" />
+        </Grid>
         <StackPanel IsVisible="{Binding TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}"
                     Spacing="12" Margin="0,24,0,0">
             <avalonia:MaterialIcon Kind="QuestionBoxMultiple" Height="64" Width="64" />
@@ -41,4 +85,24 @@
                     Command="{Binding LoginCommand}" />
         </StackPanel>
     </Panel>
+
+    <!-- <Panel> -->
+    <!--     <ScrollViewer IsVisible="{Binding !TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}"> -->
+    <!--         <ItemsControl ItemsSource="{Binding TaskManagers}"> -->
+    <!--             <ItemsControl.ItemsPanel> -->
+    <!--                 <ItemsPanelTemplate> -->
+    <!--                     <VirtualizingStackPanel /> -->
+    <!--                 </ItemsPanelTemplate> -->
+    <!--             </ItemsControl.ItemsPanel> -->
+    <!--         </ItemsControl> -->
+    <!--     </ScrollViewer> -->
+    <!--     <StackPanel IsVisible="{Binding TaskManagers.Count, Converter={StaticResource IsEqualZeroConverter}}" -->
+    <!--                 Spacing="12" Margin="0,24,0,0"> -->
+    <!--         <avalonia:MaterialIcon Kind="QuestionBoxMultiple" Height="64" Width="64" /> -->
+    <!--         <TextBlock Text="You didn't login any VRChat accounts" HorizontalAlignment="Center" -->
+    <!--                    FontSize="18" /> -->
+    <!--         <Button Content="Login" HorizontalAlignment="Center" MinWidth="200" -->
+    <!--                 Command="{Binding LoginCommand}" /> -->
+    <!--     </StackPanel> -->
+    <!-- </Panel> -->
 </UserControl>

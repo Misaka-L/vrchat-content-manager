@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -12,10 +12,12 @@ public sealed partial class HomeTasksPageViewModel(
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
     AddAccountPageViewModelFactory addAccountPageViewModelFactory,
-    PublishTaskManagerContainerViewModelFactory containerViewModelFactory,
-    ILogger<HomeTasksPageViewModel> logger) : PageViewModelBase
+    PublishTaskManagerContainerViewModelFactory containerViewModelFactory) : PageViewModelBase
 {
     public ObservableCollection<PublishTaskManagerContainerViewModel> TaskManagers { get; } = [];
+
+    [ObservableProperty]
+    public partial PublishTaskManagerContainerViewModel? SelectedTaskManagerContainerViewModel { get; set; }
 
     [RelayCommand]
     private void Load()
