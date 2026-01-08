@@ -22,7 +22,6 @@ public sealed class WorldContentPublisher : IContentPublisher
     private readonly string? _previewYoutubeId;
     private readonly string[] _udonProducts;
 
-
     private readonly UserSessionService _userSessionService;
 
     private readonly ILogger<WorldContentPublisher> _logger;
@@ -213,7 +212,7 @@ public sealed class WorldContentPublisher : IContentPublisher
         return world.UnityPackages
             .Where(package => package.Platform == _platform)
             .GroupBy(package => package.UnityVersion)
-            .MaxBy(group => UnityVersion.TryParse(group.Key))!
+            .MaxBy(group => UnityVersion.TryParse(group.Key))?
             .MaxBy(package => package.AssetVersion);
     }
 
