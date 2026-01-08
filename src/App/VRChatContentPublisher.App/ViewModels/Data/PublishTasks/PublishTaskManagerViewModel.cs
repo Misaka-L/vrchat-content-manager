@@ -21,6 +21,7 @@ public sealed partial class PublishTaskManagerViewModel(
     public string UserDisplayName { get; } = userDisplayName;
     public AvaloniaList<PublishTaskViewModel> Tasks { get; } = [];
 
+    public bool IsAnyTaskExisting => Tasks.Count > 0;
     public int TotalTaskCount => Tasks.Count;
     public int CompletedTaskCount => Tasks.Count(t => t.Status is ContentPublishTaskStatus.Completed);
     public int FailedTaskCount => Tasks.Count(t => t.Status is ContentPublishTaskStatus.Failed);
@@ -179,6 +180,7 @@ public sealed partial class PublishTaskManagerViewModel(
         OnPropertyChanged(nameof(FailedTaskCount));
         OnPropertyChanged(nameof(CanceledTaskCount));
         OnPropertyChanged(nameof(InProgressTaskCount));
+        OnPropertyChanged(nameof(IsAnyTaskExisting));
     }
 }
 

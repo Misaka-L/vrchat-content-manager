@@ -36,11 +36,17 @@
             <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button
-                    IsEnabled="{Binding IsInteractionAllowed}"
+                    ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
                     ToolTip.ShowOnDisabled="True"
                     ToolTip.Tip="No further interactions are allowed when session is expired or invalid."
                     Theme="{StaticResource MaterialFlatButton}"
                     Padding="0">
+                    <Button.IsEnabled>
+                        <MultiBinding Converter="{x:Static BoolConverters.And}">
+                            <Binding Path="IsInteractionAllowed" />
+                            <Binding Path="IsAnyTaskExisting" />
+                        </MultiBinding>
+                    </Button.IsEnabled>
                     <Button.Flyout>
                         <MenuFlyout>
                             <MenuItem Header="Completed tasks" Command="{Binding RemoveCompletedTasksCommand}" />
@@ -114,18 +120,26 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-        <ScrollViewer Grid.Row="2">
-            <ItemsControl ItemsSource="{Binding Tasks}"
-                          IsEnabled="{Binding IsInteractionAllowed}"
-                          ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
-                          ToolTip.ShowOnDisabled="True"
-                          ToolTip.Tip="No further interactions are allowed when session is expired or invalid.">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <VirtualizingStackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-        </ScrollViewer>
+        <Panel Grid.Row="2">
+            <StackPanel IsVisible="{Binding !TotalTaskCount}"
+                        VerticalAlignment="Center" Spacing="8">
+                <avalonia:MaterialIcon Kind="HeadQuestionOutline" Height="36" Width="36" />
+                <TextBlock Text="No tasks for this account for now" TextAlignment="Center"
+                           Classes="Headline6" Opacity="0.8" />
+            </StackPanel>
+            <ScrollViewer IsVisible="{Binding TotalTaskCount}">
+                <ItemsControl ItemsSource="{Binding Tasks}"
+                              IsEnabled="{Binding IsInteractionAllowed}"
+                              ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
+                              ToolTip.ShowOnDisabled="True"
+                              ToolTip.Tip="No further interactions are allowed when session is expired or invalid.">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </Panel>
     </Grid>
 </UserControl>
