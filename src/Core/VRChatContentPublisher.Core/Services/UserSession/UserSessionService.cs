@@ -168,6 +168,9 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private void OnStateChanged(UserSessionState e)
     {
+        if (e == State)
+            return;
+
         State = e;
         StateChanged?.Invoke(this, e);
     }
