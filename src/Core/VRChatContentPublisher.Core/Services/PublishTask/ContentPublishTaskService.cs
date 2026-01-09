@@ -101,8 +101,8 @@ public sealed class ContentPublishTaskService
     private async Task StartTaskCoreAsync()
     {
         using (_logger.BeginScope(
-                   "Starting publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform}",
-                   TaskId, ContentType, ContentName, ContentId, ContentPlatform)
+                   "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform}, Raw BundleFileId: {RawBundleFileId}",
+                   TaskId, ContentType, ContentName, ContentId, ContentPlatform, _rawBundleFileId)
               )
         {
             LastError = null;
@@ -119,18 +119,28 @@ public sealed class ContentPublishTaskService
             {
                 if (CurrentStage == PublishTaskStage.BundleProcessing)
                 {
-                    UpdateProgress("Preparing to process bundle file...", null);
+                    using (_logger.BeginScope("Stage {TaskStage}", CurrentStage))
+                    {
+                        UpdateProgress("Preparing to process bundle file...", null);
 
-                    await ProcessBundleAsync(cancellationToken);
-                    CurrentStage = PublishTaskStage.ContentPublishing;
+                        await ProcessBundleAsync(cancellationToken);
+                        CurrentStage = PublishTaskStage.ContentPublishing;
+                    }
                 }
 
                 if (CurrentStage == PublishTaskStage.ContentPublishing)
                 {
-                    UpdateProgress("Preparing for publish...", null);
+                    using (_logger.BeginScope(
+                               "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
+                               CurrentStage,
+                               _bundleFileId)
+                          )
+                    {
+                        UpdateProgress("Preparing for publish...", null);
 
-                    await PublishAsync(cancellationToken);
-                    CurrentStage = PublishTaskStage.Done;
+                        await PublishAsync(cancellationToken);
+                        CurrentStage = PublishTaskStage.Done;
+                    }
                 }
 
                 UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
