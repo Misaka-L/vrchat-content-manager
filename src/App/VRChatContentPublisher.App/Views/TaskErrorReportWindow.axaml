@@ -3,7 +3,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:VRChatContentPublisher.App.ViewModels"
-        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
         xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:DataType="viewModels:TaskErrorReportWindowViewModel"
@@ -32,6 +31,7 @@
                         Padding="0,0,0,8">
                     <StackPanel>
                         <TextBlock Text="Error Report" Classes="item-header" />
+                        <SelectableTextBlock Text="{Binding TaskId}"/>
                         <SelectableTextBlock Text="{Binding ContentName}" FontSize="24" />
                     </StackPanel>
                 </Border>

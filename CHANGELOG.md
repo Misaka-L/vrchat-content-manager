@@ -25,7 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Include `TaskId`, `ContentType`, `ContentName`, `ContentId`, `ContentPlatform` in content publish task related log message.
   - Include `HttpClientInstanceName` in http request logging message sent from VRChat Api HttpClient.
 - App will mark session as expired or invalid if got http 401 when request VRChat api. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
-- Show app build info (version, git commit, build date) in error report window. [`#140`](https://github.com/project-vrcz/content-publisher/pull/140)
+- Show app build info (version, git commit, build date) and task id in error report window. [`#140`](https://github.com/project-vrcz/content-publisher/pull/140) [`#161`](https://github.com/project-vrcz/content-publisher/pull/161)
 - Check is account valid before enter account repair page. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
   - If account is valid, the account will be mark as repaired. No further operation requested.
 - Acknowledgement for early adopters and open source softwares in Settings Page. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129)

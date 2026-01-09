@@ -7,6 +7,8 @@ namespace VRChatContentPublisher.App.ViewModels;
 
 public sealed class TaskErrorReportWindowViewModel(ContentPublishTaskService publishTaskService) : ViewModelBase
 {
+    public string TaskId => publishTaskService.TaskId;
+
     public string ContentName => publishTaskService.ContentName;
     public string ContentType => publishTaskService.ContentType;
     public string ContentPlatform => publishTaskService.ContentPlatform;
