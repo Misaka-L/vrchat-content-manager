@@ -42,7 +42,9 @@
             <Button Command="{Binding RemoveCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
                     IsEnabled="{Binding CanRemove}"
-                    ToolTip.ShowOnDisabled="True" ToolTip.Tip="You cannot remove a session that have tasks running."
+                    ToolTip.ServiceEnabled="{Binding !CanRemove}"
+                    ToolTip.ShowOnDisabled="True"
+                    ToolTip.Tip="You cannot remove a session that have tasks running."
                     Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
         </StackPanel>
     </Grid>
