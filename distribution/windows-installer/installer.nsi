@@ -5,6 +5,7 @@ Unicode True
 
 !include MUI2.nsh
 !include nsDialogs.nsh
+!include LogicLib.nsh
 
 # Constant Definitions
 !define ProductName "VRChat Content Publisher"
@@ -98,6 +99,16 @@ UninstPage custom un.onRemoveAppDataPage un.onRemoveAppDataPageLeave
 !insertmacro MUI_LANGUAGE "SimpChinese"
 
 ; Install Sections
+Section "Uninstall Previous Version"
+    ClearErrors
+    ReadRegStr $0 "${INSTDIR_REG_ROOT}" "${INSTDIR_REG_KEY}" "QuietUninstallString"
+    ${If} ${Errors}
+        ; No previous version installed
+    ${Else}
+        ExecWait "$0 _?=$INSTDIR"
+    ${EndIf}
+SectionEnd
+
 Section "Install Files"
     SetOutPath $INSTDIR
     !insertmacro UNINSTALL.LOG_OPEN_INSTALL
@@ -161,7 +172,7 @@ SectionEnd
 
 ; onInit
 Function .onInit
-    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${ProductName}InstallerMutex") p .r1 ?e'
+    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${ProductName}-InstallerMutex") p .r1 ?e'
     Pop $R0
 
     StrCmp $R0 0 +3
@@ -175,6 +186,13 @@ Function .onInit
         MessageBox MB_OK|MB_ICONEXCLAMATION "Application is running. Please close it before installing."
         Abort
 
+    ClearErrors
+    ReadRegStr $0 "${INSTDIR_REG_ROOT}" "${INSTDIR_REG_KEY}" "InstallLocation"
+    ${If} ${Errors}
+    ${Else}
+        StrCpy $INSTDIR $0
+    ${EndIf}
+
     !insertmacro MUI_LANGDLL_DISPLAY
     !insertmacro UNINSTALL.LOG_PREPARE_INSTALL
 FunctionEnd
@@ -184,12 +202,18 @@ Function .onInstSuccess
 FunctionEnd
 
 Function un.onInit
-    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${ProductName}InstallerMutex") p .r1 ?e'
+    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${ProductName}-UninstallerMutex") p .r1 ?e'
     Pop $R0
 
     StrCmp $R0 0 +3
-        MessageBox MB_OK|MB_ICONEXCLAMATION "The installer is already running."
+        MessageBox MB_OK|MB_ICONEXCLAMATION "The uninstaller is already running."
         Abort
+
+    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${ProductName}-InstallerMutex") p .r1 ?e'
+    Pop $R0
+
+    StrCmp $R0 0 +3
+        goto skipMutexCheck
 
     System::Call 'kernel32::CreateMutex(p 0, i 0, t "${AppMutex}") p .r1 ?e'
     Pop $R0
@@ -198,6 +222,7 @@ Function un.onInit
         MessageBox MB_OK|MB_ICONEXCLAMATION "Application is running. Please close it before uninstalling."
         Abort
 
+    skipMutexCheck:
     !insertmacro MUI_LANGDLL_DISPLAY
     !insertmacro UNINSTALL.LOG_BEGIN_UNINSTALL
 FunctionEnd
