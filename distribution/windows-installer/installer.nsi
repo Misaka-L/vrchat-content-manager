@@ -29,6 +29,8 @@ Unicode True
 
 !define START_MENU_PAGE_ID "Application"
 
+!define AppMutex "Global\VRChatContentPublisherAppMutex-89c6689a"
+
 ; Advanced Uninstall Log
 ; https://nsis.sourceforge.io/Advanced_Uninstall_Log_NSIS_Header
 !include .\include\AdvUninstLog.nsh
@@ -166,6 +168,13 @@ Function .onInit
         MessageBox MB_OK|MB_ICONEXCLAMATION "The installer is already running."
         Abort
 
+    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${AppMutex}") p .r1 ?e'
+    Pop $R0
+
+    StrCmp $R0 0 +3
+        MessageBox MB_OK|MB_ICONEXCLAMATION "Application is running. Please close it before installing."
+        Abort
+
     !insertmacro MUI_LANGDLL_DISPLAY
     !insertmacro UNINSTALL.LOG_PREPARE_INSTALL
 FunctionEnd
@@ -180,6 +189,13 @@ Function un.onInit
 
     StrCmp $R0 0 +3
         MessageBox MB_OK|MB_ICONEXCLAMATION "The installer is already running."
+        Abort
+
+    System::Call 'kernel32::CreateMutex(p 0, i 0, t "${AppMutex}") p .r1 ?e'
+    Pop $R0
+
+    StrCmp $R0 0 +3
+        MessageBox MB_OK|MB_ICONEXCLAMATION "Application is running. Please close it before uninstalling."
         Abort
 
     !insertmacro MUI_LANGDLL_DISPLAY
