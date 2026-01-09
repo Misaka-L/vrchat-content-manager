@@ -31,6 +31,7 @@ public static class ServicesExtenstion
         // Dialogs
         services.AddTransient<TwoFactorAuthDialogViewModelFactory>();
         services.AddTransient<RequestChallengeDialogViewModelFactory>();
+        services.AddTransient<ExitAppDialogViewModel>();
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
