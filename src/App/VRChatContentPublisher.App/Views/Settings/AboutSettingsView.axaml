@@ -33,6 +33,11 @@
                                  Command="{Binding NavigateToLicenseCommand}" />
             </StackPanel>
         </StackPanel>
+
+        <HyperlinkButton Content="VRChat Content Publisher on Github"
+                         NavigateUri="https://github.com/project-vrcz/content-publisher"
+                         HorizontalAlignment="Center" />
+
         <StackPanel Spacing="2">
             <StackPanel>
                 <TextBlock Text="Build Commit" Opacity="0.8" />
@@ -47,6 +52,23 @@
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
             <avalonia:MaterialIcon Kind="Heart" Height="24" Width="24" />
             <TextBlock Text="Acknowledgement" VerticalAlignment="Center" FontSize="18" />
+        </StackPanel>
+
+        <StackPanel Spacing="2" HorizontalAlignment="Center">
+            <TextBlock Text="Unity AssetBundle Processing Powered by" TextAlignment="Center" />
+            <HyperlinkButton Content="AssetsTools.NET (MIT License Copyright (c) 2020 nesrak1)"
+                             NavigateUri="https://github.com/nesrak1/AssetsTools.NET"
+                             HorizontalAlignment="Center" />
+            <HyperlinkButton Content="Modified to meet VRChat Content Publisher requirements"
+                             HorizontalAlignment="Center"
+                             NavigateUri="https://github.com/project-vrcz/AssetsTools.NET" />
+        </StackPanel>
+
+        <StackPanel>
+            <TextBlock Text="VRChat API documentation provided by" TextAlignment="Center" />
+            <HyperlinkButton Content="VRChat.community"
+                             NavigateUri="https://vrchat.community/"
+                             HorizontalAlignment="Center" />
         </StackPanel>
 
         <StackPanel Spacing="2">
