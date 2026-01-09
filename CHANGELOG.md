@@ -22,7 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Include `Application`, `ApplicationVersion`, `ApplicationBuildDate`, `ApplicationCommitHash` globally. [`#147`](https://github.com/project-vrcz/content-publisher/pull/147)
   - Include `ClientName`, `ClientId` in RPC client request related log message.
   - Include `RpcClientIp`, `RpcClientPort`, `RpcHttpMethod`, `RpcHttpPath`, `RpcHttpQuery`, `RequestId` in RPC HTTP client request related log message.
-  - Include `TaskId`, `ContentType`, `ContentName`, `ContentId`, `ContentPlatform` in content publish task related log message.
+  - Include `TaskStage`, `TaskId`, `ContentType`, `ContentName`, `ContentId`, `ContentPlatform`, `RawBundleFileId`, `FinalBundleFileId` in content publish task related log message. [`#164`](https://github.com/project-vrcz/content-publisher/pull/164)
   - Include `HttpClientInstanceName` in http request logging message sent from VRChat Api HttpClient.
 - App will mark session as expired or invalid if got http 401 when request VRChat api. [`#144`](https://github.com/project-vrcz/content-publisher/pull/144)
 - Show app build info (version, git commit, build date) and task id in error report window. [`#140`](https://github.com/project-vrcz/content-publisher/pull/140) [`#161`](https://github.com/project-vrcz/content-publisher/pull/161)
