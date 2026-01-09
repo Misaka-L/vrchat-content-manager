@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Include true app version instead of `snapshot` in rpc `ImplementationVersion` metadata. [`#165`](https://github.com/project-vrcz/content-publisher/pull/165)
 - New Task Page UI [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
   - Show accounts in tabs.
   - Show warning if account doesn't permission to publish content.
