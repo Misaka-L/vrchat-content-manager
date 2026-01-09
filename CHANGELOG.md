@@ -28,7 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Show app build info (version, git commit, build date) and task id in error report window. [`#140`](https://github.com/project-vrcz/content-publisher/pull/140) [`#161`](https://github.com/project-vrcz/content-publisher/pull/161)
 - Check is account valid before enter account repair page. [`#138`](https://github.com/project-vrcz/content-publisher/pull/138)
   - If account is valid, the account will be mark as repaired. No further operation requested.
-- Acknowledgement for early adopters and open source softwares in Settings Page. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129)
+- Acknowledgement for early adopters and open source softwares in Settings Page. [`#129`](https://github.com/project-vrcz/content-publisher/pull/129) [`#163`](https://github.com/project-vrcz/content-publisher/pull/163)
   - Also the software license.
 - Logging when create publish task failed. [`#128`](https://github.com/project-vrcz/content-publisher/pull/128)
 
