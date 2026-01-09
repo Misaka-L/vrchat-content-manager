@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Windows Installer will reuse last install location. [`#172`](https://github.com/project-vrcz/content-publisher/pull/172)
+- Windows Installer will uninstall previous version before install. [`#172`](https://github.com/project-vrcz/content-publisher/pull/172)
 - Windows Installer / Uninstaller check is app running before start. [`#171`](https://github.com/project-vrcz/content-publisher/pull/171)
 - Require confirm before exit app if have active publish tasks. [`#170`](https://github.com/project-vrcz/content-publisher/pull/170)
 - Network Diagnostics. [`#169`](https://github.com/project-vrcz/content-publisher/pull/169)
