@@ -35,6 +35,9 @@
                 <Expander Header="Http Proxy">
                     <ContentControl Content="{Binding HttpProxySettingsViewModel}" />
                 </Expander>
+                <Expander Header="Debug">
+                    <ContentControl Content="{Binding DebugSettingsViewModel}" />
+                </Expander>
                 <Expander Header="About">
                     <ContentControl Content="{Binding AboutSettingsViewModel}" />
                 </Expander>

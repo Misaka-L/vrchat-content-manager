@@ -99,6 +99,7 @@ public partial class App : Application
         ViewLocator.Register<AccountsSettingsViewModel, AccountsSettingsView>();
         ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
         ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();
+        ViewLocator.Register<DebugSettingsViewModel, DebugSettingsView>();
 
         AvaloniaXamlLoader.Load(this);
 

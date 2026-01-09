@@ -5,6 +5,7 @@ using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
+using VRChatContentPublisher.App.ViewModels.NetworkDiagnostic;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
@@ -34,6 +35,7 @@ public static class ServicesExtenstion
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
         services.AddTransient<TaskErrorReportWindowViewModel>();
+        services.AddTransient<NetworkDiagnosticWindowViewModel>();
 
         services.AddSingleton<NavigationService>();
 
@@ -71,6 +73,7 @@ public static class ServicesExtenstion
         services.AddTransient<HttpProxySettingsViewModel>();
         services.AddTransient<SessionsSettingsViewModel>();
         services.AddTransient<AboutSettingsViewModel>();
+        services.AddTransient<DebugSettingsViewModel>();
 
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();

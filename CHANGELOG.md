@@ -12,6 +12,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Network Diagnostics. [`#169`](https://github.com/project-vrcz/content-publisher/pull/169)
+  - Check out VRChat API Status.
+  - Test Connection to VRChat API, AWS S3, Cloudflare and Cloudflare China.
+  - Check out Cloudflare trace endpoint response.
 - Include true app version instead of `snapshot` in rpc `ImplementationVersion` metadata. [`#165`](https://github.com/project-vrcz/content-publisher/pull/165)
 - New Task Page UI [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
   - Show accounts in tabs.
