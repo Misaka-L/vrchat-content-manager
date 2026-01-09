@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="dialogs:ExitAppDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Dialogs.ExitAppDialog">
+
+    <Interaction.Behaviors>
+        <EventTriggerBehavior EventName="Loaded">
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </EventTriggerBehavior>
+    </Interaction.Behaviors>
+
+    <Panel>
+        <StackPanel IsVisible="{Binding LoadCommand.IsRunning}"
+                    Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+            <ProgressBar Classes="circular" IsIndeterminate="True" VerticalAlignment="Center" />
+            <TextBlock Text="Shutting down..." VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel IsVisible="{Binding !LoadCommand.IsRunning}"
+                    Spacing="24" Margin="8">
+            <TextBlock Text="There are currently active publishing tasks. Are you sure you want to exit?"
+                       Classes="Headline6" TextAlignment="Center" TextWrapping="Wrap" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Classes="accent"
+                        Content="No"
+                        Command="{Binding RequestCloseCommand}" />
+                <Button Grid.Column="1"
+                        Theme="{StaticResource MaterialOutlineButton}"
+                        Content="Yes! Exit now!"
+                        Command="{Binding ExitAppCommand}" />
+            </Grid>
+        </StackPanel>
+    </Panel>
+</UserControl>

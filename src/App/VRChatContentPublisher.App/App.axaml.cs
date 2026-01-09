@@ -11,6 +11,7 @@ using VRChatContentPublisher.App.Pages;
 using VRChatContentPublisher.App.Pages.GettingStarted;
 using VRChatContentPublisher.App.Pages.HomeTab;
 using VRChatContentPublisher.App.Pages.Settings;
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
@@ -83,6 +84,7 @@ public partial class App : Application
         // Dialogs
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
         ViewLocator.Register<RequestChallengeDialogViewModel, RequestChallengeDialog>();
+        ViewLocator.Register<ExitAppDialogViewModel, ExitAppDialog>();
 
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
@@ -143,9 +145,18 @@ public partial class App : Application
         desktop.MainWindow?.Activate();
     }
 
-    private void ExitAppClicked(object? sender, EventArgs e)
+    private async void ExitAppClicked(object? sender, EventArgs e)
     {
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+
+        var dialogService = _serviceProvider.GetRequiredService<DialogService>();
+        var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
+
+        desktop.MainWindow?.Show();
+        desktop.MainWindow?.Activate();
+
+        if (await dialogService.ShowDialogAsync(exitAppDialogViewModel) is not true)
+            return;
 
         desktop.Shutdown();
     }
@@ -158,7 +169,8 @@ public partial class App : Application
 
         var directoryInfo = new DirectoryInfo(directoryPath);
 
-        var topLevel = TopLevel.GetTopLevel((ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+        var topLevel =
+            TopLevel.GetTopLevel((ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
         if (topLevel?.Launcher is { } launcher)
         {
             // Fire and forget
