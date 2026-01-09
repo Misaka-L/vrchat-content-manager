@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Unable to scroll in Tasks page. (Fix by replace with new ui) [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
 - App keep trying get current user in some case, which trigger api rate limit. [`#154`](https://github.com/project-vrcz/content-publisher/pull/154)
 - Unable to publish new platform build for exist world. [`#157`](https://github.com/project-vrcz/content-publisher/pull/157)
+- Remove account button show has tasks running when no tasks running. [`#162`](https://github.com/project-vrcz/content-publisher/pull/162)
 
 ## [2.0.2] - 2026-01-02
 
