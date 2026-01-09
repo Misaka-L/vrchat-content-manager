@@ -1,0 +1,21 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:DebugSettingsViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Settings.DebugSettingsView">
+
+    <StackPanel Margin="8" Spacing="8">
+        <Button Content="Open Logs Folder">
+            <Interaction.Behaviors>
+                <ButtonClickEventTriggerBehavior>
+                    <interaction:LaunchDirectoryAction DirectoryPath="{Binding LogsPath}" />
+                </ButtonClickEventTriggerBehavior>
+            </Interaction.Behaviors>
+        </Button>
+        <Button Content="Open Network Diagnostics" Command="{Binding OpenNetworkDiagnosticWindowCommand}" />
+    </StackPanel>
+</UserControl>

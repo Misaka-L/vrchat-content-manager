@@ -91,6 +91,32 @@ public static class ServicesExtension
                 });
             });
 
+        services.AddTransient<VRChatApiDiagnosticService>();
+        services.AddHttpClient<VRChatApiDiagnosticService>(client =>
+        {
+            client.AddUserAgent();
+            client.Timeout = TimeSpan.FromSeconds(30);
+        })
+        .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
+        {
+            UseCookies = false,
+            PooledConnectionLifetime = TimeSpan.Zero,
+            EnableMultipleHttp2Connections = true,
+            EnableMultipleHttp3Connections = true,
+            ConnectTimeout = TimeSpan.FromSeconds(5),
+            Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
+        })
+        .AddResilienceHandler("vrchatApiDiagnosticClient", builder =>
+        {
+            builder.AddRetry(new AppHttpRetryStrategyOptions
+            {
+                UseJitter = true,
+                MaxRetryAttempts = 5,
+                Delay = TimeSpan.FromSeconds(5),
+                BackoffType = DelayBackoffType.Exponential
+            });
+        });
+
         return services;
     }
 

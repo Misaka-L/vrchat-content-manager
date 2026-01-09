@@ -1,0 +1,103 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:networkDiagnostic="clr-namespace:VRChatContentPublisher.App.ViewModels.NetworkDiagnostic"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="VRChatContentPublisher.App.Views.NetworkDiagnosticWindow"
+        x:DataType="networkDiagnostic:NetworkDiagnosticWindowViewModel"
+        Title="NetworkDiagnosticWindow">
+
+    <Window.Resources>
+        <networkDiagnostic:NetworkDiagnosticTestStatusIconConverter x:Key="NetworkDiagnosticTestStatusIconConverter" />
+    </Window.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+        <Button Content="Run Diagnostic"
+                Command="{Binding RunDiagnosticCommand}"
+                Margin="8,8,8,0" />
+        <Grid Grid.Row="1" RowDefinitions="*,*" Margin="8">
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Grid RowDefinitions="Auto,*" RowSpacing="2">
+                    <TextBlock Classes="Headline6" Text="VRChat API Status" />
+                    <Panel Grid.Row="1">
+                        <StackPanel IsVisible="{Binding RunDiagnosticCommand.IsRunning}"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Spacing="8">
+                            <ProgressBar Classes="circular" IsIndeterminate="True" />
+                            <TextBlock Text="Loading..." TextAlignment="Center" />
+                        </StackPanel>
+                        <Grid RowDefinitions="Auto,*"
+                              IsVisible="{Binding !RunDiagnosticCommand.IsRunning}">
+                            <TextBlock Grid.Row="0" Classes="Body2" Text="{Binding StatusSummary}" />
+                            <TreeView Grid.Row="1" ItemsSource="{Binding StatusPageComponents}">
+                                <TreeView.ItemTemplate>
+                                    <TreeDataTemplate ItemsSource="{Binding SubComponents}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Text="{Binding Name}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Status}" />
+                                        </Grid>
+                                    </TreeDataTemplate>
+                                </TreeView.ItemTemplate>
+                            </TreeView>
+                        </Grid>
+                    </Panel>
+                </Grid>
+                <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="2">
+                    <TextBlock Classes="Headline6" Text="Cloudflare Trace" />
+                    <Panel Grid.Row="1">
+                        <StackPanel IsVisible="{Binding RunDiagnosticCommand.IsRunning}"
+                                    VerticalAlignment="Center" HorizontalAlignment="Center"
+                                    Spacing="8">
+                            <ProgressBar Classes="circular" IsIndeterminate="True" />
+                            <TextBlock Text="Loading..." TextAlignment="Center" />
+                        </StackPanel>
+                        <ScrollViewer IsVisible="{Binding !RunDiagnosticCommand.IsRunning}"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <SelectableTextBlock Text="{Binding CloudflareTraceResult}" />
+                        </ScrollViewer>
+                    </Panel>
+                </Grid>
+            </Grid>
+            <ScrollViewer Grid.Row="1">
+                <ItemsControl ItemsSource="{Binding ConnectionTests}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Spacing="4" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.DataTemplates>
+                        <DataTemplate x:DataType="networkDiagnostic:ConnectionTestViewModel">
+                            <Expander>
+                                <Expander.Header>
+                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                        <Panel>
+                                            <avalonia:MaterialIcon
+                                                IsVisible="{Binding !IsTaskRunning}"
+                                                Kind="{Binding Status, Converter={StaticResource NetworkDiagnosticTestStatusIconConverter}}"
+                                                Height="22" Width="22" />
+                                            <ProgressBar IsVisible="{Binding IsTaskRunning}"
+                                                         Classes="circular" IsIndeterminate="True" />
+                                        </Panel>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding Name}"
+                                                   VerticalAlignment="Center" />
+                                        <Button Grid.Column="2"
+                                                Theme="{StaticResource MaterialFlatButton}"
+                                                Content="{avalonia:MaterialIconExt Kind=Refresh, Size=22}"
+                                                Width="{Binding $self.Bounds.Height}"
+                                                Command="{Binding RunTestCommand}" />
+                                    </Grid>
+                                </Expander.Header>
+                                <SelectableTextBlock Text="{Binding TaskResult}"
+                                                     Margin="8" />
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.DataTemplates>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>
