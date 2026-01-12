@@ -27,6 +27,8 @@ public sealed partial class HomeTasksPageViewModel(
             AddSessionCore(session);
         }
 
+        SelectedTaskManagerContainerViewModel = TaskManagers.FirstOrDefault();
+
         userSessionManagerService.SessionCreated += OnUserSessionCreated;
         userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
     }
