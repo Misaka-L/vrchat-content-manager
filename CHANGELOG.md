@@ -49,6 +49,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Unable to publish new platform build for exist world. [`#157`](https://github.com/project-vrcz/content-publisher/pull/157)
 - Remove account button show has tasks running when no tasks running. [`#162`](https://github.com/project-vrcz/content-publisher/pull/162)
 
+### Changes from `2.1.0-rc.1`
+
+#### Added
+
+- Select first account tab when open Tasks page. [`#175`](https://github.com/project-vrcz/content-publisher/pull/175)
+
 ## [2.1.0-rc.1] - 2026-01-09
 
 ### Changed
