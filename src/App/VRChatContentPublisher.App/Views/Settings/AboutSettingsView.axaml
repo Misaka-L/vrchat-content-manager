@@ -91,6 +91,7 @@
                     <HyperlinkButton Content="@flower-elf" NavigateUri="https://github.com/flower-elf" />
                     <HyperlinkButton Content="@Anteness" NavigateUri="https://github.com/Anteness" />
                     <HyperlinkButton Content="@SKPloft" NavigateUri="https://github.com/SKPloft" />
+                    <HyperlinkButton Content="@lonelyicer" NavigateUri="https://github.com/lonelyicer" />
                 </WrapPanel>
             </StackPanel>
         </StackPanel>
