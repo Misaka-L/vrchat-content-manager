@@ -33,6 +33,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     internal UserSessionService(
         string userNameOrEmail,
         string? userId,
+        CurrentUser user,
         SaveCookiesDelegate saveFunc,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
@@ -44,6 +45,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         _logger = logger;
         _saveFunc = saveFunc;
         UserId = userId;
+        CurrentUser = user;
 
         UserNameOrEmail = userNameOrEmail;
 
@@ -113,7 +115,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             throw;
         }
 
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail);
+        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
         OnStateChanged(UserSessionState.LoggedIn);
 
         CurrentUserUpdated?.Invoke(this, CurrentUser);
@@ -143,7 +145,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private async Task AfterHttpResponseAsync(HttpResponseMessage response)
     {
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail);
+        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
 
         if (State == UserSessionState.LoggedIn &&
             response.RequestMessage?.RequestUri?.Host == "api.vrchat.cloud" &&
@@ -188,12 +190,14 @@ public sealed class UserSessionFactory(
         string userNameOrEmail,
         string? userId,
         CookieContainer? cookieContainer,
+        CurrentUser? user,
         SaveCookiesDelegate saveFunc
     )
     {
         return new UserSessionService(
             userNameOrEmail,
             userId,
+            user,
             saveFunc,
             cookieContainer,
             apiClientFactory,
@@ -211,4 +215,8 @@ public enum UserSessionState
     InvalidSession
 }
 
-public delegate Task SaveCookiesDelegate(CookieContainer cookies, string? userId, string? userNameOrEmail);
+public delegate Task SaveCookiesDelegate(
+    CookieContainer cookies,
+    string? userId,
+    string? userNameOrEmail,
+    CurrentUser? user);

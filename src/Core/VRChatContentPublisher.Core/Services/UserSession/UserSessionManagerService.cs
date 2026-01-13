@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Auth;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -24,12 +25,13 @@ public sealed class UserSessionManagerService(
         foreach (var (userId, sessionItem) in userSessionStorage.Value.Sessions)
         {
             var cookieContainer = new CookieContainer();
-            foreach (var cookie in sessionItem.Cookies)
-            {
-                cookieContainer.Add(cookie);
-            }
+            if (sessionItem.Cookies != null)
+                foreach (var cookie in sessionItem.Cookies)
+                {
+                    cookieContainer.Add(cookie);
+                }
 
-            var session = CreateOrGetSession(sessionItem.UserName, userId, cookieContainer);
+            var session = CreateOrGetSession(sessionItem.UserName, userId, cookieContainer, sessionItem.GetApiUserModel());
             try
             {
                 await session.CreateOrGetSessionScopeAsync();
@@ -51,7 +53,7 @@ public sealed class UserSessionManagerService(
     }
 
     public UserSessionService CreateOrGetSession(string userNameOrEmail, string? userId = null, CookieContainer?
-        cookieContainer = null)
+        cookieContainer = null, CurrentUser? user = null)
     {
         if (_sessions.FirstOrDefault(session =>
                 (session.UserId is not null && userId == session.UserId) ||
@@ -61,8 +63,8 @@ public sealed class UserSessionManagerService(
             return existingSession;
         }
 
-        var session = sessionFactory.Create(userNameOrEmail, userId, cookieContainer,
-            async (cookies, sessionUserId, userName) =>
+        var session = sessionFactory.Create(userNameOrEmail, userId, cookieContainer, user,
+            async (cookies, sessionUserId, userName, userInfo) =>
             {
                 if (sessionUserId is null || userName is null)
                     return;
@@ -71,13 +73,19 @@ public sealed class UserSessionManagerService(
                 {
                     if (sessions.Sessions.TryGetValue(sessionUserId, out var session))
                     {
-                        session.Cookies.Clear();
-                        session.Cookies.AddRange(cookies.GetAllCookies());
+                        session.Cookies?.Clear();
+                        session.Cookies?.AddRange(cookies.GetAllCookies());
+
+                        if (userInfo is not null)
+                            session.User = UserSessionUserInfo.Create(userInfo);
                         return;
                     }
 
                     sessions.Sessions.Add(sessionUserId,
-                        new UserSessionStorageItem(userName, new List<Cookie>(cookies.GetAllCookies())));
+                        new UserSessionStorageItem(
+                            userName,
+                            new List<Cookie>(cookies.GetAllCookies()),
+                            userInfo != null ? UserSessionUserInfo.Create(userInfo) : null));
                 });
             });
 
