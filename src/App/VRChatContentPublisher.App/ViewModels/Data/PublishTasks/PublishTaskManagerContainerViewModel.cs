@@ -26,7 +26,10 @@ public sealed partial class PublishTaskManagerContainerViewModel(
             if (!string.IsNullOrWhiteSpace(userSessionService.CurrentUser?.ProfilePictureThumbnailUrl))
                 return userSessionService.CurrentUser?.ProfilePictureThumbnailUrl;
 
-            return userSessionService.CurrentUser?.AvatarThumbnailImageUrl;
+            if (!string.IsNullOrWhiteSpace(userSessionService.CurrentUser?.AvatarThumbnailImageUrl))
+                return userSessionService.CurrentUser?.AvatarThumbnailImageUrl;
+
+            return null;
         }
     }
 
