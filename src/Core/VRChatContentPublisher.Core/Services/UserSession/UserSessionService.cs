@@ -33,7 +33,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     internal UserSessionService(
         string userNameOrEmail,
         string? userId,
-        CurrentUser user,
+        CurrentUser? user,
         SaveCookiesDelegate saveFunc,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
