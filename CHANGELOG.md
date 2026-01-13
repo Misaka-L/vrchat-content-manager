@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Menu items are more compact now. [`#179`](https://github.com/project-vrcz/content-publisher/pull/179)
+
+### Added
+
+- Retry all failed or canceled tasks menu. [`#179`](https://github.com/project-vrcz/content-publisher/pull/179)
+
 ## [2.1.0] - 2026-01-12
 
 ### Changed
