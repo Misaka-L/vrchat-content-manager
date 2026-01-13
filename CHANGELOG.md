@@ -12,7 +12,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Show user display name and avatar when session invalid. [`#180`](https://github.com/project-vrcz/content-publisher/pull/180)
 - Retry all failed or canceled tasks menu. [`#179`](https://github.com/project-vrcz/content-publisher/pull/179)
+
+### Fixed
+
+- App crash if session cookies storage is empty. [`#180`](https://github.com/project-vrcz/content-publisher/pull/180)
 
 ## [2.1.0] - 2026-01-12
 
