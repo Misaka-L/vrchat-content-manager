@@ -64,7 +64,7 @@ public sealed partial class PublishTaskViewModel(
     }
 
     [RelayCommand]
-    private void Start()
+    public void Start()
     {
         publishTaskService.Start();
     }

@@ -49,14 +49,21 @@
                     </Button.IsEnabled>
                     <Button.Flyout>
                         <MenuFlyout>
-                            <MenuItem Header="Completed tasks" Command="{Binding RemoveCompletedTasksCommand}" />
-                            <MenuItem Header="Failed tasks" Command="{Binding RemoveFailedTasksCommand}" />
-                            <MenuItem Header="Cancelled tasks" Command="{Binding RemoveCancelledTasksCommand}" />
-                            <MenuItem Header="All removable tasks" Command="{Binding RemoveAllRemovableTasksCommand}" />
+                            <MenuItem
+                                Header="{avalonia:MaterialIconTextExt Kind=DeleteSweep, Text=Remove Completed tasks}"
+                                Command="{Binding RemoveCompletedTasksCommand}" />
+                            <MenuItem Header="Remove Failed tasks" Command="{Binding RemoveFailedTasksCommand}" />
+                            <MenuItem Header="Remove Cancelled tasks" Command="{Binding RemoveCancelledTasksCommand}" />
+                            <MenuItem Header="Remove All removable tasks"
+                                      Command="{Binding RemoveAllRemovableTasksCommand}" />
+                            <MenuItem Header="-" />
+                            <MenuItem
+                                Header="{avalonia:MaterialIconTextExt Kind=Refresh, Text=Retry all failed/cancelled tasks}"
+                                Command="{Binding RetryAllTasksCommand}" />
                         </MenuFlyout>
                     </Button.Flyout>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Remove..." />
+                        <TextBlock Text="Action" />
                         <avalonia:MaterialIcon Kind="ChevronDown" />
                     </StackPanel>
                 </Button>

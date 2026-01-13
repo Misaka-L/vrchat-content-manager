@@ -123,6 +123,19 @@ public sealed partial class PublishTaskManagerViewModel(
     }
 
     [RelayCommand]
+    private void RetryAllTasks()
+    {
+        var tasks = Tasks
+            .Where(task => task.Status is ContentPublishTaskStatus.Failed or ContentPublishTaskStatus.Canceled)
+            .ToArray();
+
+        foreach (var task in tasks)
+        {
+            task.Start();
+        }
+    }
+
+    [RelayCommand]
     private async Task RepairSessionAsync()
     {
         if (await userSessionService.TryRepairAsync())
