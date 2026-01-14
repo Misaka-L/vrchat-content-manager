@@ -195,7 +195,15 @@ public sealed class ContentPublishTaskService
                 cancellationToken);
 
             _bundleFileId = outputBundleFile.FileId;
+        }
+
+        try
+        {
             await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to delete raw bundle file {BundleFileId}", _rawBundleFileId);
         }
     }
 
