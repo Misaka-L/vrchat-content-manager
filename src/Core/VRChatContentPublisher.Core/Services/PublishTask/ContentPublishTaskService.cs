@@ -195,6 +195,7 @@ public sealed class ContentPublishTaskService
                 cancellationToken);
 
             _bundleFileId = outputBundleFile.FileId;
+            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
         }
     }
 
