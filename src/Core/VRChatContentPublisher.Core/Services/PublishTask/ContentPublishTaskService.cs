@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.BundleProcessCore.Models;
+using VRChatContentPublisher.BundleProcessCore.Services;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Services.PublishTask.BundleProcesser;
+using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Utils;
 
@@ -17,7 +19,6 @@ public sealed class ContentPublishTaskService
     private readonly ILogger<ContentPublishTaskService> _logger;
 
     private readonly IContentPublisher _contentPublisher;
-    private readonly IBundleProcesser _bundleProcesser;
 
     private readonly PublishStageProgressReporter _progressReporter;
 
@@ -61,7 +62,7 @@ public sealed class ContentPublishTaskService
         string contentId, string rawBundleFileId,
         string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
         HttpClient awsHttpClient, IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
-        IContentPublisher contentPublisher, IBundleProcesser bundleProcesser)
+        IContentPublisher contentPublisher)
     {
         TaskId = taskId;
 
@@ -80,7 +81,6 @@ public sealed class ContentPublishTaskService
         _awsHttpClient = awsHttpClient;
         _tempFileService = tempFileService;
         _contentPublisher = contentPublisher;
-        _bundleProcesser = bundleProcesser;
         _logger = logger;
 
         _progressReporter = new PublishStageProgressReporter((text, progress) => UpdateProgress(text, progress));
@@ -170,12 +170,32 @@ public sealed class ContentPublishTaskService
                    "Bundle file {BundleFileId} processing for content ({ContentId}) {ContentPlatform} {ContentName} took {ElapsedMilliseconds} ms",
                    _rawBundleFileId, ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
         {
-            _bundleFileId =
-                await _bundleProcesser.ProcessBundleAsync(_rawBundleFileId, _progressReporter, cancellationToken);
-        }
+            var progressReporter = new PublishStageProgressReporter((message, progress) =>
+            {
+                _logger.LogInformation("Bundle Processing: {Message} ({Progress:P2})", message, progress);
+                _progressReporter.Report(message, progress);
+            });
 
-        if (_bundleFileId != _rawBundleFileId)
-            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+            var bundleProcesser = new BundleProcessService(new BundleProcessOptions
+            {
+                TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp")
+            });
+
+            await using var rawBundleStream = await _tempFileService.GetFileAsync(_rawBundleFileId);
+            if (rawBundleStream is null)
+                throw new FileNotFoundException("Raw bundle file not found.", _rawBundleFileId);
+
+            var outputBundleFile = await _tempFileService.GetUploadFileStreamAsync("processed_bundle.bundle");
+            await using var outputBundleFileStream = outputBundleFile.FileStream;
+
+            await bundleProcesser.ProcessBundleAsync(
+                rawBundleStream,
+                outputBundleFileStream,
+                progressReporter,
+                cancellationToken);
+
+            _bundleFileId = outputBundleFile.FileId;
+        }
     }
 
     private async ValueTask PublishAsync(CancellationToken cancellationToken)
@@ -225,8 +245,7 @@ public enum PublishTaskStage
 public sealed class ContentPublishTaskFactory(
     HttpClient awsHttpClient,
     IFileService tempFileService,
-    ILogger<ContentPublishTaskService> logger,
-    BundleCompressProcesser bundleCompressProcesser)
+    ILogger<ContentPublishTaskService> logger)
 {
     public ValueTask<ContentPublishTaskService> Create(
         string taskId,
@@ -249,8 +268,7 @@ public sealed class ContentPublishTaskFactory(
             awsHttpClient,
             tempFileService,
             logger,
-            contentPublisher,
-            bundleCompressProcesser
+            contentPublisher
         );
 
         return ValueTask.FromResult(publishTask);

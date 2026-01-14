@@ -13,7 +13,6 @@ using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.PublishTask.BundleProcesser;
 using VRChatContentPublisher.Core.Services.PublishTask.Connect;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -42,8 +41,6 @@ public static class ServicesExtension
         services.AddTransient<AvatarContentPublisherFactory>();
 
         services.AddTransient<IHealthService, RpcHealthService>();
-
-        services.AddTransient<BundleCompressProcesser>();
 
         services.AddMemoryCache();
 
