@@ -141,10 +141,11 @@ internal sealed class BundleProcessPipeline(BundleProcessOptions options)
             {
                 var audioClipBase = manager.GetBaseField(assetsFile, audioClipInfo);
                 if (audioClipBase["m_Resource"] is
-                    { IsDummy: false, Value.ValueType: AssetValueType.String } resourceField)
+                        { IsDummy: false, TypeName: "StreamedResource" } resourceField &&
+                    resourceField["m_Source"] is { IsDummy: false, Value.ValueType: AssetValueType.String } pathField)
                 {
-                    resourceField.AsString =
-                        resourceField.AsString.Replace(originalAssetBundleBlockName, newAssetBundleBlockName);
+                    pathField.AsString =
+                        pathField.AsString.Replace(originalAssetBundleBlockName, newAssetBundleBlockName);
 
                     audioClipInfo.SetNewData(audioClipBase);
                 }
