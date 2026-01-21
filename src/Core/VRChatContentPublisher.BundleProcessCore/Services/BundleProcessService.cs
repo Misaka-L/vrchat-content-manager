@@ -32,8 +32,8 @@ public sealed class BundleProcessService(BundleProcessOptions options)
             bundleStream = result.BundleStream;
 
             // Step.2 Run processing pipeline
-            var pipeline = new BundleProcessPipeline();
-            await pipeline.ProcessAsync(bundleStream, progressReporter, cancellationToken);
+            var pipeline = new BundleProcessPipeline(options);
+            bundleStream = await pipeline.ProcessAsync(bundleStream, progressReporter, !isTempFileCreated, cancellationToken);
 
             // Step.3 Bundle Compress
             await CompressBundleAsync(bundleStream, outputStream, progressReporter, !isTempFileCreated,

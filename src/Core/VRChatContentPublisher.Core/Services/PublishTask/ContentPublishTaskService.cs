@@ -178,7 +178,8 @@ public sealed class ContentPublishTaskService
 
             var bundleProcesser = new BundleProcessService(new BundleProcessOptions
             {
-                TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp")
+                TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp"),
+                AvatarId = ContentId
             });
 
             await using var rawBundleStream = await _tempFileService.GetFileAsync(_rawBundleFileId);
