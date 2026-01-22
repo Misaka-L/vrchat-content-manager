@@ -8,9 +8,10 @@
              x:Class="VRChatContentPublisher.App.Dialogs.ExitAppDialog">
 
     <Interaction.Behaviors>
-        <AttachedToVisualTreeTrigger>
+        <!-- Change to AttachedToVisualTreeTrigger will lead to NullReferenceException -->
+        <EventTrigger EventName="Loaded">
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </AttachedToVisualTreeTrigger>
+        </EventTrigger>
     </Interaction.Behaviors>
 
     <Panel>
