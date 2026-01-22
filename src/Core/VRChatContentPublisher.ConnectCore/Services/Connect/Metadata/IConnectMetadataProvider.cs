@@ -6,4 +6,6 @@ public interface IConnectMetadataProvider
 
     string GetImplementation();
     string GetImplementationVersion();
+
+    string[] GetFeatureFlags();
 }

@@ -6,6 +6,8 @@ public sealed class ConnectMetadataService(IConnectMetadataProvider metadataProv
 
     public string GetImplementation() => metadataProvider.GetImplementation();
     public string GetImplementationVersion() => metadataProvider.GetImplementationVersion();
+    
+    public string[] GetFeatureFlags() => metadataProvider.GetFeatureFlags();
 
-    public string GetApiVersion() => "1.0.0";
+    public string GetApiVersion() => "1.1.0";
 }

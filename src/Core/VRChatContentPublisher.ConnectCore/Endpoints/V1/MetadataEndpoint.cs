@@ -19,7 +19,8 @@ public static class MetadataEndpoint
                 ApiVersion = metadataService.GetApiVersion(),
                 Implementation = metadataService.GetImplementation(),
                 ImplementationVersion = metadataService.GetImplementationVersion(),
-                InstanceName = metadataService.GetInstanceName()
+                InstanceName = metadataService.GetInstanceName(),
+                FeatureFlags = metadataService.GetFeatureFlags()
             }, ApiV1JsonContext.Default.ApiV1MetadataResponse);
         });
 
