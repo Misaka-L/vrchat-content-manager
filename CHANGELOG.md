@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Retry all failed or canceled tasks menu. [`#179`](https://github.com/project-vrcz/content-publisher/pull/179)
 - New bundle process pipeline for mulit-target publish. [`#187`](https://github.com/project-vrcz/content-publisher/pull/187)
 - New `FeatureFlags` field for rpc api metadata. [`#187`](https://github.com/project-vrcz/content-publisher/pull/187)
+- Keep seleted tab after page switch for home and tasks page. [`#190`](https://github.com/project-vrcz/content-publisher/pull/190)
 
 ### Fixed
 

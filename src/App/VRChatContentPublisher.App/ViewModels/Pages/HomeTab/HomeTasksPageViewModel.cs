@@ -19,27 +19,25 @@ public sealed partial class HomeTasksPageViewModel(
     [ObservableProperty]
     public partial PublishTaskManagerContainerViewModel? SelectedTaskManagerContainerViewModel { get; set; }
 
+    private bool _firstLoad = true;
+
     [RelayCommand]
     private void Load()
     {
-        foreach (var session in userSessionManagerService.Sessions)
+        if (_firstLoad)
         {
-            AddSessionCore(session);
+            foreach (var session in userSessionManagerService.Sessions)
+            {
+                AddSessionCore(session);
+            }
+            
+            userSessionManagerService.SessionCreated += OnUserSessionCreated;
+            userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
         }
 
-        SelectedTaskManagerContainerViewModel = TaskManagers.FirstOrDefault();
+        UpdateSelectedTaskManager();
 
-        userSessionManagerService.SessionCreated += OnUserSessionCreated;
-        userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
-    }
-
-    [RelayCommand]
-    private void Unload()
-    {
-        userSessionManagerService.SessionCreated -= OnUserSessionCreated;
-        userSessionManagerService.SessionRemoved -= OnUserSessionRemoved;
-
-        TaskManagers.Clear();
+        _firstLoad = false;
     }
 
     [RelayCommand]
@@ -81,7 +79,16 @@ public sealed partial class HomeTasksPageViewModel(
             }
 
             TaskManagers.Remove(matchViewModel);
+            UpdateSelectedTaskManager();
         });
+    }
+
+    private void UpdateSelectedTaskManager()
+    {
+        if (SelectedTaskManagerContainerViewModel is not null &&
+            TaskManagers.Contains(SelectedTaskManagerContainerViewModel)) return;
+
+        SelectedTaskManagerContainerViewModel = TaskManagers.FirstOrDefault();
     }
 
     private void AddSessionCore(UserSessionService session)

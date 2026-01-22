@@ -42,7 +42,7 @@ public static class ServicesExtenstion
 
         services.AddTransient<BootstrapPageViewModel>();
 
-        services.AddTransient<HomePageViewModel>();
+        services.AddSingleton<HomePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
 
         // Data ViewModels
@@ -55,7 +55,7 @@ public static class ServicesExtenstion
         services.AddTransient<RpcClientSessionViewModelFactory>();
 
         // HomePage Tabs
-        services.AddTransient<HomeTasksPageViewModel>();
+        services.AddSingleton<HomeTasksPageViewModel>();
 
         // Getting Started Pages
         services.AddTransient<GuideWelcomePageViewModel>();
