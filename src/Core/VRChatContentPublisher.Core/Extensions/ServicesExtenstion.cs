@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Polly;
+using VRChatContentPublisher.BundleProcessCore.Models;
+using VRChatContentPublisher.BundleProcessCore.Services;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
@@ -13,7 +15,6 @@ using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.PublishTask.BundleProcesser;
 using VRChatContentPublisher.Core.Services.PublishTask.Connect;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -41,9 +42,12 @@ public static class ServicesExtension
         services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
         services.AddTransient<AvatarContentPublisherFactory>();
 
-        services.AddTransient<IHealthService, RpcHealthService>();
+        services.AddTransient<BundleProcessService>(_ => new BundleProcessService(new BundleProcessPipelineOptions
+        {
+            TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp"),
+        }));
 
-        services.AddTransient<BundleCompressProcesser>();
+        services.AddTransient<IHealthService, RpcHealthService>();
 
         services.AddMemoryCache();
 

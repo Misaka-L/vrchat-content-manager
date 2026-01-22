@@ -15,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Submodules\AssetsTools.NET\AssetTools.NET\AssetsTools.NET.csproj"/>
-        <ProjectReference Include="..\VRChatContentPublisher.ConnectCore\VRChatContentPublisher.ConnectCore.csproj" />
+        <ProjectReference Include="..\VRChatContentPublisher.BundleProcessCore\VRChatContentPublisher.BundleProcessCore.csproj"/>
+        <ProjectReference Include="..\VRChatContentPublisher.ConnectCore\VRChatContentPublisher.ConnectCore.csproj"/>
     </ItemGroup>
 
     <Import Project="../../BuildInfo.targets"/>

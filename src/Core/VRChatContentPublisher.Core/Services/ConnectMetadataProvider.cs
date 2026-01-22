@@ -13,4 +13,9 @@ public sealed class ConnectMetadataProvider(IWritableOptions<AppSettings> appSet
 
     public string GetImplementationVersion() =>
         $"{AppVersionUtils.GetAppVersion()}+{AppVersionUtils.GetAppCommitHash()}";
+
+    public string[] GetFeatureFlags()
+    {
+        return ["blueprint-id-override-world", "blueprint-id-override-avatar"];
+    }
 }

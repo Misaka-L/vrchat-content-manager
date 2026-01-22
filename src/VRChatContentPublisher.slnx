@@ -9,6 +9,7 @@
   </Folder>
   <Folder Name="/Core/">
     <File Path="Core/Directory.Packages.props" />
+    <Project Path="Core/VRChatContentPublisher.BundleProcessCore/VRChatContentPublisher.BundleProcessCore.csproj" />
     <Project Path="Core/VRChatContentPublisher.ConnectCore/VRChatContentPublisher.ConnectCore.csproj" />
     <Project Path="Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj" />
     <Project Path="Core/VRChatContentPublisher.IpcCore/VRChatContentPublisher.IpcCore.csproj" />
