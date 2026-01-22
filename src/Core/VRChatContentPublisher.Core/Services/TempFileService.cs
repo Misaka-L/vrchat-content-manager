@@ -48,6 +48,11 @@ public sealed class TempFileService : IFileService
         return ValueTask.FromResult<UploadedFile?>(uploadedFile);
     }
 
+    public ValueTask<bool> IsFileExistAsync(string fileId)
+    {
+        return ValueTask.FromResult(_fileMap.ContainsKey(fileId));
+    }
+
     public ValueTask DeleteFileAsync(string fileId)
     {
         if (_fileMap.TryGetValue(fileId, out var fileMapEntry))

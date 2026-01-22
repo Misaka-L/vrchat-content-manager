@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.BundleProcessCore.Models;
 using VRChatContentPublisher.BundleProcessCore.Services;
+using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.App;
@@ -262,7 +263,7 @@ public sealed class ContentPublishTaskFactory(
     ILogger<ContentPublishTaskService> logger,
     BundleProcessService bundleProcessService)
 {
-    public ValueTask<ContentPublishTaskService> Create(
+    public async ValueTask<ContentPublishTaskService> Create(
         string taskId,
         string contentId,
         string bundleFileId,
@@ -272,6 +273,9 @@ public sealed class ContentPublishTaskFactory(
         string? releaseStatus,
         IContentPublisher contentPublisher)
     {
+        if (!await tempFileService.IsFileExistAsync(bundleFileId))
+            throw new ProvideFileIdNotFoundException(bundleFileId);
+        
         var publishTask = new ContentPublishTaskService(
             taskId,
             contentId,
@@ -287,6 +291,6 @@ public sealed class ContentPublishTaskFactory(
             bundleProcessService
         );
 
-        return ValueTask.FromResult(publishTask);
+        return publishTask;
     }
 }
