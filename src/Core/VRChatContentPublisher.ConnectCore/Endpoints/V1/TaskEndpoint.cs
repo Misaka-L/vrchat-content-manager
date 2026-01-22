@@ -115,9 +115,9 @@ public static class TaskEndpoint
                 ex.Message
             );
         }
-        catch (ContentOwnerUserSessionNotFoundException ex)
+        catch (ContentOwnerSessionOrAvatarNotFoundException ex)
         {
-            logger.LogError(ex, "Failed to create avatar publish task due to content owner user session not found.");
+            logger.LogError(ex, "Failed to create avatar publish task due to content owner user session not found or avatar not exist.");
             await context.Response.WriteProblemAsync(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
