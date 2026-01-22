@@ -64,6 +64,6 @@ public sealed class AvatarPublishTaskService(
             }
         }
 
-        throw new ContentOwnerUserSessionNotFoundException();
+        throw new ContentOwnerSessionOrAvatarNotFoundException();
     }
 }
