@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Menu items are more compact now. [`#179`](https://github.com/project-vrcz/content-publisher/pull/179)
 - When avatar details are not found, it will be reported that the avatar may not exist or its owner account is not logged in. [`#192`](https://github.com/project-vrcz/content-publisher/pull/192)
+- Reduce memory usage when upload. [`#195`](https://github.com/project-vrcz/content-publisher/pull/195)
 
 ### Added
 

@@ -43,14 +43,14 @@ public sealed class ConcurrentMultipartUploader(
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
+                // Wait for a free slot to begin the next upload.
+                await concurrencySemaphore.WaitAsync(cancellationToken);
+
                 partNumber++;
                 var currentPartNumber = partNumber;
 
                 var buffer = new byte[ChunkSize];
                 var bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
-
-                // Wait for a free slot to begin the next upload.
-                await concurrencySemaphore.WaitAsync(cancellationToken);
 
                 // Start the upload task for the current chunk.
                 var uploadTask = Task.Run(async () =>
