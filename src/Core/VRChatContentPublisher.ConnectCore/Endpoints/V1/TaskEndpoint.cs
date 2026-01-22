@@ -49,6 +49,15 @@ public static class TaskEndpoint
                 request.UdonProducts
             );
         }
+        catch (ProvideFileIdNotFoundException ex)
+        {
+            logger.LogError(ex, "Failed to create world publish task due to provided file ID not found.");
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status400BadRequest,
+                ex.Message
+            );
+        }
         catch (NoUserSessionAvailableException ex)
         {
             logger.LogError(ex, "Failed to create world publish task due to no user session available.");
@@ -105,6 +114,15 @@ public static class TaskEndpoint
                 request.Description,
                 request.Tags,
                 request.ReleaseStatus);
+        }
+        catch (ProvideFileIdNotFoundException ex)
+        {
+            logger.LogError(ex, "Failed to create avatar publish task due to provided file ID not found.");
+            await context.Response.WriteProblemAsync(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status400BadRequest,
+                ex.Message
+            );
         }
         catch (NoUserSessionAvailableException ex)
         {
