@@ -38,6 +38,10 @@ public sealed class UserSessionHttpClientFactory(
                 Delay = TimeSpan.FromSeconds(5),
                 BackoffType = DelayBackoffType.Exponential
             })
+            .AddTimeout(new HttpTimeoutStrategyOptions
+            {
+                Timeout = TimeSpan.FromSeconds(30)
+            })
             .AddConcurrencyLimiter(new ConcurrencyLimiterOptions
             {
                 PermitLimit = 1,
@@ -62,7 +66,7 @@ public sealed class UserSessionHttpClientFactory(
         })
         {
             BaseAddress = new Uri("https://api.vrchat.cloud/api/1/"),
-            Timeout = TimeSpan.FromSeconds(30)
+            Timeout = Timeout.InfiniteTimeSpan
         };
 
         client.AddUserAgent();

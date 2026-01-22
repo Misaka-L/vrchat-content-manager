@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - App crash if session cookies storage is empty. [`#180`](https://github.com/project-vrcz/content-publisher/pull/180)
 - Potential memory leak issues in UI [`#191`](https://github.com/project-vrcz/content-publisher/pull/191)
+- Won't retry if download response body took too long. [`#193`](https://github.com/project-vrcz/content-publisher/pull/193)
 
 ## [2.1.0] - 2026-01-12
 
