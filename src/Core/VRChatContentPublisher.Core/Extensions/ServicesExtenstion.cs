@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Polly;
+using VRChatContentPublisher.BundleProcessCore.Models;
+using VRChatContentPublisher.BundleProcessCore.Services;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
@@ -39,6 +41,11 @@ public static class ServicesExtension
 
         services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
         services.AddTransient<AvatarContentPublisherFactory>();
+
+        services.AddTransient<BundleProcessService>(_ => new BundleProcessService(new BundleProcessPipelineOptions
+        {
+            TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp"),
+        }));
 
         services.AddTransient<IHealthService, RpcHealthService>();
 

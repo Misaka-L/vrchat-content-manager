@@ -3,12 +3,15 @@ using VRChatContentPublisher.BundleProcessCore.Models;
 
 namespace VRChatContentPublisher.BundleProcessCore.Services;
 
-public sealed class BundleProcessService(BundleProcessOptions options)
+public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOptions)
 {
+    private readonly BundleProcessPipeline _processPipeline = new(pipelineOptions);
+
     public async ValueTask ProcessBundleAsync(
         Stream bundleRawStream,
         Stream outputStream,
-        IProcessProgressReporter? progressReporter,
+        BundleProcessOptions options,
+        IProcessProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default
     )
     {
@@ -32,8 +35,8 @@ public sealed class BundleProcessService(BundleProcessOptions options)
             bundleStream = result.BundleStream;
 
             // Step.2 Run processing pipeline
-            var pipeline = new BundleProcessPipeline(options);
-            bundleStream = await pipeline.ProcessAsync(bundleStream, progressReporter, !isTempFileCreated, cancellationToken);
+            bundleStream = await _processPipeline.ProcessAsync(
+                bundleStream, options, progressReporter, !isTempFileCreated, cancellationToken);
 
             // Step.3 Bundle Compress
             await CompressBundleAsync(bundleStream, outputStream, progressReporter, !isTempFileCreated,
@@ -138,7 +141,7 @@ public sealed class BundleProcessService(BundleProcessOptions options)
 
     private Stream CreateTempStream()
     {
-        var tempFolderPath = options.TempFolderPath ??
+        var tempFolderPath = pipelineOptions.TempFolderPath ??
                              Path.Combine(Path.GetTempPath(), "vrchat-content-publisher-bundle-process");
 
         var tempFilePath = Path.Combine(

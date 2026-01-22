@@ -15,6 +15,7 @@ public sealed class ContentPublishTaskService
 
     private readonly HttpClient _awsHttpClient;
     private readonly IFileService _tempFileService;
+    private readonly BundleProcessService _bundleProcessService;
 
     private readonly ILogger<ContentPublishTaskService> _logger;
 
@@ -62,7 +63,7 @@ public sealed class ContentPublishTaskService
         string contentId, string rawBundleFileId,
         string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
         HttpClient awsHttpClient, IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
-        IContentPublisher contentPublisher)
+        IContentPublisher contentPublisher, BundleProcessService bundleProcessService)
     {
         TaskId = taskId;
 
@@ -81,6 +82,7 @@ public sealed class ContentPublishTaskService
         _awsHttpClient = awsHttpClient;
         _tempFileService = tempFileService;
         _contentPublisher = contentPublisher;
+        _bundleProcessService = bundleProcessService;
         _logger = logger;
 
         _progressReporter = new PublishStageProgressReporter((text, progress) => UpdateProgress(text, progress));
@@ -176,12 +178,6 @@ public sealed class ContentPublishTaskService
                 _progressReporter.Report(message, progress);
             });
 
-            var bundleProcesser = new BundleProcessService(new BundleProcessOptions
-            {
-                TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp"),
-                AvatarId = ContentId
-            });
-
             await using var rawBundleStream = await _tempFileService.GetFileAsync(_rawBundleFileId);
             if (rawBundleStream is null)
                 throw new FileNotFoundException("Raw bundle file not found.", _rawBundleFileId);
@@ -189,9 +185,17 @@ public sealed class ContentPublishTaskService
             var outputBundleFile = await _tempFileService.GetUploadFileStreamAsync("processed_bundle.bundle");
             await using var outputBundleFileStream = outputBundleFile.FileStream;
 
-            await bundleProcesser.ProcessBundleAsync(
+            var processOptions = ContentType switch
+            {
+                "world" => new WorldBundleProcessOptions(ContentId, []),
+                "avatar" => new AvatarBundleProcessOptions(ContentId, []),
+                _ => new BundleProcessOptions(ContentId, [])
+            };
+
+            await _bundleProcessService.ProcessBundleAsync(
                 rawBundleStream,
                 outputBundleFileStream,
+                processOptions,
                 progressReporter,
                 cancellationToken);
 
@@ -255,7 +259,8 @@ public enum PublishTaskStage
 public sealed class ContentPublishTaskFactory(
     HttpClient awsHttpClient,
     IFileService tempFileService,
-    ILogger<ContentPublishTaskService> logger)
+    ILogger<ContentPublishTaskService> logger,
+    BundleProcessService bundleProcessService)
 {
     public ValueTask<ContentPublishTaskService> Create(
         string taskId,
@@ -278,7 +283,8 @@ public sealed class ContentPublishTaskFactory(
             awsHttpClient,
             tempFileService,
             logger,
-            contentPublisher
+            contentPublisher,
+            bundleProcessService
         );
 
         return ValueTask.FromResult(publishTask);
