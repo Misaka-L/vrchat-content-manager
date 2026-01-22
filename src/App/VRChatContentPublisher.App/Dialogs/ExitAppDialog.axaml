@@ -8,9 +8,9 @@
              x:Class="VRChatContentPublisher.App.Dialogs.ExitAppDialog">
 
     <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
+        <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
+        </AttachedToVisualTreeTrigger>
     </Interaction.Behaviors>
 
     <Panel>

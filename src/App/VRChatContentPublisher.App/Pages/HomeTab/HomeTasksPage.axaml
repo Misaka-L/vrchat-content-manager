@@ -12,9 +12,9 @@
              x:Class="VRChatContentPublisher.App.Pages.HomeTab.HomeTasksPage">
 
     <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
+        <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
+        </AttachedToVisualTreeTrigger>
     </Interaction.Behaviors>
 
     <Panel>
