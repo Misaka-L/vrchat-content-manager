@@ -1,3 +1,5 @@
+using System.Collections.Frozen;
+using System.Collections.Immutable;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using VRChatContentPublisher.BundleProcessCore.Models;
@@ -5,26 +7,31 @@ using VRChatContentPublisher.BundleProcessCore.Utils;
 
 namespace VRChatContentPublisher.BundleProcessCore.Services;
 
-internal sealed class BundleProcessPipeline(BundleProcessPipelineOptions pipelineOptions)
+internal sealed class BundleProcessPipeline(
+    BundleProcessPipelineOptions pipelineOptions
+)
 {
-    public async ValueTask<AssetBundleFile> ProcessAsync(
+    public async ValueTask<Stream> ProcessAsync(
         Stream bundleStream,
         BundleProcessOptions options,
         IProcessProgressReporter? progressReporter = null,
+        bool leaveOpen = true,
         CancellationToken cancellationToken = default)
     {
         return await Task.Factory.StartNew(() =>
-                ProcessCore(bundleStream, options, progressReporter, cancellationToken),
+                ProcessCore(bundleStream, options, progressReporter, leaveOpen, cancellationToken),
             cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
     }
 
-    private AssetBundleFile ProcessCore(
+    private Stream ProcessCore(
         Stream bundleStream,
         BundleProcessOptions options,
         IProcessProgressReporter? progressReporter = null,
+        bool leaveOpen = true,
         CancellationToken cancellationToken = default)
     {
         progressReporter?.Report("Starting bundle processing pipeline...");
+        CopyToTempFile(bundleStream, "source");
 
         // Load Assets Manager and Class Package
         var manager = new AssetsManager();
@@ -65,7 +72,7 @@ internal sealed class BundleProcessPipeline(BundleProcessPipelineOptions pipelin
                 .ToArray();
 
             if (processer.Length == 0)
-                return bundle.file;
+                return bundleStream;
 
             // Run each processor
             foreach (var bundleProcesser in processer)
@@ -74,25 +81,63 @@ internal sealed class BundleProcessPipeline(BundleProcessPipelineOptions pipelin
                 bundleProcesser.Process(manager, bundle, assetsFiles, options, progressReporter);
             }
 
-            // Set new data to bundle blocks
+            // Write back modified assets file to bundle
+            progressReporter?.Report("Writing processed assets back to bundle...");
             foreach (var blockAssetPair in blockAssetMap)
             {
                 blockAssetPair.Key.SetNewData(blockAssetPair.Value.file);
             }
 
-            return bundle.file;
-        }
-        catch
-        {
-            manager.UnloadAllAssetsFiles(true);
-            throw;
+            var newBundleStream = CreateTempStream();
+            using var writer = new AssetsFileWriter(newBundleStream, true);
+            bundle.file.Write(writer);
+
+            if (!leaveOpen)
+                bundleStream.Close();
+
+            CopyToTempFile(newBundleStream, "processed");
+
+            newBundleStream.Position = 0;
+            return newBundleStream;
         }
         finally
         {
-            manager.UnloadClassDatabase();
-            manager.UnloadClassPackage();
-            manager.UnloadAllAssetsFiles(true);
-            manager.MonoTempGenerator?.Dispose();
+            manager.UnloadAll();
         }
+    }
+
+    private Stream CreateTempStream()
+    {
+        var tempFolderPath = pipelineOptions.TempFolderPath ??
+                             Path.Combine(Path.GetTempPath(), "vrchat-content-publisher-bundle-process");
+
+        if (!Directory.Exists(tempFolderPath))
+            Directory.CreateDirectory(tempFolderPath);
+
+        var tempFilePath = Path.Combine(
+            tempFolderPath,
+            Guid.NewGuid().ToString("N") + "-bundle.tmp"
+        );
+
+        return File.Create(tempFilePath, 4096,
+            FileOptions.DeleteOnClose | FileOptions.SequentialScan | FileOptions.Asynchronous);
+    }
+
+    private void CopyToTempFile(Stream source, string name)
+    {
+        source.Position = 0;
+        var tempFolderPath = pipelineOptions.TempFolderPath ??
+                             Path.Combine(Path.GetTempPath(), "vrchat-content-publisher-bundle-process");
+
+        if (!Directory.Exists(tempFolderPath))
+            Directory.CreateDirectory(tempFolderPath);
+
+        var tempFilePath = Path.Combine(
+            tempFolderPath,
+            name + "-debug.tmp"
+        );
+
+        using var stream = File.Create(tempFilePath, 4096, FileOptions.SequentialScan | FileOptions.Asynchronous);
+        source.CopyTo(stream);
     }
 }

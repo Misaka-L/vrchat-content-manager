@@ -35,18 +35,21 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
             bundleStream = result.BundleStream;
 
             // Step.2 Run processing pipeline
-            var bundle = await _processPipeline.ProcessAsync(
-                bundleStream, options, progressReporter, cancellationToken);
+            bundleStream = await _processPipeline.ProcessAsync(
+                bundleStream, options, progressReporter, !isTempFileCreated, cancellationToken);
 
             // Step.3 Bundle Compress
-            await CompressBundleAsync(bundle, outputStream, progressReporter, cancellationToken);
+            await CompressBundleAsync(bundleStream, outputStream, progressReporter, !isTempFileCreated,
+                cancellationToken);
         }
-        finally
+        catch
         {
             if (isTempFileCreated)
             {
                 bundleStream.Close();
             }
+
+            throw;
         }
     }
 
@@ -107,18 +110,24 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
     }
 
     private async ValueTask CompressBundleAsync(
-        AssetBundleFile bundleFile,
+        Stream stream,
         Stream outputStream,
         IProcessProgressReporter? progressReporter,
+        bool leaveOpen = true,
         CancellationToken cancellationToken = default
     )
     {
         progressReporter?.Report("Compressing bundle file...");
 
+        var bundleFile = new AssetBundleFile();
+
         try
         {
             await Task.Factory.StartNew(() =>
                 {
+                    using var bundleReader = new AssetsFileReader(stream, leaveOpen);
+                    bundleFile.Read(bundleReader);
+
                     using var writer = new AssetsFileWriter(outputStream, true);
                     bundleFile.Pack(writer, AssetBundleCompressionType.LZMA, cancellationToken: cancellationToken);
                 }, cancellationToken, TaskCreationOptions.LongRunning,
