@@ -42,14 +42,12 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
             await CompressBundleAsync(bundleStream, outputStream, progressReporter, !isTempFileCreated,
                 cancellationToken);
         }
-        catch
+        finally
         {
             if (isTempFileCreated)
             {
                 bundleStream.Close();
             }
-
-            throw;
         }
     }
 

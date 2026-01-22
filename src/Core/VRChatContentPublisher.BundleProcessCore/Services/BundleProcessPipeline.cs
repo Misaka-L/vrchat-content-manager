@@ -1,5 +1,3 @@
-using System.Collections.Frozen;
-using System.Collections.Immutable;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using VRChatContentPublisher.BundleProcessCore.Models;
@@ -31,7 +29,6 @@ internal sealed class BundleProcessPipeline(
         CancellationToken cancellationToken = default)
     {
         progressReporter?.Report("Starting bundle processing pipeline...");
-        CopyToTempFile(bundleStream, "source");
 
         // Load Assets Manager and Class Package
         var manager = new AssetsManager();
@@ -95,8 +92,6 @@ internal sealed class BundleProcessPipeline(
             if (!leaveOpen)
                 bundleStream.Close();
 
-            CopyToTempFile(newBundleStream, "processed");
-
             newBundleStream.Position = 0;
             return newBundleStream;
         }
@@ -121,23 +116,5 @@ internal sealed class BundleProcessPipeline(
 
         return File.Create(tempFilePath, 4096,
             FileOptions.DeleteOnClose | FileOptions.SequentialScan | FileOptions.Asynchronous);
-    }
-
-    private void CopyToTempFile(Stream source, string name)
-    {
-        source.Position = 0;
-        var tempFolderPath = pipelineOptions.TempFolderPath ??
-                             Path.Combine(Path.GetTempPath(), "vrchat-content-publisher-bundle-process");
-
-        if (!Directory.Exists(tempFolderPath))
-            Directory.CreateDirectory(tempFolderPath);
-
-        var tempFilePath = Path.Combine(
-            tempFolderPath,
-            name + "-debug.tmp"
-        );
-
-        using var stream = File.Create(tempFilePath, 4096, FileOptions.SequentialScan | FileOptions.Asynchronous);
-        source.CopyTo(stream);
     }
 }
