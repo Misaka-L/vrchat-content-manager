@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Dialogs;
@@ -158,7 +159,7 @@ public partial class App : Application
         if (await dialogService.ShowDialogAsync(exitAppDialogViewModel) is not true)
             return;
 
-        desktop.Shutdown();
+        Dispatcher.UIThread.InvokeShutdown();
     }
 
     private void OpenLogsFolderClicked(object? sender, EventArgs e)

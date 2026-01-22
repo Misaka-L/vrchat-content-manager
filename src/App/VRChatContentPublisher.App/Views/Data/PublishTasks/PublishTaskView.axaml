@@ -9,12 +9,12 @@
              x:Class="VRChatContentPublisher.App.Views.Data.PublishTasks.PublishTaskView">
 
     <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
+        <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
-        <EventTriggerBehavior EventName="Unloaded">
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding UnloadCommand}" />
-        </EventTriggerBehavior>
+        </DetachedFromVisualTreeTrigger>
     </Interaction.Behaviors>
 
     <Grid ColumnDefinitions="Auto,*,Auto" Margin="8" ColumnSpacing="8">

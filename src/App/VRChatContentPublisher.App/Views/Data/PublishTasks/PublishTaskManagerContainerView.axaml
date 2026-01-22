@@ -8,12 +8,12 @@
              x:Class="VRChatContentPublisher.App.Views.Data.PublishTasks.PublishTaskManagerContainerView">
 
     <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
+        <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
-        <EventTriggerBehavior EventName="Unloaded">
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding UnloadCommand}" />
-        </EventTriggerBehavior>
+        </DetachedFromVisualTreeTrigger>
     </Interaction.Behaviors>
 
     <ContentControl Content="{Binding PublishTaskManager}" />

@@ -9,9 +9,9 @@
              x:Class="VRChatContentPublisher.App.Dialogs.RequestChallengeDialog">
 
     <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
+        <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
+        </AttachedToVisualTreeTrigger>
     </Interaction.Behaviors>
 
     <StackPanel Spacing="24" Margin="8">

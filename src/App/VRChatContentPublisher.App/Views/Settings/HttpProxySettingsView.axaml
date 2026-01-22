@@ -10,9 +10,9 @@
              x:Class="VRChatContentPublisher.App.Views.Settings.HttpProxySettingsView">
 
     <Interaction.Behaviors>
-        <EventTriggerBehavior EventName="Loaded">
+        <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTriggerBehavior>
+        </AttachedToVisualTreeTrigger>
     </Interaction.Behaviors>
 
     <StackPanel Margin="8">
