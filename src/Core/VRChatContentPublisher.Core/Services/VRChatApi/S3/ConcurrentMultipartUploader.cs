@@ -49,7 +49,8 @@ public sealed class ConcurrentMultipartUploader(
                 partNumber++;
                 var currentPartNumber = partNumber;
 
-                var buffer = new byte[ChunkSize];
+                var bufferSize = (int)Math.Min(ChunkSize, fileStream.Length - fileStream.Position);
+                var buffer = new byte[bufferSize];
                 var bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
 
                 // Start the upload task for the current chunk.
