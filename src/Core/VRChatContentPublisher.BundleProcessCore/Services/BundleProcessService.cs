@@ -15,6 +15,8 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var bundleStream = bundleRawStream;
         var isTempFileCreated = false;
 
@@ -60,7 +62,15 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         progressReporter?.Report("Copying bundle to temporary file...");
 
         var fileStream = CreateTempStream();
-        await stream.CopyToAsync(fileStream, cancellationToken);
+        try
+        {
+            await stream.CopyToAsync(fileStream, cancellationToken);
+        }
+        catch
+        {
+            fileStream.Close();
+            throw;
+        }
 
         return fileStream;
     }
@@ -72,6 +82,8 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         var bundleFile = new AssetBundleFile();
 
         using var bundleReader = new AssetsFileReader(stream, true);
@@ -82,6 +94,8 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
             bundleFile.Close();
             return new BundlePreprocessResult(stream, false);
         }
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         progressReporter?.Report("Decompressing bundle file...");
         var tempBundleStream = CreateTempStream();
@@ -115,6 +129,8 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         progressReporter?.Report("Compressing bundle file...");
 
         var bundleFile = new AssetBundleFile();
