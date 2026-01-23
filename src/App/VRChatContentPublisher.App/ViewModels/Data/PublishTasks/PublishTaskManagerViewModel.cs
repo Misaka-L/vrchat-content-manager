@@ -68,7 +68,7 @@ public sealed partial class PublishTaskManagerViewModel(
     }
 
     [RelayCommand]
-    private void RemoveCompletedTasks()
+    private async Task RemoveCompletedTasks()
     {
         var completedTasks = Tasks
             .Where(t => t.Status is ContentPublishTaskStatus.Completed)
@@ -76,12 +76,12 @@ public sealed partial class PublishTaskManagerViewModel(
 
         foreach (var task in completedTasks)
         {
-            taskManagerService.RemoveTask(task.TaskId);
+            await taskManagerService.RemoveTaskAsync(task.TaskId);
         }
     }
 
     [RelayCommand]
-    private void RemoveFailedTasks()
+    private async Task RemoveFailedTasks()
     {
         var completedTasks = Tasks
             .Where(t => t.Status is ContentPublishTaskStatus.Failed)
@@ -89,12 +89,12 @@ public sealed partial class PublishTaskManagerViewModel(
 
         foreach (var task in completedTasks)
         {
-            taskManagerService.RemoveTask(task.TaskId);
+            await taskManagerService.RemoveTaskAsync(task.TaskId);
         }
     }
 
     [RelayCommand]
-    private void RemoveCancelledTasks()
+    private async Task RemoveCancelledTasks()
     {
         var completedTasks = Tasks
             .Where(t => t.Status is ContentPublishTaskStatus.Canceled)
@@ -102,12 +102,12 @@ public sealed partial class PublishTaskManagerViewModel(
 
         foreach (var task in completedTasks)
         {
-            taskManagerService.RemoveTask(task.TaskId);
+            await taskManagerService.RemoveTaskAsync(task.TaskId);
         }
     }
 
     [RelayCommand]
-    private void RemoveAllRemovableTasks()
+    private async Task RemoveAllRemovableTasks()
     {
         var completedTasks = Tasks
             .Where(t =>
@@ -118,7 +118,7 @@ public sealed partial class PublishTaskManagerViewModel(
 
         foreach (var task in completedTasks)
         {
-            taskManagerService.RemoveTask(task.TaskId);
+            await taskManagerService.RemoveTaskAsync(task.TaskId);
         }
     }
 
