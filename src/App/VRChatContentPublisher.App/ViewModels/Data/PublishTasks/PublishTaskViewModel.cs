@@ -58,9 +58,9 @@ public sealed partial class PublishTaskViewModel(
     }
 
     [RelayCommand]
-    private void Remove()
+    private async Task Remove()
     {
-        taskManagerService.RemoveTask(publishTaskService.TaskId);
+        await taskManagerService.RemoveTaskAsync(publishTaskService.TaskId);
     }
 
     [RelayCommand]

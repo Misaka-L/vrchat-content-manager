@@ -7,5 +7,6 @@ public enum ContentPublishTaskStatus
     Completed,
     Failed,
     Cancelling,
-    Canceled
+    Canceled,
+    Disposed
 }

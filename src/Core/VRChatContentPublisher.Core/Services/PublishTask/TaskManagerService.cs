@@ -35,7 +35,7 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
         return task;
     }
 
-    public bool RemoveTask(string taskId)
+    public async ValueTask<bool> RemoveTaskAsync(string taskId)
     {
         if (!_tasks.TryGetValue(taskId, out var task))
             return false;
@@ -44,6 +44,8 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
             task.Status != ContentPublishTaskStatus.Completed &&
             task.Status != ContentPublishTaskStatus.Canceled)
             return false;
+
+        await task.CleanupAsync();
 
         _tasks.Remove(taskId);
         TaskRemoved?.Invoke(this, task);

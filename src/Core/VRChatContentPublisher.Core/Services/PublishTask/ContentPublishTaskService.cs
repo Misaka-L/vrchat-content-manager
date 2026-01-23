@@ -184,23 +184,32 @@ public sealed class ContentPublishTaskService
                 throw new FileNotFoundException("Raw bundle file not found.", _rawBundleFileId);
 
             var outputBundleFile = await _tempFileService.GetUploadFileStreamAsync("processed_bundle.bundle");
-            await using var outputBundleFileStream = outputBundleFile.FileStream;
-
-            var processOptions = ContentType switch
+            try
             {
-                "world" => new WorldBundleProcessOptions(ContentId, []),
-                "avatar" => new AvatarBundleProcessOptions(ContentId, []),
-                _ => new BundleProcessOptions(ContentId, [])
-            };
+                await using var outputBundleFileStream = outputBundleFile.FileStream;
 
-            await _bundleProcessService.ProcessBundleAsync(
-                rawBundleStream,
-                outputBundleFileStream,
-                processOptions,
-                progressReporter,
-                cancellationToken);
+                var processOptions = ContentType switch
+                {
+                    "world" => new WorldBundleProcessOptions(ContentId, []),
+                    "avatar" => new AvatarBundleProcessOptions(ContentId, []),
+                    _ => new BundleProcessOptions(ContentId, [])
+                };
 
-            _bundleFileId = outputBundleFile.FileId;
+                await _bundleProcessService.ProcessBundleAsync(
+                    rawBundleStream,
+                    outputBundleFileStream,
+                    processOptions,
+                    progressReporter,
+                    cancellationToken);
+
+                _bundleFileId = outputBundleFile.FileId;
+            }
+            catch
+            {
+                if (await _tempFileService.IsFileExistAsync(outputBundleFile.FileId))
+                    await  _tempFileService.DeleteFileAsync(outputBundleFile.FileId);
+                throw;
+            }
         }
 
         try
@@ -240,6 +249,20 @@ public sealed class ContentPublishTaskService
         await _cancellationTokenSource.CancelAsync();
     }
 
+    public async ValueTask CleanupAsync()
+    {
+        if (Status is not (ContentPublishTaskStatus.Canceled or ContentPublishTaskStatus.Failed))
+            throw new InvalidOperationException("Can only cleanup a task that is canceled or failed.");
+
+        Status = ContentPublishTaskStatus.Disposed;
+
+        if (await _tempFileService.IsFileExistAsync(_rawBundleFileId))
+            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+
+        if (await _tempFileService.IsFileExistAsync(_bundleFileId))
+            await _tempFileService.DeleteFileAsync(_bundleFileId);
+    }
+
     private void UpdateProgress(string text, double? value,
         ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
@@ -275,7 +298,7 @@ public sealed class ContentPublishTaskFactory(
     {
         if (!await tempFileService.IsFileExistAsync(bundleFileId))
             throw new ProvideFileIdNotFoundException(bundleFileId);
-        
+
         var publishTask = new ContentPublishTaskService(
             taskId,
             contentId,
