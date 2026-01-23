@@ -3,6 +3,7 @@ using AssetsTools.NET.Extra;
 using VRChatContentPublisher.BundleProcessCore.Models;
 using VRChatContentPublisher.BundleProcessCore.Services;
 using AssetsTools.NET;
+using VRChatContentPublisher.BundleProcessCore.Utils;
 
 namespace VRChatContentPublisher.BundleProcessCore.Processers;
 
@@ -14,6 +15,24 @@ public sealed partial class AvatarBundleRenameProcesser : IBundleProcesser
     private const string Prefix = "prefab-id-v1_";
 
     public bool ShouldProcess(
+        AssetsManager assetsManager,
+        BundleFileInstance bundleFileInstance,
+        AssetsFileInstance[] assetsFileInstances,
+        BundleProcessOptions bundleProcessOptions,
+        IProcessProgressReporter? progressReporter
+    )
+    {
+        if (!ShouldProcessCore(assetsManager, bundleFileInstance, assetsFileInstances, bundleProcessOptions,
+                progressReporter))
+            return false;
+
+        if (!BlueprintOverrideEnabledChecker.IsBlueprintOverrideEnabled(assetsManager, assetsFileInstances))
+            throw new InvalidOperationException("Blueprint override is disabled for this bundle.");
+
+        return true;
+    }
+
+    public bool ShouldProcessCore(
         AssetsManager assetsManager,
         BundleFileInstance bundleFileInstance,
         AssetsFileInstance[] assetsFileInstances,
