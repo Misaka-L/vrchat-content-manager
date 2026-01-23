@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Show user display name and avatar when session invalid. [`#180`](https://github.com/project-vrcz/content-publisher/pull/180)
 - Retry all failed or canceled tasks menu. [`#179`](https://github.com/project-vrcz/content-publisher/pull/179)
-- New bundle process pipeline for mulit-target publish. [`#187`](https://github.com/project-vrcz/content-publisher/pull/187)
+- New bundle process pipeline for mulit-target publish. [`#187`](https://github.com/project-vrcz/content-publisher/pull/187) [`#200`](https://github.com/project-vrcz/content-publisher/pull/200)
 - New `FeatureFlags` field for rpc api metadata. [`#187`](https://github.com/project-vrcz/content-publisher/pull/187)
 - Keep seleted tab after page switch for home and tasks page. [`#190`](https://github.com/project-vrcz/content-publisher/pull/190)
 - Create publish task will faill if file id provide when create publish task is not exist. [`#194`](https://github.com/project-vrcz/content-publisher/pull/194)

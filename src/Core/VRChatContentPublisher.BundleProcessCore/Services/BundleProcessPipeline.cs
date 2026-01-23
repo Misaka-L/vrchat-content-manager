@@ -16,6 +16,8 @@ internal sealed class BundleProcessPipeline(
         bool leaveOpen = true,
         CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+
         return await Task.Factory.StartNew(() =>
                 ProcessCore(bundleStream, options, progressReporter, leaveOpen, cancellationToken),
             cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
@@ -43,12 +45,16 @@ internal sealed class BundleProcessPipeline(
             if (bundle.file.BlockAndDirInfo.BlockInfos.Length == 0)
                 throw new InvalidOperationException("Bundle contains no blocks.");
 
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Load all assets files from bundle blocks
             progressReporter?.Report("Loading assets files from bundle...");
             var blockAssetMap = bundle.file.BlockAndDirInfo.DirectoryInfos
                 .Where(info => (info.Flags & 0x04) != 0)
                 .Where(info =>
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var blockStream = new SegmentStream(bundle.DataStream, info.Offset, info.DecompressedSize);
                     using var reader = new AssetsFileReader(blockStream);
                     return FileTypeDetector.DetectFileType(reader, 0) == DetectedFileType.AssetsFile;
@@ -56,6 +62,8 @@ internal sealed class BundleProcessPipeline(
                 .ToDictionary(info => info, info => manager.LoadAssetsFileFromBundle(bundle, info.Name))
                 .AsReadOnly();
             var assetsFiles = blockAssetMap.Select(i => i.Value).ToArray();
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             if (blockAssetMap.Count == 0)
                 throw new InvalidOperationException("Bundle contains no assets files.");
@@ -74,6 +82,8 @@ internal sealed class BundleProcessPipeline(
             // Run each processor
             foreach (var bundleProcesser in processer)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 progressReporter?.Report("Running " + bundleProcesser.GetType().Name);
                 bundleProcesser.Process(manager, bundle, assetsFiles, options, progressReporter);
             }
@@ -84,6 +94,8 @@ internal sealed class BundleProcessPipeline(
             {
                 blockAssetPair.Key.SetNewData(blockAssetPair.Value.file);
             }
+
+            cancellationToken.ThrowIfCancellationRequested();
 
             var newBundleStream = CreateTempStream();
             using var writer = new AssetsFileWriter(newBundleStream, true);
