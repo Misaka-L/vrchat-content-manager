@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Bundle processing pipeline will always fail if app start with working directory which is not app folder. [`#204`](https://github.com/project-vrcz/content-publisher/pull/204)
+
 ## [2.2.0] - 2026-01-23
 
 ### Changed
