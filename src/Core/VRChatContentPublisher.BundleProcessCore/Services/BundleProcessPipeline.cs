@@ -36,7 +36,7 @@ internal sealed class BundleProcessPipeline(
         var manager = new AssetsManager();
         try
         {
-            manager.LoadClassPackage("Assets/type-tree.tpk");
+            manager.LoadClassPackage(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/type-tree.tpk"));
 
             var bundle = manager.LoadBundleFile(bundleStream, "bundle", false, true);
             if (bundle.file.DataIsCompressed)
