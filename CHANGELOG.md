@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- App crashed when using the "remove tasks" action menu. [`#205`](https://github.com/project-vrcz/content-publisher/pull/205)
+
 ## [2.2.1] - 2026-02-16
 
 ### Fixed
