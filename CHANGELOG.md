@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.2.2] - 2026-02-17
+
 ### Fixed
 
 - App crashed when using the "remove tasks" action menu. [`#205`](https://github.com/project-vrcz/content-publisher/pull/205)
@@ -239,7 +241,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.2.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.2.2...HEAD
+[2.2.2]: https://github.com/project-vrcz/content-publisher/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/project-vrcz/content-publisher/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/project-vrcz/content-publisher/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/project-vrcz/content-publisher/compare/v2.1.0-rc.1...v2.1.0
