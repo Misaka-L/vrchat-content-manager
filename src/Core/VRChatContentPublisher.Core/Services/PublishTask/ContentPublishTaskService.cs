@@ -207,7 +207,7 @@ public sealed class ContentPublishTaskService
             catch
             {
                 if (await _tempFileService.IsFileExistAsync(outputBundleFile.FileId))
-                    await  _tempFileService.DeleteFileAsync(outputBundleFile.FileId);
+                    await _tempFileService.DeleteFileAsync(outputBundleFile.FileId);
                 throw;
             }
         }
@@ -251,8 +251,10 @@ public sealed class ContentPublishTaskService
 
     public async ValueTask CleanupAsync()
     {
-        if (Status is not (ContentPublishTaskStatus.Canceled or ContentPublishTaskStatus.Failed))
-            throw new InvalidOperationException("Can only cleanup a task that is canceled or failed.");
+        if (Status is not (ContentPublishTaskStatus.Completed
+            or ContentPublishTaskStatus.Canceled
+            or ContentPublishTaskStatus.Failed))
+            throw new InvalidOperationException("Can only cleanup a task that is completed, canceled or failed.");
 
         Status = ContentPublishTaskStatus.Disposed;
 
