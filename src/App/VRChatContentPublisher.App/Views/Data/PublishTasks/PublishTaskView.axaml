@@ -22,7 +22,13 @@
                                Height="32" Width="32" />
         <StackPanel Grid.Column="1" Spacing="2">
             <StackPanel Spacing="2">
-                <TextBlock Text="{Binding ContentPlatform}" FontSize="12" Opacity="0.7" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding ContentPlatform}" FontSize="12" Opacity="0.7" />
+                    <TextBlock Grid.Column="1" FontSize="12" Opacity="0.7" >
+                        <Run Text="Created at"/>
+                        <Run Text="{Binding CreatedTime, StringFormat=T}"/>
+                    </TextBlock>
+                </Grid>
                 <TextBlock Text="{Binding ContentName}" FontSize="18" />
             </StackPanel>
             <StackPanel>

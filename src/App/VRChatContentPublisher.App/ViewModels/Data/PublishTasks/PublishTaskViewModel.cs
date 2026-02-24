@@ -22,6 +22,8 @@ public sealed partial class PublishTaskViewModel(
     public double? ProgressValue => publishTaskService.ProgressValue * 100;
     public bool IsIndeterminate => !ProgressValue.HasValue;
 
+    public DateTimeOffset CreatedTime => publishTaskService.CreatedTime;
+
     public ContentPublishTaskStatus Status => publishTaskService.Status;
 
     [RelayCommand]
@@ -47,7 +49,7 @@ public sealed partial class PublishTaskViewModel(
         {
             DataContext = errorReportWindow
         };
-        
+
         window.Show();
     }
 
