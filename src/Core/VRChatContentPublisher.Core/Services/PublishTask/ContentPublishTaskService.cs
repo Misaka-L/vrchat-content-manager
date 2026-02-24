@@ -37,6 +37,7 @@ public sealed class ContentPublishTaskService
 
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
 
+    public DateTimeOffset CreatedTime { get; } = DateTimeOffset.Now;
     public string ProgressText { get; private set; } = "Waiting for task started...";
     public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.Pending;
     public double? ProgressValue { get; private set; }
