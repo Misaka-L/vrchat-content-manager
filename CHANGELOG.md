@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Show task created time. [`#207`](https://github.com/project-vrcz/content-publisher/pull/207)
 - RGB Cycling animation menu bar. [`#208`](https://github.com/project-vrcz/content-publisher/pull/208)
 
+### Fixed
+
+- App won't exit process after quit in some cases. [`#206`](https://github.com/project-vrcz/content-publisher/pull/206)
+
 ## [2.2.2] - 2026-02-17
 
 ### Fixed
