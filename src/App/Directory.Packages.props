@@ -1,39 +1,32 @@
 ﻿<Project>
-    <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    </PropertyGroup>
-    <ItemGroup>
-        <!--Avalonia Framekwork-->
-        <PackageVersion Include="Avalonia" Version="11.3.9"/>
-        <PackageVersion Include="Avalonia.Desktop" Version="11.3.9"/>
-        <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.9"/>
-
-        <!--Hot Reload Support-->
-        <PackageVersion Include="HotAvalonia" Version="3.0.1" PrivateAssets="All" Publish="True"/>
-
-        <!--DevTools Support-->
-        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1"/>
-
-        <!--Mvvm-->
-        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
-        <PackageVersion Include="DialogHost.Avalonia" Version="0.10.2"/>
-
-        <!--UI-->
-        <PackageVersion Include="Material.Avalonia" Version="3.13.3"/>
-        <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.1"/>
-
-        <!--App Host-->
-        <PackageVersion Include="Lemon.Hosting.AvaloniauiDesktop" Version="1.0.3-beta"/>
-        <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0"/>
-        <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="11.3.9" />
-    
-        <!--Serilog Logging-->
-        <PackageVersion Include="Serilog" Version="4.3.0"/>
-        <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0"/>
-        <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0"/>
-        <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0"/>
-        <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1"/>
-        <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0"/>
-        <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--Avalonia Framekwork-->
+    <PackageVersion Include="Avalonia" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Desktop" Version="11.3.9" />
+    <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.9" />
+    <!--Hot Reload Support-->
+    <PackageVersion Include="HotAvalonia" Version="3.0.1" PrivateAssets="All" Publish="True" />
+    <!--DevTools Support-->
+    <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.1.1" />
+    <!--Mvvm-->
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageVersion Include="DialogHost.Avalonia" Version="0.10.2" />
+    <!--UI-->
+    <PackageVersion Include="Material.Avalonia" Version="3.13.3" />
+    <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.1" />
+    <!--App Host-->
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+    <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="11.3.9" />
+    <!--Serilog Logging-->
+    <PackageVersion Include="Serilog" Version="4.3.0" />
+    <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+  </ItemGroup>
 </Project>

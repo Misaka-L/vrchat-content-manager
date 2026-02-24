@@ -47,11 +47,13 @@ public sealed class HttpServerService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         await _kestrelServer.StartAsync(_simpleHttpApplication, cancellationToken);
+        _logger.LogInformation("HTTP server started.");
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         await _kestrelServer.StopAsync(cancellationToken);
+        _logger.LogInformation("HTTP server stopped.");
     }
 
     private async Task HandleRequestAsync(HttpContext httpContext)

@@ -159,7 +159,7 @@ public partial class App : Application
         if (await dialogService.ShowDialogAsync(exitAppDialogViewModel) is not true)
             return;
 
-        Dispatcher.UIThread.InvokeShutdown();
+        desktop.Shutdown();
     }
 
     private void OpenLogsFolderClicked(object? sender, EventArgs e)

@@ -23,6 +23,7 @@ public sealed class NamedPipeService(ILogger<NamedPipeService> logger, IpcComman
             1);
 
         _ = Task.Factory.StartNew(NamedPipeServerLoop, TaskCreationOptions.LongRunning);
+        logger.LogInformation("Named pipe server started.");
     }
 
     public async ValueTask StopAsync()
@@ -33,6 +34,8 @@ public sealed class NamedPipeService(ILogger<NamedPipeService> logger, IpcComman
             _loopCts.Dispose();
             _loopCts = null;
         }
+
+        logger.LogInformation("Named pipe server stopped.");
     }
 
     private async Task NamedPipeServerLoop()
