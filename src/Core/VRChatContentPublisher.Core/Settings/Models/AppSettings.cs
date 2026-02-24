@@ -5,6 +5,7 @@ namespace VRChatContentPublisher.Core.Settings.Models;
 public sealed class AppSettings
 {
     public bool SkipFirstSetup { get; set; } = false;
+    public bool UseRgbCyclingBackgroundMenu { get; set; } = false;
     public string ConnectInstanceName { get; set; } = RandomWordsUtils.GetRandomWords();
 
     public AppHttpProxySettings HttpProxySettings { get; set; } = AppHttpProxySettings.SystemProxy;

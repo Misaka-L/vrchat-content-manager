@@ -15,8 +15,29 @@
         </AttachedToVisualTreeTrigger>
     </Interaction.Behaviors>
 
+    <UserControl.Styles>
+        <Style Selector="controls|ColorZone.rgb-enabled">
+            <Style.Animations>
+                <Animation Duration="0:0:3" IterationCount="Infinite">
+                    <KeyFrame Cue="0%">
+                        <Setter Property="Background" Value="Red" />
+                    </KeyFrame>
+                    <KeyFrame Cue="33%">
+                        <Setter Property="Background" Value="Lime" />
+                    </KeyFrame>
+                    <KeyFrame Cue="66%">
+                        <Setter Property="Background" Value="Blue" />
+                    </KeyFrame>
+                    <KeyFrame Cue="100%">
+                        <Setter Property="Background" Value="Red" />
+                    </KeyFrame>
+                </Animation>
+            </Style.Animations>
+        </Style>
+    </UserControl.Styles>
+
     <Grid RowDefinitions="Auto,*">
-        <controls:ColorZone Mode="PrimaryMid" Height="60">
+        <controls:ColorZone Mode="PrimaryMid" Height="60" Classes.rgb-enabled="{Binding UseRgbCyclingBackgroundMenu}">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,8,0" ColumnSpacing="12">
                 <Image Height="32" Width="32" Source="{StaticResource AppIcon}" />
                 <ListBox Grid.Column="1" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentNavigationItem }">

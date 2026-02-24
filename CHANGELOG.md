@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Show task created time. [`#207`](https://github.com/project-vrcz/content-publisher/pull/207)
+- RGB Cycling animation menu bar. [`#208`](https://github.com/project-vrcz/content-publisher/pull/208)
 
 ## [2.2.2] - 2026-02-17
 
