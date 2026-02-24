@@ -38,7 +38,6 @@
         <PackageReference Include="Material.Icons.Avalonia"/>
 
         <!--App Host-->
-        <PackageReference Include="Lemon.Hosting.AvaloniauiDesktop"/>
         <PackageReference Include="Microsoft.Extensions.Hosting"/>
 
         <PackageReference Include="Xaml.Behaviors.Avalonia"/>

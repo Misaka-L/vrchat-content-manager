@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using System.Runtime.Versioning;
 using HotAvalonia;
-using Lemon.Hosting.AvaloniauiDesktop;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -28,8 +27,6 @@ internal sealed class Program
     [SupportedOSPlatform("macos")]
     public static void Main(string[] args)
     {
-        var builder = new HostApplicationBuilder();
-
         var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
         var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
         Log.Logger = new LoggerConfiguration()
@@ -69,20 +66,23 @@ internal sealed class Program
                     "Continuing to run this instance.");
             }
 
+            var builder = new HostApplicationBuilder();
+
             builder.Services.AddSerilog();
 
             builder.UseAppCore();
             builder.Services.AddAppServices();
             builder.Services.AddIpcCore();
-            builder.Services.AddAvaloniauiDesktopApplication<App>(appBuilder => appBuilder
+
+            builder.Services.AddAvaloniaApplication<App>(appBuilder => appBuilder
                 .UseHotReload()
                 .UsePlatformDetect()
                 .WithInterFont()
                 .LogToTrace());
 
-            using var app = builder.Build();
+            using var host = builder.Build();
 
-            app.RunAvaloniauiApplication(args);
+            host.RunAvaloniaWaitForShutdown(args);
         }
         catch (MutexOwnedByAnotherInstanceException)
         {
