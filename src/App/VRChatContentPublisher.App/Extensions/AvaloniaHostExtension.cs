@@ -41,15 +41,9 @@ public static class AvaloniaHostExtension
 
         var cts = new CancellationTokenSource();
 
-        try
-        {
-            Log.Information("Host is starting...");
-            _ = host.StartAsync(cts.Token).ContinueWith(_ => Log.Information("Host start completed."));
-        }
-        catch (OperationCanceledException)
-        {
-            Log.Information("Host start cancelled.");
-        }
+        Log.Information("Host is starting...");
+        _ = host.StartAsync(cts.Token).ContinueWith(_ => Log.Information("Host start completed."));
+        Log.Information("Host start cancelled.");
 
         lifetime.Start();
 
