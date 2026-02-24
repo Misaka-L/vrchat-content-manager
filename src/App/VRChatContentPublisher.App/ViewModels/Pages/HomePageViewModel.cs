@@ -11,6 +11,8 @@ namespace VRChatContentPublisher.App.ViewModels.Pages;
 
 public partial class HomePageViewModel : PageViewModelBase
 {
+    public bool UseRgbCyclingBackgroundMenu => _appSettings.Value.UseRgbCyclingBackgroundMenu;
+
     [ObservableProperty] public partial HomePageNavigationItem CurrentNavigationItem { get; set; }
     [ObservableProperty] public partial PageViewModelBase? CurrentPage { get; private set; }
 
@@ -58,10 +60,7 @@ public partial class HomePageViewModel : PageViewModelBase
     [RelayCommand]
     private async Task Load()
     {
-        await _appSettings.UpdateAsync(settings =>
-        {
-            settings.SkipFirstSetup = true;
-        });
+        await _appSettings.UpdateAsync(settings => { settings.SkipFirstSetup = true; });
     }
 
     [RelayCommand]

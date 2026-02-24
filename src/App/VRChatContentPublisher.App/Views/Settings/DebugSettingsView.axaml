@@ -9,6 +9,7 @@
              x:Class="VRChatContentPublisher.App.Views.Settings.DebugSettingsView">
 
     <StackPanel Margin="8" Spacing="8">
+        <ToggleSwitch Content="Use RGB Cycling Menu Bar" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
         <Button Content="Open Logs Folder">
             <Interaction.Behaviors>
                 <ButtonClickEventTriggerBehavior>
