@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Tasks in Tasks page didn't sort correctly after re-enter Tasks page. [`#211`](https://github.com/project-vrcz/content-publisher/pull/211)
+
 ## [2.3.0] - 2026-02-24
 
 ### Added
