@@ -7,6 +7,7 @@ namespace VRChatContentPublisher.App.ViewModels.Pages;
 public sealed partial class SettingsPageViewModel(
     NavigationService navigationService,
     AccountsSettingsViewModel accountsSettingsViewModel,
+    AppearanceSettingsViewModel appearanceSettingsViewModel,
     ConnectSettingsViewModel connectSettingsViewModel,
     SessionsSettingsViewModel sessionsSettingsViewModel,
     AboutSettingsViewModel aboutSettingsViewModel,
@@ -14,6 +15,7 @@ public sealed partial class SettingsPageViewModel(
     DebugSettingsViewModel debugSettingsViewModel) : PageViewModelBase
 {
     public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
+    public AppearanceSettingsViewModel AppearanceSettingsViewModel { get; } = appearanceSettingsViewModel;
     public ConnectSettingsViewModel ConnectSettingsViewModel { get; } = connectSettingsViewModel;
     public SessionsSettingsViewModel SessionsSettingsViewModel { get; } = sessionsSettingsViewModel;
     public HttpProxySettingsViewModel HttpProxySettingsViewModel { get; } = httpProxySettingsViewModel;

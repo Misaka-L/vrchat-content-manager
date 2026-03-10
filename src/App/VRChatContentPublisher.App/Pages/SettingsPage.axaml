@@ -26,6 +26,9 @@
                 <Expander Header="Accounts">
                     <ContentControl Content="{Binding AccountsSettingsViewModel}" />
                 </Expander>
+                <Expander Header="Appearance">
+                    <ContentControl Content="{Binding AppearanceSettingsViewModel}" />
+                </Expander>
                 <Expander Header="Connect">
                     <ContentControl Content="{Binding ConnectSettingsViewModel}" />
                 </Expander>
