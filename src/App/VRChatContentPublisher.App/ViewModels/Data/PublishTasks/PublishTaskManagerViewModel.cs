@@ -40,8 +40,9 @@ public sealed partial class PublishTaskManagerViewModel(
     [RelayCommand]
     private void Load()
     {
-        var viewModels = taskManagerService.Tasks.Select(task =>
-                taskFactory.Create(task.Value, taskManagerService))
+        var viewModels = taskManagerService.Tasks
+            .Select(task => taskFactory.Create(task.Value, taskManagerService))
+            .Reverse()
             .ToArray();
 
         Tasks.Clear();
@@ -65,6 +66,8 @@ public sealed partial class PublishTaskManagerViewModel(
         taskManagerService.TaskUpdated -= OnTaskUpdated;
 
         userSessionService.StateChanged -= OnUserSessionStateChanged;
+        
+        Tasks.Clear();
     }
 
     [RelayCommand]
