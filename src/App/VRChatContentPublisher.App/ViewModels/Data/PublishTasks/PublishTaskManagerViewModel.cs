@@ -1,15 +1,20 @@
 ﻿using Avalonia.Collections;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.Options;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 
 public sealed partial class PublishTaskManagerViewModel(
+    IWritableOptions<AppSettings> appSettings,
     UserSessionService userSessionService,
     TaskManagerService taskManagerService,
     PublishTaskViewModelFactory taskFactory,
@@ -31,22 +36,42 @@ public sealed partial class PublishTaskManagerViewModel(
         t.Status is ContentPublishTaskStatus.InProgress or ContentPublishTaskStatus.Pending);
 
     public bool IsInteractionAllowed => UserSessionService.State == UserSessionState.LoggedIn;
-    public bool IsContentPublishAllowed => 
-        UserSessionService.CurrentUser?.CanPublishAvatar() == true && 
+
+    public bool IsContentPublishAllowed =>
+        UserSessionService.CurrentUser?.CanPublishAvatar() == true &&
         UserSessionService.CurrentUser?.CanPublishWorld() == true;
+
+    [NotifyPropertyChangedFor(nameof(CurrentPageSortModeText))]
+    [ObservableProperty]
+    private partial AppTasksPageSortMode TasksSortMode { get; set; }
+
+    public string CurrentPageSortModeText =>
+        TasksSortMode == AppTasksPageSortMode.LatestFirst ? "Latest First" : "Oldest First";
 
     public UserSessionService UserSessionService => userSessionService;
 
     [RelayCommand]
     private void Load()
     {
-        var viewModels = taskManagerService.Tasks
-            .Select(task => taskFactory.Create(task.Value, taskManagerService))
-            .Reverse()
-            .ToArray();
+        TasksSortMode = appSettings.Value.TasksPageSortMode;
 
         Tasks.Clear();
-        Tasks.AddRange(viewModels);
+
+        if (TasksSortMode == AppTasksPageSortMode.LatestFirst)
+        {
+            var viewModels = taskManagerService.Tasks
+                .Select(task => taskFactory.Create(task.Value, taskManagerService))
+                .Reverse()
+                .ToArray();
+            Tasks.AddRange(viewModels);
+        }
+        else
+        {
+            var viewModels = taskManagerService.Tasks
+                .Select(task => taskFactory.Create(task.Value, taskManagerService))
+                .ToArray();
+            Tasks.AddRange(viewModels);
+        }
 
         NotifyUserSessionChanged();
         NotifyTaskCountsChanged();
@@ -66,8 +91,35 @@ public sealed partial class PublishTaskManagerViewModel(
         taskManagerService.TaskUpdated -= OnTaskUpdated;
 
         userSessionService.StateChanged -= OnUserSessionStateChanged;
-        
+
         Tasks.Clear();
+    }
+
+    [RelayCommand]
+    private async Task ToggleSortMode()
+    {
+        TasksSortMode = TasksSortMode == AppTasksPageSortMode.LatestFirst
+            ? AppTasksPageSortMode.OldestFirst
+            : AppTasksPageSortMode.LatestFirst;
+
+        await appSettings.UpdateAsync(s => s.TasksPageSortMode = TasksSortMode);
+        ResortTasks();
+    }
+
+    private void ResortTasks()
+    {
+        if (TasksSortMode == AppTasksPageSortMode.LatestFirst)
+        {
+            var sorted = Tasks.OrderByDescending(t => t.CreatedTime).ToArray();
+            Tasks.Clear();
+            Tasks.AddRange(sorted);
+        }
+        else
+        {
+            var sorted = Tasks.OrderBy(t => t.CreatedTime).ToArray();
+            Tasks.Clear();
+            Tasks.AddRange(sorted);
+        }
     }
 
     [RelayCommand]
@@ -182,7 +234,7 @@ public sealed partial class PublishTaskManagerViewModel(
     {
         Dispatcher.UIThread.Invoke(NotifyUserSessionChanged);
     }
-    
+
     private void NotifyUserSessionChanged()
     {
         OnPropertyChanged(nameof(IsInteractionAllowed));
@@ -201,6 +253,7 @@ public sealed partial class PublishTaskManagerViewModel(
 }
 
 public sealed class PublishTaskManagerViewModelFactory(
+    IWritableOptions<AppSettings> appSettings,
     PublishTaskViewModelFactory taskFactory,
     SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory,
     NavigationService navigationService)
@@ -210,10 +263,12 @@ public sealed class PublishTaskManagerViewModelFactory(
         TaskManagerService taskManagerService,
         string userDisplayName
     ) => new(
+        appSettings,
         userSessionService,
         taskManagerService,
         taskFactory,
         fixAccountPageViewModelFactory,
         navigationService,
-        userDisplayName);
+        userDisplayName
+    );
 }

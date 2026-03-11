@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Move RGB cycling menu settings to Appearance setting. [`#212`](https://github.com/project-vrcz/content-publisher/pull/212)
+
+### Added
+
+- Sort how tasks sorted in Tasks page. [`#212`](https://github.com/project-vrcz/content-publisher/pull/212)
+  - Latest first (Default), Oldest first.
+
 ### Fixed
 
 - Tasks in Tasks page didn't sort correctly after re-enter Tasks page. [`#211`](https://github.com/project-vrcz/content-publisher/pull/211)

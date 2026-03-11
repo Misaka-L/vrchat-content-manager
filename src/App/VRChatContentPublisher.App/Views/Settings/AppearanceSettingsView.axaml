@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:AppearanceSettingsViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Settings.AppearanceSettingsView">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <StackPanel Margin="8" Spacing="8">
+        <ToggleSwitch Content="Use RGB Cycling Menu Bar" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
+        <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
+                  assists:ComboBoxAssist.Label="How tasks order in Task Page"
+                  ItemsSource="{Binding TasksSortMode}"
+                  SelectedItem="{Binding SelectedTasksSortMode}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="settings:AppTasksPageSortModeItemViewModel">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+
+            <Interaction.Behaviors>
+                <ValueChangedTriggerBehavior Binding="{Binding SelectedTasksSortMode}">
+                    <InvokeCommandAction Command="{Binding ApplySettingsCommand}" />
+                </ValueChangedTriggerBehavior>
+            </Interaction.Behaviors>
+        </ComboBox>
+    </StackPanel>
+</UserControl>
