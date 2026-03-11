@@ -36,20 +36,11 @@
             <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button
+                    Content="{Binding CurrentPageSortModeText}"
+                    Command="{Binding ToggleSortModeCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
-                    Padding="0">
-                    <Button.Flyout>
-                        <MenuFlyout>
-                            <MenuItem Header="Latest first" />
-                            <MenuItem Header="Oldest first" />
-                        </MenuFlyout>
-                    </Button.Flyout>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Ordered by" />
-                        <avalonia:MaterialIcon Kind="ChevronDown" />
-                    </StackPanel>
-                </Button>
-                <Border Width="5" Height="1" Margin="0,0,5,0" Background="{DynamicResource MaterialDesignBodyLight}" />
+                    Padding="0" />
+                <Border Width="5" Height="1" Margin="5,0,5,0" Background="{DynamicResource MaterialDesignBodyLight}" />
                 <Button
                     ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
                     ToolTip.ShowOnDisabled="True"
