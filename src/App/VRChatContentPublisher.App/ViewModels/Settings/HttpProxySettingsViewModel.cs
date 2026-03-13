@@ -11,9 +11,19 @@ public sealed partial class HttpProxySettingsViewModel : ViewModelBase
 
     [ObservableProperty] public partial string ProxyUri { get; set; }
 
-    [NotifyPropertyChangedFor(nameof(IsCustomProxySelected))]
-    [ObservableProperty]
-    public partial HttpProxyModeItemViewModel SelectedHttpProxyMode { get; set; }
+    public HttpProxyModeItemViewModel SelectedHttpProxyMode
+    {
+        get => HttpProxyModes.First(x => x.Mode == _appSettings.Value.HttpProxySettings);
+        set
+        {
+            if (value.Mode == _appSettings.Value.HttpProxySettings)
+                return;
+
+            OnPropertyChanging();
+            _appSettings.Update(settings => settings.HttpProxySettings = value.Mode);
+            OnPropertyChanged();
+        }
+    }
 
     public bool IsCustomProxySelected => SelectedHttpProxyMode.Mode == AppHttpProxySettings.CustomProxy;
 
@@ -39,7 +49,6 @@ public sealed partial class HttpProxySettingsViewModel : ViewModelBase
     private void UpdateSettingsFromOptions()
     {
         ProxyUri = _appSettings.Value.HttpProxyUri?.ToString() ?? "";
-        SelectedHttpProxyMode = HttpProxyModes.First(x => x.Mode == _appSettings.Value.HttpProxySettings);
     }
 
     [RelayCommand]

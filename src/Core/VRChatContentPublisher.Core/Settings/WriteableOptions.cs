@@ -14,7 +14,32 @@ public sealed class WritableOptions<T>(
     where T : class, new()
 {
     public T Value => options.CurrentValue;
-    
+
+    public void Update(Action<T> applyChanges)
+    {
+        writer.UpdateOptions(opt =>
+        {
+            var jsonTypeInfo = SettingsJsonContext.Default.GetTypeInfo(typeof(T));
+            if (jsonTypeInfo is null)
+                throw new InvalidOperationException($"No Json type info for type {typeof(T)}");
+
+            T sectionObject;
+            if (opt[sectionName] is { } sectionNode)
+            {
+                sectionObject = sectionNode.Deserialize(jsonTypeInfo) as T ?? new T();
+            }
+            else
+            {
+                sectionObject = new T();
+            }
+
+            applyChanges(sectionObject);
+
+            var json = JsonSerializer.Serialize(sectionObject, jsonTypeInfo);
+            opt[sectionName] = JsonNode.Parse(json);
+        });
+    }
+
     public async Task UpdateAsync(Action<T> applyChanges)
     {
         await writer.UpdateOptionsAsync(opt =>
@@ -22,7 +47,7 @@ public sealed class WritableOptions<T>(
             var jsonTypeInfo = SettingsJsonContext.Default.GetTypeInfo(typeof(T));
             if (jsonTypeInfo is null)
                 throw new InvalidOperationException($"No Json type info for type {typeof(T)}");
-            
+
             T sectionObject;
             if (opt[sectionName] is { } sectionNode)
             {
