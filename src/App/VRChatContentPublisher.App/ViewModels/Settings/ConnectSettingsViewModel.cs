@@ -12,11 +12,13 @@ public sealed partial class ConnectSettingsViewModel(
     : ViewModelBase
 {
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsApplyEnabled))]
     public partial string ConnectInstanceName { get; set; } = appSettings.Value.ConnectInstanceName;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsPortInValidRange))]
     [NotifyPropertyChangedFor(nameof(ShowPortValidationError))]
+    [NotifyPropertyChangedFor(nameof(IsApplyEnabled))]
     public partial string RpcServerPort { get; set; } = appSettings.Value.RpcServerPort.ToString();
 
     [ObservableProperty]
