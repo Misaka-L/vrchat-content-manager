@@ -69,24 +69,6 @@ public sealed partial class ConnectSettingsViewModel(
         RpcServerPort = HttpServerService.DefaultPort.ToString();
     }
 
-    [RelayCommand]
-    private void FindAvailablePort()
-    {
-        var preferredPort = TryParseAndValidatePort(RpcServerPort, out var parsedPort)
-            ? parsedPort
-            : HttpServerService.DefaultPort;
-        var availablePort = httpServerService.FindAvailablePort(preferredPort);
-        if (availablePort is null)
-        {
-            SetError(
-                $"No free port found in range {HttpServerService.MinUserPort}-{HttpServerService.MaxUserPort}.");
-            return;
-        }
-
-        ClearError();
-        RpcServerPort = availablePort.Value.ToString();
-    }
-
     partial void OnConnectInstanceNameChanged(string value)
     {
         MarkSettingsModified();

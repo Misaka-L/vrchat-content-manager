@@ -52,12 +52,9 @@
         <TextBlock Text="Port must be in range 1024-65535." IsVisible="{Binding ShowPortValidationError}"
                    Foreground="OrangeRed" />
 
-        <Button Content="Apply" Command="{Binding ApplyConnectSettingsCommand}"
-                IsEnabled="{Binding IsApplyEnabled}" />
-
-        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
-            <Button Content="Find Available Port" Command="{Binding FindAvailablePortCommand}"
-                    Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <Button Content="Apply" Command="{Binding ApplyConnectSettingsCommand}"
+                    IsEnabled="{Binding IsApplyEnabled}" />
             <Button Grid.Column="1" Content="Reset to Default" Command="{Binding ResetToDefaultPortCommand}"
                     Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
         </Grid>
