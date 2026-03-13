@@ -27,9 +27,9 @@
             </ComboBox.ItemTemplate>
 
             <Interaction.Behaviors>
-                <ValueChangedTriggerBehavior Binding="{Binding SelectedHttpProxyMode}">
+                <EventTriggerBehavior EventName="SelectionChanged">
                     <InvokeCommandAction Command="{Binding ApplyHttpProxySettingsCommand}" />
-                </ValueChangedTriggerBehavior>
+                </EventTriggerBehavior>
             </Interaction.Behaviors>
         </ComboBox>
         <TextBox UseFloatingWatermark="True" Classes="outline dense" Theme="{StaticResource OutlineTextBox}"

@@ -6,4 +6,5 @@ namespace VRChatContentPublisher.Core.Settings;
 public interface IWritableOptions<out T> : IOptions<T> where T : class, new()
 {
     Task UpdateAsync(Action<T> applyChanges);
+    void Update(Action<T> applyChanges);
 }

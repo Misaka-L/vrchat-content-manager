@@ -8,12 +8,6 @@
              x:DataType="settings:AppearanceSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.AppearanceSettingsView">
 
-    <Interaction.Behaviors>
-        <AttachedToVisualTreeTrigger>
-            <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </AttachedToVisualTreeTrigger>
-    </Interaction.Behaviors>
-
     <StackPanel Margin="8" Spacing="8">
         <ToggleSwitch Content="Use RGB Cycling Menu Bar" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
@@ -25,12 +19,6 @@
                     <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
-
-            <Interaction.Behaviors>
-                <ValueChangedTriggerBehavior Binding="{Binding SelectedTasksSortMode}">
-                    <InvokeCommandAction Command="{Binding ApplySettingsCommand}" />
-                </ValueChangedTriggerBehavior>
-            </Interaction.Behaviors>
         </ComboBox>
     </StackPanel>
 </UserControl>

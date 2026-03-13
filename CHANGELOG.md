@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- App crash when open settings page in some case. [`#214`](https://github.com/project-vrcz/content-publisher/pull/214)
+
 ## [2.4.0] - 2026-03-11
 
 ### Changed
