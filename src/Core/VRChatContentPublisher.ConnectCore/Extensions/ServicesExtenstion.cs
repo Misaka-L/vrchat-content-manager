@@ -12,7 +12,6 @@ public static class ServicesExtenstion
         services.AddSingleton<ClientSessionService>();
         
         services.AddSingleton<HttpServerService>();
-        services.AddHostedService<ConnectHostService>();
         services.AddSingleton<EndpointService>();
 
         services.AddTransient<ConnectMetadataService>();

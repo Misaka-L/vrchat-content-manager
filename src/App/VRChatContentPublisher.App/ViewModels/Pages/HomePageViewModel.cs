@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
+using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -26,18 +28,28 @@ public partial class HomePageViewModel : PageViewModelBase
 
     private readonly NavigationService _navigationService;
     private readonly AppWindowService _appWindowService;
+    private readonly DialogService _dialogService;
+    private readonly RpcStartupPortWarningState _startupPortWarningState;
+    private readonly StartupPortChangedDialogViewModelFactory _startupPortChangedDialogFactory;
     private readonly IWritableOptions<AppSettings> _appSettings;
     private readonly IServiceProvider _serviceProvider;
 
     public HomePageViewModel(
         NavigationService navigationService,
+        DialogService dialogService,
         IServiceProvider serviceProvider,
-        IWritableOptions<AppSettings> appSettings, AppWindowService appWindowService)
+        IWritableOptions<AppSettings> appSettings,
+        AppWindowService appWindowService,
+        RpcStartupPortWarningState startupPortWarningState,
+        StartupPortChangedDialogViewModelFactory startupPortChangedDialogFactory)
     {
         _navigationService = navigationService;
+        _dialogService = dialogService;
         _serviceProvider = serviceProvider;
         _appSettings = appSettings;
         _appWindowService = appWindowService;
+        _startupPortWarningState = startupPortWarningState;
+        _startupPortChangedDialogFactory = startupPortChangedDialogFactory;
 
         PropertyChanged += (_, args) =>
         {
@@ -61,6 +73,13 @@ public partial class HomePageViewModel : PageViewModelBase
     private async Task Load()
     {
         await _appSettings.UpdateAsync(settings => { settings.SkipFirstSetup = true; });
+
+        // Consume before showing so the warning is guaranteed to be launch-only.
+        if (!_startupPortWarningState.TryConsume(out var warning))
+            return;
+
+        await _dialogService.ShowDialogAsync(
+            _startupPortChangedDialogFactory.Create(warning.ConfiguredPort, warning.ActivePort));
     }
 
     [RelayCommand]

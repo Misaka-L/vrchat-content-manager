@@ -1,15 +1,18 @@
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 
 public sealed partial class GuideConnectUnityPageViewModel(
     NavigationService navigationService,
-    ClientSessionService clientSessionService
+    ClientSessionService clientSessionService,
+    IWritableOptions<AppSettings> appSettings
 ) : PageViewModelBase
 {
-    public string HostUri => "http://localhost:59328";
+    public string HostUri => $"http://localhost:{appSettings.Value.RpcServerPort}";
 
     [RelayCommand]
     private void Load()
