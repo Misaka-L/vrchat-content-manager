@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -11,7 +12,6 @@ namespace VRChatContentPublisher.App.ViewModels.Data;
 
 public sealed partial class UserSessionViewModel(
     UserSessionService userSessionService,
-    ILogger<UserSessionViewModel> logger,
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
     SettingsFixAccountPageViewModelFactory settingsFixAccountPageViewModelFactory) : ViewModelBase
@@ -82,7 +82,12 @@ public sealed partial class UserSessionViewModel(
         if (await userSessionService.TryRepairAsync())
             return;
 
-        var fixPageViewModel = settingsFixAccountPageViewModelFactory.Create(userSessionService);
+        var fixPageViewModel = settingsFixAccountPageViewModelFactory.Create(
+            userSessionService,
+            navigationService.Navigate<SettingsPageViewModel>,
+            navigationService.Navigate<SettingsPageViewModel>
+        );
+
         navigationService.Navigate(fixPageViewModel);
     }
 
@@ -99,7 +104,6 @@ public sealed partial class UserSessionViewModel(
 }
 
 public sealed class UserSessionViewModelFactory(
-    ILogger<UserSessionViewModel> logger,
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
     SettingsFixAccountPageViewModelFactory settingsFixAccountPageViewModelFactory)
@@ -108,7 +112,6 @@ public sealed class UserSessionViewModelFactory(
     {
         return new UserSessionViewModel(
             userSessionService,
-            logger,
             userSessionManagerService,
             navigationService,
             settingsFixAccountPageViewModelFactory);
