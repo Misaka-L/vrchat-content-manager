@@ -86,6 +86,7 @@ public partial class App : Application
         ViewLocator.Register<TwoFactorAuthDialogViewModel, TwoFactorAuthDialog>();
         ViewLocator.Register<RequestChallengeDialogViewModel, RequestChallengeDialog>();
         ViewLocator.Register<ExitAppDialogViewModel, ExitAppDialog>();
+        ViewLocator.Register<StartupPortChangedDialogViewModel, StartupPortChangedDialog>();
 
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();

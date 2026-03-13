@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="dialogs:StartupPortChangedDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Dialogs.StartupPortChangedDialog">
+
+    <StackPanel Spacing="24" Margin="8" Width="360">
+        <TextBlock Classes="Headline6"
+                   Text="RPC Startup Port Changed"
+                   TextAlignment="Center"
+                   TextWrapping="Wrap" />
+
+        <StackPanel Spacing="8">
+            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <TextBlock Text="Configured port:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding ConfiguredPort}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <TextBlock Text="Active port:" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding ActivePort}" />
+            </StackPanel>
+        </StackPanel>
+
+        <Button Content="Acknowledge"
+                Command="{Binding AcknowledgeCommand}" />
+    </StackPanel>
+</UserControl>

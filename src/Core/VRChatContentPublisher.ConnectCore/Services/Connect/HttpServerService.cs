@@ -160,6 +160,15 @@ public sealed class HttpServerService
         return null;
     }
 
+    public bool IsPortInUse(int port)
+    {
+        if (!IsValidUserPort(port))
+            throw new ArgumentOutOfRangeException(nameof(port),
+                $"Port must be between {MinUserPort} and {MaxUserPort}.");
+
+        return !IsPortAvailable(port);
+    }
+
     private static bool IsPortAvailable(int port)
     {
         try

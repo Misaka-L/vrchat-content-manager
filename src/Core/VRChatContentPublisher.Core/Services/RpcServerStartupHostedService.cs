@@ -11,6 +11,7 @@ public sealed class RpcServerStartupHostedService(
     HttpServerService httpServerService,
     EndpointService endpointService,
     IWritableOptions<AppSettings> appSettings,
+    RpcStartupPortWarningState startupPortWarningState,
     ILogger<RpcServerStartupHostedService> logger) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
@@ -18,8 +19,10 @@ public sealed class RpcServerStartupHostedService(
         endpointService.MapConnectService();
 
         var configuredPort = appSettings.Value.RpcServerPort;
+        var wasConfiguredPortOutOfRange = false;
         if (configuredPort is < HttpServerService.MinUserPort or > HttpServerService.MaxUserPort)
         {
+            wasConfiguredPortOutOfRange = true;
             logger.LogWarning(
                 "Configured RPC port {RpcPort} is out of range. Falling back to default port {DefaultPort}.",
                 configuredPort,
@@ -36,6 +39,8 @@ public sealed class RpcServerStartupHostedService(
 
             return;
         }
+
+        var configuredPortIsInUse = !wasConfiguredPortOutOfRange && httpServerService.IsPortInUse(configuredPort);
 
         var fallbackPort = httpServerService.FindAvailablePort(configuredPort);
         if (fallbackPort is null)
@@ -54,6 +59,12 @@ public sealed class RpcServerStartupHostedService(
         }
 
         await appSettings.UpdateAsync(settings => { settings.RpcServerPort = fallbackPort.Value; });
+
+        if (configuredPortIsInUse)
+        {
+            startupPortWarningState.Set(configuredPort, fallbackPort.Value);
+        }
+
         logger.LogWarning(
             "Configured RPC port {ConfiguredPort} was unavailable. Started RPC server on fallback port {FallbackPort}.",
             configuredPort,
@@ -65,4 +76,3 @@ public sealed class RpcServerStartupHostedService(
         await httpServerService.StopAsync(cancellationToken);
     }
 }
-
