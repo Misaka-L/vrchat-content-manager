@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.4.1] - 2026-03-13
+
 ### Fixed
 
 - App crash when open settings page in some case. [`#214`](https://github.com/project-vrcz/content-publisher/pull/214)
@@ -271,7 +273,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.4.0...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.4.1...HEAD
+[2.4.1]: https://github.com/project-vrcz/content-publisher/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/project-vrcz/content-publisher/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/project-vrcz/content-publisher/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/project-vrcz/content-publisher/compare/v2.2.1...v2.2.2
