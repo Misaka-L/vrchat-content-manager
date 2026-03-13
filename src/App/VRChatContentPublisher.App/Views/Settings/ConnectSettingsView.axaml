@@ -13,8 +13,25 @@
                  UseFloatingWatermark="True" Watermark="e.g Greatest Chiffon" Classes="outline"
                  assists:TextFieldAssist.Label="Connect Instance Name"
                  Theme="{StaticResource OutlineTextBox}" />
+        <TextBox Text="{Binding RpcServerPort}"
+                 UseFloatingWatermark="True" Watermark="1024-65535" Classes="outline"
+                 assists:TextFieldAssist.Label="RPC Server Port"
+                 Theme="{StaticResource OutlineTextBox}" />
+        <TextBlock Text="{Binding HostUri}" Opacity="0.8" />
+        <TextBlock Text="Port must be in range 1024-65535." IsVisible="{Binding ShowPortValidationError}"
+                   Foreground="OrangeRed" />
+        <TextBlock Text="Changing port requires updating Unity Connect host setting."
+                   Foreground="OrangeRed" TextWrapping="Wrap" />
         <CheckBox Content="Allow LAN discovery" IsEnabled="False" />
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Find Available Port" Command="{Binding FindAvailablePortCommand}" />
+            <Button Content="Reset to Default" Command="{Binding ResetToDefaultPortCommand}" />
+        </StackPanel>
+        <TextBlock Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Foreground="OrangeRed"
+                   TextWrapping="Wrap" />
+        <TextBlock Text="{Binding InfoMessage}" IsVisible="{Binding HasInfoMessage}" Opacity="0.8"
+                   TextWrapping="Wrap" />
         <Button Content="Apply" Command="{Binding ApplyConnectSettingsCommand}"
-                IsEnabled="{Binding IsSettingsModified}"/>
+                IsEnabled="{Binding IsApplyEnabled}"/>
     </StackPanel>
 </UserControl>

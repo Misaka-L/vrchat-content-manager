@@ -30,6 +30,7 @@ public static class ServicesExtension
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
         services.AddConnectCore();
+        services.AddHostedService<RpcServerStartupHostedService>();
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
         services.AddSingleton<IFileService, TempFileService>();

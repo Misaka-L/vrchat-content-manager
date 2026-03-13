@@ -7,6 +7,7 @@ public sealed class AppSettings
     public bool SkipFirstSetup { get; set; } = false;
     public bool UseRgbCyclingBackgroundMenu { get; set; } = false;
     public string ConnectInstanceName { get; set; } = RandomWordsUtils.GetRandomWords();
+    public int RpcServerPort { get; set; } = 59328;
 
     public AppHttpProxySettings HttpProxySettings { get; set; } = AppHttpProxySettings.SystemProxy;
     public Uri? HttpProxyUri { get; set; }
