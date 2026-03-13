@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:ConnectSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.ConnectSettingsView">
@@ -13,25 +14,52 @@
                  UseFloatingWatermark="True" Watermark="e.g Greatest Chiffon" Classes="outline"
                  assists:TextFieldAssist.Label="Connect Instance Name"
                  Theme="{StaticResource OutlineTextBox}" />
+
+        <Border Background="#d50000" CornerRadius="8" IsVisible="{Binding HasError}">
+            <StackPanel Margin="8" Spacing="4">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
+                    <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                           Foreground="White" VerticalAlignment="Top"
+                                           Margin="0,2,0,0" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding ErrorMessage}"
+                               Foreground="White" TextWrapping="Wrap" />
+                </Grid>
+            </StackPanel>
+        </Border>
+
+        <Border Background="#FF6D00" CornerRadius="8">
+            <StackPanel Margin="8" Spacing="4">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
+                    <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                           Foreground="White" VerticalAlignment="Top"
+                                           Margin="0,2,0,0" />
+                    <TextBlock Grid.Column="1"
+                               Text="Changing port requires updating Unity Connect host setting." FontWeight="Bold"
+                               FontSize="18"
+                               Foreground="White" TextWrapping="Wrap" />
+                </Grid>
+                <TextBlock Foreground="White" TextWrapping="Wrap"
+                           Text="You must reconnect to App in Unity integrate after changing port." />
+            </StackPanel>
+        </Border>
+
         <TextBox Text="{Binding RpcServerPort}"
                  UseFloatingWatermark="True" Watermark="1024-65535" Classes="outline"
                  assists:TextFieldAssist.Label="RPC Server Port"
                  Theme="{StaticResource OutlineTextBox}" />
-        <TextBlock Text="{Binding HostUri}" Opacity="0.8" />
+
         <TextBlock Text="Port must be in range 1024-65535." IsVisible="{Binding ShowPortValidationError}"
                    Foreground="OrangeRed" />
-        <TextBlock Text="Changing port requires updating Unity Connect host setting."
-                   Foreground="OrangeRed" TextWrapping="Wrap" />
-        <CheckBox Content="Allow LAN discovery" IsEnabled="False" />
-        <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Content="Find Available Port" Command="{Binding FindAvailablePortCommand}" />
-            <Button Content="Reset to Default" Command="{Binding ResetToDefaultPortCommand}" />
-        </StackPanel>
-        <TextBlock Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" Foreground="OrangeRed"
-                   TextWrapping="Wrap" />
-        <TextBlock Text="{Binding InfoMessage}" IsVisible="{Binding HasInfoMessage}" Opacity="0.8"
-                   TextWrapping="Wrap" />
+
         <Button Content="Apply" Command="{Binding ApplyConnectSettingsCommand}"
-                IsEnabled="{Binding IsApplyEnabled}"/>
+                IsEnabled="{Binding IsApplyEnabled}" />
+
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+            <Button Content="Find Available Port" Command="{Binding FindAvailablePortCommand}"
+                    Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
+            <Button Grid.Column="1" Content="Reset to Default" Command="{Binding ResetToDefaultPortCommand}"
+                    Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
+        </Grid>
     </StackPanel>
 </UserControl>

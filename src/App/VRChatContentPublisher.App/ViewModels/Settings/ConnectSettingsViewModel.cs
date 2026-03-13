@@ -6,35 +6,32 @@ using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
-public sealed partial class ConnectSettingsViewModel : ViewModelBase
+public sealed partial class ConnectSettingsViewModel(
+    IWritableOptions<AppSettings> appSettings,
+    HttpServerService httpServerService)
+    : ViewModelBase
 {
-    [ObservableProperty] public partial string ConnectInstanceName { get; set; }
-    [ObservableProperty] public partial string RpcServerPort { get; set; }
+    [ObservableProperty]
+    public partial string ConnectInstanceName { get; set; } = appSettings.Value.ConnectInstanceName;
 
-    [ObservableProperty] public partial bool HasError { get; private set; }
-    [ObservableProperty] public partial string ErrorMessage { get; private set; } = "";
-    [ObservableProperty] public partial string InfoMessage { get; private set; } = "";
-    [ObservableProperty] public partial bool IsSettingsModified { get; private set; }
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsPortInValidRange))]
+    [NotifyPropertyChangedFor(nameof(ShowPortValidationError))]
+    public partial string RpcServerPort { get; set; } = appSettings.Value.RpcServerPort.ToString();
 
-    private readonly IWritableOptions<AppSettings> _appSettings;
-    private readonly HttpServerService _httpServerService;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasError))]
+    public partial string ErrorMessage { get; private set; } = "";
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsApplyEnabled))]
+    public partial bool IsSettingsModified { get; private set; }
 
     public bool IsPortInValidRange => TryParseAndValidatePort(RpcServerPort, out _);
     public bool ShowPortValidationError => !IsPortInValidRange;
     public bool IsApplyEnabled => IsSettingsModified && IsPortInValidRange;
-    public bool HasInfoMessage => !string.IsNullOrWhiteSpace(InfoMessage);
-    public string HostUri => $"http://localhost:{(TryParseAndValidatePort(RpcServerPort, out var port) ? port : "<invalid-port>")}";
-
-    public ConnectSettingsViewModel(
-        IWritableOptions<AppSettings> appSettings,
-        HttpServerService httpServerService)
-    {
-        _appSettings = appSettings;
-        _httpServerService = httpServerService;
-
-        ConnectInstanceName = appSettings.Value.ConnectInstanceName;
-        RpcServerPort = appSettings.Value.RpcServerPort.ToString();
-    }
 
     [RelayCommand]
     private async Task ApplyConnectSettings()
@@ -47,11 +44,9 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
             return;
         }
 
-        var previousPort = _httpServerService.CurrentPort;
-
-        if (_httpServerService.CurrentPort is { } activePort && activePort != targetPort)
+        if (httpServerService.CurrentPort is { } activePort && activePort != targetPort)
         {
-            var rebindResult = await _httpServerService.RebindAsync(targetPort);
+            var rebindResult = await httpServerService.RebindAsync(targetPort);
             if (!rebindResult.IsSuccess)
             {
                 SetError(rebindResult.ErrorMessage ?? "Failed to apply RPC server port.");
@@ -59,27 +54,12 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
             }
         }
 
-        try
+        await appSettings.UpdateAsync(settings =>
         {
-            await _appSettings.UpdateAsync(settings =>
-            {
-                settings.ConnectInstanceName = ConnectInstanceName;
-                settings.RpcServerPort = targetPort;
-            });
-        }
-        catch (Exception ex)
-        {
-            if (previousPort is { } rollbackPort && _httpServerService.CurrentPort != rollbackPort)
-            {
-                await _httpServerService.RebindAsync(rollbackPort);
-            }
+            settings.ConnectInstanceName = ConnectInstanceName;
+            settings.RpcServerPort = targetPort;
+        });
 
-            SetError($"Failed to save settings: {ex.Message}");
-            return;
-        }
-
-        InfoMessage =
-            $"Connect settings applied. Unity host is now {HostUri}. Update Unity Connect settings if needed.";
         IsSettingsModified = false;
     }
 
@@ -87,7 +67,6 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
     private void ResetToDefaultPort()
     {
         RpcServerPort = HttpServerService.DefaultPort.ToString();
-        InfoMessage = $"RPC port reset to default {HttpServerService.DefaultPort}.";
     }
 
     [RelayCommand]
@@ -96,7 +75,7 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
         var preferredPort = TryParseAndValidatePort(RpcServerPort, out var parsedPort)
             ? parsedPort
             : HttpServerService.DefaultPort;
-        var availablePort = _httpServerService.FindAvailablePort(preferredPort);
+        var availablePort = httpServerService.FindAvailablePort(preferredPort);
         if (availablePort is null)
         {
             SetError(
@@ -106,7 +85,6 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
 
         ClearError();
         RpcServerPort = availablePort.Value.ToString();
-        InfoMessage = $"Found available port: {availablePort.Value}.";
     }
 
     partial void OnConnectInstanceNameChanged(string value)
@@ -117,20 +95,6 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
     partial void OnRpcServerPortChanged(string value)
     {
         MarkSettingsModified();
-        OnPropertyChanged(nameof(IsPortInValidRange));
-        OnPropertyChanged(nameof(ShowPortValidationError));
-        OnPropertyChanged(nameof(IsApplyEnabled));
-        OnPropertyChanged(nameof(HostUri));
-    }
-
-    partial void OnInfoMessageChanged(string value)
-    {
-        OnPropertyChanged(nameof(HasInfoMessage));
-    }
-
-    partial void OnIsSettingsModifiedChanged(bool value)
-    {
-        OnPropertyChanged(nameof(IsApplyEnabled));
     }
 
     private void MarkSettingsModified()
@@ -148,14 +112,11 @@ public sealed partial class ConnectSettingsViewModel : ViewModelBase
 
     private void SetError(string message)
     {
-        InfoMessage = "";
         ErrorMessage = message;
-        HasError = true;
     }
 
     private void ClearError()
     {
         ErrorMessage = "";
-        HasError = false;
     }
 }
