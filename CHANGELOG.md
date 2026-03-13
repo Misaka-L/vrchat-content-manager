@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Will return to Home page if click "Repair" button in home page. [`#216`](https://github.com/project-vrcz/content-publisher/pull/216)
+
 ## [2.4.1] - 2026-03-13
 
 ### Fixed
