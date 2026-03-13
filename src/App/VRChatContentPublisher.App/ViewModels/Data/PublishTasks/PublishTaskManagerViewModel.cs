@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Options;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
@@ -196,7 +197,12 @@ public sealed partial class PublishTaskManagerViewModel(
         if (await userSessionService.TryRepairAsync())
             return;
 
-        var page = fixAccountPageViewModelFactory.Create(userSessionService);
+        var page = fixAccountPageViewModelFactory.Create(
+            userSessionService,
+            navigationService.Navigate<HomePageViewModel>,
+            navigationService.Navigate<HomePageViewModel>
+        );
+
         navigationService.Navigate(page);
     }
 

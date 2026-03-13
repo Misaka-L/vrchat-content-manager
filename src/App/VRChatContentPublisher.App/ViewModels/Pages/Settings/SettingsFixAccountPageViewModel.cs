@@ -10,7 +10,8 @@ namespace VRChatContentPublisher.App.ViewModels.Pages.Settings;
 
 public sealed partial class SettingsFixAccountPageViewModel(
     UserSessionService userSessionService,
-    NavigationService navigationService,
+    Action onBack,
+    Action onNext,
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogViewModelFactory,
     DialogService dialogService,
     ILogger<SettingsFixAccountPageViewModel> logger) : PageViewModelBase
@@ -22,10 +23,7 @@ public sealed partial class SettingsFixAccountPageViewModel(
     [ObservableProperty] public partial string ErrorMessage { get; private set; } = "";
 
     [RelayCommand]
-    private void BackToSettings()
-    {
-        navigationService.Navigate<SettingsPageViewModel>();
-    }
+    private void BackToSettings() => onBack();
 
     [RelayCommand]
     private async Task Login()
@@ -76,7 +74,7 @@ public sealed partial class SettingsFixAccountPageViewModel(
             return;
         }
 
-        navigationService.Navigate<SettingsPageViewModel>();
+        onNext();
     }
 
     private async ValueTask<bool> OpenTwoFactorAuthDialog(bool isEmailOtp)
@@ -113,17 +111,21 @@ public sealed partial class SettingsFixAccountPageViewModel(
 }
 
 public sealed class SettingsFixAccountPageViewModelFactory(
-    NavigationService navigationService,
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogViewModelFactory,
     DialogService dialogService,
     ILogger<SettingsFixAccountPageViewModel> logger)
 {
-    public SettingsFixAccountPageViewModel Create(UserSessionService userSessionService)
+    public SettingsFixAccountPageViewModel Create(
+        UserSessionService userSessionService,
+        Action onBack,
+        Action onNext
+    )
     {
-        return new SettingsFixAccountPageViewModel(userSessionService,
-            navigationService,
+        return new SettingsFixAccountPageViewModel(
+            userSessionService, onBack, onNext,
             twoFactorAuthDialogViewModelFactory,
             dialogService,
-            logger);
+            logger
+        );
     }
 }

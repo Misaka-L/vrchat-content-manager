@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.Core.Services.UserSession;
 
@@ -27,7 +28,12 @@ public sealed partial class InvalidSessionTaskManagerViewModel(
         if (await userSessionService.TryRepairAsync())
             return;
 
-        var page = fixAccountPageViewModelFactory.Create(userSessionService);
+        var page = fixAccountPageViewModelFactory.Create(
+            userSessionService,
+            navigationService.Navigate<HomePageViewModel>,
+            navigationService.Navigate<HomePageViewModel>
+        );
+
         navigationService.Navigate(page);
     }
 }
