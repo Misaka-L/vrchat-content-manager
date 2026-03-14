@@ -99,6 +99,7 @@ public partial class App : Application
 
         // Settings Section
         ViewLocator.Register<ConnectSettingsViewModel, ConnectSettingsView>();
+        ViewLocator.Register<NotificationSettingsViewModel, NotificationSettingsView>();
         ViewLocator.Register<AppearanceSettingsViewModel, AppearanceSettingsView>();
         ViewLocator.Register<HttpProxySettingsViewModel, HttpProxySettingsView>();
         ViewLocator.Register<AccountsSettingsViewModel, AccountsSettingsView>();

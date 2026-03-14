@@ -24,6 +24,7 @@ public static class ServicesExtenstion
 
         services.AddSingleton<AppWindowService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
+        services.AddHostedService<AppNotificationTaskFailureListener>();
 
         // Dialog
         services.AddSingleton<DialogService>();
@@ -73,6 +74,7 @@ public static class ServicesExtenstion
         services.AddTransient<AccountsSettingsViewModel>();
         services.AddTransient<AppearanceSettingsViewModel>();
         services.AddTransient<ConnectSettingsViewModel>();
+        services.AddTransient<NotificationSettingsViewModel>();
         services.AddTransient<HttpProxySettingsViewModel>();
         services.AddTransient<SessionsSettingsViewModel>();
         services.AddTransient<AboutSettingsViewModel>();

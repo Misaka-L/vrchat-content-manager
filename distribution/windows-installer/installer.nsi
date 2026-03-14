@@ -27,6 +27,9 @@ Unicode True
 
 !define INSTDIR_REG_ROOT HKLM
 !define INSTDIR_REG_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${ProductName}"
+; For windows notification (uninstall)
+!define AMUID_REG_ROOT HKCU
+!define AMUID_REG_KEY "Software\Classes\AppUserModelId\vrchat-content-publisher-c7a27b26-8e90-4e82-9c10-b03f4a794b4c"
 
 !define START_MENU_PAGE_ID "Application"
 
@@ -167,6 +170,7 @@ Section "uninstall"
     ${EndIf}
 
     DeleteRegKey "${INSTDIR_REG_ROOT}" "${INSTDIR_REG_KEY}"
+    DeleteRegKey "${AMUID_REG_ROOT}" "${AMUID_REG_KEY}"
     DeleteRegKey HKCR "${AppProtocol}"
 SectionEnd
 

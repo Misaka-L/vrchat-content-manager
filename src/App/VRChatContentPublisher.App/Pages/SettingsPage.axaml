@@ -32,6 +32,9 @@
                 <Expander Header="Connect">
                     <ContentControl Content="{Binding ConnectSettingsViewModel}" />
                 </Expander>
+                <Expander Header="Notifications">
+                    <ContentControl Content="{Binding NotificationSettingsViewModel}" />
+                </Expander>
                 <Expander Header="Sessions">
                     <ContentControl Content="{Binding SessionsSettingsViewModel}" />
                 </Expander>

@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Send notification when login failed during startup. [`#220`](https://github.com/project-vrcz/content-publisher/pull/220)
+- Send notification when publish task failed. [`#220`](https://github.com/project-vrcz/content-publisher/pull/220)
 - Custom RPC server port setting. [`#217`](https://github.com/project-vrcz/content-publisher/pull/217)
 - App will fallback to next available localhost port if configured RPC port is unavailable on startup. [`#217`](https://github.com/project-vrcz/content-publisher/pull/217)
 - Show startup warning dialog when configured RPC port is in use and fallback port is used. [`#217`](https://github.com/project-vrcz/content-publisher/pull/217)

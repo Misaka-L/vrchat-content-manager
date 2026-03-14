@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <TargetFrameworks>net10.0;net10.0-windows10.0.17763.0</TargetFrameworks>
         <OutputType>WinExe</OutputType>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -7,6 +8,7 @@
         <ApplicationIcon>Assets/AppIcon.ico</ApplicationIcon>
         <Version>2.4.2</Version>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'!='Debug'">
@@ -53,8 +55,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Core\VRChatContentPublisher.Core\VRChatContentPublisher.Core.csproj" />
-        <ProjectReference Include="..\..\Core\VRChatContentPublisher.IpcCore\VRChatContentPublisher.IpcCore.csproj" />
+        <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Abstraction\VRChatContentPublisher.Platform.Abstraction.csproj"/>
+        <ProjectReference Include="..\..\Core\VRChatContentPublisher.Core\VRChatContentPublisher.Core.csproj"/>
+        <ProjectReference Include="..\..\Core\VRChatContentPublisher.IpcCore\VRChatContentPublisher.IpcCore.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+        <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Noop\VRChatContentPublisher.Platform.Noop.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.17763.0'">
+        <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Windows\VRChatContentPublisher.Platform.Windows.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

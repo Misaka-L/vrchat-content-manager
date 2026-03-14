@@ -9,6 +9,7 @@ public sealed partial class SettingsPageViewModel(
     AccountsSettingsViewModel accountsSettingsViewModel,
     AppearanceSettingsViewModel appearanceSettingsViewModel,
     ConnectSettingsViewModel connectSettingsViewModel,
+    NotificationSettingsViewModel notificationSettingsViewModel,
     SessionsSettingsViewModel sessionsSettingsViewModel,
     AboutSettingsViewModel aboutSettingsViewModel,
     HttpProxySettingsViewModel httpProxySettingsViewModel,
@@ -17,6 +18,7 @@ public sealed partial class SettingsPageViewModel(
     public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
     public AppearanceSettingsViewModel AppearanceSettingsViewModel { get; } = appearanceSettingsViewModel;
     public ConnectSettingsViewModel ConnectSettingsViewModel { get; } = connectSettingsViewModel;
+    public NotificationSettingsViewModel NotificationSettingsViewModel { get; } = notificationSettingsViewModel;
     public SessionsSettingsViewModel SessionsSettingsViewModel { get; } = sessionsSettingsViewModel;
     public HttpProxySettingsViewModel HttpProxySettingsViewModel { get; } = httpProxySettingsViewModel;
     public AboutSettingsViewModel AboutSettingsViewModel { get; } = aboutSettingsViewModel;

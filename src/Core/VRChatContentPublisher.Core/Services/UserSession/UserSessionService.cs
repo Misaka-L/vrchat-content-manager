@@ -24,6 +24,8 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     public event EventHandler<CurrentUser?>? CurrentUserUpdated;
     public UserSessionState State { get; set; } = UserSessionState.Pending;
 
+    private readonly SemaphoreSlim _createOrGetScopeLock = new SemaphoreSlim(1, 1);
+
     public string UserNameOrEmail { get; private set; }
     public string? UserId { get; private set; }
     public CurrentUser? CurrentUser { get; private set; }
@@ -124,12 +126,15 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     public async ValueTask<AsyncServiceScope> CreateOrGetSessionScopeAsync()
     {
-        if (_sessionScope is { } scope)
-            return scope;
+        using (await SimpleSemaphoreSlimLockScope.WaitAsync(_createOrGetScopeLock))
+        {
+            if (_sessionScope is { } scope)
+                return scope;
 
-        CurrentUser = await GetCurrentUserAsync();
+            CurrentUser = await GetCurrentUserAsync();
 
-        return await CreateSessionScopeAsyncCore();
+            return await CreateSessionScopeAsyncCore();
+        }
     }
 
     private ValueTask<AsyncServiceScope> CreateSessionScopeAsyncCore()
