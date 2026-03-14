@@ -22,7 +22,7 @@ public sealed class UserSessionManagerService(
     public bool IsAnySessionAvailable =>
         _sessions.Count > 0 && _sessions.Any(session => session.State == UserSessionState.LoggedIn);
 
-    public async Task RestoreSessionsAsync()
+    public async Task RestoreSessionsAsync(Action<UserSessionService, Exception>? onSessionRestoredFailed = null)
     {
         foreach (var (userId, sessionItem) in userSessionStorage.Value.Sessions)
         {
@@ -42,6 +42,7 @@ public sealed class UserSessionManagerService(
             {
                 logger.LogError(ex, "Failed to restore session for user ({UserId}) {UserName}", userId,
                     sessionItem.UserName);
+                onSessionRestoredFailed?.Invoke(session, ex);
             }
         }
 
