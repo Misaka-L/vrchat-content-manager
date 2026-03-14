@@ -19,6 +19,9 @@ public sealed partial class BootstrapPageViewModel(
     {
         await sessionManagerService.RestoreSessionsAsync((session, ex) =>
         {
+            if (!appSettings.Value.SendNotificationOnStartupSessionRestoreFailed)
+                return;
+
             _ = desktopNotificationService.SendDesktopNotificationAsync(
                 $"Failed to restore session for user {session.CurrentUser?.DisplayName ?? session.UserId ?? session.UserNameOrEmail}",
                 ex.Message

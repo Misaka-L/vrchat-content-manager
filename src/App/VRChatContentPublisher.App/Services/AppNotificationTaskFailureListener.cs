@@ -4,12 +4,15 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Platform.Abstraction.Services;
 
 namespace VRChatContentPublisher.App.Services;
 
 public sealed class AppNotificationTaskFailureListener(
     UserSessionManagerService userSessionManagerService,
+    IWritableOptions<AppSettings> appSettings,
     IDesktopNotificationService desktopNotificationService,
     ILogger<AppNotificationTaskFailureListener> logger)
     : IHostedService
@@ -114,6 +117,9 @@ public sealed class AppNotificationTaskFailureListener(
     private async void OnTaskUpdated(object? _, ContentPublishTaskUpdateEventArg e)
     {
         if (e.ProgressEventArg.Status != ContentPublishTaskStatus.Failed)
+            return;
+
+        if (!appSettings.Value.SendNotificationOnTaskFailed)
             return;
 
         var contentType = MapContentTypeLabel(e.Task.ContentType);
