@@ -1,0 +1,19 @@
+using Microsoft.Extensions.DependencyInjection;
+using VRChatContentPublisher.Platform.Abstraction.Services;
+using VRChatContentPublisher.Platform.Windows.Services;
+
+namespace VRChatContentPublisher.Platform.Windows.Extensions;
+
+public static class ServicesExtension
+{
+    public static IServiceCollection AddWindowsPlatformServices(this IServiceCollection services)
+    {
+        services.AddHostedService<WindowsHostedService>();
+
+        services.AddSingleton<WindowsDesktopNotificationService>();
+        services.AddSingleton<IDesktopNotificationService>(s =>
+            s.GetRequiredService<WindowsDesktopNotificationService>());
+
+        return services;
+    }
+}

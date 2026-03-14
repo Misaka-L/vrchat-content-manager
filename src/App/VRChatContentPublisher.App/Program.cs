@@ -14,6 +14,12 @@ using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
 using VRChatContentPublisher.IpcCore.Models;
 
+#if WINDOWS
+using VRChatContentPublisher.Platform.Windows.Extensions;
+#else
+using VRChatContentPublisher.Platform.Noop.Extensions;
+#endif
+
 namespace VRChatContentPublisher.App;
 
 internal sealed class Program
@@ -73,6 +79,12 @@ internal sealed class Program
             builder.UseAppCore();
             builder.Services.AddAppServices();
             builder.Services.AddIpcCore();
+
+#if WINDOWS
+            builder.Services.AddWindowsPlatformServices();
+#else
+            builder.Services.AddNoopPlatformServices();
+#endif
 
             builder.Services.AddAvaloniaApplication<App>(appBuilder => appBuilder
                 .UseHotReload()
