@@ -38,9 +38,8 @@
             <Button Command="{Binding SetAsDefaultCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
                     IsEnabled="{Binding CanSetDefault}"
-                    ToolTip.ServiceEnabled="{Binding !CanSetDefault}"
                     ToolTip.ShowOnDisabled="True"
-                    ToolTip.Tip="This account is already the default."
+                    ToolTip.Tip="{Binding SetAsDefaultToolTip}"
                     Width="32" Height="32">
                 <Grid>
                     <avalonia:MaterialIcon Kind="Star" Height="24" Width="24"

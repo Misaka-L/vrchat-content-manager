@@ -20,6 +20,9 @@ public sealed partial class UserSessionViewModel(
     public bool IsSessionRequiringReauthentication => userSessionService.State != UserSessionState.LoggedIn;
     public bool IsDefault => userSessionManagerService.IsDefaultSession(userSessionService);
     public bool CanSetDefault => !IsDefault;
+    public string SetAsDefaultToolTip => CanSetDefault
+        ? "Set this account as default."
+        : "This account is already the default.";
 
     [ObservableProperty] public partial bool CanRemove { get; private set; }
 
@@ -111,12 +114,14 @@ public sealed partial class UserSessionViewModel(
         OnPropertyChanged(nameof(DisplayName));
         OnPropertyChanged(nameof(IsDefault));
         OnPropertyChanged(nameof(CanSetDefault));
+        OnPropertyChanged(nameof(SetAsDefaultToolTip));
     }
 
     private void OnDefaultSessionChanged(object? sender, UserSessionService? e)
     {
         OnPropertyChanged(nameof(IsDefault));
         OnPropertyChanged(nameof(CanSetDefault));
+        OnPropertyChanged(nameof(SetAsDefaultToolTip));
     }
 }
 
