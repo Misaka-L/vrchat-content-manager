@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.5.0] - 2026-03-14
+
 ### Added
 
 - Send notification when login failed during startup. [`#220`](https://github.com/project-vrcz/content-publisher/pull/220)
@@ -288,7 +290,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.4.2...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.5.0...HEAD
+[2.5.0]: https://github.com/project-vrcz/content-publisher/compare/v2.4.2...v2.5.0
 [2.4.2]: https://github.com/project-vrcz/content-publisher/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/project-vrcz/content-publisher/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/project-vrcz/content-publisher/compare/v2.3.0...v2.4.0
