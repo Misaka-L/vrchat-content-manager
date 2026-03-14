@@ -24,6 +24,7 @@ public static class ServicesExtenstion
 
         services.AddSingleton<AppWindowService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
+        services.AddHostedService<AppNotificationTaskFailureListener>();
 
         // Dialog
         services.AddSingleton<DialogService>();
