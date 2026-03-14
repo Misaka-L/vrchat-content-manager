@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Custom RPC server port setting. [`#217`](https://github.com/project-vrcz/content-publisher/pull/217)
 - App will fallback to next available localhost port if configured RPC port is unavailable on startup. [`#217`](https://github.com/project-vrcz/content-publisher/pull/217)
 - Show startup warning dialog when configured RPC port is in use and fallback port is used. [`#217`](https://github.com/project-vrcz/content-publisher/pull/217)
+- Allow selecting a default account in Account Settings for Tasks page. [`#218`](https://github.com/project-vrcz/content-publisher/pull/218)
 
 ## [2.4.2] - 2026-03-13
 

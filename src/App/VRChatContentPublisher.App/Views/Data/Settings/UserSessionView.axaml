@@ -35,6 +35,19 @@
             <TextBlock Text="{Binding DisplayName}" />
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Button Command="{Binding SetAsDefaultCommand}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    IsEnabled="{Binding CanSetDefault}"
+                    ToolTip.ShowOnDisabled="True"
+                    ToolTip.Tip="{Binding SetAsDefaultToolTip}"
+                    Width="32" Height="32">
+                <Grid>
+                    <avalonia:MaterialIcon Kind="Star" Height="24" Width="24"
+                                           IsVisible="{Binding IsDefault}" />
+                    <avalonia:MaterialIcon Kind="StarOutline" Height="24" Width="24"
+                                           IsVisible="{Binding !IsDefault}" />
+                </Grid>
+            </Button>
             <Button IsVisible="{Binding IsSessionRequiringReauthentication}"
                     Command="{Binding RepairCommand}"
                     Theme="{StaticResource MaterialFlatButton}"

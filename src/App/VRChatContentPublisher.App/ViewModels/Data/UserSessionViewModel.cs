@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
@@ -19,6 +18,11 @@ public sealed partial class UserSessionViewModel(
     public string? UserId => userSessionService.UserId;
     public string UserNameOrEmail => userSessionService.UserNameOrEmail;
     public bool IsSessionRequiringReauthentication => userSessionService.State != UserSessionState.LoggedIn;
+    public bool IsDefault => userSessionManagerService.IsDefaultSession(userSessionService);
+    public bool CanSetDefault => !IsDefault;
+    public string SetAsDefaultToolTip => CanSetDefault
+        ? "Set this account as default."
+        : "This account is already the default.";
 
     [ObservableProperty] public partial bool CanRemove { get; private set; }
 
@@ -39,6 +43,7 @@ public sealed partial class UserSessionViewModel(
     private async Task Load()
     {
         userSessionService.StateChanged += OnUserSessionStateChanged;
+        userSessionManagerService.DefaultSessionChanged += OnDefaultSessionChanged;
 
         await LoadCore();
     }
@@ -68,6 +73,13 @@ public sealed partial class UserSessionViewModel(
     private void Unload()
     {
         userSessionService.StateChanged -= OnUserSessionStateChanged;
+        userSessionManagerService.DefaultSessionChanged -= OnDefaultSessionChanged;
+    }
+
+    [RelayCommand]
+    private async Task SetAsDefault()
+    {
+        await userSessionManagerService.SetDefaultSessionAsync(userSessionService);
     }
 
     [RelayCommand]
@@ -100,6 +112,16 @@ public sealed partial class UserSessionViewModel(
         OnPropertyChanged(nameof(UserNameOrEmail));
         OnPropertyChanged(nameof(ProfilePictureUrl));
         OnPropertyChanged(nameof(DisplayName));
+        OnPropertyChanged(nameof(IsDefault));
+        OnPropertyChanged(nameof(CanSetDefault));
+        OnPropertyChanged(nameof(SetAsDefaultToolTip));
+    }
+
+    private void OnDefaultSessionChanged(object? sender, UserSessionService? e)
+    {
+        OnPropertyChanged(nameof(IsDefault));
+        OnPropertyChanged(nameof(CanSetDefault));
+        OnPropertyChanged(nameof(SetAsDefaultToolTip));
     }
 }
 

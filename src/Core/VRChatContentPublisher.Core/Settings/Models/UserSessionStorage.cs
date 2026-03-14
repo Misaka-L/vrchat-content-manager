@@ -6,6 +6,8 @@ namespace VRChatContentPublisher.Core.Settings.Models;
 public sealed class UserSessionStorage
 {
     public Dictionary<string, UserSessionStorageItem> Sessions { get; set; } = new();
+    public string? DefaultAccountUserId { get; set; }
+    public string? DefaultAccountUserNameOrEmail { get; set; }
 }
 
 public sealed record UserSessionStorageItem(

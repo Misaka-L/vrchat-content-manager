@@ -12,10 +12,12 @@ public sealed class UserSessionManagerService(
     ILogger<UserSessionManagerService> logger)
 {
     private readonly List<UserSessionService> _sessions = [];
+    private UserSessionService? _defaultSession;
     public IReadOnlyList<UserSessionService> Sessions => _sessions.AsReadOnly();
 
     public event EventHandler<UserSessionService>? SessionCreated;
     public event EventHandler<UserSessionService>? SessionRemoved;
+    public event EventHandler<UserSessionService?>? DefaultSessionChanged;
 
     public bool IsAnySessionAvailable =>
         _sessions.Count > 0 && _sessions.Any(session => session.State == UserSessionState.LoggedIn);
@@ -42,6 +44,67 @@ public sealed class UserSessionManagerService(
                     sessionItem.UserName);
             }
         }
+
+        var resolvedDefaultSession = ResolveDefaultSessionFromSettings();
+        _defaultSession = resolvedDefaultSession;
+
+        if (resolvedDefaultSession is not null)
+            return;
+
+        var hasDefaultSelection =
+            !string.IsNullOrWhiteSpace(userSessionStorage.Value.DefaultAccountUserId) ||
+            !string.IsNullOrWhiteSpace(userSessionStorage.Value.DefaultAccountUserNameOrEmail);
+        if (!hasDefaultSelection)
+            return;
+
+        await ClearDefaultSessionStorageAsync();
+    }
+
+    public UserSessionService? GetDefaultSession()
+    {
+        if (_defaultSession is not null && _sessions.Contains(_defaultSession))
+            return _defaultSession;
+
+        _defaultSession = ResolveDefaultSessionFromSettings();
+        return _defaultSession;
+    }
+
+    public bool IsDefaultSession(UserSessionService session)
+    {
+        return GetDefaultSession() == session;
+    }
+
+    public async ValueTask SetDefaultSessionAsync(UserSessionService session)
+    {
+        if (!_sessions.Contains(session))
+            throw new InvalidOperationException("Session does not exist.");
+
+        var existingDefaultSession = GetDefaultSession();
+        if (existingDefaultSession == session)
+            return;
+
+        await userSessionStorage.UpdateAsync(storage =>
+        {
+            storage.DefaultAccountUserId = session.UserId;
+            storage.DefaultAccountUserNameOrEmail = session.UserNameOrEmail;
+        });
+
+        _defaultSession = session;
+        OnDefaultSessionChanged(session);
+    }
+
+    public async ValueTask ClearDefaultSessionAsync()
+    {
+        if (_defaultSession is null &&
+            string.IsNullOrWhiteSpace(userSessionStorage.Value.DefaultAccountUserId) &&
+            string.IsNullOrWhiteSpace(userSessionStorage.Value.DefaultAccountUserNameOrEmail))
+        {
+            return;
+        }
+
+        await ClearDefaultSessionStorageAsync();
+        _defaultSession = null;
+        OnDefaultSessionChanged(null);
     }
 
     public bool IsSessionExists(string userNameOrEmail)
@@ -156,8 +219,13 @@ public sealed class UserSessionManagerService(
             throw new InvalidOperationException("Session does not exist.");
         }
 
+        var isDefaultSession = IsDefaultSession(session);
+
         _sessions.Remove(session);
         OnSessionRemoved(session);
+
+        if (isDefaultSession)
+            await ClearDefaultSessionAsync();
 
         if (logout)
         {
@@ -194,5 +262,38 @@ public sealed class UserSessionManagerService(
     private void OnSessionRemoved(UserSessionService e)
     {
         SessionRemoved?.Invoke(this, e);
+    }
+
+    private UserSessionService? ResolveDefaultSessionFromSettings()
+    {
+        var defaultUserId = userSessionStorage.Value.DefaultAccountUserId;
+        if (!string.IsNullOrWhiteSpace(defaultUserId) &&
+            _sessions.FirstOrDefault(session => session.UserId == defaultUserId) is { } sessionByUserId)
+        {
+            return sessionByUserId;
+        }
+
+        var defaultUserNameOrEmail = userSessionStorage.Value.DefaultAccountUserNameOrEmail;
+        if (!string.IsNullOrWhiteSpace(defaultUserNameOrEmail) &&
+            _sessions.FirstOrDefault(session => session.UserNameOrEmail == defaultUserNameOrEmail) is { } sessionByUserName)
+        {
+            return sessionByUserName;
+        }
+
+        return null;
+    }
+
+    private async ValueTask ClearDefaultSessionStorageAsync()
+    {
+        await userSessionStorage.UpdateAsync(storage =>
+        {
+            storage.DefaultAccountUserId = null;
+            storage.DefaultAccountUserNameOrEmail = null;
+        });
+    }
+
+    private void OnDefaultSessionChanged(UserSessionService? session)
+    {
+        DefaultSessionChanged?.Invoke(this, session);
     }
 }
