@@ -35,7 +35,7 @@ public sealed partial class HomeTasksPageViewModel(
             userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
         }
 
-        UpdateSelectedTaskManager();
+        UpdateSelectedTaskManager(_firstLoad);
 
         _firstLoad = false;
     }
@@ -83,10 +83,19 @@ public sealed partial class HomeTasksPageViewModel(
         });
     }
 
-    private void UpdateSelectedTaskManager()
+    private void UpdateSelectedTaskManager(bool preferDefaultSession = false)
     {
         if (SelectedTaskManagerContainerViewModel is not null &&
             TaskManagers.Contains(SelectedTaskManagerContainerViewModel)) return;
+
+        if (preferDefaultSession && userSessionManagerService.GetDefaultSession() is { } defaultSession)
+        {
+            SelectedTaskManagerContainerViewModel = TaskManagers.FirstOrDefault(manager =>
+                manager.UserSessionService == defaultSession);
+
+            if (SelectedTaskManagerContainerViewModel is not null)
+                return;
+        }
 
         SelectedTaskManagerContainerViewModel = TaskManagers.FirstOrDefault();
     }
