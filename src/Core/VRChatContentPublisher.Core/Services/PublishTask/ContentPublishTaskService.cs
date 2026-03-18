@@ -295,7 +295,7 @@ public sealed class ContentPublishTaskFactory(
     BundleProcessService bundleProcessService,
     IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
 {
-    public async ValueTask<ContentPublishTaskService> Create(
+    public async ValueTask<ContentPublishTaskService> CreateAsync(
         string taskId,
         string contentId,
         string bundleFileId,
@@ -307,6 +307,8 @@ public sealed class ContentPublishTaskFactory(
     {
         if (!await tempFileService.IsFileExistAsync(bundleFileId))
             throw new ProvideFileIdNotFoundException(bundleFileId);
+
+        await contentPublisher.BeforePublishTaskAsync(thumbnailFileId, description, tags, releaseStatus, awsHttpClient);
 
         var publishTask = new ContentPublishTaskService(
             taskId,

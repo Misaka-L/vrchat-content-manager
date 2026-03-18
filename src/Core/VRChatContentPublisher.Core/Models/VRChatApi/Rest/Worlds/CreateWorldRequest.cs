@@ -6,13 +6,17 @@ public record CreateWorldRequest(
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("assetUrl")]
-    string AssetUrl,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? AssetUrl,
     [property: JsonPropertyName("assetVersion")]
-    int AssetVersion,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    int? AssetVersion,
     [property: JsonPropertyName("platform")]
-    string Platform,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? Platform,
     [property: JsonPropertyName("unityVersion")]
-    string UnityVersion,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    string? UnityVersion,
     [property: JsonPropertyName("worldSignature")]
     [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     string? WorldSignature,

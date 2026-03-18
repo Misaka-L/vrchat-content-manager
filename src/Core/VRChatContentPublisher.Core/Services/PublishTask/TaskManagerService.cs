@@ -24,7 +24,8 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
     )
     {
         var taskId = Guid.NewGuid().ToString("D");
-        var task = await contentPublishTaskFactory.Create(taskId,
+
+        var task = await contentPublishTaskFactory.CreateAsync(taskId,
             contentId, bundleFileId, thumbnailFileId, description, tags, releaseStatus,
             contentPublisher);
 

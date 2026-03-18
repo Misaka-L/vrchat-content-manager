@@ -10,40 +10,32 @@ using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
-public sealed class AvatarContentPublisher : IContentPublisher
+public sealed class AvatarContentPublisher(
+    string avatarId,
+    string name,
+    string platform,
+    string unityVersion,
+    UserSessionService userSessionService,
+    ILogger<AvatarContentPublisher> logger,
+    IFileService tempFileService)
+    : IContentPublisher
 {
-    private readonly string _avatarId;
-    private readonly string _name;
-    private readonly string _platform;
-    private readonly string _unityVersion;
-    private readonly UserSessionService _userSessionService;
-    private readonly ILogger<AvatarContentPublisher> _logger;
-    private readonly IFileService _tempFileService;
-
-    private readonly VRChatApiClient _apiClient;
-
-    public AvatarContentPublisher(string avatarId,
-        string name,
-        string platform,
-        string unityVersion,
-        UserSessionService userSessionService,
-        ILogger<AvatarContentPublisher> logger,
-        IFileService tempFileService)
-    {
-        _avatarId = avatarId;
-        _name = name;
-        _platform = platform;
-        _unityVersion = unityVersion;
-        _userSessionService = userSessionService;
-        _logger = logger;
-        _tempFileService = tempFileService;
-
-        _apiClient = _userSessionService.GetApiClient();
-    }
+    private readonly VRChatApiClient _apiClient = userSessionService.GetApiClient();
 
     public string GetContentType() => "avatar";
-    public string GetContentName() => _name;
-    public string GetContentPlatform() => _platform;
+    public string GetContentName() => name;
+    public string GetContentPlatform() => platform;
+
+    public ValueTask BeforePublishTaskAsync(string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus,
+        HttpClient awsClient,
+        CancellationToken cancellationToken = default)
+    {
+        // Do nothing
+        return ValueTask.CompletedTask;
+    }
 
     private const long MaxBundleFileSizeForDesktopBytes = 209715200; // 200 MB
     private const long MaxBundleFileSizeForMobileBytes = 10485760; // 10 MB
@@ -58,9 +50,9 @@ public sealed class AvatarContentPublisher : IContentPublisher
         PublishStageProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default)
     {
-        await using var bundleFileStream = await _tempFileService.GetFileAsync(bundleFileId);
+        await using var bundleFileStream = await tempFileService.GetFileAsync(bundleFileId);
         var thumbnailFile = thumbnailFileId is not null
-            ? await _tempFileService.GetFileWithNameAsync(thumbnailFileId)
+            ? await tempFileService.GetFileWithNameAsync(thumbnailFileId)
             : null;
         await using var thumbnailFileStream = thumbnailFile?.FileStream;
 
@@ -70,7 +62,7 @@ public sealed class AvatarContentPublisher : IContentPublisher
         if (thumbnailFile is null && thumbnailFileId is not null)
             throw new ArgumentException("Could not find the provided thumbnail file.", nameof(thumbnailFileId));
 
-        if (UnityBuildTargetUtils.IsStandalonePlatform(_platform))
+        if (UnityBuildTargetUtils.IsStandalonePlatform(platform))
         {
             if (bundleFileStream.Length > MaxBundleFileSizeForDesktopBytes)
                 throw new ArgumentException(
@@ -90,14 +82,14 @@ public sealed class AvatarContentPublisher : IContentPublisher
         // Step 1. Try to get the asset file for this platform, if not create a new one.
         // This step also cleanups any incomplete file versions.
 
-        _logger.LogInformation("Publish Avatar {AvatarId}", _avatarId);
+        logger.LogInformation("Publish Avatar {AvatarId}", avatarId);
         progressReporter?.Report("Fetching avatar detail...");
 
-        var avatar = await _apiClient.GetAvatarAsync(_avatarId, cancellationToken);
+        var avatar = await _apiClient.GetAvatarAsync(avatarId, cancellationToken);
         var fileId = await GetOrCreateBundleFileIdAsync(avatar);
 
         // Step 2. Create and upload a new file version
-        _logger.LogInformation("Using file id {FileId} for avatar {AvatarId}", fileId, _avatarId);
+        logger.LogInformation("Using file id {FileId} for avatar {AvatarId}", fileId, avatarId);
         progressReporter?.Report("Preparing for upload bundle file...");
 
         var fileVersion = await _apiClient.CreateAndUploadFileVersionAsync(
@@ -116,7 +108,7 @@ public sealed class AvatarContentPublisher : IContentPublisher
         string? imageUri = null;
         if (thumbnailFile is not null && thumbnailFileStream is not null)
         {
-            _logger.LogInformation("Uploading thumbnail for avatar {AvatarId}", _avatarId);
+            logger.LogInformation("Uploading thumbnail for avatar {AvatarId}", avatarId);
             progressReporter?.Report("Uploading thumbnail...");
 
             var imageFileId = await GetOrCreateBundleImageIdAsync(avatar, thumbnailFile.FileName);
@@ -138,29 +130,29 @@ public sealed class AvatarContentPublisher : IContentPublisher
         }
 
         // Step 3. Update Avatar
-        _logger.LogInformation("Updating avatar {AvatarId} to use new file version {Version}", _avatarId,
+        logger.LogInformation("Updating avatar {AvatarId} to use new file version {Version}", avatarId,
             fileVersion.Version);
         progressReporter?.Report("Updating avatar to latest asset version...");
 
-        await _apiClient.CreateAvatarVersionAsync(_avatarId, new CreateAvatarVersionRequest(
-            _name,
+        await _apiClient.CreateAvatarVersionAsync(avatarId, new CreateAvatarVersionRequest(
+            name,
             fileVersion.File.Url,
             1,
-            _platform,
-            _unityVersion,
+            platform,
+            unityVersion,
             imageUri,
             description,
             tags,
             releaseStatus
         ), cancellationToken);
 
-        _logger.LogInformation("Successfully published avatar {AvatarId}", _avatarId);
+        logger.LogInformation("Successfully published avatar {AvatarId}", avatarId);
     }
 
     private VRChatApiUnityPackage? TryGetUnityPackageForPlatform(VRChatApiAvatar apiAvatar)
     {
         var platformApiUnityPackage = apiAvatar.UnityPackages
-            .Where(package => package.Platform == _platform)
+            .Where(package => package.Platform == platform)
             .GroupBy(package => package.UnityVersion)
             .MaxBy(group => UnityVersion.TryParse(group.Key))?
             .MaxBy(package => package.AssetVersion);
@@ -180,7 +172,7 @@ public sealed class AvatarContentPublisher : IContentPublisher
             return fileId;
         }
 
-        var fileName = $"Avatar - {_name} - Asset bundle - {_unityVersion}-{_platform}";
+        var fileName = $"Avatar - {name} - Asset bundle - {unityVersion}-{platform}";
         var file = await _apiClient.CreateFileAsync(fileName, "application/x-avatar", ".vrca");
         return file.Id;
     }
@@ -198,8 +190,8 @@ public sealed class AvatarContentPublisher : IContentPublisher
 
         var extension = Path.GetExtension(imageFileName);
         var mimeType = VRChatApiFlieUtils.GetMimeTypeFromExtension(extension);
-        
-        var fileName = $"Avatar - {_name} - Image - {_unityVersion}-{_platform}";
+
+        var fileName = $"Avatar - {name} - Image - {unityVersion}-{platform}";
         var file = await _apiClient.CreateFileAsync(fileName, mimeType, extension);
         return file.Id;
     }

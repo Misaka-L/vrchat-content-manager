@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- For world publish task which will create a new world, will create world record while create publish task. [`#229`](https://github.com/project-vrcz/content-publisher/pull/229)
+
+### Fixed
+
+- Fix issues with create new world. [`#229`](https://github.com/project-vrcz/content-publisher/pull/229)
+  - Upload separate worlds accidentally when MPA upload or
+  - Blueprint id was immediately clear after publish task create.
+
 ## [2.5.0] - 2026-03-14
 
 ### Added
