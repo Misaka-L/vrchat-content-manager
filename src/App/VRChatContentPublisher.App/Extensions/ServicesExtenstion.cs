@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.NotificationSender;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
@@ -24,7 +25,7 @@ public static class ServicesExtenstion
 
         services.AddSingleton<AppWindowService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
-        services.AddHostedService<AppNotificationTaskFailureListener>();
+        services.AddHostedService<TaskFailedNotificationSenderService>();
 
         // Dialog
         services.AddSingleton<DialogService>();
