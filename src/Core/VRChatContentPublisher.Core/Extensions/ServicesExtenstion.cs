@@ -123,6 +123,8 @@ public static class ServicesExtension
             });
         });
 
+        services.AddMessagePipe();
+
         return services;
     }
 
