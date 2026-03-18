@@ -6,6 +6,15 @@ public interface IContentPublisher
     string GetContentName();
     string GetContentPlatform();
 
+    ValueTask BeforePublishTaskAsync(
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus,
+        HttpClient awsClient,
+        CancellationToken cancellationToken = default
+    );
+
     ValueTask PublishAsync(
         string bundleFileId,
         string? thumbnailFileId,
