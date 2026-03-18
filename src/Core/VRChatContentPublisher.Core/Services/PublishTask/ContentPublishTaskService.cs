@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MessagePipe;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.BundleProcessCore.Models;
 using VRChatContentPublisher.BundleProcessCore.Services;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services;
+using VRChatContentPublisher.Core.Events.PublishTask;
 using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Utils;
 
@@ -35,6 +36,7 @@ public sealed class ContentPublishTaskService
 
     #region Progress
 
+    private readonly IPublisher<PublishTaskProgressChangedEvent> _progressPublisher;
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
 
     public DateTimeOffset CreatedTime { get; } = DateTimeOffset.Now;
@@ -65,7 +67,8 @@ public sealed class ContentPublishTaskService
         string contentId, string rawBundleFileId,
         string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
         HttpClient awsHttpClient, IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
-        IContentPublisher contentPublisher, BundleProcessService bundleProcessService)
+        IContentPublisher contentPublisher, BundleProcessService bundleProcessService,
+        IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
     {
         TaskId = taskId;
 
@@ -85,6 +88,7 @@ public sealed class ContentPublishTaskService
         _tempFileService = tempFileService;
         _contentPublisher = contentPublisher;
         _bundleProcessService = bundleProcessService;
+        _progressPublisher = progressPublisher;
         _logger = logger;
 
         _progressReporter = new PublishStageProgressReporter((text, progress) => UpdateProgress(text, progress));
@@ -272,6 +276,7 @@ public sealed class ContentPublishTaskService
         ProgressText = text;
         ProgressValue = value;
         Status = status;
+        _progressPublisher.Publish(new PublishTaskProgressChangedEvent(this, text, value, status));
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
 }
@@ -287,7 +292,8 @@ public sealed class ContentPublishTaskFactory(
     HttpClient awsHttpClient,
     IFileService tempFileService,
     ILogger<ContentPublishTaskService> logger,
-    BundleProcessService bundleProcessService)
+    BundleProcessService bundleProcessService,
+    IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
 {
     public async ValueTask<ContentPublishTaskService> Create(
         string taskId,
@@ -314,7 +320,8 @@ public sealed class ContentPublishTaskFactory(
             tempFileService,
             logger,
             contentPublisher,
-            bundleProcessService
+            bundleProcessService,
+            progressPublisher
         );
 
         return publishTask;
