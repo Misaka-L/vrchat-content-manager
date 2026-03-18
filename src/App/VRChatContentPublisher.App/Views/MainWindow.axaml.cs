@@ -1,6 +1,8 @@
+using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using VRChatContentPublisher.App.ViewModels;
 
 namespace VRChatContentPublisher.App.Views;
@@ -11,17 +13,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        if (!OperatingSystem.IsWindows())
-        {
-            ShowInTaskbar = true;
-            WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            ExtendClientAreaChromeHints = Avalonia.Platform.ExtendClientAreaChromeHints.PreferSystemChrome;
-            ExtendClientAreaToDecorationsHint = false;
-            SystemDecorations = SystemDecorations.Full;
-            Topmost = false;
-
-            return;
-        }
+        UpdateWindowConfiguration();
 
 #if DEBUG
         ShowInTaskbar = true;
@@ -43,9 +35,70 @@ public partial class MainWindow : Window
             Hide();
 #endif
         };
-
-        // TransparencyLevelHint = [WindowTransparencyLevel.Mica];
     }
+
+    private bool IsBorderlessSupported() => OperatingSystem.IsWindows();
+
+    #region Window Configuration
+
+    private void UpdateWindowConfiguration()
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+            return;
+
+        if (!IsBorderlessSupported() || !viewModel.Borderless)
+        {
+            ShowInTaskbar = true;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.PreferSystemChrome;
+            ExtendClientAreaToDecorationsHint = false;
+            SystemDecorations = SystemDecorations.Full;
+            Topmost = viewModel.Pinned;
+
+            return;
+        }
+
+        ExtendClientAreaToDecorationsHint = true;
+        SystemDecorations = SystemDecorations.BorderOnly;
+        ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome;
+        ShowInTaskbar = false;
+        Topmost = true;
+
+        UpdateWindowPosition();
+    }
+
+    private void UpdateWindowPosition()
+    {
+        if (Screens.Primary is not { } primaryScreen)
+            return;
+
+        var taskBarLocation = GetTaskBarLocation();
+        var taskBarHeight = GetTaskBarHeight();
+
+        var screenBoundsWithDpi = new PixelPoint(primaryScreen.Bounds.Width, primaryScreen.Bounds.Height);
+        var windowBoundsWithDpi =
+            PixelPoint.FromPoint(new Point((int)Bounds.Size.Width, (int)Bounds.Size.Height), primaryScreen.Scaling);
+        switch (taskBarLocation)
+        {
+            case TaskBarLocation.Top:
+                break;
+            case TaskBarLocation.Bottom:
+                Position = screenBoundsWithDpi - windowBoundsWithDpi -
+                           PixelPoint.FromPoint(new Point(0, taskBarHeight), primaryScreen.Scaling) -
+                           PixelPoint.FromPoint(new Point(4, 4), primaryScreen.Scaling);
+                break;
+            case TaskBarLocation.Left:
+                break;
+            case TaskBarLocation.Right:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    #endregion
+
+    #region TaskBar Helper
 
     private enum TaskBarLocation
     {
@@ -92,41 +145,11 @@ public partial class MainWindow : Window
         return (int)(taskbarHeight / primaryScreen.Scaling);
     }
 
+    #endregion
+
     private void TopLevel_OnOpened(object? sender, EventArgs e)
     {
-        UpdateWindowPosition();
-    }
-
-    private void UpdateWindowPosition()
-    {
-        if (!OperatingSystem.IsWindows())
-            return;
-
-        if (Screens.Primary is not { } primaryScreen)
-            return;
-
-        var taskBarLocation = GetTaskBarLocation();
-        var taskBarHeight = GetTaskBarHeight();
-
-        var screenBoundsWithDpi = new PixelPoint(primaryScreen.Bounds.Width, primaryScreen.Bounds.Height);
-        var windowBoundsWithDpi =
-            PixelPoint.FromPoint(new Point((int)Bounds.Size.Width, (int)Bounds.Size.Height), primaryScreen.Scaling);
-        switch (taskBarLocation)
-        {
-            case TaskBarLocation.Top:
-                break;
-            case TaskBarLocation.Bottom:
-                Position = screenBoundsWithDpi - windowBoundsWithDpi -
-                           PixelPoint.FromPoint(new Point(0, taskBarHeight), primaryScreen.Scaling) -
-                           PixelPoint.FromPoint(new Point(4, 4), primaryScreen.Scaling);
-                break;
-            case TaskBarLocation.Left:
-                break;
-            case TaskBarLocation.Right:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+        UpdateWindowConfiguration();
     }
 
     private void Window_OnLoaded(object? sender, RoutedEventArgs e)
@@ -135,6 +158,7 @@ public partial class MainWindow : Window
             return;
 
         viewModel.RequestActivate += RequestActive;
+        viewModel.PropertyChanged += OnPropertyChanged;
     }
 
     private void Window_OnUnloaded(object? sender, RoutedEventArgs e)
@@ -143,6 +167,15 @@ public partial class MainWindow : Window
             return;
 
         viewModel.RequestActivate -= RequestActive;
+        viewModel.PropertyChanged -= OnPropertyChanged;
+    }
+
+    private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(MainWindowViewModel.Borderless) or nameof(MainWindowViewModel.Pinned))
+        {
+            UpdateWindowConfiguration();
+        }
     }
 
     private void RequestActive(object? sender, EventArgs e)

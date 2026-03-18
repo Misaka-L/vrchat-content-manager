@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Avalonia.Collections;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,16 +16,16 @@ public partial class HomePageViewModel : PageViewModelBase
 {
     public bool UseRgbCyclingBackgroundMenu => _appSettings.Value.UseRgbCyclingBackgroundMenu;
 
-    [ObservableProperty] public partial HomePageNavigationItem CurrentNavigationItem { get; set; }
+    [ObservableProperty] public partial HomePageNavigationItem? CurrentNavigationItem { get; set; }
     [ObservableProperty] public partial PageViewModelBase? CurrentPage { get; private set; }
 
-    [ObservableProperty]
-    public partial List<HomePageNavigationItem> Items { get; private set; } =
+    public AvaloniaList<HomePageNavigationItem> Items { get; } =
     [
         new("Tasks", MaterialIconKind.ProgressUpload, typeof(HomeTasksPageViewModel))
     ];
 
     public bool IsPinned => _appWindowService.IsPinned();
+    public bool IsBorderless => _appWindowService.IsBorderless();
 
     private readonly NavigationService _navigationService;
     private readonly AppWindowService _appWindowService;
@@ -32,7 +33,6 @@ public partial class HomePageViewModel : PageViewModelBase
     private readonly RpcStartupPortWarningState _startupPortWarningState;
     private readonly StartupPortChangedDialogViewModelFactory _startupPortChangedDialogFactory;
     private readonly IWritableOptions<AppSettings> _appSettings;
-    private readonly IServiceProvider _serviceProvider;
 
     public HomePageViewModel(
         NavigationService navigationService,
@@ -45,7 +45,6 @@ public partial class HomePageViewModel : PageViewModelBase
     {
         _navigationService = navigationService;
         _dialogService = dialogService;
-        _serviceProvider = serviceProvider;
         _appSettings = appSettings;
         _appWindowService = appWindowService;
         _startupPortWarningState = startupPortWarningState;
@@ -62,7 +61,7 @@ public partial class HomePageViewModel : PageViewModelBase
                 return;
             }
 
-            var page = (PageViewModelBase)_serviceProvider.GetRequiredService(CurrentNavigationItem.PageViewModelType)!;
+            var page = (PageViewModelBase)serviceProvider.GetRequiredService(CurrentNavigationItem.PageViewModelType);
             CurrentPage = page;
         };
 
@@ -86,6 +85,13 @@ public partial class HomePageViewModel : PageViewModelBase
     private void NavigateToSettings()
     {
         _navigationService.Navigate<SettingsPageViewModel>();
+    }
+
+    [RelayCommand]
+    private async Task ToggleBoardless()
+    {
+        await _appWindowService.SetBorderlessAsync(!_appWindowService.IsBorderless());
+        OnPropertyChanged(nameof(IsBorderless));
     }
 
     [RelayCommand]

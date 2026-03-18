@@ -10,6 +10,11 @@
 
     <StackPanel Margin="8" Spacing="8">
         <ToggleSwitch Content="Use RGB Cycling Menu Bar" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
+        <OnPlatform>
+            <On Options="Windows">
+                <ToggleSwitch Content="Use Borderless Window" IsChecked="{Binding UseBorderlessWindow}" />
+            </On>
+        </OnPlatform>
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
                   assists:ComboBoxAssist.Label="How tasks order in Task Page"
                   ItemsSource="{Binding TasksSortMode}"

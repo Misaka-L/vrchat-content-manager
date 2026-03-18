@@ -15,6 +15,8 @@ public sealed class AppSettings
     public Uri? HttpProxyUri { get; set; }
 
     public AppTasksPageSortMode TasksPageSortMode { get; set; } = AppTasksPageSortMode.LatestFirst;
+
+    public bool UseBorderlessWindow { get; set; } = true;
 }
 
 public enum AppHttpProxySettings

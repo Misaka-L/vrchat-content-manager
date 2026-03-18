@@ -56,10 +56,20 @@
                     </ListBox.DataTemplates>
                 </ListBox>
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <OnPlatform>
+                        <On Options="Windows">
+                            <ToggleButton Theme="{StaticResource MaterialFlatToggleButton}" Height="48" Width="48"
+                                          Content="{avalonia:MaterialIconExt Kind=WindowMaximize, Size=26}"
+                                          IsChecked="{Binding !IsBorderless}"
+                                          Command="{Binding ToggleBoardlessCommand}"
+                                          ToolTip.Tip="Toggle use normal or borderless window." />
+                        </On>
+                    </OnPlatform>
                     <ToggleButton Theme="{StaticResource MaterialFlatToggleButton}" Height="48" Width="48"
                                   Content="{avalonia:MaterialIconExt Kind=Pin, Size=26}"
                                   IsChecked="{Binding IsPinned}"
-                                  Command="{Binding ToggleWindowPinCommand}" />
+                                  Command="{Binding ToggleWindowPinCommand}"
+                                  ToolTip.Tip="Do not hide windows or toggle is window topmost in borderless mode." />
                     <Button Command="{Binding NavigateToSettingsCommand}"
                             Theme="{StaticResource MaterialFlatButton}" Height="48" Width="48"
                             Content="{avalonia:MaterialIconExt Kind=Cog, Size=26}" />

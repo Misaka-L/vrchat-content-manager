@@ -1,10 +1,14 @@
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
-public sealed class AppearanceSettingsViewModel(IWritableOptions<AppSettings> appSettings) : PageViewModelBase
+public sealed class AppearanceSettingsViewModel(
+    IWritableOptions<AppSettings> appSettings,
+    AppWindowService appWindowService
+    ) : PageViewModelBase
 {
     public bool UseRgbCyclingBackgroundMenu
     {
@@ -16,6 +20,21 @@ public sealed class AppearanceSettingsViewModel(IWritableOptions<AppSettings> ap
 
             OnPropertyChanging();
             appSettings.Update(settings => settings.UseRgbCyclingBackgroundMenu = value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool UseBorderlessWindow
+    {
+        get => appWindowService.IsBorderless();
+        set
+        {
+            if (appWindowService.IsBorderless() == value)
+                return;
+
+            OnPropertyChanging();
+            appSettings.Update(settings => settings.UseBorderlessWindow = value);
+            _ = appWindowService.SetBorderlessAsync(value);
             OnPropertyChanged();
         }
     }
