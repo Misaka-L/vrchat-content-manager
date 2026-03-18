@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - For world publish task which will create a new world, will create world record while create publish task. [`#229`](https://github.com/project-vrcz/content-publisher/pull/229)
+- For Linux, the pin button in the home page now control topmost of the window. [`#230`](https://github.com/project-vrcz/content-publisher/pull/230)
+
+### Added
+
+- For Windows, you can choice use borderless window (current behavior) or normal window (with system window chrome). [`#230`](https://github.com/project-vrcz/content-publisher/pull/230)
 
 ### Fixed
 

@@ -7,12 +7,10 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="VRChatContentPublisher.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        ExtendClientAreaToDecorationsHint="True" SystemDecorations="BorderOnly"
-        ExtendClientAreaChromeHints="NoChrome" ShowInTaskbar="False" Topmost="True"
         Opened="TopLevel_OnOpened" Width="420" Height="680"
         Loaded="Window_OnLoaded" Unloaded="Window_OnUnloaded"
         Icon="/Assets/AppIcon.ico"
-        Title="VRChatContentPublisher.App">
+        Title="VRChat Content Publisher">
 
     <dialogHostAvalonia:DialogHost Identifier="{Binding DialogHostId}">
         <TransitioningContentControl Content="{Binding CurrentPage}" />
