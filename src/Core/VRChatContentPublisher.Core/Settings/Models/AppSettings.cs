@@ -8,6 +8,7 @@ public sealed class AppSettings
     public bool UseRgbCyclingBackgroundMenu { get; set; } = false;
     public bool SendNotificationOnStartupSessionRestoreFailed { get; set; } = true;
     public bool SendNotificationOnTaskFailed { get; set; } = true;
+    public bool SendNotificationOnPublicIpChanged { get; set; } = true;
     public string ConnectInstanceName { get; set; } = RandomWordsUtils.GetRandomWords();
     public int RpcServerPort { get; set; } = 59328;
 

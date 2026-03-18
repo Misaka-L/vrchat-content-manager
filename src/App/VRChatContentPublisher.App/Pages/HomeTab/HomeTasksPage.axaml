@@ -15,9 +15,32 @@
         <AttachedToVisualTreeTrigger>
             <InvokeCommandAction Command="{Binding LoadCommand}" />
         </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
     </Interaction.Behaviors>
 
-    <Panel>
+    <Grid RowDefinitions="Auto,*">
+        <Border Grid.Row="0"
+                IsVisible="{Binding IsPublicIpWarningVisible}"
+                Background="#FF6D00">
+            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="8">
+                <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1"
+                           Text="{Binding PublicIpWarningText}"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           TextWrapping="Wrap" />
+                <Button Grid.Column="2"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Foreground="White"
+                        Command="{Binding DismissPublicIpWarningCommand}"
+                        Content="Dismiss"
+                        VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <Panel Grid.Row="1">
         <Grid RowDefinitions="Auto,*"
               IsVisible="{Binding TaskManagers.Count}">
             <controls1:ColorZone>
@@ -76,5 +99,6 @@
             <Button Content="Login" HorizontalAlignment="Center" MinWidth="200"
                     Command="{Binding LoginCommand}" />
         </StackPanel>
-    </Panel>
+        </Panel>
+    </Grid>
 </UserControl>
