@@ -124,7 +124,7 @@ public static class ServicesExtension
             });
         });
 
-        services.AddSingleton<IIpCryptService, MockIpCryptService>();
+        services.AddSingleton<IIpCryptService, IpCryptService>();
         services.AddSingleton<PublicIpCheckerService>();
 
         services.AddHttpClient<CloudflareTracePublicIpProvider>(client =>
