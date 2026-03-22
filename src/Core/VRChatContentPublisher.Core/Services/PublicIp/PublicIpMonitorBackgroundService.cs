@@ -19,7 +19,7 @@ public sealed class PublicIpMonitorBackgroundService(
     {
         _sessionInvalidatedSubscription = sessionStateChangedSubscriber.Subscribe(args =>
         {
-            if (args.SessionState is not (UserSessionState.LoggedIn or UserSessionState.InvalidSession))
+            if (args.SessionState != UserSessionState.InvalidSession)
                 return;
 
             _checkSignal.Release();
@@ -50,7 +50,7 @@ public sealed class PublicIpMonitorBackgroundService(
     {
         try
         {
-            await checkerService.CheckAndPublishIfChangedAsync(cancellationToken);
+            await checkerService.RequestCheckAndPublishIfChangedAsync(cancellationToken);
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
