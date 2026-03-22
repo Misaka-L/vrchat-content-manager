@@ -25,9 +25,8 @@ public sealed partial class HomeTasksPageViewModel(
     public partial PublishTaskManagerContainerViewModel? SelectedTaskManagerContainerViewModel { get; set; }
 
     public bool IsPublicIpWarningVisible => !publicIpCheckerService.IsWarningDismissed;
-
-    public string PublicIpWarningText =>
-        $"Public IP changed from {publicIpCheckerService.LastPreviousIp} to {publicIpCheckerService.LastPublicIp}.";
+    public string? LastPublicIp => publicIpCheckerService.LastPublicIp;
+    public string? LastPreviousPublicIp => publicIpCheckerService.LastPreviousIp;
 
     private IDisposable? _publicIpChangedSubscription;
 
@@ -69,7 +68,8 @@ public sealed partial class HomeTasksPageViewModel(
     {
         await publicIpCheckerService.DismissWarningAsync();
 
-        OnPropertyChanged(nameof(PublicIpWarningText));
+        OnPropertyChanged(nameof(LastPublicIp));
+        OnPropertyChanged(nameof(LastPreviousPublicIp));
         OnPropertyChanged(nameof(IsPublicIpWarningVisible));
     }
 
@@ -143,7 +143,8 @@ public sealed partial class HomeTasksPageViewModel(
     {
         Dispatcher.UIThread.Invoke(() =>
         {
-            OnPropertyChanged(nameof(PublicIpWarningText));
+            OnPropertyChanged(nameof(LastPublicIp));
+            OnPropertyChanged(nameof(LastPreviousPublicIp));
             OnPropertyChanged(nameof(IsPublicIpWarningVisible));
         });
     }

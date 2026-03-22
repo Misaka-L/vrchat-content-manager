@@ -24,81 +24,105 @@
         <Border Grid.Row="0"
                 IsVisible="{Binding IsPublicIpWarningVisible}"
                 Background="#FF6D00">
-            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="8">
-                <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top" />
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="8">
+                <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top"
+                                       Margin="0,0,8,0"/>
                 <TextBlock Grid.Column="1"
-                           Text="{Binding PublicIpWarningText}"
+                           Text="Public IP Changed: Your public IP address has changed since the last time you logged in. This may cause login issues. Please log out and log in again to refresh your session."
                            Foreground="White"
                            VerticalAlignment="Center"
                            TextWrapping="Wrap" />
-                <Button Grid.Column="2"
+                <StackPanel VerticalAlignment="Center" Grid.Column="2">
+                    <Button
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Foreground="White"
+                        Content="Show IP"
+                        VerticalAlignment="Center">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel>
+                                    <SelectableTextBlock>
+                                        <Bold>Current Public Ip:</Bold>
+                                        <Run Text="{Binding LastPublicIp, FallbackValue=N/A}" />
+                                    </SelectableTextBlock>
+                                    <SelectableTextBlock>
+                                        <Bold>Last Public Ip:</Bold>
+                                        <Run Text="{Binding LastPreviousPublicIp, FallbackValue=N/A}" />
+                                    </SelectableTextBlock>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <Button
                         Theme="{StaticResource MaterialFlatButton}"
                         Foreground="White"
                         Command="{Binding DismissPublicIpWarningCommand}"
                         Content="Dismiss"
                         VerticalAlignment="Center" />
+                </StackPanel>
             </Grid>
         </Border>
 
         <Panel Grid.Row="1">
-        <Grid RowDefinitions="Auto,*"
-              IsVisible="{Binding TaskManagers.Count}">
-            <controls1:ColorZone>
-                <Grid ColumnDefinitions="*,Auto">
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
-                        <Interaction.Behaviors>
-                            <HorizontalScrollViewerBehavior RequireShiftKey="False" ScrollChangeSize="Line" />
-                        </Interaction.Behaviors>
-                        <ListBox ItemsSource="{Binding TaskManagers}"
-                                 SelectedItem="{Binding SelectedTaskManagerContainerViewModel}"
-                                 SelectionMode="Single">
-                            <ListBox.Styles>
-                                <Style Selector="ListBoxItem">
-                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                </Style>
-                                <Style Selector="ListBoxItem:selected">
-                                    <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignBodyLight}" />
-                                </Style>
-                            </ListBox.Styles>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate x:DataType="publishTasks:PublishTaskManagerContainerViewModel">
-                                    <StackPanel Orientation="Horizontal" Spacing="4">
-                                        <Border
-                                            IsVisible="{Binding AvatarUri, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                            CornerRadius="100" Height="18" Width="18" ClipToBounds="True">
-                                            <Image controls:AsyncImageLoader.Source="{Binding AvatarUri}"
-                                                   Stretch="UniformToFill" />
-                                        </Border>
-                                        <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ListBox.ItemsPanel>
-                        </ListBox>
-                    </ScrollViewer>
-                    <Button Grid.Column="1"
-                            Name="AddAccountButton"
-                            Theme="{StaticResource MaterialFlatButton}"
-                            Command="{Binding LoginCommand}"
-                            Content="{avalonia:MaterialIconExt Kind=Add, Size=24}"
-                            Width="{Binding #AddAccountButton.Bounds.Height}"
-                            ToolTip.Tip="Add New Account" />
-                </Grid>
-            </controls1:ColorZone>
-            <TransitioningContentControl Grid.Row="1" Content="{Binding SelectedTaskManagerContainerViewModel}" />
-        </Grid>
-        <StackPanel IsVisible="{Binding !TaskManagers.Count}"
-                    Spacing="12" Margin="0,24,0,0">
-            <avalonia:MaterialIcon Kind="QuestionBoxMultiple" Height="64" Width="64" />
-            <TextBlock Text="You didn't login any VRChat accounts" HorizontalAlignment="Center"
-                       FontSize="18" />
-            <Button Content="Login" HorizontalAlignment="Center" MinWidth="200"
-                    Command="{Binding LoginCommand}" />
-        </StackPanel>
+            <Grid RowDefinitions="Auto,*"
+                  IsVisible="{Binding TaskManagers.Count}">
+                <controls1:ColorZone>
+                    <Grid ColumnDefinitions="*,Auto">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                            <Interaction.Behaviors>
+                                <HorizontalScrollViewerBehavior RequireShiftKey="False" ScrollChangeSize="Line" />
+                            </Interaction.Behaviors>
+                            <ListBox ItemsSource="{Binding TaskManagers}"
+                                     SelectedItem="{Binding SelectedTaskManagerContainerViewModel}"
+                                     SelectionMode="Single">
+                                <ListBox.Styles>
+                                    <Style Selector="ListBoxItem">
+                                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                                    </Style>
+                                    <Style Selector="ListBoxItem:selected">
+                                        <Setter Property="BorderBrush"
+                                                Value="{DynamicResource MaterialDesignBodyLight}" />
+                                    </Style>
+                                </ListBox.Styles>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate x:DataType="publishTasks:PublishTaskManagerContainerViewModel">
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <Border
+                                                IsVisible="{Binding AvatarUri, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                                CornerRadius="100" Height="18" Width="18" ClipToBounds="True">
+                                                <Image controls:AsyncImageLoader.Source="{Binding AvatarUri}"
+                                                       Stretch="UniformToFill" />
+                                            </Border>
+                                            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+                        </ScrollViewer>
+                        <Button Grid.Column="1"
+                                Name="AddAccountButton"
+                                Theme="{StaticResource MaterialFlatButton}"
+                                Command="{Binding LoginCommand}"
+                                Content="{avalonia:MaterialIconExt Kind=Add, Size=24}"
+                                Width="{Binding #AddAccountButton.Bounds.Height}"
+                                ToolTip.Tip="Add New Account" />
+                    </Grid>
+                </controls1:ColorZone>
+                <TransitioningContentControl Grid.Row="1" Content="{Binding SelectedTaskManagerContainerViewModel}" />
+            </Grid>
+            <StackPanel IsVisible="{Binding !TaskManagers.Count}"
+                        Spacing="12" Margin="0,24,0,0">
+                <avalonia:MaterialIcon Kind="QuestionBoxMultiple" Height="64" Width="64" />
+                <TextBlock Text="You didn't login any VRChat accounts" HorizontalAlignment="Center"
+                           FontSize="18" />
+                <Button Content="Login" HorizontalAlignment="Center" MinWidth="200"
+                        Command="{Binding LoginCommand}" />
+            </StackPanel>
         </Panel>
     </Grid>
 </UserControl>
