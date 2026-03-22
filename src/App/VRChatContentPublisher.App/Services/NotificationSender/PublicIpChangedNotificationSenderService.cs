@@ -22,7 +22,7 @@ public sealed class PublicIpChangedNotificationSenderService(
             if (!appSettings.Value.SendNotificationOnPublicIpChanged)
                 return;
 
-            var title = "Public IP changed";
+            var title = "Public IP Changed";
             var message = $"Old: {args.OldIpPlaintext}  New: {args.NewIpPlaintext}";
 
             _ = desktopNotificationService.SendDesktopNotificationAsync(title, message).AsTask();
