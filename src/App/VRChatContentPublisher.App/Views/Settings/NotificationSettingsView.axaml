@@ -8,13 +8,20 @@
              x:Class="VRChatContentPublisher.App.Views.Settings.NotificationSettingsView">
 
     <StackPanel Margin="8" Spacing="8">
-        <TextBlock Text="Send notifications when" FontWeight="SemiBold"/>
+        <ToggleSwitch Content="Enabled notifications"
+                      IsChecked="{Binding EnabledNotifications}" />
+        <Button Content="Send Test Notification"
+                Command="{Binding SendTestNotificationCommand}"
+                IsEnabled="{Binding EnabledNotifications}" />
+        <TextBlock Text="Send notifications when" FontWeight="SemiBold" />
         <ToggleSwitch Content="Session restore failed on startup"
+                      IsEnabled="{Binding EnabledNotifications}"
                       IsChecked="{Binding SendNotificationOnStartupSessionRestoreFailed}" />
         <ToggleSwitch Content="Publish task failed"
+                      IsEnabled="{Binding EnabledNotifications}"
                       IsChecked="{Binding SendNotificationOnTaskFailed}" />
         <ToggleSwitch Content="Public IP changed"
+                      IsEnabled="{Binding EnabledNotifications}"
                       IsChecked="{Binding SendNotificationOnPublicIpChanged}" />
     </StackPanel>
 </UserControl>
-

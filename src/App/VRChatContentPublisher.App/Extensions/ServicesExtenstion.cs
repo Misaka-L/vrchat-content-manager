@@ -24,6 +24,7 @@ public static class ServicesExtenstion
         services.AddSingleton<AppWebImageLoader>();
 
         services.AddSingleton<AppWindowService>();
+        services.AddSingleton<AppNotificationService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
         services.AddHostedService<TaskFailedNotificationSenderService>();
         services.AddHostedService<PublicIpChangedNotificationSenderService>();

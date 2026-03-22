@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - For Windows, you can choice use borderless window (current behavior) or normal window (with system window chrome). [`#230`](https://github.com/project-vrcz/content-publisher/pull/230)
+- Send Test Notification. [`#232`](https://github.com/project-vrcz/content-publisher/pull/232)
+- Notification Enabled Settings. [`#232`](https://github.com/project-vrcz/content-publisher/pull/232)
 - Notify user when public IP changed. [`#231`](https://github.com/project-vrcz/content-publisher/pull/231)
   - Send desktop notification when public ip changed. (optional settings)
   - Show warning banner on Tasks page when public ip changed.

@@ -1,10 +1,29 @@
+using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Services.NotificationSender;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
-public sealed partial class NotificationSettingsViewModel(IWritableOptions<AppSettings> appSettings) : ViewModelBase
+public sealed partial class NotificationSettingsViewModel(
+    IWritableOptions<AppSettings> appSettings,
+    AppNotificationService appNotificationService
+) : ViewModelBase
 {
+    public bool EnabledNotifications
+    {
+        get => appSettings.Value.NotificationsEnabled;
+        set
+        {
+            if (appSettings.Value.NotificationsEnabled == value)
+                return;
+
+            OnPropertyChanging();
+            appSettings.Update(settings => settings.NotificationsEnabled = value);
+            OnPropertyChanged();
+        }
+    }
+
     public bool SendNotificationOnStartupSessionRestoreFailed
     {
         get => appSettings.Value.SendNotificationOnStartupSessionRestoreFailed;
@@ -45,5 +64,11 @@ public sealed partial class NotificationSettingsViewModel(IWritableOptions<AppSe
             appSettings.Update(settings => settings.SendNotificationOnPublicIpChanged = value);
             OnPropertyChanged();
         }
+    }
+
+    [RelayCommand]
+    private async Task SendTestNotification()
+    {
+        await appNotificationService.SendNotificationAsync("Test Notification", "This is a test notification");
     }
 }
