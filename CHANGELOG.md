@@ -6,6 +6,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- For world publish task which will create a new world, will create world record while create publish task. [`#229`](https://github.com/project-vrcz/content-publisher/pull/229)
+- For Linux, the pin button in the home page now control topmost of the window. [`#230`](https://github.com/project-vrcz/content-publisher/pull/230)
+
+### Added
+
+- For Windows, you can choice use borderless window (current behavior) or normal window (with system window chrome). [`#230`](https://github.com/project-vrcz/content-publisher/pull/230)
+- Send Test Notification. [`#232`](https://github.com/project-vrcz/content-publisher/pull/232)
+- Notification Enabled Settings. [`#232`](https://github.com/project-vrcz/content-publisher/pull/232)
+- Notify user when public IP changed. [`#231`](https://github.com/project-vrcz/content-publisher/pull/231)
+  - Send desktop notification when public ip changed. (optional settings)
+  - Show warning banner on Tasks page when public ip changed.
+  - Will only print encrypted public ip to log. (decrypt in app debug settings)
+
+### Fixed
+
+- Fix issues with create new world. [`#229`](https://github.com/project-vrcz/content-publisher/pull/229)
+  - Upload separate worlds accidentally when MPA upload or
+  - Blueprint id was immediately clear after publish task create.
+
+### Changes from 2.6.0
+
+#### Fixed
+
+- App crash when startup.
+
 ## [2.6.0] - 2026-03-22
 
 ### Changed
