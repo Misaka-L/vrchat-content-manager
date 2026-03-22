@@ -15,9 +15,11 @@ public sealed class PublicIpCheckerService(
 {
     private readonly SemaphoreSlim _checkLock = new(1, 1);
 
-    public async ValueTask CheckAndPublishIfChangedAsync(CancellationToken cancellationToken = default)
+    public async ValueTask RequestCheckAndPublishIfChangedAsync(CancellationToken cancellationToken = default)
     {
-        await _checkLock.WaitAsync(cancellationToken);
+        if (!await _checkLock.WaitAsync(0, cancellationToken))
+            return;
+
         try
         {
             var currentIp = await publicIpProvider.GetCurrentPublicIpAsync(cancellationToken);
@@ -74,4 +76,3 @@ public sealed class PublicIpCheckerService(
         }
     }
 }
-
