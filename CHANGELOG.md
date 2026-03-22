@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.6.0] - 2026-03-22
+
 ### Changed
 
 - For world publish task which will create a new world, will create world record while create publish task. [`#229`](https://github.com/project-vrcz/content-publisher/pull/229)
@@ -311,7 +313,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.5.0...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.6.0...HEAD
+[2.6.0]: https://github.com/project-vrcz/content-publisher/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/project-vrcz/content-publisher/compare/v2.4.2...v2.5.0
 [2.4.2]: https://github.com/project-vrcz/content-publisher/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/project-vrcz/content-publisher/compare/v2.4.0...v2.4.1
