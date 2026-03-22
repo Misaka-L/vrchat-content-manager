@@ -3,13 +3,12 @@ using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.Core.Events.PublicIp;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
-using VRChatContentPublisher.Platform.Abstraction.Services;
 
 namespace VRChatContentPublisher.App.Services.NotificationSender;
 
 public sealed class PublicIpChangedNotificationSenderService(
     IWritableOptions<AppSettings> appSettings,
-    IDesktopNotificationService desktopNotificationService,
+    AppNotificationService appNotificationService,
     ISubscriber<PublicIpChangedEvent> ipChangedSubscriber)
     : IHostedService
 {
@@ -25,7 +24,7 @@ public sealed class PublicIpChangedNotificationSenderService(
             var title = "Public IP Changed";
             var message = $"Old: {args.OldIpPlaintext}  New: {args.NewIpPlaintext}";
 
-            _ = desktopNotificationService.SendDesktopNotificationAsync(title, message).AsTask();
+            _ = appNotificationService.SendNotificationAsync(title, message).AsTask();
         });
 
         return Task.CompletedTask;

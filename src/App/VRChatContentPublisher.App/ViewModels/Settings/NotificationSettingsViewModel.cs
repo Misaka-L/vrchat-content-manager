@@ -5,6 +5,20 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed partial class NotificationSettingsViewModel(IWritableOptions<AppSettings> appSettings) : ViewModelBase
 {
+    public bool EnabledNotifications
+    {
+        get => appSettings.Value.NotificationsEnabled;
+        set
+        {
+            if (appSettings.Value.NotificationsEnabled == value)
+                return;
+
+            OnPropertyChanging();
+            appSettings.Update(settings => settings.NotificationsEnabled = value);
+            OnPropertyChanged();
+        }
+    }
+
     public bool SendNotificationOnStartupSessionRestoreFailed
     {
         get => appSettings.Value.SendNotificationOnStartupSessionRestoreFailed;
