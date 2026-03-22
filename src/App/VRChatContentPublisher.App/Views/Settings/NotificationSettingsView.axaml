@@ -10,6 +10,9 @@
     <StackPanel Margin="8" Spacing="8">
         <ToggleSwitch Content="Enabled notifications"
                       IsChecked="{Binding EnabledNotifications}" />
+        <Button Content="Send Test Notification"
+                Command="{Binding SendTestNotificationCommand}"
+                IsEnabled="{Binding EnabledNotifications}" />
         <TextBlock Text="Send notifications when" FontWeight="SemiBold" />
         <ToggleSwitch Content="Session restore failed on startup"
                       IsEnabled="{Binding EnabledNotifications}"
