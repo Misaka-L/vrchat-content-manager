@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 #### Fixed
 
 - App crash when startup.
+- Normal mode windows won't respond to Close or Resize correctly. [`#234`](https://github.com/project-vrcz/content-publisher/pull/234)
 
 ## [2.6.0] - 2026-03-22
 

@@ -29,7 +29,7 @@ public partial class MainWindow : Window
 
         Deactivated += (_, _) =>
         {
-            if (DataContext is MainWindowViewModel { Pinned: true })
+            if (DataContext is MainWindowViewModel viewModel && (viewModel.Pinned || !viewModel.Borderless))
                 return;
 #if !DEBUG
             Hide();
