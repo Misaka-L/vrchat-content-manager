@@ -15,16 +15,6 @@
                       IsChecked="{Binding SendNotificationOnTaskFailed}" />
         <ToggleSwitch Content="Public IP changed"
                       IsChecked="{Binding SendNotificationOnPublicIpChanged}" />
-
-        <Border Height="1" Margin="0,4,0,0" Background="{DynamicResource MaterialDesignBodyLight}" />
-
-        <TextBlock Text="Decrypt encrypted IP" FontWeight="SemiBold" />
-        <TextBox Watermark="Paste encrypted IP here"
-                 Text="{Binding EncryptedIpText}" />
-        <Button Content="Decrypt" Command="{Binding DecryptIpCommand}" HorizontalAlignment="Left" />
-        <TextBlock Text="{Binding DecryptedIpText}" IsVisible="{Binding HasDecryptedIpText}" />
-        <TextBlock Text="{Binding DecryptErrorText}" Foreground="#d50000"
-                   IsVisible="{Binding HasDecryptErrorText}" />
     </StackPanel>
 </UserControl>
 

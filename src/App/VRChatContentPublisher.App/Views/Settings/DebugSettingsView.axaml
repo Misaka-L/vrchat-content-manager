@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:DebugSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.DebugSettingsView">
@@ -17,5 +18,14 @@
             </Interaction.Behaviors>
         </Button>
         <Button Content="Open Network Diagnostics" Command="{Binding OpenNetworkDiagnosticWindowCommand}" />
+        <Border Height="1" Margin="0,4,0,0" Background="{DynamicResource MaterialDesignBodyLight}" />
+
+        <TextBox assists:TextFieldAssist.Label="Paste encrypted IP here"
+                 UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                 Text="{Binding EncryptedIpText}" />
+        <Button Content="Decrypt" Command="{Binding DecryptIpCommand}" />
+        <SelectableTextBlock Text="{Binding DecryptedIpText}" IsVisible="{Binding HasDecryptedIpText}" />
+        <SelectableTextBlock Text="{Binding DecryptErrorText}" Foreground="#d50000"
+                   IsVisible="{Binding HasDecryptErrorText}" />
     </StackPanel>
 </UserControl>
