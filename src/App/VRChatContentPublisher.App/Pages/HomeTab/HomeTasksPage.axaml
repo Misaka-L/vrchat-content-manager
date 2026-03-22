@@ -25,7 +25,7 @@
                 IsVisible="{Binding IsPublicIpWarningVisible}"
                 Background="#FF6D00">
             <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8" Margin="8">
-                <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Center" />
+                <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top" />
                 <TextBlock Grid.Column="1"
                            Text="{Binding PublicIpWarningText}"
                            Foreground="White"

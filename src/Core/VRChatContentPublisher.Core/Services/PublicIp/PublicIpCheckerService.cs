@@ -13,6 +13,17 @@ public sealed class PublicIpCheckerService(
     IPublisher<PublicIpChangedEvent> ipChangedPublisher,
     ILogger<PublicIpCheckerService> logger)
 {
+    public bool IsWarningDismissed => ipStateStorage.Value.IsWarningDismissed;
+    public DateTimeOffset? LastCheckedAtUtc => ipStateStorage.Value.LastCheckedAtUtc;
+    public DateTimeOffset? LastChangedAtUtc => ipStateStorage.Value.LastChangedAtUtc;
+    public string? LastPublicIp => ipStateStorage.Value.LastPublicIp;
+    public string? LastPreviousIp => ipStateStorage.Value.LastPreviousIp;
+
+    public async ValueTask DismissWarningAsync()
+    {
+        await ipStateStorage.UpdateAsync(storage => storage.IsWarningDismissed = true);
+    }
+
     private readonly SemaphoreSlim _checkLock = new(1, 1);
 
     public async ValueTask RequestCheckAndPublishIfChangedAsync(CancellationToken cancellationToken = default)
@@ -44,26 +55,24 @@ public sealed class PublicIpCheckerService(
                 return;
             }
 
-            var warningInstanceId = Guid.CreateVersion7();
             var encryptedOldIp = await ipCryptService.EncryptAsync(previousIp, cancellationToken);
             var encryptedNewIp = await ipCryptService.EncryptAsync(currentIp, cancellationToken);
 
             await ipStateStorage.UpdateAsync(storage =>
             {
+                storage.LastPreviousIp = previousIp;
                 storage.LastPublicIp = currentIp;
                 storage.LastCheckedAtUtc = now;
                 storage.LastChangedAtUtc = now;
-                storage.LastWarningInstanceId = warningInstanceId;
+                storage.IsWarningDismissed = false;
             });
 
             logger.LogWarning(
-                "Public public IP changed. WarningId: {WarningId}, OldIpEncrypted: {OldIpEncrypted}, NewIpEncrypted: {NewIpEncrypted}",
-                warningInstanceId,
+                "Public public IP changed. OldIpEncrypted: {OldIpEncrypted}, NewIpEncrypted: {NewIpEncrypted}",
                 encryptedOldIp,
                 encryptedNewIp);
 
             ipChangedPublisher.Publish(new PublicIpChangedEvent(
-                warningInstanceId,
                 previousIp,
                 currentIp,
                 encryptedOldIp,

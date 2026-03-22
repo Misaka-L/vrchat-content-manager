@@ -6,6 +6,7 @@ using MessagePipe;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.Core.Events.PublicIp;
+using VRChatContentPublisher.Core.Services.PublicIp;
 using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
@@ -15,19 +16,19 @@ public sealed partial class HomeTasksPageViewModel(
     NavigationService navigationService,
     AddAccountPageViewModelFactory addAccountPageViewModelFactory,
     PublishTaskManagerContainerViewModelFactory containerViewModelFactory,
-    ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber) : PageViewModelBase
+    ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber,
+    PublicIpCheckerService publicIpCheckerService) : PageViewModelBase
 {
     public ObservableCollection<PublishTaskManagerContainerViewModel> TaskManagers { get; } = [];
 
     [ObservableProperty]
     public partial PublishTaskManagerContainerViewModel? SelectedTaskManagerContainerViewModel { get; set; }
 
-    [ObservableProperty] public partial bool IsPublicIpWarningVisible { get; private set; }
+    public bool IsPublicIpWarningVisible => !publicIpCheckerService.IsWarningDismissed;
 
-    [ObservableProperty] public partial string PublicIpWarningText { get; private set; } = string.Empty;
+    public string PublicIpWarningText =>
+        $"Public IP changed from {publicIpCheckerService.LastPreviousIp} to {publicIpCheckerService.LastPublicIp}.";
 
-    private Guid? _currentPublicIpWarningInstanceId;
-    private Guid? _dismissedPublicIpWarningInstanceId;
     private IDisposable? _publicIpChangedSubscription;
 
     private bool _firstLoad = true;
@@ -64,10 +65,12 @@ public sealed partial class HomeTasksPageViewModel(
     }
 
     [RelayCommand]
-    private void DismissPublicIpWarning()
+    private async Task DismissPublicIpWarning()
     {
-        _dismissedPublicIpWarningInstanceId = _currentPublicIpWarningInstanceId;
-        IsPublicIpWarningVisible = false;
+        await publicIpCheckerService.DismissWarningAsync();
+
+        OnPropertyChanged(nameof(PublicIpWarningText));
+        OnPropertyChanged(nameof(IsPublicIpWarningVisible));
     }
 
     [RelayCommand]
@@ -140,12 +143,8 @@ public sealed partial class HomeTasksPageViewModel(
     {
         Dispatcher.UIThread.Invoke(() =>
         {
-            if (_dismissedPublicIpWarningInstanceId == args.WarningInstanceId)
-                return;
-
-            _currentPublicIpWarningInstanceId = args.WarningInstanceId;
-            PublicIpWarningText = $"Public IP changed from {args.OldIpPlaintext} to {args.NewIpPlaintext}.";
-            IsPublicIpWarningVisible = true;
+            OnPropertyChanged(nameof(PublicIpWarningText));
+            OnPropertyChanged(nameof(IsPublicIpWarningVisible));
         });
     }
 }
