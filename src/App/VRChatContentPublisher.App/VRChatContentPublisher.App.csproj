@@ -71,6 +71,8 @@
     <ItemGroup>
         <!-- Preserve Avalonia types for reflection -->
         <TrimmerRootAssembly Include="Avalonia.Controls"/>
+        <TrimmerRootAssembly Include="MessagePipe"/>
+<!--        <RdXmlFile Include="rd.xml" />-->
     </ItemGroup>
 
     <ItemGroup>
