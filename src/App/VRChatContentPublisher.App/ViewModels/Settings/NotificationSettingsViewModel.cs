@@ -3,7 +3,7 @@ using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
-public sealed class NotificationSettingsViewModel(IWritableOptions<AppSettings> appSettings) : ViewModelBase
+public sealed partial class NotificationSettingsViewModel(IWritableOptions<AppSettings> appSettings) : ViewModelBase
 {
     public bool SendNotificationOnStartupSessionRestoreFailed
     {
@@ -32,5 +32,18 @@ public sealed class NotificationSettingsViewModel(IWritableOptions<AppSettings> 
             OnPropertyChanged();
         }
     }
-}
 
+    public bool SendNotificationOnPublicIpChanged
+    {
+        get => appSettings.Value.SendNotificationOnPublicIpChanged;
+        set
+        {
+            if (appSettings.Value.SendNotificationOnPublicIpChanged == value)
+                return;
+
+            OnPropertyChanging();
+            appSettings.Update(settings => settings.SendNotificationOnPublicIpChanged = value);
+            OnPropertyChanged();
+        }
+    }
+}

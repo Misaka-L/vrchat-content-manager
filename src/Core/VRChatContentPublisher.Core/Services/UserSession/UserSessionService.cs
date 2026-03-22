@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Auth;
 using VRChatContentPublisher.Core.Services.VRChatApi;
@@ -17,6 +19,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private readonly HttpClient _sessionHttpClient;
     private readonly VRChatApiClient _apiClient;
+    private readonly IPublisher<SessionStateChangedEvent> _sessionStateChangedPublisher;
 
     public CookieContainer CookieContainer { get; }
 
@@ -24,7 +27,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     public event EventHandler<CurrentUser?>? CurrentUserUpdated;
     public UserSessionState State { get; set; } = UserSessionState.Pending;
 
-    private readonly SemaphoreSlim _createOrGetScopeLock = new SemaphoreSlim(1, 1);
+    private readonly SemaphoreSlim _createOrGetScopeLock = new(1, 1);
 
     public string UserNameOrEmail { get; private set; }
     public string? UserId { get; private set; }
@@ -39,6 +42,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         SaveCookiesDelegate saveFunc,
         CookieContainer? cookieContainer,
         VRChatApiClientFactory apiClientFactory,
+        IPublisher<SessionStateChangedEvent> sessionStateChangedPublisher,
         IServiceScopeFactory scopeFactory,
         UserSessionHttpClientFactory httpClientFactory,
         ILogger<UserSessionService> logger)
@@ -46,6 +50,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         _scopeFactory = scopeFactory;
         _logger = logger;
         _saveFunc = saveFunc;
+        _sessionStateChangedPublisher = sessionStateChangedPublisher;
         UserId = userId;
         CurrentUser = user;
 
@@ -180,14 +185,19 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         if (e == State)
             return;
 
+        var oldState = State;
+
         State = e;
         StateChanged?.Invoke(this, e);
+
+        _sessionStateChangedPublisher.Publish(new SessionStateChangedEvent(UserId, UserNameOrEmail, e, oldState));
     }
 }
 
 public sealed class UserSessionFactory(
     IServiceScopeFactory scopeFactory,
     VRChatApiClientFactory apiClientFactory,
+    IPublisher<SessionStateChangedEvent> sessionInvalidatedPublisher,
     UserSessionHttpClientFactory httpClientFactory,
     ILogger<UserSessionService> logger)
 {
@@ -206,6 +216,7 @@ public sealed class UserSessionFactory(
             saveFunc,
             cookieContainer,
             apiClientFactory,
+            sessionInvalidatedPublisher,
             scopeFactory,
             httpClientFactory,
             logger);

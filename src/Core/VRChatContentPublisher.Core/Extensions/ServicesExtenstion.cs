@@ -14,6 +14,7 @@ using VRChatContentPublisher.ConnectCore.Services.PublishTask;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Services.App;
+using VRChatContentPublisher.Core.Services.PublicIp;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask.Connect;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
@@ -123,6 +124,26 @@ public static class ServicesExtension
             });
         });
 
+        services.AddSingleton<IIpCryptService, IpCryptService>();
+        services.AddSingleton<PublicIpCheckerService>();
+
+        services.AddHttpClient<CloudflareTracePublicIpProvider>(client =>
+        {
+            client.AddUserAgent();
+            client.Timeout = TimeSpan.FromSeconds(15);
+        })
+        .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
+        {
+            UseCookies = false,
+            PooledConnectionLifetime = TimeSpan.Zero,
+            EnableMultipleHttp2Connections = true,
+            EnableMultipleHttp3Connections = true,
+            ConnectTimeout = TimeSpan.FromSeconds(5),
+            Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
+        });
+
+        services.AddHostedService<PublicIpMonitorBackgroundService>();
+
         services.AddMessagePipe();
 
         return services;
@@ -152,6 +173,20 @@ public static class ServicesExtension
         var rpcSessionsSection = builder.Configuration.GetSection("RpcSessions");
         builder.Services.Configure<RpcSessionStorage>(rpcSessionsSection);
         builder.Services.AddWriteableOptions<RpcSessionStorage>(rpcSessionsSection.Key, rpcSessionsFileName);
+
+        const string publicIpStateFileName = "public-ip-state.json";
+        builder.Configuration.AddAppJsonFile(publicIpStateFileName);
+
+        var publicIpStateSection = builder.Configuration.GetSection("PublicIpState");
+        builder.Services.Configure<PublicIpStateStorage>(publicIpStateSection);
+        builder.Services.AddWriteableOptions<PublicIpStateStorage>(publicIpStateSection.Key, publicIpStateFileName);
+
+        const string ipCryptFileName = "ipcrypt.json";
+        builder.Configuration.AddAppJsonFile(ipCryptFileName);
+
+        var ipCryptSection = builder.Configuration.GetSection("IpCrypt");
+        builder.Services.Configure<IpCryptStorage>(ipCryptSection);
+        builder.Services.AddWriteableOptions<IpCryptStorage>(ipCryptSection.Key, ipCryptFileName);
 
         return builder;
     }

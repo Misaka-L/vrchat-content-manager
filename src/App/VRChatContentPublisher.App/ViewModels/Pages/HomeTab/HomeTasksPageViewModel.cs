@@ -2,8 +2,11 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MessagePipe;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
+using VRChatContentPublisher.Core.Events.PublicIp;
+using VRChatContentPublisher.Core.Services.PublicIp;
 using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
@@ -12,32 +15,62 @@ public sealed partial class HomeTasksPageViewModel(
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
     AddAccountPageViewModelFactory addAccountPageViewModelFactory,
-    PublishTaskManagerContainerViewModelFactory containerViewModelFactory) : PageViewModelBase
+    PublishTaskManagerContainerViewModelFactory containerViewModelFactory,
+    ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber,
+    PublicIpCheckerService publicIpCheckerService) : PageViewModelBase
 {
     public ObservableCollection<PublishTaskManagerContainerViewModel> TaskManagers { get; } = [];
 
     [ObservableProperty]
     public partial PublishTaskManagerContainerViewModel? SelectedTaskManagerContainerViewModel { get; set; }
 
+    public bool IsPublicIpWarningVisible => !publicIpCheckerService.IsWarningDismissed;
+    public string? LastPublicIp => publicIpCheckerService.LastPublicIp;
+    public string? LastPreviousPublicIp => publicIpCheckerService.LastPreviousIp;
+
+    private IDisposable? _publicIpChangedSubscription;
+
     private bool _firstLoad = true;
 
     [RelayCommand]
     private void Load()
     {
+        var preferDefaultSession = _firstLoad;
+
         if (_firstLoad)
         {
             foreach (var session in userSessionManagerService.Sessions)
             {
                 AddSessionCore(session);
             }
-            
-            userSessionManagerService.SessionCreated += OnUserSessionCreated;
-            userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
         }
 
-        UpdateSelectedTaskManager(_firstLoad);
+        userSessionManagerService.SessionCreated += OnUserSessionCreated;
+        userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
+        _publicIpChangedSubscription = publicIpChangedSubscriber.Subscribe(OnPublicIpChanged);
 
+        UpdateSelectedTaskManager(preferDefaultSession);
         _firstLoad = false;
+    }
+
+    [RelayCommand]
+    private void Unload()
+    {
+        userSessionManagerService.SessionCreated -= OnUserSessionCreated;
+        userSessionManagerService.SessionRemoved -= OnUserSessionRemoved;
+
+        _publicIpChangedSubscription?.Dispose();
+        _publicIpChangedSubscription = null;
+    }
+
+    [RelayCommand]
+    private async Task DismissPublicIpWarning()
+    {
+        await publicIpCheckerService.DismissWarningAsync();
+
+        OnPropertyChanged(nameof(LastPublicIp));
+        OnPropertyChanged(nameof(LastPreviousPublicIp));
+        OnPropertyChanged(nameof(IsPublicIpWarningVisible));
     }
 
     [RelayCommand]
@@ -104,5 +137,15 @@ public sealed partial class HomeTasksPageViewModel(
     {
         var containerViewModel = containerViewModelFactory.Create(session);
         TaskManagers.Add(containerViewModel);
+    }
+
+    private void OnPublicIpChanged(PublicIpChangedEvent args)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            OnPropertyChanged(nameof(LastPublicIp));
+            OnPropertyChanged(nameof(LastPreviousPublicIp));
+            OnPropertyChanged(nameof(IsPublicIpWarningVisible));
+        });
     }
 }
