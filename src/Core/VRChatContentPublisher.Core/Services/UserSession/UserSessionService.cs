@@ -185,10 +185,12 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         if (e == State)
             return;
 
+        var oldState = State;
+
         State = e;
         StateChanged?.Invoke(this, e);
 
-        _sessionStateChangedPublisher.Publish(new SessionStateChangedEvent(UserId, UserNameOrEmail, e));
+        _sessionStateChangedPublisher.Publish(new SessionStateChangedEvent(UserId, UserNameOrEmail, e, oldState));
     }
 }
 

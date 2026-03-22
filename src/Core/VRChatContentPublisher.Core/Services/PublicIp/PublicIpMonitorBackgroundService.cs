@@ -19,10 +19,11 @@ public sealed class PublicIpMonitorBackgroundService(
     {
         _sessionInvalidatedSubscription = sessionStateChangedSubscriber.Subscribe(args =>
         {
-            if (args.SessionState != UserSessionState.InvalidSession)
-                return;
-
-            _checkSignal.Release();
+            if (args.SessionState == UserSessionState.InvalidSession ||
+                args is { OldSessionState: UserSessionState.InvalidSession, SessionState: UserSessionState.LoggedIn })
+            {
+                _checkSignal.Release();
+            }
         });
 
         await RunCheckSafelyAsync(stoppingToken);
