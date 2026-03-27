@@ -117,8 +117,11 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var appSettings = _serviceProvider.GetRequiredService<IWritableOptions<AppSettings>>();
-        AppLocalizationService.Initialize(appSettings.Value.AppCulture);
+        if (!Design.IsDesignMode)
+        {
+            var appSettings = _serviceProvider.GetRequiredService<IWritableOptions<AppSettings>>();
+            AppLocalizationService.Initialize(appSettings.Value.AppCulture);
+        }
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
