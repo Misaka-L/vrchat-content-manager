@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
@@ -22,16 +23,16 @@ public sealed partial class UserSessionViewModel(
     public bool CanSetDefault => !IsDefault;
 
     public string SetAsDefaultToolTip => CanSetDefault
-        ? "Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip"
-        : "Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip";
+        ? LangKeys.Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip
+        : LangKeys.Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip;
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RemoveButtonTooltip))]
     public partial bool CanRemove { get; private set; }
 
     public string RemoveButtonTooltip => CanRemove
-        ? "Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip"
-        : "Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip";
+        ? LangKeys.Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip
+        : LangKeys.Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip;
 
     public string? ProfilePictureUrl
     {

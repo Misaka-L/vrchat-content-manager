@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using Microsoft.Extensions.DependencyInjection;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
@@ -21,7 +22,7 @@ public partial class HomePageViewModel : PageViewModelBase
 
     public AvaloniaList<HomePageNavigationItem> Items { get; } =
     [
-        new("Pages_Tasks_Title", MaterialIconKind.ProgressUpload, typeof(HomeTasksPageViewModel))
+        new(LangKeys.Pages_Tasks_Title, MaterialIconKind.ProgressUpload, typeof(HomeTasksPageViewModel))
     ];
 
     public bool IsPinned => _appWindowService.IsPinned();
