@@ -24,6 +24,27 @@
     <data name="Pages_Tasks_Title" xml:space="preserve">
         <value>Tasks</value>
     </data>
+    <data name="Pages_Settings_Accounts_Title" xml:space="preserve">
+        <value>Accounts</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Add_New_Account" xml:space="preserve">
+        <value>Add New Account</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip" xml:space="preserve">
+        <value>Repair this account</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
+        <value>Remove this account</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip" xml:space="preserve">
+        <value>You cannot remove a session that have uncompleted tasks.</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
+        <value>Set this account as default show on Tasks page.</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip" xml:space="preserve">
+        <value>This account is already set as default show on Tasks page.</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
         <value>Send Test Notification</value>
     </data>

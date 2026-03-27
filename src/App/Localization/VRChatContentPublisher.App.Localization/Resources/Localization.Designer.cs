@@ -205,6 +205,70 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot remove a session that have uncompleted tasks..
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip {
+            get {
+                return ResourceManager.GetString(("Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Unco" +
+                        "mpleted_Tasks_Tooltip"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove this account.
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repair this account.
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This account is already set as default show on Tasks page..
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set this account as default show on Tasks page..
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Account.
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Add_New_Account {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Add_New_Account", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Accounts.
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follow system settings.
         /// </summary>
         internal static string Pages_Settings_Appearance_Language_Selector_Follow_System {

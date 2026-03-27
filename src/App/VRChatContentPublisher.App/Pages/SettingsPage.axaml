@@ -23,7 +23,7 @@
         </Border>
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="8" Margin="18">
-                <Expander Header="Accounts">
+                <Expander Header="{I18N Pages_Settings_Accounts_Title}">
                     <ContentControl Content="{Binding AccountsSettingsViewModel}" />
                 </Expander>
                 <Expander Header="Appearance">

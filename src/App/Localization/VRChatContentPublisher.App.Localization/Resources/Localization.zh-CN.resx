@@ -24,6 +24,27 @@
     <data name="Pages_Tasks_Title" xml:space="preserve">
         <value>任务</value>
     </data>
+    <data name="Pages_Settings_Accounts_Title" xml:space="preserve">
+        <value>账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Add_New_Account" xml:space="preserve">
+        <value>登录新的账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip" xml:space="preserve">
+        <value>修复该账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
+        <value>移除该账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip" xml:space="preserve">
+        <value>你不能移除一个有未完成任务的账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
+        <value>设置该账号的标签页为任务页的默认标签页</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip" xml:space="preserve">
+        <value>该账号的标签页已经是任务页的默认标签页了</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
         <value>发送测试通知</value>
     </data>

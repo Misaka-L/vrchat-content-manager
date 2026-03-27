@@ -20,11 +20,18 @@ public sealed partial class UserSessionViewModel(
     public bool IsSessionRequiringReauthentication => userSessionService.State != UserSessionState.LoggedIn;
     public bool IsDefault => userSessionManagerService.IsDefaultSession(userSessionService);
     public bool CanSetDefault => !IsDefault;
-    public string SetAsDefaultToolTip => CanSetDefault
-        ? "Set this account as default."
-        : "This account is already the default.";
 
-    [ObservableProperty] public partial bool CanRemove { get; private set; }
+    public string SetAsDefaultToolTip => CanSetDefault
+        ? "Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip"
+        : "Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip";
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(RemoveButtonTooltip))]
+    public partial bool CanRemove { get; private set; }
+
+    public string RemoveButtonTooltip => CanRemove
+        ? "Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip"
+        : "Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip";
 
     public string? ProfilePictureUrl
     {
