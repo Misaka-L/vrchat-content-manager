@@ -45,11 +45,32 @@
     <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip" xml:space="preserve">
         <value>This account is already set as default show on Tasks page.</value>
     </data>
-    <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
-        <value>Send Test Notification</value>
+    <data name="Pages_Settings_Appearance_Title" xml:space="preserve">
+        <value>Appearance and Language</value>
+    </data>
+    <data name="Pages_Settings_Appearance_App_Language" xml:space="preserve">
+        <value>App Language</value>
     </data>
     <data name="Pages_Settings_Appearance_Language_Selector_Follow_System" xml:space="preserve">
         <value>Follow system settings</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar" xml:space="preserve">
+        <value>Use RGB Cycling Background App Bar</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Use_Borderless_Window" xml:space="preserve">
+        <value>Use Borderless Window</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title" xml:space="preserve">
+        <value>How tasks order in Tasks page</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First" xml:space="preserve">
+        <value>Latest first</value>
+    </data>   
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
+        <value>Oldest first</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
+        <value>Send Test Notification</value>
     </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>About</value>

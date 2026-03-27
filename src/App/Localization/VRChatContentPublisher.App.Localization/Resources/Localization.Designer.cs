@@ -269,11 +269,74 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to App Language.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_App_Language {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_App_Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest first.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oldest first.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How tasks order in Tasks page.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follow system settings.
         /// </summary>
         internal static string Pages_Settings_Appearance_Language_Selector_Follow_System {
             get {
                 return ResourceManager.GetString("Pages_Settings_Appearance_Language_Selector_Follow_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appearance and Language.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Borderless Window.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_Use_Borderless_Window {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_Use_Borderless_Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use RGB Cycling Background App Bar.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar", resourceCulture);
             }
         }
         

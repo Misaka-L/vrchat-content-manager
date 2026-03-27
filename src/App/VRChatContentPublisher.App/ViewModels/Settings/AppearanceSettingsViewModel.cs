@@ -8,13 +8,14 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed class AppearanceSettingsViewModel : PageViewModelBase
 {
-    private const string AppCultureFollowSystemStringKey = "Pages_Settings_Appearance_Language_Selector_Follow_System";
-
     public AppLang[] AvailableLanguages { get; }
 
     // ReSharper disable once ReplaceWithFieldKeyword
     private readonly AppLang _followSystemLang =
-        new(AppCultureFollowSystemStringKey, AppCultureFollowSystemStringKey);
+        new(
+            LangKeys.Pages_Settings_Appearance_Language_Selector_Follow_System,
+            LangKeys.Pages_Settings_Appearance_Language_Selector_Follow_System
+        );
 
     private readonly IWritableOptions<AppSettings> _appSettings;
     private readonly AppWindowService _appWindowService;
@@ -110,8 +111,10 @@ public sealed class AppearanceSettingsViewModel : PageViewModelBase
 
     public AppTasksPageSortModeItemViewModel[] TasksSortMode { get; } =
     [
-        new("Latest first", AppTasksPageSortMode.LatestFirst),
-        new("Oldest first", AppTasksPageSortMode.OldestFirst)
+        new(LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First,
+            AppTasksPageSortMode.LatestFirst),
+        new(LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First,
+            AppTasksPageSortMode.OldestFirst)
     ];
 
     private void UpdateAppCulture(string? cultureCode)

@@ -26,7 +26,7 @@
                 <Expander Header="{I18N Pages_Settings_Accounts_Title}">
                     <ContentControl Content="{Binding AccountsSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Appearance">
+                <Expander Header="{I18N Pages_Settings_Appearance_Title}">
                     <ContentControl Content="{Binding AppearanceSettingsViewModel}" />
                 </Expander>
                 <Expander Header="Connect">
