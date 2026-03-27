@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Add new account require restart to appear on Tasks page. [`#236`](https://github.com/project-vrcz/content-publisher/pull/236)
+- Banner image in first start welcome page won't fit to window width. [`#238`](https://github.com/project-vrcz/content-publisher/pull/238)
 
 ## [2.6.1] - 2026-03-22
 
