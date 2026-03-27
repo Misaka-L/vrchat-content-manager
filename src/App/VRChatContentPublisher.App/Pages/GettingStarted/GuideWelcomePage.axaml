@@ -11,7 +11,7 @@
     <Grid RowDefinitions="240,*" RowSpacing="48">
         <Border>
             <Border.Background>
-                <ImageBrush Source="/Assets/WelcomeHeader.png" />
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel VerticalAlignment="Center" Spacing="2" HorizontalAlignment="Center">
                 <TextBlock Text="A More Efficient Way" Margin="0,12,0,0" FontSize="36"
