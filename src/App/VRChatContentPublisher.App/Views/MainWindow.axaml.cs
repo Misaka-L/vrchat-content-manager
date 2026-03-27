@@ -61,7 +61,11 @@ public partial class MainWindow : Window
         ExtendClientAreaToDecorationsHint = true;
         SystemDecorations = SystemDecorations.BorderOnly;
         ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome;
+#if DEBUG
+        ShowInTaskbar = true;
+#else
         ShowInTaskbar = false;
+#endif
         Topmost = true;
 
         UpdateWindowPosition();
