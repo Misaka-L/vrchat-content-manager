@@ -21,7 +21,7 @@ public partial class HomePageViewModel : PageViewModelBase
 
     public AvaloniaList<HomePageNavigationItem> Items { get; } =
     [
-        new("Tasks", MaterialIconKind.ProgressUpload, typeof(HomeTasksPageViewModel))
+        new("Pages_Tasks_Title", MaterialIconKind.ProgressUpload, typeof(HomeTasksPageViewModel))
     ];
 
     public bool IsPinned => _appWindowService.IsPinned();

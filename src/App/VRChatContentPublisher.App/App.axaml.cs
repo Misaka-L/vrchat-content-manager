@@ -8,6 +8,7 @@ using Avalonia.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Dialogs;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Pages;
 using VRChatContentPublisher.App.Pages.GettingStarted;
 using VRChatContentPublisher.App.Pages.HomeTab;
@@ -30,6 +31,8 @@ using VRChatContentPublisher.App.Views.Data.Settings;
 using VRChatContentPublisher.App.Views.Settings;
 using VRChatContentPublisher.Core;
 using VRChatContentPublisher.Core.Services.App;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App;
 
@@ -114,6 +117,9 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        var appSettings = _serviceProvider.GetRequiredService<IWritableOptions<AppSettings>>();
+        AppLocalizationService.Initialize(appSettings.Value.AppCulture);
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 

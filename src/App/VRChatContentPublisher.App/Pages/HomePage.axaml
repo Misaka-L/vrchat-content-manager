@@ -50,7 +50,7 @@
                         <DataTemplate x:DataType="pages:HomePageNavigationItem">
                             <StackPanel VerticalAlignment="Center" Spacing="4" Width="42" HorizontalAlignment="Center">
                                 <avalonia:MaterialIcon Kind="{Binding Icon}" Height="24" Width="24" />
-                                <TextBlock Text="{Binding Name}" FontSize="12" HorizontalAlignment="Center" />
+                                <TextBlock Text="{I18N {Binding Name}}" FontSize="12" HorizontalAlignment="Center" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.DataTemplates>

@@ -4,11 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:AppearanceSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.AppearanceSettingsView">
 
     <StackPanel Margin="8" Spacing="8">
+        <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
+                  assists:ComboBoxAssist.Label="App Language"
+                  ItemsSource="{Binding AvailableLanguages}"
+                  SelectedItem="{Binding SelectedLanguage}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="localization:AppLang">
+                    <TextBlock Text="{I18N {Binding DisplayName}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <ToggleSwitch Content="Use RGB Cycling Menu Bar" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
         <OnPlatform>
             <On Options="Windows">

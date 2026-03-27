@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:NotificationSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.NotificationSettingsView">
@@ -10,7 +11,7 @@
     <StackPanel Margin="8" Spacing="8">
         <ToggleSwitch Content="Enabled notifications"
                       IsChecked="{Binding EnabledNotifications}" />
-        <Button Content="Send Test Notification"
+        <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Test_Notification}}"
                 Command="{Binding SendTestNotificationCommand}"
                 IsEnabled="{Binding EnabledNotifications}" />
         <TextBlock Text="Send notifications when" FontWeight="SemiBold" />
