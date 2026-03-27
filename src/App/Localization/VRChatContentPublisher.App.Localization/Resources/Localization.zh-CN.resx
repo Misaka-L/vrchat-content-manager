@@ -30,4 +30,52 @@
     <data name="Pages_Settings_Appearance_Language_Selector_Follow_System" xml:space="preserve">
         <value>跟随系统语言设置</value>
     </data>
+    <data name="Pages_Settings_About_Title" xml:space="preserve">
+        <value>关于该软件</value>
+    </data>
+    <data name="Pages_Settings_About_Slogan" xml:space="preserve">
+        <value>更高效的发布 VRChat 内容</value>
+    </data>
+    <data name="Pages_Settings_Copyright" xml:space="preserve">
+        <value>以 GPL-3.0 许可证许可</value>
+    </data>
+    <data name="Pages_Settings_About_Gitub_Link_Text" xml:space="preserve">
+        <value>VRChat Content Publisher 的 Github 主页</value>
+    </data>
+    <data name="Pages_Settings_About_Build_Commit" xml:space="preserve">
+        <value>构建提交 SHA</value>
+    </data>
+    <data name="Pages_Settings_About_Build_At" xml:space="preserve">
+        <value>构建于</value>
+    </data>
+    <data name="Pages_Settings_About_Acknowledgement_Title" xml:space="preserve">
+        <value>鸣谢</value>
+    </data>
+    <data name="Pages_Settings_About_AssetsTools_Unity_AssetBundle_Processing_Powered_By" xml:space="preserve">
+        <value>Unity AssetBundle 处理能力由以下软件强力驱动</value>
+    </data>
+    <data name="Pages_Settings_About_AssetsTools_Modify_To_Meet_VCP_Requirements" xml:space="preserve">
+        <value>为满足 VRChat Content Publisher 需求做了部分修改</value>
+    </data>
+    <data name="Pages_Settings_About_VRChat_API_Documentation_Provided_By" xml:space="preserve">
+        <value>VRChat API 文档由以下群组提供</value>
+    </data>
+    <data name="Pages_Settings_About_Thanks_To_Those_Open_Soure_Software" xml:space="preserve">
+        <value>VCP 的诞生离不开这些开源软件</value>
+    </data>
+    <data name="Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters" xml:space="preserve">
+        <value>特别感谢我们的早期支持者</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By" xml:space="preserve">
+        <value>请考虑通过以下方式支持开发</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Donate" xml:space="preserve">
+        <value>捐赠</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Feedback" xml:space="preserve">
+        <value>提供反馈</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
+        <value>贡献代码</value>
+    </data>
 </root>

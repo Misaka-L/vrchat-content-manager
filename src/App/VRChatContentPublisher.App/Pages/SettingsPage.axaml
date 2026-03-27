@@ -44,7 +44,7 @@
                 <Expander Header="Debug">
                     <ContentControl Content="{Binding DebugSettingsViewModel}" />
                 </Expander>
-                <Expander Header="About">
+                <Expander Header="{I18N Pages_Settings_About_Title}">
                     <ContentControl Content="{Binding AboutSettingsViewModel}" />
                 </Expander>
             </StackPanel>

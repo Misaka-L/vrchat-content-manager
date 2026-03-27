@@ -70,11 +70,155 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Acknowledgement.
+        /// </summary>
+        internal static string Pages_Settings_About_Acknowledgement_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Acknowledgement_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modified to meet VRChat Content Publisher requirements.
+        /// </summary>
+        internal static string Pages_Settings_About_AssetsTools_Modify_To_Meet_VCP_Requirements {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_AssetsTools_Modify_To_Meet_VCP_Requirements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unity AssetBundle Processing Powered by.
+        /// </summary>
+        internal static string Pages_Settings_About_AssetsTools_Unity_AssetBundle_Processing_Powered_By {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_AssetsTools_Unity_AssetBundle_Processing_Powered_By", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build at.
+        /// </summary>
+        internal static string Pages_Settings_About_Build_At {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Build_At", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build Commit SHA.
+        /// </summary>
+        internal static string Pages_Settings_About_Build_Commit {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Build_Commit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please consider support development by.
+        /// </summary>
+        internal static string Pages_Settings_About_Consider_Support_By {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Consider_Support_By", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Contribute.
+        /// </summary>
+        internal static string Pages_Settings_About_Consider_Support_By_Content_Contribute {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Consider_Support_By_Content_Contribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate.
+        /// </summary>
+        internal static string Pages_Settings_About_Consider_Support_By_Content_Donate {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Consider_Support_By_Content_Donate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feedback.
+        /// </summary>
+        internal static string Pages_Settings_About_Consider_Support_By_Content_Feedback {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Consider_Support_By_Content_Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VRChat Content Publisher on Github.
+        /// </summary>
+        internal static string Pages_Settings_About_Gitub_Link_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Gitub_Link_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A More Efficient Way to publish your VRChat Contents.
+        /// </summary>
+        internal static string Pages_Settings_About_Slogan {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Slogan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Special thanks to our early adopters.
+        /// </summary>
+        internal static string Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thanks to those Open source software.
+        /// </summary>
+        internal static string Pages_Settings_About_Thanks_To_Those_Open_Soure_Software {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Thanks_To_Those_Open_Soure_Software", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string Pages_Settings_About_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VRChat API documentation provided by.
+        /// </summary>
+        internal static string Pages_Settings_About_VRChat_API_Documentation_Provided_By {
+            get {
+                return ResourceManager.GetString("Pages_Settings_About_VRChat_API_Documentation_Provided_By", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follow system settings.
         /// </summary>
         internal static string Pages_Settings_Appearance_Language_Selector_Follow_System {
             get {
                 return ResourceManager.GetString("Pages_Settings_Appearance_Language_Selector_Follow_System", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Licensed under GPL-3.0 license.
+        /// </summary>
+        internal static string Pages_Settings_Copyright {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Copyright", resourceCulture);
             }
         }
         
