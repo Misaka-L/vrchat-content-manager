@@ -37,12 +37,22 @@ public sealed partial class HomeTasksPageViewModel(
     {
         var preferDefaultSession = _firstLoad;
 
-        if (_firstLoad)
+        var sessionToAdd = userSessionManagerService.Sessions
+            .Where(s => TaskManagers.All(manager => manager.UserSessionService != s))
+            .ToArray();
+
+        foreach (var session in sessionToAdd)
         {
-            foreach (var session in userSessionManagerService.Sessions)
-            {
-                AddSessionCore(session);
-            }
+            AddSessionCore(session);
+        }
+
+        var sessionToRemove = TaskManagers
+            .Where(manager => !userSessionManagerService.Sessions.Contains(manager.UserSessionService))
+            .ToArray();
+
+        foreach (var session in sessionToRemove)
+        {
+            TaskManagers.Remove(session);
         }
 
         userSessionManagerService.SessionCreated += OnUserSessionCreated;
