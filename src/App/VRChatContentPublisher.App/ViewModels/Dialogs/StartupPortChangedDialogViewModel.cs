@@ -9,9 +9,6 @@ public sealed partial class StartupPortChangedDialogViewModel(
     public int ConfiguredPort { get; } = configuredPort;
     public int ActivePort { get; } = activePort;
 
-    public string Description =>
-        $"Configured RPC port {ConfiguredPort} is in use. RPC server started on fallback port {ActivePort}.";
-
     [RelayCommand]
     private void Acknowledge()
     {

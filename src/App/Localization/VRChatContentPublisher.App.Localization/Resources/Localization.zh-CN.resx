@@ -292,4 +292,20 @@
     <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
         <value>不退出</value>
     </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title" xml:space="preserve">
+        <value>RPC 服务器被迫变更端口</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description" xml:space="preserve">
+        <value>RPC 服务器无法在设置的端口启动，这可能是因为端口被占用了。
+请注意你需要重新和 App 配对，或者你可以在解决这个问题之后把端口改回来。</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port" xml:space="preserve">
+        <value>用户设置的端口</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port" xml:space="preserve">
+        <value>当前的端口</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
+        <value>我知道了</value>
+    </data>
 </root>

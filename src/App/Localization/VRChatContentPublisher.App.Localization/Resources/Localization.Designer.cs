@@ -113,6 +113,52 @@ namespace VRChatContentPublisher.App.Localization.Resources {
             }
         }
         
+         /// <summary>
+        ///   Looks up a localized string similar to I know.
+        /// </summary>
+        internal static string Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Port.
+        /// </summary>
+        internal static string Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port {
+            get {
+                return ResourceManager.GetString("Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RPC Server failed to start with configured port, it may cause by the port is in use.
+        ///Please notice that you need to re-pair with the app, or you can change port back after solve the problem..
+        /// </summary>
+        internal static string Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description {
+            get {
+                return ResourceManager.GetString("Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RPC Server port change due to bind error.
+        /// </summary>
+        internal static string Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title {
+            get {
+                return ResourceManager.GetString("Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Settings Port.
+        /// </summary>
+        internal static string Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port {
+            get {
+                return ResourceManager.GetString("Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to There are uncompleted publish tasks.
         ///Are you really sure you want to shutdown the app?.

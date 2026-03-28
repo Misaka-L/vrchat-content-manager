@@ -300,4 +300,20 @@ Are you really sure you want to shutdown the app?</value>
     <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
         <value>No</value>
     </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title" xml:space="preserve">
+        <value>RPC Server port change due to bind error</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description" xml:space="preserve">
+        <value>RPC Server failed to start with configured port, it may cause by the port is in use.
+Please notice that you need to re-pair with the app, or you can change port back after solve the problem.</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port" xml:space="preserve">
+        <value>User Settings Port</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port" xml:space="preserve">
+        <value>Current Port</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
+        <value>I know</value>
+    </data>
 </root>
