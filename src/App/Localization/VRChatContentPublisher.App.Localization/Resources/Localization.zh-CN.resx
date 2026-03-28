@@ -123,6 +123,27 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
         <value>公网 IP 变动</value>
     </data>
+    <data name="Pages_Settings_Http_Proxy_Title" xml:space="preserve">
+        <value>Http 代理</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label" xml:space="preserve">
+        <value>代理模式</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Follow_System_Settings" xml:space="preserve">
+        <value>跟随系统代理设置</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_No_Proxy" xml:space="preserve">
+        <value>不使用代理</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy" xml:space="preserve">
+        <value>自定义代理</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field" xml:space="preserve">
+        <value>自定义 HTTP 代理 URI</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
+        <value>HTTP 代理 URI 必须是 http:// 或 https:// 链接</value>
+    </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>关于该软件</value>
     </data>

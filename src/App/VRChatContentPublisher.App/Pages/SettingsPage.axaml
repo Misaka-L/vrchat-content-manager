@@ -39,7 +39,7 @@
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_PairedClients_Title}}">
                     <ContentControl Content="{Binding SessionsSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Http Proxy">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Title}}">
                     <ContentControl Content="{Binding HttpProxySettingsViewModel}" />
                 </Expander>
                 <Expander Header="Debug">

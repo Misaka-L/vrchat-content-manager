@@ -449,6 +449,69 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom HTTP Proxy URI.
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTTP Proxy URI must be a http or https URI..
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom Proxy.
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Follow System Settings.
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Follow_System_Settings {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Follow_System_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proxy Mode.
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Proxy.
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Proxy_Mode_Selector_No_Proxy {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Proxy_Mode_Selector_No_Proxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HTTP Proxy.
+        /// </summary>
+        internal static string Pages_Settings_Http_Proxy_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Http_Proxy_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Notifications.
         /// </summary>
         internal static string Pages_Settings_Notification_Enable_Notifications_Toggle_Label {

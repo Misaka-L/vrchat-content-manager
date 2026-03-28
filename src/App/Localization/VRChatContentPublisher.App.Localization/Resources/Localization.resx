@@ -132,6 +132,27 @@
     <data name="Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip" xml:space="preserve">
         <value>Revoke Client Session</value>
     </data>
+    <data name="Pages_Settings_Http_Proxy_Title" xml:space="preserve">
+        <value>HTTP Proxy</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label" xml:space="preserve">
+        <value>Proxy Mode</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Follow_System_Settings" xml:space="preserve">
+        <value>Follow System Settings</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_No_Proxy" xml:space="preserve">
+        <value>No Proxy</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy" xml:space="preserve">
+        <value>Custom Proxy</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field" xml:space="preserve">
+        <value>Custom HTTP Proxy URI</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
+        <value>HTTP Proxy URI must be a http or https URI.</value>
+    </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>About</value>
     </data>
