@@ -261,4 +261,22 @@
     <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
         <value>贡献代码</value>
     </data>
+    <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
+        <value>认证请求识别码</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Enter_Code_In_Client" xml:space="preserve">
+        <value>在客户端输入以下验证码完成配对</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Security_Warning" xml:space="preserve">
+        <value>你只应该在配对请求来自你信任的客户端时输入验证码</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Request_From_Client" xml:space="preserve">
+        <value>请求来自该客户端</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Close_Dialog_Button" xml:space="preserve">
+        <value>关闭</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Copy_Code_Button" xml:space="preserve">
+        <value>复制验证码</value>
+    </data>
 </root>

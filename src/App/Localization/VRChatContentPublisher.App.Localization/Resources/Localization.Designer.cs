@@ -60,6 +60,60 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        internal static string Dialog_Request_Challenge_Close_Dialog_Button {
+            get {
+                return ResourceManager.GetString("Dialog_Request_Challenge_Close_Dialog_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string Dialog_Request_Challenge_Copy_Code_Button {
+            get {
+                return ResourceManager.GetString("Dialog_Request_Challenge_Copy_Code_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter this code in the client to finish pairing.
+        /// </summary>
+        internal static string Dialog_Request_Challenge_Enter_Code_In_Client {
+            get {
+                return ResourceManager.GetString("Dialog_Request_Challenge_Enter_Code_In_Client", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity Prompt.
+        /// </summary>
+        internal static string Dialog_Request_Challenge_Identity_Prompt_Title {
+            get {
+                return ResourceManager.GetString("Dialog_Request_Challenge_Identity_Prompt_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request come from client.
+        /// </summary>
+        internal static string Dialog_Request_Challenge_Request_From_Client {
+            get {
+                return ResourceManager.GetString("Dialog_Request_Challenge_Request_From_Client", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ONLY enter this code when the request COMES FROM the client you TRUST.
+        /// </summary>
+        internal static string Dialog_Request_Challenge_Security_Warning {
+            get {
+                return ResourceManager.GetString("Dialog_Request_Challenge_Security_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to en.
         /// </summary>
         internal static string Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option {

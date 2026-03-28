@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
         <xsd:element name="root" msdata:IsDataSet="true">
-            
+
         </xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
@@ -13,12 +14,17 @@
         <value>1.3</value>
     </resheader>
     <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
     </resheader>
     <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
     </resheader>
-    <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option" xml:space="preserve">
+    <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option"
+          xml:space="preserve">
         <value>en</value>
     </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
@@ -81,7 +87,8 @@
     <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
         <value>Remove this account</value>
     </data>
-    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip" xml:space="preserve">
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip"
+          xml:space="preserve">
         <value>You cannot remove a session that have uncompleted tasks.</value>
     </data>
     <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
@@ -110,7 +117,7 @@
     </data>
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First" xml:space="preserve">
         <value>Latest first</value>
-    </data>   
+    </data>
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
         <value>Oldest first</value>
     </data>
@@ -159,7 +166,8 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Title" xml:space="preserve">
         <value>Send notifications when</value>
     </data>
-    <data name="Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup" xml:space="preserve">
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup"
+          xml:space="preserve">
         <value>Account Session Expired on Startup</value>
     </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
@@ -260,5 +268,23 @@
     </data>
     <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
         <value>Contribute</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
+        <value>Identity Prompt</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Enter_Code_In_Client" xml:space="preserve">
+        <value>Enter this code in the client to finish pairing</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Security_Warning" xml:space="preserve">
+        <value>ONLY enter this code when the request COMES FROM the client you TRUST</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Request_From_Client" xml:space="preserve">
+        <value>Request come from client</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Close_Dialog_Button" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Copy_Code_Button" xml:space="preserve">
+        <value>Copy</value>
     </data>
 </root>
