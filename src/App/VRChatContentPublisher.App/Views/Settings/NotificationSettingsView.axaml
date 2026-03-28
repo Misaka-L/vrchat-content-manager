@@ -9,19 +9,24 @@
              x:Class="VRChatContentPublisher.App.Views.Settings.NotificationSettingsView">
 
     <StackPanel Margin="8" Spacing="8">
-        <ToggleSwitch Content="Enabled notifications"
-                      IsChecked="{Binding EnabledNotifications}" />
-        <Button Content="{I18N x:Static localization:LangKeys.Pages_Settings_Notification_Send_Test_Notification}"
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Enable_Notifications_Toggle_Label}}"
+            IsChecked="{Binding EnabledNotifications}" />
+        <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Test_Notification}}"
                 Command="{Binding SendTestNotificationCommand}"
                 IsEnabled="{Binding EnabledNotifications}" />
-        <TextBlock Text="Send notifications when" FontWeight="SemiBold" />
-        <ToggleSwitch Content="Session restore failed on startup"
-                      IsEnabled="{Binding EnabledNotifications}"
-                      IsChecked="{Binding SendNotificationOnStartupSessionRestoreFailed}" />
-        <ToggleSwitch Content="Publish task failed"
-                      IsEnabled="{Binding EnabledNotifications}"
-                      IsChecked="{Binding SendNotificationOnTaskFailed}" />
-        <ToggleSwitch Content="Public IP changed"
+        <TextBlock
+            Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Title}}"
+            FontWeight="SemiBold" />
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup}}"
+            IsEnabled="{Binding EnabledNotifications}"
+            IsChecked="{Binding SendNotificationOnStartupSessionRestoreFailed}" />
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed}}"
+            IsEnabled="{Binding EnabledNotifications}"
+            IsChecked="{Binding SendNotificationOnTaskFailed}" />
+        <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed}}"
                       IsEnabled="{Binding EnabledNotifications}"
                       IsChecked="{Binding SendNotificationOnPublicIpChanged}" />
     </StackPanel>

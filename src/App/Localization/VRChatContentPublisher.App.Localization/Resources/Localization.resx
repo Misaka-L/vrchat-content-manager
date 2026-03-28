@@ -102,8 +102,26 @@
     <data name="Pages_Settings_Connect_Apply_Error_Unknown_Error" xml:space="preserve">
         <value>Failed to apply RPC Serer settings due to unknown error.</value>
     </data>
+    <data name="Pages_Settings_Notification_Title" xml:space="preserve">
+        <value>Notifications</value>
+    </data>
+    <data name="Pages_Settings_Notification_Enable_Notifications_Toggle_Label" xml:space="preserve">
+        <value>Enable Notifications</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
         <value>Send Test Notification</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Title" xml:space="preserve">
+        <value>Send notifications when</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup" xml:space="preserve">
+        <value>Account Session Expired on Startup</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
+        <value>Publish Task Failed</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
+        <value>Public IP Changed</value>
     </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>About</value>

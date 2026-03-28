@@ -33,7 +33,7 @@
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Title}}">
                     <ContentControl Content="{Binding ConnectSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Notifications">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Title}}">
                     <ContentControl Content="{Binding NotificationSettingsViewModel}" />
                 </Expander>
                 <Expander Header="Sessions">

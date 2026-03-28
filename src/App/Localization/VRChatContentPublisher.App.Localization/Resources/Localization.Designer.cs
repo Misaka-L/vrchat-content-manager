@@ -449,11 +449,66 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Notifications.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Enable_Notifications_Toggle_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Enable_Notifications_Toggle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Session Expired on Startup.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup {
+            get {
+                return ResourceManager.GetString(("Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_St" +
+                        "artup"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public IP Changed.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish Task Failed.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send notifications when.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Send_Notifications_When_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send Test Notification.
         /// </summary>
         internal static string Pages_Settings_Notification_Send_Test_Notification {
             get {
                 return ResourceManager.GetString("Pages_Settings_Notification_Send_Test_Notification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notifications.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Title", resourceCulture);
             }
         }
         
