@@ -5,6 +5,7 @@
              xmlns:data="clr-namespace:VRChatContentPublisher.App.ViewModels.Data"
              xmlns:controls="clr-namespace:VRChatContentPublisher.App.Controls"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="data:UserSessionViewModel"
              x:Class="VRChatContentPublisher.App.Views.Data.Settings.UserSessionView">
@@ -52,7 +53,7 @@
                     Command="{Binding RepairCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
                     Content="{avalonia:MaterialIconExt Kind=AccountWrench, Size=24}" Width="32" Height="32"
-                    ToolTip.Tip="{I18N Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip}" />
+                    ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip}}" />
             <Button Command="{Binding RemoveCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
                     IsEnabled="{Binding CanRemove}"

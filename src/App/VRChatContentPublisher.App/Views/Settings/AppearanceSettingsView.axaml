@@ -11,7 +11,7 @@
 
     <StackPanel Margin="8" Spacing="8">
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
-                  assists:ComboBoxAssist.Label="{I18N Pages_Settings_Appearance_App_Language}"
+                  assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_App_Language}}"
                   ItemsSource="{Binding AvailableLanguages}"
                   SelectedItem="{Binding SelectedLanguage}">
             <ComboBox.ItemTemplate>
@@ -20,14 +20,14 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ToggleSwitch Content="{I18N Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar}" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
+        <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar}}" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
         <OnPlatform>
             <On Options="Windows">
-                <ToggleSwitch Content="{I18N Pages_Settings_Appearance_Use_Borderless_Window}" IsChecked="{Binding UseBorderlessWindow}" />
+                <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Use_Borderless_Window}}" IsChecked="{Binding UseBorderlessWindow}" />
             </On>
         </OnPlatform>
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
-                  assists:ComboBoxAssist.Label="{I18N Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title}"
+                  assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title}}"
                   ItemsSource="{Binding TasksSortMode}"
                   SelectedItem="{Binding SelectedTasksSortMode}">
             <ComboBox.ItemTemplate>

@@ -11,7 +11,7 @@
     <StackPanel Margin="8" Spacing="8">
         <ToggleSwitch Content="Enabled notifications"
                       IsChecked="{Binding EnabledNotifications}" />
-        <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Test_Notification}}"
+        <Button Content="{I18N x:Static localization:LangKeys.Pages_Settings_Notification_Send_Test_Notification}"
                 Command="{Binding SendTestNotificationCommand}"
                 IsEnabled="{Binding EnabledNotifications}" />
         <TextBlock Text="Send notifications when" FontWeight="SemiBold" />

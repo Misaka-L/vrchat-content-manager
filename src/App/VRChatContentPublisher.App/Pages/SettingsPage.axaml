@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="pages:SettingsPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.SettingsPage">
@@ -23,13 +24,13 @@
         </Border>
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="8" Margin="18">
-                <Expander Header="{I18N Pages_Settings_Accounts_Title}">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Title}}">
                     <ContentControl Content="{Binding AccountsSettingsViewModel}" />
                 </Expander>
-                <Expander Header="{I18N Pages_Settings_Appearance_Title}">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Title}}">
                     <ContentControl Content="{Binding AppearanceSettingsViewModel}" />
                 </Expander>
-                <Expander Header="{I18N Pages_Settings_Connect_Title}">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Title}}">
                     <ContentControl Content="{Binding ConnectSettingsViewModel}" />
                 </Expander>
                 <Expander Header="Notifications">
@@ -44,7 +45,7 @@
                 <Expander Header="Debug">
                     <ContentControl Content="{Binding DebugSettingsViewModel}" />
                 </Expander>
-                <Expander Header="{I18N Pages_Settings_About_Title}">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Title}}">
                     <ContentControl Content="{Binding AboutSettingsViewModel}" />
                 </Expander>
             </StackPanel>

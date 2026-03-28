@@ -6,6 +6,7 @@
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:validation="clr-namespace:VRChatContentPublisher.App.Interaction.Validation"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:ConnectSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.ConnectSettingsView">
@@ -18,20 +19,20 @@
                                            Foreground="White" VerticalAlignment="Top"
                                            Margin="0,2,0,0" />
                     <TextBlock Grid.Column="1"
-                               Text="{I18N Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title}"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title}}"
                                FontWeight="Bold"
                                FontSize="18"
                                Foreground="White" TextWrapping="Wrap" />
                 </Grid>
                 <TextBlock Foreground="White" TextWrapping="Wrap"
-                           Text="{I18N Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description}" />
+                           Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description}}" />
             </StackPanel>
         </Border>
 
         <TextBox Text="{Binding ConnectInstanceName}"
-                 UseFloatingWatermark="True" Watermark="{I18N Pages_Settings_Connect_Server_Name_Field_Watermark}"
+                 UseFloatingWatermark="True" Watermark="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Name_Field_Watermark}}"
                  Classes="outline"
-                 assists:TextFieldAssist.Label="{I18N Pages_Settings_Connect_Server_Name_Field_Label}"
+                 assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Name_Field_Label}}"
                  Theme="{StaticResource OutlineTextBox}">
             <Interaction.Behaviors>
                 <TextBoxValidationBehavior>
@@ -56,7 +57,7 @@
 
         <TextBox Text="{Binding RpcServerPort}"
                  UseFloatingWatermark="True" Watermark="1024-65535" Classes="outline"
-                 assists:TextFieldAssist.Label="{I18N Pages_Settings_Connect_Server_Port_Field_Label}"
+                 assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Port_Field_Label}}"
                  Theme="{StaticResource OutlineTextBox}">
             <Interaction.Behaviors>
                 <TextBoxValidationBehavior>
@@ -69,10 +70,10 @@
         </TextBox>
 
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-            <Button Content="{I18N Pages_Settings_Connect_Apply_Button_Text}"
+            <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Apply_Button_Text}}"
                     Command="{Binding ApplyConnectSettingsCommand}"
                     IsEnabled="{Binding IsApplyEnabled}" />
-            <Button Grid.Column="1" Content="{I18N Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text}"
+            <Button Grid.Column="1" Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text}}"
                     Command="{Binding ResetToDefaultPortCommand}"
                     Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
         </Grid>
