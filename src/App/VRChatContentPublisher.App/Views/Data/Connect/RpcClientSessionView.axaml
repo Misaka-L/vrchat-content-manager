@@ -16,7 +16,7 @@
             <TextBlock Opacity="0.7" FontSize="12">
                 <TextBlock.Text>
                     <I18N
-                        Key="{x:Static localization:LangKeys.Pages_Settings_ConnectedClients_Client_Item_Expired_At_Text_Template}">
+                        Key="{x:Static localization:LangKeys.Pages_Settings_PairedClients_Client_Item_Expired_At_Text_Template}">
                         <Binding Path="ExpiresLocal" StringFormat="g" />
                     </I18N>
                 </TextBlock.Text>
@@ -25,6 +25,6 @@
         <Button Command="{Binding DeleteCommand}"
                 Grid.Column="1" Theme="{StaticResource MaterialFlatButton}"
                 Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32"
-                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_ConnectedClients_Client_Item_Revoke_Client_Button_Tooltip}}" />
+                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip}}" />
     </Grid>
 </UserControl>

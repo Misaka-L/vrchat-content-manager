@@ -440,33 +440,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Client session will expire at {0}.
-        /// </summary>
-        internal static string Pages_Settings_ConnectedClients_Client_Item_Expired_At_Text_Template {
-            get {
-                return ResourceManager.GetString("Pages_Settings_ConnectedClients_Client_Item_Expired_At_Text_Template", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Revoke Client Session.
-        /// </summary>
-        internal static string Pages_Settings_ConnectedClients_Client_Item_Revoke_Client_Button_Tooltip {
-            get {
-                return ResourceManager.GetString("Pages_Settings_ConnectedClients_Client_Item_Revoke_Client_Button_Tooltip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Connected Clients.
-        /// </summary>
-        internal static string Pages_Settings_ConnectedClients_Title {
-            get {
-                return ResourceManager.GetString("Pages_Settings_ConnectedClients_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Licensed under GPL-3.0 license.
         /// </summary>
         internal static string Pages_Settings_Copyright {
@@ -536,6 +509,33 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_Notification_Title {
             get {
                 return ResourceManager.GetString("Pages_Settings_Notification_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client session will expire at {0}.
+        /// </summary>
+        internal static string Pages_Settings_PairedClients_Client_Item_Expired_At_Text_Template {
+            get {
+                return ResourceManager.GetString("Pages_Settings_PairedClients_Client_Item_Expired_At_Text_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revoke Client Session.
+        /// </summary>
+        internal static string Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paired Clients.
+        /// </summary>
+        internal static string Pages_Settings_PairedClients_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_PairedClients_Title", resourceCulture);
             }
         }
         
