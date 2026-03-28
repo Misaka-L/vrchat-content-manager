@@ -341,6 +341,105 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You must re-pair with the app after changing the port..
+        /// </summary>
+        internal static string Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing the port requires re-pairing.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Apply_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Apply_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server name are require..
+        /// </summary>
+        internal static string Pages_Settings_Connect_Apply_Error_Empty_Server_Name {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Apply_Error_Empty_Server_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port must be between {0} to {1}..
+        /// </summary>
+        internal static string Pages_Settings_Connect_Apply_Error_Port_Out_Of_Range {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Apply_Error_Port_Out_Of_Range", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to apply RPC Serer settings due to unknown error..
+        /// </summary>
+        internal static string Pages_Settings_Connect_Apply_Error_Unknown_Error {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Apply_Error_Unknown_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Name.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Server_Name_Field_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Server_Name_Field_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to e.g Greatest Chiffon.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Server_Name_Field_Watermark {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Server_Name_Field_Watermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server Port.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Server_Port_Field_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Server_Port_Field_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Port to Default.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RPC Server.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Licensed under GPL-3.0 license.
         /// </summary>
         internal static string Pages_Settings_Copyright {

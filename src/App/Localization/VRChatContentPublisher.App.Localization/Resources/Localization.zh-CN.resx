@@ -69,6 +69,39 @@
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
         <value>最早的任务在上</value>
     </data>
+    <data name="Pages_Settings_Connect_Title" xml:space="preserve">
+        <value>RPC 服务器</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title" xml:space="preserve">
+        <value>更改服务器端口需要重新配对</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description" xml:space="preserve">
+        <value>修改端口后必须重新和 App 配对。</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Watermark" xml:space="preserve">
+        <value>例如：伟大戚风</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Label" xml:space="preserve">
+        <value>服务器名称</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Field_Label" xml:space="preserve">
+        <value>服务器端口</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Button_Text" xml:space="preserve">
+        <value>应用设置</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text" xml:space="preserve">
+        <value>恢复默认服务器端口</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
+        <value>服务器名称为必填项</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Port_Out_Of_Range" xml:space="preserve">
+        <value>端口号必须在 {0} 到 {1} 之间</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Unknown_Error" xml:space="preserve">
+        <value>由于未知错误无法应用 RPC 服务器设置</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
         <value>发送测试通知</value>
     </data>

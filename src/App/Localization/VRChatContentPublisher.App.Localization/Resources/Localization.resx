@@ -69,6 +69,39 @@
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
         <value>Oldest first</value>
     </data>
+    <data name="Pages_Settings_Connect_Title" xml:space="preserve">
+        <value>RPC Server</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title" xml:space="preserve">
+        <value>Changing the port requires re-pairing</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description" xml:space="preserve">
+        <value>You must re-pair with the app after changing the port.</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Watermark" xml:space="preserve">
+        <value>e.g Greatest Chiffon</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Label" xml:space="preserve">
+        <value>Server Name</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Field_Label" xml:space="preserve">
+        <value>Server Port</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Button_Text" xml:space="preserve">
+        <value>Apply</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text" xml:space="preserve">
+        <value>Reset Port to Default</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
+        <value>Server name are require.</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Port_Out_Of_Range" xml:space="preserve">
+        <value>Port must be between {0} to {1}.</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Unknown_Error" xml:space="preserve">
+        <value>Failed to apply RPC Serer settings due to unknown error.</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
         <value>Send Test Notification</value>
     </data>

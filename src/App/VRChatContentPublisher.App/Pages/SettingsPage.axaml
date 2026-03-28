@@ -29,7 +29,7 @@
                 <Expander Header="{I18N Pages_Settings_Appearance_Title}">
                     <ContentControl Content="{Binding AppearanceSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Connect">
+                <Expander Header="{I18N Pages_Settings_Connect_Title}">
                     <ContentControl Content="{Binding ConnectSettingsViewModel}" />
                 </Expander>
                 <Expander Header="Notifications">
