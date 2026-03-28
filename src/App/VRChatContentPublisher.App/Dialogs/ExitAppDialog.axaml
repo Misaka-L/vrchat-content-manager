@@ -3,7 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="600"
              x:DataType="dialogs:ExitAppDialogViewModel"
              x:Class="VRChatContentPublisher.App.Dialogs.ExitAppDialog">
 
@@ -18,20 +19,25 @@
         <StackPanel IsVisible="{Binding LoadCommand.IsRunning}"
                     Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
             <ProgressBar Classes="circular" IsIndeterminate="True" VerticalAlignment="Center" />
-            <TextBlock Text="Shutting down..." VerticalAlignment="Center" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Shutdown_Shutdown_In_Progress_Text}}"
+                       VerticalAlignment="Center" />
         </StackPanel>
         <StackPanel IsVisible="{Binding !LoadCommand.IsRunning}"
                     Spacing="24" Margin="8">
-            <TextBlock Text="There are currently active publishing tasks. Are you sure you want to exit?"
-                       Classes="Headline6" TextAlignment="Center" TextWrapping="Wrap" />
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks}}"
+                Classes="Headline6" TextAlignment="Center" TextWrapping="Wrap" />
             <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                 <Button Classes="accent"
-                        Content="No"
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks}}"
                         Command="{Binding RequestCloseCommand}" />
                 <Button Grid.Column="1"
                         Theme="{StaticResource MaterialOutlineButton}"
-                        Content="Yes! Exit now!"
-                        Command="{Binding ExitAppCommand}" />
+                        Command="{Binding ExitAppCommand}">
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks}}"
+                        TextWrapping="Wrap" />
+                </Button>
             </Grid>
         </StackPanel>
     </Panel>

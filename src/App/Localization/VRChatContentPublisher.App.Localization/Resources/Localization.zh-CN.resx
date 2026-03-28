@@ -279,4 +279,17 @@
     <data name="Dialog_Request_Challenge_Copy_Code_Button" xml:space="preserve">
         <value>复制验证码</value>
     </data>
+    <data name="Dialog_Shutdown_Shutdown_In_Progress_Text" xml:space="preserve">
+        <value>正在退出...</value>
+    </data>
+    <data name="Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>有未完成的内容发布任务
+你真的想退出 App 吗？</value>
+    </data>
+    <data name="Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>坚持退出！我知道有未完成的内容发布任务！</value>
+    </data>
+    <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>不退出</value>
+    </data>
 </root>

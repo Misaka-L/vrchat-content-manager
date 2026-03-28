@@ -114,6 +114,43 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There are uncompleted publish tasks.
+        ///Are you really sure you want to shutdown the app?.
+        /// </summary>
+        internal static string Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks {
+            get {
+                return ResourceManager.GetString("Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks {
+            get {
+                return ResourceManager.GetString("Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes! I want to shutdown with uncompleted tasks!.
+        /// </summary>
+        internal static string Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks {
+            get {
+                return ResourceManager.GetString("Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutting down....
+        /// </summary>
+        internal static string Dialog_Shutdown_Shutdown_In_Progress_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Shutdown_Shutdown_In_Progress_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to en.
         /// </summary>
         internal static string Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option {
