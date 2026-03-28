@@ -24,6 +24,12 @@
     <data name="Pages_Tasks_Title" xml:space="preserve">
         <value>任务</value>
     </data>
+    <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
+        <value>返回</value>
+    </data>
+    <data name="Pages_Settings_Title" xml:space="preserve">
+        <value>设置</value>
+    </data>
     <data name="Pages_Settings_Accounts_Title" xml:space="preserve">
         <value>账号</value>
     </data>

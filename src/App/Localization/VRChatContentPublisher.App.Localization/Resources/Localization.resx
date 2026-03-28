@@ -21,8 +21,14 @@
     <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option" xml:space="preserve">
         <value>en</value>
     </data>
+    <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
+        <value>Back</value>
+    </data>
     <data name="Pages_Tasks_Title" xml:space="preserve">
         <value>Tasks</value>
+    </data>
+    <data name="Pages_Settings_Title" xml:space="preserve">
+        <value>Settings</value>
     </data>
     <data name="Pages_Settings_Accounts_Title" xml:space="preserve">
         <value>Accounts</value>

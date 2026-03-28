@@ -15,11 +15,17 @@
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
-                <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
-                        Command="{Binding NavigateToHomeCommand}"
-                        Padding="0" Margin="0,0,0,5" Foreground="White"
-                        Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
-                <TextBlock Text="Settings" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+                <Button
+                    Command="{Binding NavigateToHomeCommand}"
+                    Padding="0" Margin="0,0,0,5" Foreground="White"
+                    Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="ArrowLeft" />
+                        <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Navigation_Go_Back_Button_Text}}" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Title}}" FontSize="36"
+                           FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
         <ScrollViewer Grid.Row="1">

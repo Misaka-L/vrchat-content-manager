@@ -70,6 +70,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        internal static string Pages_Navigation_Go_Back_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Navigation_Go_Back_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Acknowledgement.
         /// </summary>
         internal static string Pages_Settings_About_Acknowledgement_Title {
@@ -644,6 +653,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_PairedClients_Title {
             get {
                 return ResourceManager.GetString("Pages_Settings_PairedClients_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        internal static string Pages_Settings_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Title", resourceCulture);
             }
         }
         
