@@ -21,11 +21,50 @@
     <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option" xml:space="preserve">
         <value>zh-CN</value>
     </data>
+    <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
+        <value>返回</value>
+    </data>
     <data name="Pages_Tasks_Title" xml:space="preserve">
         <value>任务</value>
     </data>
-    <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
-        <value>返回</value>
+    <data name="Pages_Add_Account_Title_Headline1" xml:space="preserve">
+        <value>登录到你的</value>
+    </data>
+    <data name="Pages_Add_Account_Title_Headline2_Bold" xml:space="preserve">
+        <value>VRChat 账号</value>
+    </data>
+    <data name="Pages_Add_Account_Username_Or_Email_Field_Label" xml:space="preserve">
+        <value>用户名或邮箱</value>
+    </data>
+    <data name="Pages_Add_Account_Password_Field_Label" xml:space="preserve">
+        <value>密码</value>
+    </data>
+    <data name="Pages_Add_Account_Login_Button_Text" xml:space="preserve">
+        <value>登录</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
+        <value>在用 Pico, Oculus, Steam, 或 Viveport 账号?</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Description" xml:space="preserve">
+        <value>请跟随以下文章指引，将你的 Pico, Oculus, Steam 或 Viveport 账号与你的 VRChat 账号关联：</value>
+    </data>
+    <data name="Pages_Add_Account_Alert_Login_Failed_Title" xml:space="preserve">
+        <value>登录失败</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Title" xml:space="preserve">
+        <value>需要一次性验证码</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Code_Field_Watermark" xml:space="preserve">
+        <value>验证码</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_Totp" xml:space="preserve">
+        <value>请检查你的 TOTP App</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_EmailOtp" xml:space="preserve">
+        <value>请检查你的邮箱</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code" xml:space="preserve">
+        <value>无法验证你提供的验证码</value>
     </data>
     <data name="Pages_Settings_Title" xml:space="preserve">
         <value>设置</value>

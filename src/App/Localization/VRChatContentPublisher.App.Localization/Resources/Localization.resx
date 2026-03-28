@@ -27,6 +27,45 @@
     <data name="Pages_Tasks_Title" xml:space="preserve">
         <value>Tasks</value>
     </data>
+    <data name="Pages_Add_Account_Title_Headline1" xml:space="preserve">
+        <value>Login to your</value>
+    </data>
+    <data name="Pages_Add_Account_Title_Headline2_Bold" xml:space="preserve">
+        <value>VRChat Account</value>
+    </data>
+    <data name="Pages_Add_Account_Username_Or_Email_Field_Label" xml:space="preserve">
+        <value>Username/Email</value>
+    </data>
+    <data name="Pages_Add_Account_Password_Field_Label" xml:space="preserve">
+        <value>Password</value>
+    </data>
+    <data name="Pages_Add_Account_Login_Button_Text" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
+        <value>Using an Pico, Oculus, Steam, or Viveport account?</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Description" xml:space="preserve">
+        <value>Please link your Pico, Oculus, Steam, or Viveport account to your VRChat Account follow this article in the below:</value>
+    </data>
+    <data name="Pages_Add_Account_Alert_Login_Failed_Title" xml:space="preserve">
+        <value>Failed to login</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Title" xml:space="preserve">
+        <value>One Time Password Required</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Code_Field_Watermark" xml:space="preserve">
+        <value>Code</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_Totp" xml:space="preserve">
+        <value>Please check your TOTP App for code</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_EmailOtp" xml:space="preserve">
+        <value>Please check your email for code</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code" xml:space="preserve">
+        <value>Failed to verify your code</value>
+    </data>
     <data name="Pages_Settings_Title" xml:space="preserve">
         <value>Settings</value>
     </data>

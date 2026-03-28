@@ -70,6 +70,123 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to login.
+        /// </summary>
+        internal static string Pages_Add_Account_Alert_Login_Failed_Title {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Alert_Login_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        internal static string Pages_Add_Account_Login_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Login_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to verify your code.
+        /// </summary>
+        internal static string Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code.
+        /// </summary>
+        internal static string Pages_Add_Account_Otp_Dialog_Code_Field_Watermark {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Code_Field_Watermark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please check your email for code.
+        /// </summary>
+        internal static string Pages_Add_Account_Otp_Dialog_Require_EmailOtp {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Require_EmailOtp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please check your TOTP App for code.
+        /// </summary>
+        internal static string Pages_Add_Account_Otp_Dialog_Require_Totp {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Require_Totp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One Time Password Required.
+        /// </summary>
+        internal static string Pages_Add_Account_Otp_Dialog_Title {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Pages_Add_Account_Password_Field_Label {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Password_Field_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login to your.
+        /// </summary>
+        internal static string Pages_Add_Account_Title_Headline1 {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Title_Headline1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VRChat Account.
+        /// </summary>
+        internal static string Pages_Add_Account_Title_Headline2_Bold {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Title_Headline2_Bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username/Email.
+        /// </summary>
+        internal static string Pages_Add_Account_Username_Or_Email_Field_Label {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Username_Or_Email_Field_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please link your Pico, Oculus, Steam, or Viveport account to your VRChat Account follow this article in the below:.
+        /// </summary>
+        internal static string Pages_Add_Account_Using_No_VRChat_Account_Tip_Description {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Using_No_VRChat_Account_Tip_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using an Pico, Oculus, Steam, or Viveport account?.
+        /// </summary>
+        internal static string Pages_Add_Account_Using_No_VRChat_Account_Tip_Title {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Using_No_VRChat_Account_Tip_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Pages_Navigation_Go_Back_Button_Text {
