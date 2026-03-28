@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:connect="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.Connect"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="connect:RpcClientSessionViewModel"
              x:Class="VRChatContentPublisher.App.Views.Data.Connect.RpcClientSessionView">
@@ -13,12 +14,17 @@
             <TextBlock Text="{Binding ClientId}" FontSize="12" Opacity="0.7" />
             <TextBlock Text="{Binding ClientName}" />
             <TextBlock Opacity="0.7" FontSize="12">
-                <Run Text="Will expire at" />
-                <Run Text="{Binding ExpiresLocal, StringFormat=G}" />
+                <TextBlock.Text>
+                    <I18N
+                        Key="{x:Static localization:LangKeys.Pages_Settings_ConnectedClients_Client_Item_Expired_At_Text_Template}">
+                        <Binding Path="ExpiresLocal" StringFormat="g" />
+                    </I18N>
+                </TextBlock.Text>
             </TextBlock>
         </StackPanel>
         <Button Command="{Binding DeleteCommand}"
                 Grid.Column="1" Theme="{StaticResource MaterialFlatButton}"
-                Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32" />
+                Content="{avalonia:MaterialIconExt Kind=Close, Size=24}" Width="32" Height="32"
+                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_ConnectedClients_Client_Item_Revoke_Client_Button_Tooltip}}" />
     </Grid>
 </UserControl>

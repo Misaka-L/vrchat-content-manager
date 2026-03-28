@@ -123,6 +123,15 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
         <value>Public IP Changed</value>
     </data>
+    <data name="Pages_Settings_ConnectedClients_Title" xml:space="preserve">
+        <value>Connected Clients</value>
+    </data>
+    <data name="Pages_Settings_ConnectedClients_Client_Item_Expired_At_Text_Template" xml:space="preserve">
+        <value>Client session will expire at {0}</value>
+    </data>
+    <data name="Pages_Settings_ConnectedClients_Client_Item_Revoke_Client_Button_Tooltip" xml:space="preserve">
+        <value>Revoke Client Session</value>
+    </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>About</value>
     </data>

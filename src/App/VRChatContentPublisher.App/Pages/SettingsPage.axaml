@@ -36,7 +36,7 @@
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Title}}">
                     <ContentControl Content="{Binding NotificationSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Sessions">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_ConnectedClients_Title}}">
                     <ContentControl Content="{Binding SessionsSettingsViewModel}" />
                 </Expander>
                 <Expander Header="Http Proxy">
