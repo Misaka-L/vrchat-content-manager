@@ -5,6 +5,7 @@
              xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="680"
              x:DataType="gettingStarted:GuideConnectUnityPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.GettingStarted.GuideConnectUnityPage">
@@ -19,13 +20,17 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <Border Height="90">
+        <Border MinHeight="90">
             <Border.Background>
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
-                <TextBlock Text="Finish setup by" FontSize="16" Foreground="White" Opacity="0.7" />
-                <TextBlock Text="Connect Unity to App" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Headline1_Light}}"
+                    FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Headline2_Bold}}"
+                    FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
 
@@ -35,22 +40,32 @@
                         BorderThickness="2,0,0,0"
                         Padding="8,0,0,0">
                     <StackPanel>
-                        <TextBlock Classes="Caption" Text="Step.2" Opacity="0.8" />
-                        <TextBlock Classes="Headline6" Text="Connect to App" TextWrapping="Wrap" />
+                        <TextBlock Classes="Caption"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Shared_Steps_Step_1_Title}}"
+                                   Opacity="0.8" />
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Step_2_Connect_To_App_Title}}"
+                                   TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
-                <TextBlock Text="Enter following host address in Connect Settings in Unity, then press Connect."
-                           TextWrapping="Wrap" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Step_2_Description}}"
+                    TextWrapping="Wrap" />
                 <TextBox UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
-                         assists:TextFieldAssist.Label="Host URL"
+                         assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint}}"
                          IsReadOnly="True" Text="{Binding HostUri}" />
 
-                <Button Content="{avalonia:MaterialIconTextExt Kind=ContentCopy, Text=Copy}">
+                <Button>
                     <Interaction.Behaviors>
                         <ButtonClickEventTriggerBehavior>
                             <SetClipboardTextAction Text="{Binding HostUri}" />
                         </ButtonClickEventTriggerBehavior>
                     </Interaction.Behaviors>
+                    <StackPanel Orientation="Horizontal">
+                        <avalonia:MaterialIcon Kind="ContentCopy" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text}}" />
+                    </StackPanel>
                 </Button>
                 <Image Source="/Assets/Setup/UnitySetup/ConnectSettingsHost.png" />
             </StackPanel>
@@ -61,7 +76,8 @@
             <Button Theme="{StaticResource MaterialOutlineButton}"
                     Foreground="{DynamicResource MaterialDesignBody}"
                     BorderBrush="{DynamicResource MaterialDesignBodyLight}"
-                    Content="Skip" Command="{Binding SkipCommand}" />
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Skip_Button_Text}}"
+                    Command="{Binding SkipCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

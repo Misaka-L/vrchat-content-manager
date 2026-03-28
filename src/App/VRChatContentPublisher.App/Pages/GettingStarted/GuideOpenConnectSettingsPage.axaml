@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="680"
              x:DataType="gettingStarted:GuideOpenConnectSettingsPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.GettingStarted.GuideOpenConnectSettingsPage">
@@ -17,13 +18,17 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <Border Height="90">
+        <Border MinHeight="90">
             <Border.Background>
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
-                <TextBlock Text="Finish setup by" FontSize="16" Foreground="White" Opacity="0.7" />
-                <TextBlock Text="Connect Unity to App" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Open_Connect_Settings_In_Unity_Headline1_Light}}"
+                    FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Open_Connect_Settings_In_Unity_Headline2_Bold}}"
+                    FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
 
@@ -33,12 +38,17 @@
                         BorderThickness="2,0,0,0"
                         Padding="8,0,0,0">
                     <StackPanel>
-                        <TextBlock Classes="Caption" Text="Step.1" Opacity="0.8" />
-                        <TextBlock Classes="Headline6" Text="Open Connect Settings" TextWrapping="Wrap" />
+                        <TextBlock Classes="Caption"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Shared_Steps_Step_1_Title}}"
+                                   Opacity="0.8" />
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Open_Connect_Settings_Title}}"
+                                   TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
-                <TextBlock Text="Select Tools > VRChat Content Publisher Connect > Settings to open Connect Settings"
-                           TextWrapping="Wrap" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Description}}"
+                    TextWrapping="Wrap" />
                 <Image Source="/Assets/Setup/UnitySetup/Windows/ToolbarTools.png" Stretch="Uniform" />
                 <Image Source="/Assets/Setup/UnitySetup/Windows/ToolbarConnect.png" Stretch="Uniform" />
             </StackPanel>
@@ -49,8 +59,11 @@
             <Button Theme="{StaticResource MaterialOutlineButton}"
                     Foreground="{DynamicResource MaterialDesignBody}"
                     BorderBrush="{DynamicResource MaterialDesignBodyLight}"
-                    Content="Skip" Command="{Binding SkipCommand}" />
-            <Button Content="Next" Command="{Binding NextCommand}" />
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Open_Connect_Settings_In_Unity_Skip_Button_Text}}"
+                    Command="{Binding SkipCommand}" />
+            <Button
+                Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Open_Connect_Settings_In_Unity_Next_Button_Text}}"
+                Command="{Binding NextCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

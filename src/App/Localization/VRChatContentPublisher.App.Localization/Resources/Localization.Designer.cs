@@ -113,7 +113,7 @@ namespace VRChatContentPublisher.App.Localization.Resources {
             }
         }
         
-         /// <summary>
+        /// <summary>
         ///   Looks up a localized string similar to I know.
         /// </summary>
         internal static string Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text {
@@ -320,6 +320,285 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Add_Account_Using_No_VRChat_Account_Tip_Title {
             get {
                 return ResourceManager.GetString("Pages_Add_Account_Using_No_VRChat_Account_Tip_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish setup by.
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Headline1_Light {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Headline1_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect Unity to App.
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Headline2_Bold {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Headline2_Bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Host URL.
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip.
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Skip_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Skip_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect to App.
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Step_2_Connect_To_App_Title {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Step_2_Connect_To_App_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter following host address in Connect Settings in Unity, then press Connect..
+        /// </summary>
+        internal static string Pages_Guide_Connect_Unity_To_App_Step_2_Description {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Connect_Unity_To_App_Step_2_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish setup by.
+        /// </summary>
+        internal static string Pages_Guide_Open_Connect_Settings_In_Unity_Headline1_Light {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Open_Connect_Settings_In_Unity_Headline1_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connect Unity to App.
+        /// </summary>
+        internal static string Pages_Guide_Open_Connect_Settings_In_Unity_Headline2_Bold {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Open_Connect_Settings_In_Unity_Headline2_Bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string Pages_Guide_Open_Connect_Settings_In_Unity_Next_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Open_Connect_Settings_In_Unity_Next_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip.
+        /// </summary>
+        internal static string Pages_Guide_Open_Connect_Settings_In_Unity_Skip_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Open_Connect_Settings_In_Unity_Skip_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Tools &gt; VRChat Content Publisher Connect &gt; Settings to open Connect Settings.
+        /// </summary>
+        internal static string Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Description {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Connect Settings.
+        /// </summary>
+        internal static string Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Open_Connect_Settings_Title {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Open_Connect_Settings_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To Connect Unity to App.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Headline1_Light {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Headline1_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Connect Package.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Headline2_Bold {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Headline2_Bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Next_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Next_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Skip_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Skip_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to the package manager.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_1_Add_To_Package_Manager_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_1_Add_To_Package_Manager_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add VPM Repository.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_1_Add_VPM_Repository_Title {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_1_Add_VPM_Repository_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_1_Copy_Repository_URL_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_1_Copy_Repository_URL_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VPM Repository URL.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For Worlds Project.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_2_For_Avatars_Project_Caption {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_2_For_Avatars_Project_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you are using Continuous Avatar Uploader.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_2_For_Project_With_CAU_Caption {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_2_For_Project_With_CAU_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For Worlds Project.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_2_For_Worlds_Project_Caption {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_2_For_Worlds_Project_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Connect Package.
+        /// </summary>
+        internal static string Pages_Guide_Setup_Unity_Step_2_Install_Connect_Package_Title {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Setup_Unity_Step_2_Install_Connect_Package_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step.1.
+        /// </summary>
+        internal static string Pages_Guide_Shared_Steps_Step_1_Title {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Shared_Steps_Step_1_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step.2.
+        /// </summary>
+        internal static string Pages_Guide_Shared_Steps_Step_2_Title {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Shared_Steps_Step_2_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A More Efficient Way.
+        /// </summary>
+        internal static string Pages_Guide_Welcome_Headline1_Bold {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Welcome_Headline1_Bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to to publish your VRChat contents.
+        /// </summary>
+        internal static string Pages_Guide_Welcome_Headline2_Light {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Welcome_Headline2_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string Pages_Guide_Welcome_Next_Page_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Welcome_Next_Page_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Just take me to the Home page!.
+        /// </summary>
+        internal static string Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text", resourceCulture);
             }
         }
         

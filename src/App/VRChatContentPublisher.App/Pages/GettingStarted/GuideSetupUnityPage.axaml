@@ -5,7 +5,8 @@
              xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="680"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="430" d:DesignHeight="680"
              x:DataType="gettingStarted:GuideSetupUnityPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.GettingStarted.GuideSetupUnityPage">
 
@@ -19,13 +20,16 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <Border Height="90">
+        <Border MinHeight="90">
             <Border.Background>
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
-                <TextBlock Text="To Connect Unity to App" FontSize="16" Foreground="White" Opacity="0.7" />
-                <TextBlock Text="Install Connect Package" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Headline1_Light}}"
+                    FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Headline2_Bold}}"
+                           FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
 
@@ -35,30 +39,42 @@
                         BorderThickness="2,0,0,0"
                         Padding="8,0,0,0">
                     <StackPanel>
-                        <TextBlock Classes="Caption" Text="Step.1" Opacity="0.8" />
-                        <TextBlock Classes="Headline6" Text="Add VPM Repository" TextWrapping="Wrap" />
+                        <TextBlock Classes="Caption"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Shared_Steps_Step_1_Title}}"
+                                   Opacity="0.8" />
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_1_Add_VPM_Repository_Title}}"
+                                   TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
                 <TextBox UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
-                         assists:TextFieldAssist.Label="VPM Repository URL"
+                         assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint}}"
                          IsReadOnly="True" Text="{Binding VpmRepositoryUrl}" />
 
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                    <Button
-                        Content="{avalonia:MaterialIconTextExt Kind=PackageVariantClosedPlus, Text=Add to package manager}">
+                    <Button>
                         <Interaction.Behaviors>
                             <ButtonClickEventTriggerBehavior>
                                 <LaunchUriAction Uri="{Binding PackageManagerUrl}" />
                             </ButtonClickEventTriggerBehavior>
                         </Interaction.Behaviors>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <avalonia:MaterialIcon Kind="PackageVariantClosedPlus" />
+                            <TextBlock
+                                Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_1_Add_To_Package_Manager_Button_Text}}" />
+                        </StackPanel>
                     </Button>
-                    <Button Grid.Column="1" Theme="{StaticResource MaterialOutlineButton}" Classes="light"
-                            Content="{avalonia:MaterialIconTextExt Kind=ContentCopy, Text=Copy}">
+                    <Button Grid.Column="1" Theme="{StaticResource MaterialOutlineButton}" Classes="light">
                         <Interaction.Behaviors>
                             <ButtonClickEventTriggerBehavior>
                                 <SetClipboardTextAction Text="{Binding VpmRepositoryUrl}" />
                             </ButtonClickEventTriggerBehavior>
                         </Interaction.Behaviors>
+                        <StackPanel Orientation="Horizontal" Spacing="4">
+                            <avalonia:MaterialIcon Kind="ContentCopy" />
+                            <TextBlock
+                                Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_1_Copy_Repository_URL_Button_Text}}" />
+                        </StackPanel>
                     </Button>
                 </Grid>
             </StackPanel>
@@ -69,21 +85,31 @@
                         Padding="8,0,0,0"
                         Margin="0,0,0,4">
                     <StackPanel>
-                        <TextBlock Classes="Caption" Text="Step.2" Opacity="0.8" />
-                        <TextBlock Classes="Headline6" Text="Install Connect Package" TextWrapping="Wrap" />
+                        <TextBlock Classes="Caption"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Shared_Steps_Step_2_Title}}"
+                                   Opacity="0.8" />
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_2_Install_Connect_Package_Title}}"
+                                   TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
 
                 <StackPanel Margin="2 0">
-                    <TextBlock Classes="Caption" Text="For Worlds Project" Opacity="0.6" />
+                    <TextBlock Classes="Caption"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_2_For_Worlds_Project_Caption}}"
+                               Opacity="0.6" />
                     <SelectableTextBlock TextWrapping="Wrap" Text="VRChat Content Publisher Connect - Worlds" />
                 </StackPanel>
                 <StackPanel Margin="2 0">
-                    <TextBlock Classes="Caption" Text="For Avatars Project" Opacity="0.6" />
+                    <TextBlock Classes="Caption"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_2_For_Avatars_Project_Caption}}"
+                               Opacity="0.6" />
                     <SelectableTextBlock TextWrapping="Wrap" Text="VRChat Content Publisher Connect - Avatars" />
                 </StackPanel>
                 <StackPanel Margin="2 0">
-                    <TextBlock Classes="Caption" Text="If you are using Continuous Avatar Uploader" Opacity="0.6" />
+                    <TextBlock Classes="Caption"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_2_For_Project_With_CAU_Caption}}"
+                               Opacity="0.6" />
                     <SelectableTextBlock TextWrapping="Wrap"
                                          Text="VRChat Content Publisher Connect - Avatars - Continuous Avatar Uploader Extension" />
                 </StackPanel>
@@ -95,8 +121,10 @@
             <Button Theme="{StaticResource MaterialOutlineButton}"
                     Foreground="{DynamicResource MaterialDesignBody}"
                     BorderBrush="{DynamicResource MaterialDesignBodyLight}"
-                    Content="Skip" Command="{Binding SkipCommand}" />
-            <Button Content="Next" Command="{Binding NextCommand}" />
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Skip_Button_Text}}"
+                    Command="{Binding SkipCommand}" />
+            <Button Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Next_Button_Text}}"
+                    Command="{Binding NextCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

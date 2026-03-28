@@ -269,6 +269,99 @@
     <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
         <value>Contribute</value>
     </data>
+    <data name="Pages_Guide_Shared_Steps_Step_1_Title" xml:space="preserve">
+        <value>Step.1</value>
+    </data>
+    <data name="Pages_Guide_Shared_Steps_Step_2_Title" xml:space="preserve">
+        <value>Step.2</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Headline1_Bold" xml:space="preserve">
+        <value>A More Efficient Way</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Headline2_Light" xml:space="preserve">
+        <value>to publish your VRChat contents</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Next_Page_Button_Text" xml:space="preserve">
+        <value>Next</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text" xml:space="preserve">
+        <value>Just take me to the Home page!</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Headline1_Light" xml:space="preserve">
+        <value>To Connect Unity to App</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Headline2_Bold" xml:space="preserve">
+        <value>Install Connect Package</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Add_VPM_Repository_Title" xml:space="preserve">
+        <value>Add VPM Repository</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint" xml:space="preserve">
+        <value>VPM Repository URL</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Add_To_Package_Manager_Button_Text" xml:space="preserve">
+        <value>Add to the package manager</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Copy_Repository_URL_Button_Text" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_Install_Connect_Package_Title" xml:space="preserve">
+        <value>Install Connect Package</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Worlds_Project_Caption" xml:space="preserve">
+        <value>For Worlds Project</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Avatars_Project_Caption" xml:space="preserve">
+        <value>For Worlds Project</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Project_With_CAU_Caption" xml:space="preserve">
+        <value>If you are using Continuous Avatar Uploader</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Next_Button_Text" xml:space="preserve">
+        <value>Next</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Skip_Button_Text" xml:space="preserve">
+        <value>Skip</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Headline1_Light" xml:space="preserve">
+        <value>Finish setup by</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Headline2_Bold" xml:space="preserve">
+        <value>Connect Unity to App</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Open_Connect_Settings_Title" xml:space="preserve">
+        <value>Open Connect Settings</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Description" xml:space="preserve">
+        <value>Select Tools > VRChat Content Publisher Connect > Settings to open Connect Settings</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Next_Button_Text" xml:space="preserve">
+        <value>Next</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Skip_Button_Text" xml:space="preserve">
+        <value>Skip</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Headline1_Light" xml:space="preserve">
+        <value>Finish setup by</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Headline2_Bold" xml:space="preserve">
+        <value>Connect Unity to App</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Step_2_Connect_To_App_Title" xml:space="preserve">
+        <value>Connect to App</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Step_2_Description" xml:space="preserve">
+        <value>Enter following host address in Connect Settings in Unity, then press Connect.</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint" xml:space="preserve">
+        <value>Host URL</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Skip_Button_Text" xml:space="preserve">
+        <value>Skip</value>
+    </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>Identity Prompt</value>
     </data>
