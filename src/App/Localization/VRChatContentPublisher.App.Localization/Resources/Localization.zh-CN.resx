@@ -43,7 +43,7 @@
         <value>登录</value>
     </data>
     <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
-        <value>在用 Pico, Oculus, Steam, 或 Viveport 账号?</value>
+        <value>在用 Pico, Oculus, Steam 或 Viveport 账号?</value>
     </data>
     <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Description" xml:space="preserve">
         <value>请跟随以下文章指引，将你的 Pico, Oculus, Steam 或 Viveport 账号与你的 VRChat 账号关联：</value>
