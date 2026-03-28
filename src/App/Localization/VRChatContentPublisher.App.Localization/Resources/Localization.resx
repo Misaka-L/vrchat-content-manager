@@ -153,6 +153,21 @@
     <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
         <value>HTTP Proxy URI must be a http or https URI.</value>
     </data>
+    <data name="Pages_Settings_Debug_Title" xml:space="preserve">
+        <value>Debug</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Logs_Folder_Button_Text" xml:space="preserve">
+        <value>Open Logs Folder</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Network_Diagnostics_Window" xml:space="preserve">
+        <value>Open Network Diagnostics Window</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
+        <value>Enter encrypted IP in the logs here</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Button_Text" xml:space="preserve">
+        <value>Decrypt</value>
+    </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>About</value>
     </data>

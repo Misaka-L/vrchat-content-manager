@@ -449,6 +449,51 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Decrypt.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Encrypted_IP_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Encrypted_IP_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter encrypted IP in the logs here.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Encrypted_IP_Field_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Encrypted_IP_Field_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Logs Folder.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Open_Logs_Folder_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Open_Logs_Folder_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Network Diagnostics Window.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Open_Network_Diagnostics_Window {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Open_Network_Diagnostics_Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Custom HTTP Proxy URI.
         /// </summary>
         internal static string Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field {

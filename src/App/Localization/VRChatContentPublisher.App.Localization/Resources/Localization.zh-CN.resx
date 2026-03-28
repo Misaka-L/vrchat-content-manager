@@ -144,6 +144,21 @@
     <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
         <value>HTTP 代理 URI 必须是 http:// 或 https:// 链接</value>
     </data>
+    <data name="Pages_Settings_Debug_Title" xml:space="preserve">
+        <value>调试</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Logs_Folder_Button_Text" xml:space="preserve">
+        <value>打开日志文件夹</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Network_Diagnostics_Window" xml:space="preserve">
+        <value>打开网络诊断窗口</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
+        <value>在此输入日志中加密后的 IP</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Button_Text" xml:space="preserve">
+        <value>解密</value>
+    </data>
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>关于该软件</value>
     </data>
