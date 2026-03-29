@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.7.0] - 2026-03-29
+
 ### Changed
 
 - Improved the text and term in the app. [`#242`](https://github.com/project-vrcz/content-publisher/pull/242)
@@ -362,7 +364,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.6.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.7.0...HEAD
+[2.7.0]: https://github.com/project-vrcz/content-publisher/compare/v2.6.1...v2.7.0
 [2.6.1]: https://github.com/project-vrcz/content-publisher/compare/v2.6.0...v2.6.1
 [2.6.0]: https://github.com/project-vrcz/content-publisher/compare/v2.5.0...v2.6.0
 [2.5.0]: https://github.com/project-vrcz/content-publisher/compare/v2.4.2...v2.5.0
