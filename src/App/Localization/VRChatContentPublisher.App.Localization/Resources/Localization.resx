@@ -470,6 +470,13 @@ Please try using VRChat SDK to publish content, if fail, contact VRChat Support,
     <data name="Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip" xml:space="preserve">
         <value>Cancel</value>
     </data>
+    <data name="Pages_Home_App_Bar_Toggle_Borderless_Window_Button_Tooltip" xml:space="preserve">
+        <value>Toggle Borderless Window</value>
+    </data>
+    <data name="Pages_Home_App_Bar_Toggle_Window_Pin_Button_Tooltip" xml:space="preserve">
+        <value>Borderless Window: Toggle prevent window hide ,
+Normal Window: Toggle window on top.</value>
+    </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>Identity Prompt</value>
     </data>

@@ -603,6 +603,25 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Toggle Borderless Window.
+        /// </summary>
+        internal static string Pages_Home_App_Bar_Toggle_Borderless_Window_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Home_App_Bar_Toggle_Borderless_Window_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Borderless Window: Toggle prevent window hide ,
+        ///Normal Window: Toggle window on top..
+        /// </summary>
+        internal static string Pages_Home_App_Bar_Toggle_Window_Pin_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Home_App_Bar_Toggle_Window_Pin_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Pages_Navigation_Go_Back_Button_Text {
