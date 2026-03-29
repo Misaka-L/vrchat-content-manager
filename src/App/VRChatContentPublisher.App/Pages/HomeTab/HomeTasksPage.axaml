@@ -42,14 +42,14 @@
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel>
-                                    <SelectableTextBlock>
+                                    <SelectableTextBlock Foreground="{DynamicResource MaterialBodyBrush}">
                                         <Bold>
                                             <Run
                                                 Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text}}" />
                                         </Bold>
                                         <Run Text="{Binding LastPublicIp, FallbackValue=N/A}" />
                                     </SelectableTextBlock>
-                                    <SelectableTextBlock>
+                                    <SelectableTextBlock Foreground="{DynamicResource MaterialBodyBrush}">
                                         <Bold>
                                             <Run
                                                 Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text}}" />
