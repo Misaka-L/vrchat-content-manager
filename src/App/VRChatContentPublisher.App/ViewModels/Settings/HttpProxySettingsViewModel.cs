@@ -7,27 +7,27 @@ using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
-public sealed partial class HttpProxySettingsViewModel : ViewModelBase
+public sealed partial class HttpProxySettingsViewModel(IWritableOptions<AppSettings> appSettings) : ViewModelBase
 {
-    private readonly IWritableOptions<AppSettings> _appSettings;
-
     public static string ProxyUriValidationFailedMessage =>
         I18NExtension.Translate(LangKeys.Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message) ??
         "HTTP Proxy URI must be a http or https URI.";
 
-    [ObservableProperty] public partial string ProxyUri { get; set; }
+    [ObservableProperty] public partial string ProxyUri { get; set; } = "";
 
     public HttpProxyModeItemViewModel SelectedHttpProxyMode
     {
-        get => HttpProxyModes.First(x => x.Mode == _appSettings.Value.HttpProxySettings);
+        get => HttpProxyModes.First(x => x.Mode == appSettings.Value.HttpProxySettings);
         set
         {
-            if (value.Mode == _appSettings.Value.HttpProxySettings)
+            if (value.Mode == appSettings.Value.HttpProxySettings)
                 return;
 
             OnPropertyChanging();
-            _appSettings.Update(settings => settings.HttpProxySettings = value.Mode);
+            OnProxyUriChanging(nameof(IsCustomProxySelected));
+            appSettings.Update(settings => settings.HttpProxySettings = value.Mode);
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsCustomProxySelected));
         }
     }
 
@@ -41,12 +41,6 @@ public sealed partial class HttpProxySettingsViewModel : ViewModelBase
         new(LangKeys.Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy, AppHttpProxySettings.CustomProxy)
     ];
 
-    public HttpProxySettingsViewModel(IWritableOptions<AppSettings> appSettings)
-    {
-        _appSettings = appSettings;
-        UpdateSettingsFromOptions();
-    }
-
     [RelayCommand]
     private void Load()
     {
@@ -55,7 +49,7 @@ public sealed partial class HttpProxySettingsViewModel : ViewModelBase
 
     private void UpdateSettingsFromOptions()
     {
-        ProxyUri = _appSettings.Value.HttpProxyUri?.ToString() ?? "";
+        ProxyUri = appSettings.Value.HttpProxyUri?.ToString() ?? "";
     }
 
     [RelayCommand]
@@ -64,7 +58,7 @@ public sealed partial class HttpProxySettingsViewModel : ViewModelBase
         if (!Uri.TryCreate(ProxyUri, UriKind.Absolute, out var uri) && IsCustomProxySelected)
             return;
 
-        await _appSettings.UpdateAsync(settings =>
+        await appSettings.UpdateAsync(settings =>
         {
             settings.HttpProxyUri = uri;
             settings.HttpProxySettings = SelectedHttpProxyMode.Mode;
