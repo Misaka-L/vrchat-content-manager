@@ -21,6 +21,12 @@
     <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option" xml:space="preserve">
         <value>zh-CN</value>
     </data>
+    <data name="Common_Content_Type_Avatar" xml:space="preserve">
+        <value>虚拟形象</value>
+    </data>
+    <data name="Common_Content_Type_World" xml:space="preserve">
+        <value>世界</value>
+    </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
         <value>返回</value>
     </data>
@@ -515,5 +521,20 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
         <value>我知道了</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Title" xml:space="preserve">
+        <value>测试通知</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Body" xml:space="preserve">
+        <value>这是一条测试通知</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Title" xml:space="preserve">
+        <value>公网 IP 变更</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Body_Template" xml:space="preserve">
+        <value>旧 IP: {0} 新 IP: {1}</value>
+    </data>
+    <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
+        <value>发布 {0} "{1}" 失败</value>
     </data>
 </root>

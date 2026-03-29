@@ -27,6 +27,12 @@
           xml:space="preserve">
         <value>en</value>
     </data>
+    <data name="Common_Content_Type_Avatar" xml:space="preserve">
+        <value>Avatar</value>
+    </data>
+    <data name="Common_Content_Type_World" xml:space="preserve">
+        <value>World</value>
+    </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
         <value>Back</value>
     </data>
@@ -523,5 +529,20 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
         <value>I know</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Title" xml:space="preserve">
+        <value>Test Notification</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Body" xml:space="preserve">
+        <value>This is a test notification</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Title" xml:space="preserve">
+        <value>Public IP Changed</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Body_Template" xml:space="preserve">
+        <value>Old: {0} New: {1}</value>
+    </data>
+    <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
+        <value>Publish {0} "{1}" Failed</value>
     </data>
 </root>

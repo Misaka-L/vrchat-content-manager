@@ -60,6 +60,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Avatar.
+        /// </summary>
+        internal static string Common_Content_Type_Avatar {
+            get {
+                return ResourceManager.GetString("Common_Content_Type_Avatar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to World.
+        /// </summary>
+        internal static string Common_Content_Type_World {
+            get {
+                return ResourceManager.GetString("Common_Content_Type_World", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string Dialog_Request_Challenge_Close_Dialog_Button {
@@ -203,6 +221,51 @@ namespace VRChatContentPublisher.App.Localization.Resources {
             get {
                 return ResourceManager.GetString(("Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizati" +
                         "onService_To_Add_Lanauge_Option"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old: {0} New: {1}.
+        /// </summary>
+        internal static string Notifications_Public_IP_Changed_Body_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Public_IP_Changed_Body_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public IP Changed.
+        /// </summary>
+        internal static string Notifications_Public_IP_Changed_Title {
+            get {
+                return ResourceManager.GetString("Notifications_Public_IP_Changed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is a test notification.
+        /// </summary>
+        internal static string Notifications_Settings_Test_Notification_Body {
+            get {
+                return ResourceManager.GetString("Notifications_Settings_Test_Notification_Body", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test Notification.
+        /// </summary>
+        internal static string Notifications_Settings_Test_Notification_Title {
+            get {
+                return ResourceManager.GetString("Notifications_Settings_Test_Notification_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish {0} &quot;{1}&quot; Failed.
+        /// </summary>
+        internal static string Notifications_Task_Failed_Title_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Task_Failed_Title_Template", resourceCulture);
             }
         }
         

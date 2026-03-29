@@ -1,3 +1,4 @@
+using Antelcat.I18N.Avalonia;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Platform.Abstraction.Services;
@@ -13,6 +14,9 @@ public sealed class AppNotificationService(
         if (!appSettings.Value.NotificationsEnabled)
             return;
 
-        await desktopNotificationService.SendDesktopNotificationAsync(title, message);
+        var localizedTitle = I18NExtension.Translate(title) ?? title;
+        var localizedMessage = message is not null ? I18NExtension.Translate(message, message) : message;
+
+        await desktopNotificationService.SendDesktopNotificationAsync(localizedTitle, localizedMessage);
     }
 }
