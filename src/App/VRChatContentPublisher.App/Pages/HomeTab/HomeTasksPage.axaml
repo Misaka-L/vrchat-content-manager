@@ -7,7 +7,8 @@
              xmlns:publishTasks="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.PublishTasks"
              xmlns:controls="clr-namespace:VRChatContentPublisher.App.Controls"
              xmlns:controls1="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:DataType="homeTab:HomeTasksPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.HomeTab.HomeTasksPage">
 
@@ -26,27 +27,33 @@
                 Background="#FF6D00">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="8">
                 <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top"
-                                       Margin="0,0,8,0"/>
+                                       Margin="0,0,8,0" />
                 <TextBlock Grid.Column="1"
-                           Text="Public IP Changed: Your public IP address has changed since the last time you logged in. This may cause login issues. Please log out and log in again to refresh your session."
+                           Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Message}}"
                            Foreground="White"
-                           VerticalAlignment="Center"
+                           VerticalAlignment="Top"
                            TextWrapping="Wrap" />
-                <StackPanel VerticalAlignment="Center" Grid.Column="2">
+                <StackPanel Grid.Column="2">
                     <Button
                         Theme="{StaticResource MaterialFlatButton}"
                         Foreground="White"
-                        Content="Show IP"
+                        Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text}}"
                         VerticalAlignment="Center">
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel>
                                     <SelectableTextBlock>
-                                        <Bold>Current Public Ip:</Bold>
+                                        <Bold>
+                                            <Run
+                                                Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text}}" />
+                                        </Bold>
                                         <Run Text="{Binding LastPublicIp, FallbackValue=N/A}" />
                                     </SelectableTextBlock>
                                     <SelectableTextBlock>
-                                        <Bold>Last Public Ip:</Bold>
+                                        <Bold>
+                                            <Run
+                                                Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text}}" />
+                                        </Bold>
                                         <Run Text="{Binding LastPreviousPublicIp, FallbackValue=N/A}" />
                                     </SelectableTextBlock>
                                 </StackPanel>
@@ -57,7 +64,7 @@
                         Theme="{StaticResource MaterialFlatButton}"
                         Foreground="White"
                         Command="{Binding DismissPublicIpWarningCommand}"
-                        Content="Dismiss"
+                        Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text}}"
                         VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
@@ -110,7 +117,7 @@
                                 Command="{Binding LoginCommand}"
                                 Content="{avalonia:MaterialIconExt Kind=Add, Size=24}"
                                 Width="{Binding #AddAccountButton.Bounds.Height}"
-                                ToolTip.Tip="Add New Account" />
+                                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip}}" />
                     </Grid>
                 </controls1:ColorZone>
                 <TransitioningContentControl Grid.Row="1" Content="{Binding SelectedTaskManagerContainerViewModel}" />
@@ -118,10 +125,13 @@
             <StackPanel IsVisible="{Binding !TaskManagers.Count}"
                         Spacing="12" Margin="0,24,0,0">
                 <avalonia:MaterialIcon Kind="QuestionBoxMultiple" Height="64" Width="64" />
-                <TextBlock Text="You didn't login any VRChat accounts" HorizontalAlignment="Center"
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_No_VRChat_Account_Exist_Title}}"
+                           HorizontalAlignment="Center"
                            FontSize="18" />
-                <Button Content="Login" HorizontalAlignment="Center" MinWidth="200"
-                        Command="{Binding LoginCommand}" />
+                <Button
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text}}"
+                    HorizontalAlignment="Center" MinWidth="200"
+                    Command="{Binding LoginCommand}" />
             </StackPanel>
         </Panel>
     </Grid>

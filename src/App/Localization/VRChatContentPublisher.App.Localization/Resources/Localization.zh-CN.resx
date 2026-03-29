@@ -109,10 +109,10 @@
         <value>任务页中任务的排序方式</value>
     </data>
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First" xml:space="preserve">
-        <value>最新的任务在上</value>
+        <value>创建时间降序</value>
     </data>
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
-        <value>最早的任务在上</value>
+        <value>创建时间升序</value>
     </data>
     <data name="Pages_Settings_Connect_Title" xml:space="preserve">
         <value>RPC 服务器</value>
@@ -353,6 +353,114 @@
     </data>
     <data name="Pages_Guide_Connect_Unity_To_App_Skip_Button_Text" xml:space="preserve">
         <value>跳过</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Message" xml:space="preserve">
+        <value>你目前的公网 IP 和上次登录使用的 IP 不符。你可能需要点击“修复账号”重新登录你的账号。
+注：如果你切换回了上次使用的公网 IP，你可以直接点击“修复账号”按钮而无需重新登录。</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text" xml:space="preserve">
+        <value>显示 IP</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text" xml:space="preserve">
+        <value>我知道了</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text" xml:space="preserve">
+        <value>当前的公网 IP:</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text" xml:space="preserve">
+        <value>上一次登录使用的公网 IP:</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Title" xml:space="preserve">
+        <value>你还没有登录任何 VRChat 账号</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text" xml:space="preserve">
+        <value>登录</value>
+    </data>
+    <data name="Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip" xml:space="preserve">
+        <value>添加新的账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Title" xml:space="preserve">
+        <value>无法初始化该账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Description" xml:space="preserve">
+        <value>网络错误、公网 IP 变动或会话过期都可能导致该问题
+点击修复账号按钮来决定重试或重新登录</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text" xml:space="preserve">
+        <value>修复账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip" xml:space="preserve">
+        <value>正在进行的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip" xml:space="preserve">
+        <value>已完成的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip" xml:space="preserve">
+        <value>失败的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip" xml:space="preserve">
+        <value>取消的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_Text" xml:space="preserve">
+        <value>批量操作</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks" xml:space="preserve">
+        <value>移除所有已完成的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks" xml:space="preserve">
+        <value>移除所有失败的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks" xml:space="preserve">
+        <value>移除所有取消的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks" xml:space="preserve">
+        <value>移除所有可移除的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks" xml:space="preserve">
+        <value>重试所有可重试的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title" xml:space="preserve">
+        <value>账号会话过期或无效</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>在修复账号前，不允许任何操作。</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
+        <value>修复账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>在账号会话过期或失效时不允许操作任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
+        <value>该账号不被允许发布内容</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description" xml:space="preserve">
+        <value>你的 VRChat 账号必须有 &quot;萌新（New User）&quot; 或更高的信誉级别才能发布内容。
+VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，但是很有可能会失败。
+
+如果你满足了以上要求但是仍然看到这个提升或无法发布内容。
+请尝试用 VRChat SDK 发布内容。如果失败了，请联系 VRChat 支持。如果使用 SDK 能成功发布内容，请在 Github 上创建一个 Issue 来报告这个问题。</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text" xml:space="preserve">
+        <value>了解更多</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist" xml:space="preserve">
+        <value>这个账号没有发布任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template" xml:space="preserve">
+        <value>任务创建于 {0}</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Debug_Button_Tooltip" xml:space="preserve">
+        <value>调试</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Remove_Task_Button_Tooltip" xml:space="preserve">
+        <value>移除</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip" xml:space="preserve">
+        <value>重试</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip" xml:space="preserve">
+        <value>取消</value>
     </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>认证请求识别码</value>

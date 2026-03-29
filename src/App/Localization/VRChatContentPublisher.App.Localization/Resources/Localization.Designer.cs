@@ -1199,6 +1199,319 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Action.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No further interactions are allowed when session is expired or invalid..
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove All Removable Tasks.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Cancelled Tasks.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Completed Tasks.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Failed Tasks.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove All Tasks.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your VRChat account must have a trust rank of &quot;New User&quot; or higher to publish content.
+        ///VRChat Content Publisher won&apos;t prevent you from publish content for this account, but it will likely fail.
+        ///
+        ///If you still saw this or still unable to publish content when you have meet the requirement.
+        ///Please try using VRChat SDK to publish content, if fail, contact VRChat Support, if not, create a issues on github report this..
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Learn more.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text {
+            get {
+                return ResourceManager.GetString(("Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Bu" +
+                        "tton_Text"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account are not allowed to publish content.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repair.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Session Expired or Invalid.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No further interactions are allowed before account repaired..
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It may cause by network issue, public IP changed or session expired.
+        ///Click Repair Account to re-try or login again..
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Initialize_Error_Description {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Initialize_Error_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repair Account.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to initialize this account.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Initialize_Error_Title {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Initialize_Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No tasks exist for this account.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Task_Item_Debug_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Task_Item_Debug_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Task_Item_Remove_Task_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Task_Item_Remove_Task_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Created at {0}.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks Canceled.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks Completed.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks Failed.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks In Progress.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Public IP:.
+        /// </summary>
+        internal static string Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismiss.
+        /// </summary>
+        internal static string Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Public IP:.
+        /// </summary>
+        internal static string Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your public IP address has changed since the last time you logged in. This may cause login issues. You may need to click Repair Account button to login again
+        ///Tip: If you switch back to your last public IP, you can click Repair Account button without login again..
+        /// </summary>
+        internal static string Pages_Tasks_Alert_Public_IP_Changed_Message {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Alert_Public_IP_Changed_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show IP.
+        /// </summary>
+        internal static string Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login.
+        /// </summary>
+        internal static string Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You didn&apos;t login any VRChat accounts.
+        /// </summary>
+        internal static string Pages_Tasks_No_VRChat_Account_Exist_Title {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_No_VRChat_Account_Exist_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add New Account.
+        /// </summary>
+        internal static string Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tasks.
         /// </summary>
         internal static string Pages_Tasks_Title {

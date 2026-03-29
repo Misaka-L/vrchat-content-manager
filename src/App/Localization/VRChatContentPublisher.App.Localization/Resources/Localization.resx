@@ -362,6 +362,114 @@
     <data name="Pages_Guide_Connect_Unity_To_App_Skip_Button_Text" xml:space="preserve">
         <value>Skip</value>
     </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Message" xml:space="preserve">
+        <value>Your public IP address has changed since the last time you logged in. This may cause login issues. You may need to click Repair Account button to login again
+Tip: If you switch back to your last public IP, you can click Repair Account button without login again.</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text" xml:space="preserve">
+        <value>Show IP</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text" xml:space="preserve">
+        <value>Dismiss</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text" xml:space="preserve">
+        <value>Current Public IP:</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text" xml:space="preserve">
+        <value>Last Public IP:</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Title" xml:space="preserve">
+        <value>You didn't login any VRChat accounts</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip" xml:space="preserve">
+        <value>Add New Account</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Title" xml:space="preserve">
+        <value>Failed to initialize this account</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Description" xml:space="preserve">
+        <value>It may cause by network issue, public IP changed or session expired.
+Click Repair Account to re-try or login again.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text" xml:space="preserve">
+        <value>Repair Account</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip" xml:space="preserve">
+        <value>Tasks In Progress</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip" xml:space="preserve">
+        <value>Tasks Completed</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip" xml:space="preserve">
+        <value>Tasks Failed</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip" xml:space="preserve">
+        <value>Tasks Canceled</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_Text" xml:space="preserve">
+        <value>Action</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip" xml:space="preserve">
+        <value>No further interactions are allowed when session is expired or invalid.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks" xml:space="preserve">
+        <value>Remove Completed Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks" xml:space="preserve">
+        <value>Remove Failed Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks" xml:space="preserve">
+        <value>Remove Cancelled Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks" xml:space="preserve">
+        <value>Remove All Removable Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks" xml:space="preserve">
+        <value>Remove All Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title" xml:space="preserve">
+        <value>Session Expired or Invalid</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
+        <value>Repair</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>No further interactions are allowed before account repaired.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
+        <value>Account are not allowed to publish content</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description" xml:space="preserve">
+        <value>Your VRChat account must have a trust rank of &quot;New User&quot; or higher to publish content.
+VRChat Content Publisher won't prevent you from publish content for this account, but it will likely fail.
+
+If you still saw this or still unable to publish content when you have meet the requirement.
+Please try using VRChat SDK to publish content, if fail, contact VRChat Support, if not, create a issues on github report this.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text" xml:space="preserve">
+        <value>Learn more</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist" xml:space="preserve">
+        <value>No tasks exist for this account</value>
+    </data> 
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template" xml:space="preserve">
+        <value>Created at {0}</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Debug_Button_Tooltip" xml:space="preserve">
+        <value>Debug</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Remove_Task_Button_Tooltip" xml:space="preserve">
+        <value>Remove</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip" xml:space="preserve">
+        <value>Retry</value>
+    </data>   
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>Identity Prompt</value>
     </data>
