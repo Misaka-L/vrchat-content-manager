@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="dialogs:RequestChallengeDialogViewModel"
              x:Class="VRChatContentPublisher.App.Dialogs.RequestChallengeDialog">
@@ -16,35 +17,42 @@
 
     <StackPanel Spacing="24" Margin="8">
         <StackPanel>
-            <TextBlock Text="Identity Prompt" TextAlignment="Center" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Request_Challenge_Identity_Prompt_Title}}"
+                       TextAlignment="Center" />
             <TextBlock Text="{Binding IdentityPrompt}" TextAlignment="Center"
                        FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
         </StackPanel>
         <StackPanel>
-            <TextBlock Text="Finish challenge by enter this code" TextAlignment="Center"
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Request_Challenge_Enter_Code_In_Client}}"
+                       TextAlignment="Center"
                        FontSize="18" />
             <TextBlock Text="{Binding Code}" FontWeight="SemiBold" FontSize="36"
                        TextAlignment="Center" />
-            <Button Content="{avalonia:MaterialIconTextExt Kind=ContentCopy, Text=Copy}"
-                    Theme="{StaticResource MaterialFlatButton}"
+            <Button Theme="{StaticResource MaterialFlatButton}"
                     HorizontalAlignment="Center">
                 <Interaction.Behaviors>
                     <ButtonClickEventTriggerBehavior>
                         <SetClipboardTextAction Text="{Binding Code}" />
                     </ButtonClickEventTriggerBehavior>
                 </Interaction.Behaviors>
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <avalonia:MaterialIcon Kind="ContentCopy" />
+                    <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Request_Challenge_Copy_Code_Button}}" />
+                </StackPanel>
             </Button>
         </StackPanel>
         <StackPanel Spacing="4">
             <avalonia:MaterialIcon Kind="Warning" Height="30" Width="30" />
-            <TextBlock Text="Only Enter This Code When Challenge Was Requested By The Client You Trust."
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Request_Challenge_Security_Warning}}"
                        TextWrapping="Wrap" TextAlignment="Center" />
         </StackPanel>
         <StackPanel>
-            <TextBlock Text="Challenge request from Client" TextAlignment="Center" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Request_Challenge_Request_From_Client}}"
+                       TextAlignment="Center" />
             <TextBlock Text="{Binding ClientName}" TextAlignment="Center" FontWeight="Black" />
             <TextBlock Text="{Binding ClientId}" TextAlignment="Center" FontSize="12" Opacity="0.7" />
         </StackPanel>
-        <Button Content="Close" Command="{Binding RequestCloseCommand}" />
+        <Button Content="{I18N {x:Static localization:LangKeys.Dialog_Request_Challenge_Close_Dialog_Button}}"
+                Command="{Binding RequestCloseCommand}" />
     </StackPanel>
 </UserControl>

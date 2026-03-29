@@ -5,7 +5,8 @@
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:pages="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="800"
              x:DataType="pages:AddAccountPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.AddAccountPage">
 
@@ -15,12 +16,19 @@
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
-                <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
-                        Command="{Binding BackCommand}"
-                        Padding="0" Margin="0,0,0,5" Foreground="White"
-                        Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
-                <TextBlock Text="Login to your" FontSize="16" Foreground="White" Opacity="0.7" />
-                <TextBlock Text="VRChat Account" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+                <Button
+                    Command="{Binding BackCommand}"
+                    Padding="0" Margin="0,0,0,5" Foreground="White"
+                    Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="ArrowLeft" />
+                        <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Navigation_Go_Back_Button_Text}}" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Title_Headline1}}"
+                           FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Title_Headline2_Bold}}"
+                           FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
         <StackPanel Spacing="24" Margin="18">
@@ -32,34 +40,46 @@
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
                                                    Foreground="White" />
-                            <TextBlock Text="Failed to Login" FontWeight="Bold" FontSize="18"
-                                       Foreground="White" />
+                            <TextBlock
+                                Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Alert_Login_Failed_Title}}"
+                                FontWeight="Bold" FontSize="18"
+                                Foreground="White" />
                         </StackPanel>
                         <TextBlock Text="{Binding ErrorMessage}" Foreground="White" />
                     </StackPanel>
                 </Border>
-                <TextBox assists:TextFieldAssist.Label="Username/Email" Classes="outline" UseFloatingWatermark="True"
-                         Theme="{StaticResource OutlineTextBox}"
-                         Text="{Binding Username}" />
-                <TextBox PasswordChar="*" assists:TextFieldAssist.Label="Password" Classes="outline"
+                <TextBox
+                    assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Username_Or_Email_Field_Label}}"
+                    Classes="outline" UseFloatingWatermark="True"
+                    Theme="{StaticResource OutlineTextBox}"
+                    Text="{Binding Username}" />
+                <TextBox PasswordChar="*"
+                         assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Password_Field_Label}}"
+                         Classes="outline"
                          UseFloatingWatermark="True" Theme="{StaticResource OutlineTextBox}"
                          Text="{Binding Password}" />
             </StackPanel>
-            <Button Content="Login" Command="{Binding LoginCommand}" />
+            <Button Content="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Login_Button_Text}}"
+                    Command="{Binding LoginCommand}" />
             <StackPanel Spacing="12">
                 <Border Height="1" Background="{DynamicResource MaterialDesignBodyLight}" Opacity="0.4" />
                 <StackPanel Spacing="8">
-                    <TextBlock Text="Using an Pico, Oculus, Steam, or Viveport account?" FontSize="16"
-                               FontWeight="SemiBold"
-                               TextWrapping="Wrap" Opacity="0.8" />
-                    <TextBlock TextWrapping="Wrap" FontSize="14" Opacity="0.8">
-                        <Span>Please link your Pico, Oculus, Steam, or Viveport account to your VRChat Account follow this</Span>
-                        <InlineUIContainer>
-                            <HyperlinkButton Content="Article"
-                                             NavigateUri="https://help.vrchat.com/hc/en-us/articles/360062659053-I-want-to-turn-my-platform-account-through-Steam-Meta-Pico-or-Viveport-into-a-VRChat-account"
-                                             Margin="0,0,0,-4" />
-                        </InlineUIContainer>
-                    </TextBlock>
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Using_No_VRChat_Account_Tip_Title}}"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        TextWrapping="Wrap" Opacity="0.8" />
+                    <StackPanel>
+                        <TextBlock TextWrapping="Wrap" FontSize="14" Opacity="0.8"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Using_No_VRChat_Account_Tip_Description}}" />
+                        <HyperlinkButton
+                            NavigateUri="https://help.vrchat.com/hc/en-us/articles/360062659053-I-want-to-turn-my-platform-account-through-Steam-Meta-Pico-or-Viveport-into-a-VRChat-account"
+                            Margin="0,0,0,-4">
+                            <TextBlock
+                                Text="I want to turn my platform account through Steam, Meta, Pico or Viveport into a VRChat account"
+                                TextWrapping="Wrap" />
+                        </HyperlinkButton>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:AccountsSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.AccountsSettingsView">
@@ -23,7 +24,7 @@
                 Padding="8,4">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
                 <avalonia:MaterialIcon Height="24" Width="24" Kind="Add" />
-                <TextBlock Grid.Column="1" Text="Add New Account" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Add_New_Account}}" VerticalAlignment="Center" />
             </Grid>
         </Button>
         <ItemsControl ItemsSource="{Binding UserSessions}" Margin="8" />

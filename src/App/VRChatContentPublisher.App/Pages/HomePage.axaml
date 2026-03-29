@@ -5,6 +5,7 @@
              xmlns:pages="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="pages:HomePageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.HomePage">
@@ -50,7 +51,7 @@
                         <DataTemplate x:DataType="pages:HomePageNavigationItem">
                             <StackPanel VerticalAlignment="Center" Spacing="4" Width="42" HorizontalAlignment="Center">
                                 <avalonia:MaterialIcon Kind="{Binding Icon}" Height="24" Width="24" />
-                                <TextBlock Text="{Binding Name}" FontSize="12" HorizontalAlignment="Center" />
+                                <TextBlock Text="{I18N {Binding Name}}" FontSize="12" HorizontalAlignment="Center" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.DataTemplates>
@@ -62,17 +63,18 @@
                                           Content="{avalonia:MaterialIconExt Kind=WindowMaximize, Size=26}"
                                           IsChecked="{Binding !IsBorderless}"
                                           Command="{Binding ToggleBoardlessCommand}"
-                                          ToolTip.Tip="Toggle use normal or borderless window." />
+                                          ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Home_App_Bar_Toggle_Borderless_Window_Button_Tooltip}}" />
                         </On>
                     </OnPlatform>
                     <ToggleButton Theme="{StaticResource MaterialFlatToggleButton}" Height="48" Width="48"
                                   Content="{avalonia:MaterialIconExt Kind=Pin, Size=26}"
                                   IsChecked="{Binding IsPinned}"
                                   Command="{Binding ToggleWindowPinCommand}"
-                                  ToolTip.Tip="Do not hide windows or toggle is window topmost in borderless mode." />
+                                  ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Home_App_Bar_Toggle_Window_Pin_Button_Tooltip}}" />
                     <Button Command="{Binding NavigateToSettingsCommand}"
                             Theme="{StaticResource MaterialFlatButton}" Height="48" Width="48"
-                            Content="{avalonia:MaterialIconExt Kind=Cog, Size=26}" />
+                            Content="{avalonia:MaterialIconExt Kind=Cog, Size=26}"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_Title}}" />
                 </StackPanel>
             </Grid>
         </controls:ColorZone>

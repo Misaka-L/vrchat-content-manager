@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Improved the text and term in the app. [`#242`](https://github.com/project-vrcz/content-publisher/pull/242)
+- Extend the area trigger tooltip of tasks count in Tasks page. [`#242`](https://github.com/project-vrcz/content-publisher/pull/242)
+- Slightly adjust the layout of some page or dialog. [`#242`](https://github.com/project-vrcz/content-publisher/pull/242)
+
+### Added
+
+- i18n support. [`#242`](https://github.com/project-vrcz/content-publisher/pull/242)
+  - Support language: English, Mandarin Chinese (普通话)
+  - Task progress text are not localize in this release.
+
 ### Fixed
 
 - Add new account require restart to appear on Tasks page. [`#236`](https://github.com/project-vrcz/content-publisher/pull/236)

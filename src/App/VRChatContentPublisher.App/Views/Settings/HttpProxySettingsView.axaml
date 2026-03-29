@@ -5,6 +5,7 @@
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:validation="clr-namespace:VRChatContentPublisher.App.Interaction.Validation"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:HttpProxySettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.HttpProxySettingsView">
@@ -17,12 +18,12 @@
 
     <StackPanel Margin="8">
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
-                  assists:ComboBoxAssist.Label="Proxy Mode"
+                  assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label}}"
                   ItemsSource="{Binding HttpProxyModes}"
                   SelectedItem="{Binding SelectedHttpProxyMode}">
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="settings:HttpProxyModeItemViewModel">
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{I18N {Binding Name}}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
 
@@ -33,13 +34,14 @@
             </Interaction.Behaviors>
         </ComboBox>
         <TextBox UseFloatingWatermark="True" Classes="outline dense" Theme="{StaticResource OutlineTextBox}"
-                 assists:TextFieldAssist.Label="Custom Http Proxy URI"
+                 assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field}}"
                  Text="{Binding ProxyUri}"
                  IsVisible="{Binding IsCustomProxySelected}">
 
             <Interaction.Behaviors>
                 <TextBoxValidationBehavior>
-                    <validation:HttpValidationRule ErrorMessage="Http Proxy URI must be a http or https URI." />
+                    <validation:HttpValidationRule
+                        ErrorMessage="{x:Static settings:HttpProxySettingsViewModel.ProxyUriValidationFailedMessage}" />
                 </TextBoxValidationBehavior>
                 <LostFocusTrigger>
                     <InvokeCommandAction Command="{Binding ApplyHttpProxySettingsCommand}" />

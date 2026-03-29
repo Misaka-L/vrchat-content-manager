@@ -3,29 +3,37 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:DataType="dialogs:StartupPortChangedDialogViewModel"
              x:Class="VRChatContentPublisher.App.Dialogs.StartupPortChangedDialog">
 
-    <StackPanel Spacing="24" Margin="8" Width="360">
+    <StackPanel Spacing="24" Margin="8" Width="380">
         <TextBlock Classes="Headline6"
-                   Text="RPC Startup Port Changed"
+                   Text="{I18N {x:Static localization:LangKeys.Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title}}"
                    TextAlignment="Center"
                    TextWrapping="Wrap" />
 
         <StackPanel Spacing="8">
-            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description}}"
+                TextWrapping="Wrap" />
             <StackPanel Orientation="Horizontal" Spacing="4">
-                <TextBlock Text="Configured port:" FontWeight="SemiBold" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port}}"
+                    FontWeight="SemiBold" />
                 <TextBlock Text="{Binding ConfiguredPort}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Spacing="4">
-                <TextBlock Text="Active port:" FontWeight="SemiBold" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port}}"
+                    FontWeight="SemiBold" />
                 <TextBlock Text="{Binding ActivePort}" />
             </StackPanel>
         </StackPanel>
 
-        <Button Content="Acknowledge"
-                Command="{Binding AcknowledgeCommand}" />
+        <Button
+            Content="{I18N {x:Static localization:LangKeys.Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text}}"
+            Command="{Binding AcknowledgeCommand}" />
     </StackPanel>
 </UserControl>

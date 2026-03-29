@@ -4,24 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:AppearanceSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.AppearanceSettingsView">
 
     <StackPanel Margin="8" Spacing="8">
-        <ToggleSwitch Content="Use RGB Cycling Menu Bar" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
+        <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
+                  assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_App_Language}}"
+                  ItemsSource="{Binding AvailableLanguages}"
+                  SelectedItem="{Binding SelectedLanguage}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate x:DataType="localization:AppLang">
+                    <TextBlock Text="{I18N {Binding DisplayName}}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar}}" IsChecked="{Binding UseRgbCyclingBackgroundMenu}" />
         <OnPlatform>
             <On Options="Windows">
-                <ToggleSwitch Content="Use Borderless Window" IsChecked="{Binding UseBorderlessWindow}" />
+                <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Use_Borderless_Window}}" IsChecked="{Binding UseBorderlessWindow}" />
             </On>
         </OnPlatform>
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
-                  assists:ComboBoxAssist.Label="How tasks order in Task Page"
+                  assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title}}"
                   ItemsSource="{Binding TasksSortMode}"
                   SelectedItem="{Binding SelectedTasksSortMode}">
             <ComboBox.ItemTemplate>
                 <DataTemplate x:DataType="settings:AppTasksPageSortModeItemViewModel">
-                    <TextBlock Text="{Binding Name}" />
+                    <TextBlock Text="{I18N {Binding Name}}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

@@ -58,6 +58,7 @@
         <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Abstraction\VRChatContentPublisher.Platform.Abstraction.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.Core\VRChatContentPublisher.Core.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.IpcCore\VRChatContentPublisher.IpcCore.csproj"/>
+        <ProjectReference Include="..\Localization\VRChatContentPublisher.App.Localization\VRChatContentPublisher.App.Localization.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">

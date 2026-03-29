@@ -3,6 +3,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Options;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
@@ -47,7 +48,9 @@ public sealed partial class PublishTaskManagerViewModel(
     private partial AppTasksPageSortMode TasksSortMode { get; set; }
 
     public string CurrentPageSortModeText =>
-        TasksSortMode == AppTasksPageSortMode.LatestFirst ? "Latest First" : "Oldest First";
+        TasksSortMode == AppTasksPageSortMode.LatestFirst
+            ? LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First
+            : LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First;
 
     public UserSessionService UserSessionService => userSessionService;
 

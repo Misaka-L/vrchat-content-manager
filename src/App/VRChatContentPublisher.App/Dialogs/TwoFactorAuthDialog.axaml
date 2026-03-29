@@ -5,24 +5,37 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="dialogs:TwoFactorAuthDialogViewModel"
              x:Class="VRChatContentPublisher.App.Dialogs.TwoFactorAuthDialog">
 
     <Grid Width="320" Height="320">
-        <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
-                Padding="0" Margin="0,0,0,5"
-                Theme="{StaticResource MaterialFlatButton}"
-                Command="{Binding RequestCloseCommand}"
-                HorizontalAlignment="Left" VerticalAlignment="Top" />
+        <Button
+            Command="{Binding RequestCloseCommand}"
+            Padding="0" Margin="0,0,0,5"
+            Theme="{StaticResource MaterialFlatButton}"
+            HorizontalAlignment="Left" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <avalonia:MaterialIcon Kind="ArrowLeft" />
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Navigation_Go_Back_Button_Text}}" />
+            </StackPanel>
+        </Button>
         <StackPanel Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <StackPanel HorizontalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center" Spacing="4">
                 <avalonia:MaterialIcon Kind="Lock" Height="64" Width="64" HorizontalAlignment="Center"
                                        Margin="0,0,0,12" />
-                <TextBlock Text="One Time Password Required" HorizontalAlignment="Center"
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Title}}"
+                           HorizontalAlignment="Center"
                            FontSize="22" FontWeight="SemiBold" />
-                <TextBlock IsVisible="{Binding IsEmailOtp}" Text="Please check your email" HorizontalAlignment="Center" />
-                <TextBlock IsVisible="{Binding !IsEmailOtp}" Text="Please check your totp App" HorizontalAlignment="Center" />
+                <StackPanel>
+                    <TextBlock IsVisible="{Binding IsEmailOtp}"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Require_EmailOtp}}"
+                               HorizontalAlignment="Center" />
+                    <TextBlock IsVisible="{Binding !IsEmailOtp}"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Require_Totp}}"
+                               HorizontalAlignment="Center" />
+                </StackPanel>
                 <Border IsVisible="{Binding HasError}"
                         Background="#d50000" Margin="0,8,0,0"
                         CornerRadius="8">
@@ -30,8 +43,10 @@
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
                                                    Foreground="White" />
-                            <TextBlock Text="Failed to Verify your code" FontWeight="Bold" FontSize="18"
-                                       Foreground="White" />
+                            <TextBlock
+                                Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code}}"
+                                FontWeight="Bold" FontSize="18"
+                                Foreground="White" />
                         </StackPanel>
                         <TextBlock Text="{Binding ErrorMessage}" Foreground="White" />
                     </StackPanel>
@@ -43,7 +58,7 @@
                      TextAlignment="Center" HorizontalAlignment="Center"
                      UseFloatingWatermark="False" Classes="outline" Theme="{StaticResource OutlineTextBox}"
                      TextChanged="Totp_OnTextChanged" KeyDown="Totp_OnKeyDown"
-                     Watermark="Code" />
+                     Watermark="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Code_Field_Watermark}}" />
         </StackPanel>
     </Grid>
 </UserControl>

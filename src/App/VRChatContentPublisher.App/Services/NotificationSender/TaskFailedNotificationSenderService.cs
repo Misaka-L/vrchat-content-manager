@@ -1,5 +1,7 @@
+using Antelcat.I18N.Avalonia;
 using MessagePipe;
 using Microsoft.Extensions.Hosting;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.Core.Events.PublishTask;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Settings;
@@ -24,7 +26,11 @@ public sealed class TaskFailedNotificationSenderService(
                 return;
 
             var contentType = MapContentTypeLabel(args.TaskService.ContentType);
-            var title = $"{contentType} \"{args.TaskService.ContentName}\" Publish failed";
+            var title = string.Format(
+                I18NExtension.Translate(LangKeys.Notifications_Task_Failed_Title_Template) ??
+                "Publish {0} \"{1}\" Failed",
+                contentType, args.TaskService.ContentName
+            );
 
             _ = appNotificationService.SendNotificationAsync(title, args.ProgressText).AsTask();
         });
@@ -41,8 +47,8 @@ public sealed class TaskFailedNotificationSenderService(
     {
         return contentType switch
         {
-            "world" => "World",
-            "avatar" => "Avatar",
+            "world" => I18NExtension.Translate(LangKeys.Common_Content_Type_World) ?? "World",
+            "avatar" => I18NExtension.Translate(LangKeys.Common_Content_Type_Avatar) ?? "Avatar",
             _ => contentType
         };
     }

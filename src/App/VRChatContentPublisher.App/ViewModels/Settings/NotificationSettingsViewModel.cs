@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services.NotificationSender;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
@@ -69,6 +70,9 @@ public sealed partial class NotificationSettingsViewModel(
     [RelayCommand]
     private async Task SendTestNotification()
     {
-        await appNotificationService.SendNotificationAsync("Test Notification", "This is a test notification");
+        await appNotificationService.SendNotificationAsync(
+            LangKeys.Notifications_Settings_Test_Notification_Title,
+            LangKeys.Notifications_Settings_Test_Notification_Body
+        );
     }
 }

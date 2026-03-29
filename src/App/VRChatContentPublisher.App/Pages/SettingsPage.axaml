@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="pages:SettingsPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.SettingsPage">
@@ -14,37 +15,43 @@
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
-                <Button Content="{avalonia:MaterialIconTextExt Kind=ArrowLeft, Text=Back}"
-                        Command="{Binding NavigateToHomeCommand}"
-                        Padding="0" Margin="0,0,0,5" Foreground="White"
-                        Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left" />
-                <TextBlock Text="Settings" FontSize="36" FontWeight="SemiBold" Foreground="White" />
+                <Button
+                    Command="{Binding NavigateToHomeCommand}"
+                    Padding="0" Margin="0,0,0,5" Foreground="White"
+                    Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="ArrowLeft" />
+                        <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Navigation_Go_Back_Button_Text}}" />
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Title}}" FontSize="36"
+                           FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="8" Margin="18">
-                <Expander Header="Accounts">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Title}}">
                     <ContentControl Content="{Binding AccountsSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Appearance">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Title}}">
                     <ContentControl Content="{Binding AppearanceSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Connect">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Title}}">
                     <ContentControl Content="{Binding ConnectSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Notifications">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Title}}">
                     <ContentControl Content="{Binding NotificationSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Sessions">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_PairedClients_Title}}">
                     <ContentControl Content="{Binding SessionsSettingsViewModel}" />
                 </Expander>
-                <Expander Header="Http Proxy">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Title}}">
                     <ContentControl Content="{Binding HttpProxySettingsViewModel}" />
                 </Expander>
-                <Expander Header="Debug">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Title}}">
                     <ContentControl Content="{Binding DebugSettingsViewModel}" />
                 </Expander>
-                <Expander Header="About">
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Title}}">
                     <ContentControl Content="{Binding AboutSettingsViewModel}" />
                 </Expander>
             </StackPanel>

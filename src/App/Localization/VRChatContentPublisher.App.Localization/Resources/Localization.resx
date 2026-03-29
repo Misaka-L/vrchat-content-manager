@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option"
+          xml:space="preserve">
+        <value>en</value>
+    </data>
+    <data name="Common_Content_Type_Avatar" xml:space="preserve">
+        <value>Avatar</value>
+    </data>
+    <data name="Common_Content_Type_World" xml:space="preserve">
+        <value>World</value>
+    </data>
+    <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
+        <value>Back</value>
+    </data>
+    <data name="Pages_Tasks_Title" xml:space="preserve">
+        <value>Tasks</value>
+    </data>
+    <data name="Pages_Add_Account_Title_Headline1" xml:space="preserve">
+        <value>Login to your</value>
+    </data>
+    <data name="Pages_Add_Account_Title_Headline2_Bold" xml:space="preserve">
+        <value>VRChat Account</value>
+    </data>
+    <data name="Pages_Add_Account_Username_Or_Email_Field_Label" xml:space="preserve">
+        <value>Username/Email</value>
+    </data>
+    <data name="Pages_Add_Account_Password_Field_Label" xml:space="preserve">
+        <value>Password</value>
+    </data>
+    <data name="Pages_Add_Account_Login_Button_Text" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
+        <value>Using an Pico, Oculus, Steam, or Viveport account?</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Description" xml:space="preserve">
+        <value>Please link your Pico, Oculus, Steam, or Viveport account to your VRChat Account follow this article in the below:</value>
+    </data>
+    <data name="Pages_Add_Account_Alert_Login_Failed_Title" xml:space="preserve">
+        <value>Failed to login</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Title" xml:space="preserve">
+        <value>One Time Password Required</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Code_Field_Watermark" xml:space="preserve">
+        <value>Code</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_Totp" xml:space="preserve">
+        <value>Please check your TOTP App for code</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_EmailOtp" xml:space="preserve">
+        <value>Please check your email for code</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code" xml:space="preserve">
+        <value>Failed to verify your code</value>
+    </data>
+    <data name="Pages_Settings_Title" xml:space="preserve">
+        <value>Settings</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Title" xml:space="preserve">
+        <value>Accounts</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Add_New_Account" xml:space="preserve">
+        <value>Add New Account</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip" xml:space="preserve">
+        <value>Repair this account</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
+        <value>Remove this account</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip"
+          xml:space="preserve">
+        <value>You cannot remove a session that have uncompleted tasks.</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
+        <value>Set this account as default show on Tasks page.</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip" xml:space="preserve">
+        <value>This account is already set as default show on Tasks page.</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Title" xml:space="preserve">
+        <value>Appearance and Language</value>
+    </data>
+    <data name="Pages_Settings_Appearance_App_Language" xml:space="preserve">
+        <value>App Language</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Language_Selector_Follow_System" xml:space="preserve">
+        <value>Follow system settings</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar" xml:space="preserve">
+        <value>Use RGB Cycling Background App Bar</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Use_Borderless_Window" xml:space="preserve">
+        <value>Use Borderless Window</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title" xml:space="preserve">
+        <value>How tasks order in Tasks page</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First" xml:space="preserve">
+        <value>Latest first</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
+        <value>Oldest first</value>
+    </data>
+    <data name="Pages_Settings_Connect_Title" xml:space="preserve">
+        <value>RPC Server</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title" xml:space="preserve">
+        <value>Changing the port requires re-pairing</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description" xml:space="preserve">
+        <value>You must re-pair with the app after changing the port.</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Watermark" xml:space="preserve">
+        <value>e.g Greatest Chiffon</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Label" xml:space="preserve">
+        <value>Server Name</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Field_Label" xml:space="preserve">
+        <value>Server Port</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Button_Text" xml:space="preserve">
+        <value>Apply</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text" xml:space="preserve">
+        <value>Reset Port to Default</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
+        <value>Server name are require.</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Port_Out_Of_Range" xml:space="preserve">
+        <value>Port must be between {0} to {1}.</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Unknown_Error" xml:space="preserve">
+        <value>Failed to apply RPC Serer settings due to unknown error.</value>
+    </data>
+    <data name="Pages_Settings_Notification_Title" xml:space="preserve">
+        <value>Notifications</value>
+    </data>
+    <data name="Pages_Settings_Notification_Enable_Notifications_Toggle_Label" xml:space="preserve">
+        <value>Enable Notifications</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
+        <value>Send Test Notification</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Title" xml:space="preserve">
+        <value>Send notifications when</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup"
+          xml:space="preserve">
+        <value>Account Session Expired on Startup</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
+        <value>Publish Task Failed</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
+        <value>Public IP Changed</value>
+    </data>
+    <data name="Pages_Settings_PairedClients_Title" xml:space="preserve">
+        <value>Paired Clients</value>
+    </data>
+    <data name="Pages_Settings_PairedClients_Client_Item_Expired_At_Text_Template" xml:space="preserve">
+        <value>Client session will expire at {0}</value>
+    </data>
+    <data name="Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip" xml:space="preserve">
+        <value>Revoke Client Session</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Title" xml:space="preserve">
+        <value>HTTP Proxy</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label" xml:space="preserve">
+        <value>Proxy Mode</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Follow_System_Settings" xml:space="preserve">
+        <value>Follow System Settings</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_No_Proxy" xml:space="preserve">
+        <value>No Proxy</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy" xml:space="preserve">
+        <value>Custom Proxy</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field" xml:space="preserve">
+        <value>Custom HTTP Proxy URI</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
+        <value>HTTP Proxy URI must be a http or https URI.</value>
+    </data>
+    <data name="Pages_Settings_Debug_Title" xml:space="preserve">
+        <value>Debug</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Logs_Folder_Button_Text" xml:space="preserve">
+        <value>Open Logs Folder</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Network_Diagnostics_Window" xml:space="preserve">
+        <value>Open Network Diagnostics Window</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
+        <value>Enter encrypted IP in the logs here</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Button_Text" xml:space="preserve">
+        <value>Decrypt</value>
+    </data>
+    <data name="Pages_Settings_About_Title" xml:space="preserve">
+        <value>About</value>
+    </data>
+    <data name="Pages_Settings_About_Slogan" xml:space="preserve">
+        <value>A More Efficient Way to publish your VRChat Contents</value>
+    </data>
+    <data name="Pages_Settings_Copyright" xml:space="preserve">
+        <value>Licensed under GPL-3.0 license</value>
+    </data>
+    <data name="Pages_Settings_About_Gitub_Link_Text" xml:space="preserve">
+        <value>VRChat Content Publisher on Github</value>
+    </data>
+    <data name="Pages_Settings_About_Build_Commit" xml:space="preserve">
+        <value>Build Commit SHA</value>
+    </data>
+    <data name="Pages_Settings_About_Build_At" xml:space="preserve">
+        <value>Build at</value>
+    </data>
+    <data name="Pages_Settings_About_Acknowledgement_Title" xml:space="preserve">
+        <value>Acknowledgement</value>
+    </data>
+    <data name="Pages_Settings_About_AssetsTools_Unity_AssetBundle_Processing_Powered_By" xml:space="preserve">
+        <value>Unity AssetBundle Processing Powered by</value>
+    </data>
+    <data name="Pages_Settings_About_AssetsTools_Modify_To_Meet_VCP_Requirements" xml:space="preserve">
+        <value>Modified to meet VRChat Content Publisher requirements</value>
+    </data>
+    <data name="Pages_Settings_About_VRChat_API_Documentation_Provided_By" xml:space="preserve">
+        <value>VRChat API documentation provided by</value>
+    </data>
+    <data name="Pages_Settings_About_Thanks_To_Those_Open_Soure_Software" xml:space="preserve">
+        <value>Thanks to those Open source software</value>
+    </data>
+    <data name="Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters" xml:space="preserve">
+        <value>Special thanks to our early adopters</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By" xml:space="preserve">
+        <value>Please consider support development by</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Donate" xml:space="preserve">
+        <value>Donate</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Feedback" xml:space="preserve">
+        <value>Feedback</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
+        <value>Contribute</value>
+    </data>
+    <data name="Pages_Guide_Shared_Steps_Step_1_Title" xml:space="preserve">
+        <value>Step.1</value>
+    </data>
+    <data name="Pages_Guide_Shared_Steps_Step_2_Title" xml:space="preserve">
+        <value>Step.2</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Headline1_Bold" xml:space="preserve">
+        <value>A More Efficient Way</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Headline2_Light" xml:space="preserve">
+        <value>to publish your VRChat contents</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Next_Page_Button_Text" xml:space="preserve">
+        <value>Next</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text" xml:space="preserve">
+        <value>Just take me to the Home page!</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Headline1_Light" xml:space="preserve">
+        <value>To Connect Unity to App</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Headline2_Bold" xml:space="preserve">
+        <value>Install Connect Package</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Add_VPM_Repository_Title" xml:space="preserve">
+        <value>Add VPM Repository</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint" xml:space="preserve">
+        <value>VPM Repository URL</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Add_To_Package_Manager_Button_Text" xml:space="preserve">
+        <value>Add to the package manager</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Copy_Repository_URL_Button_Text" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_Install_Connect_Package_Title" xml:space="preserve">
+        <value>Install Connect Package</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Worlds_Project_Caption" xml:space="preserve">
+        <value>For Worlds Project</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Avatars_Project_Caption" xml:space="preserve">
+        <value>For Worlds Project</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Project_With_CAU_Caption" xml:space="preserve">
+        <value>If you are using Continuous Avatar Uploader</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Next_Button_Text" xml:space="preserve">
+        <value>Next</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Skip_Button_Text" xml:space="preserve">
+        <value>Skip</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Headline1_Light" xml:space="preserve">
+        <value>Finish setup by</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Headline2_Bold" xml:space="preserve">
+        <value>Connect Unity to App</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Open_Connect_Settings_Title" xml:space="preserve">
+        <value>Open Connect Settings</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Description" xml:space="preserve">
+        <value>Select Tools > VRChat Content Publisher Connect > Settings to open Connect Settings</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Next_Button_Text" xml:space="preserve">
+        <value>Next</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Skip_Button_Text" xml:space="preserve">
+        <value>Skip</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Headline1_Light" xml:space="preserve">
+        <value>Finish setup by</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Headline2_Bold" xml:space="preserve">
+        <value>Connect Unity to App</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Step_2_Connect_To_App_Title" xml:space="preserve">
+        <value>Connect to App</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Step_2_Description" xml:space="preserve">
+        <value>Enter following host address in Connect Settings in Unity, then press Connect.</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint" xml:space="preserve">
+        <value>Host URL</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Skip_Button_Text" xml:space="preserve">
+        <value>Skip</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Message" xml:space="preserve">
+        <value>Your public IP address has changed since the last time you logged in. This may cause login issues. You may need to click Repair Account button to login again
+Tip: If you switch back to your last public IP, you can click Repair Account button without login again.</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text" xml:space="preserve">
+        <value>Show IP</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text" xml:space="preserve">
+        <value>Dismiss</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text" xml:space="preserve">
+        <value>Current Public IP:</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text" xml:space="preserve">
+        <value>Last Public IP:</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Title" xml:space="preserve">
+        <value>You didn't login any VRChat accounts</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text" xml:space="preserve">
+        <value>Login</value>
+    </data>
+    <data name="Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip" xml:space="preserve">
+        <value>Add New Account</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Title" xml:space="preserve">
+        <value>Failed to initialize this account</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Description" xml:space="preserve">
+        <value>It may cause by network issue, public IP changed or session expired.
+Click Repair Account to re-try or login again.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text" xml:space="preserve">
+        <value>Repair Account</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip" xml:space="preserve">
+        <value>Tasks In Progress</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip" xml:space="preserve">
+        <value>Tasks Completed</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip" xml:space="preserve">
+        <value>Tasks Failed</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip" xml:space="preserve">
+        <value>Tasks Canceled</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_Text" xml:space="preserve">
+        <value>Action</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip" xml:space="preserve">
+        <value>No further interactions are allowed when session is expired or invalid.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks" xml:space="preserve">
+        <value>Remove Completed Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks" xml:space="preserve">
+        <value>Remove Failed Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks" xml:space="preserve">
+        <value>Remove Cancelled Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks" xml:space="preserve">
+        <value>Remove All Removable Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks" xml:space="preserve">
+        <value>Remove All Tasks</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title" xml:space="preserve">
+        <value>Session Expired or Invalid</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
+        <value>Repair</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>No further interactions are allowed before account repaired.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
+        <value>Account are not allowed to publish content</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description" xml:space="preserve">
+        <value>Your VRChat account must have a trust rank of &quot;New User&quot; or higher to publish content.
+VRChat Content Publisher won't prevent you from publish content for this account, but it will likely fail.
+
+If you still saw this or still unable to publish content when you have meet the requirement.
+Please try using VRChat SDK to publish content, if fail, contact VRChat Support, if not, create a issues on github report this.</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text" xml:space="preserve">
+        <value>Learn more</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist" xml:space="preserve">
+        <value>No tasks exist for this account</value>
+    </data> 
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template" xml:space="preserve">
+        <value>Created at {0}</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Debug_Button_Tooltip" xml:space="preserve">
+        <value>Debug</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Remove_Task_Button_Tooltip" xml:space="preserve">
+        <value>Remove</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip" xml:space="preserve">
+        <value>Retry</value>
+    </data>   
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Pages_Home_App_Bar_Toggle_Borderless_Window_Button_Tooltip" xml:space="preserve">
+        <value>Toggle Borderless Window</value>
+    </data>
+    <data name="Pages_Home_App_Bar_Toggle_Window_Pin_Button_Tooltip" xml:space="preserve">
+        <value>Borderless Window: Toggle prevent window hide ,
+Normal Window: Toggle window on top.</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
+        <value>Identity Prompt</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Enter_Code_In_Client" xml:space="preserve">
+        <value>Enter this code in the client to finish pairing</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Security_Warning" xml:space="preserve">
+        <value>ONLY enter this code when the request COMES FROM the client you TRUST</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Request_From_Client" xml:space="preserve">
+        <value>Request come from client</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Close_Dialog_Button" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Copy_Code_Button" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="Dialog_Shutdown_Shutdown_In_Progress_Text" xml:space="preserve">
+        <value>Shutting down...</value>
+    </data>
+    <data name="Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>There are uncompleted publish tasks.
+Are you really sure you want to shutdown the app?</value>
+    </data>
+    <data name="Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>Yes! I want to shutdown with uncompleted tasks!</value>
+    </data>
+    <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>No</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title" xml:space="preserve">
+        <value>RPC Server port change due to bind error</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description" xml:space="preserve">
+        <value>RPC Server failed to start with configured port, it may cause by the port is in use.
+Please notice that you need to re-pair with the app, or you can change port back after solve the problem.</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port" xml:space="preserve">
+        <value>User Settings Port</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port" xml:space="preserve">
+        <value>Current Port</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
+        <value>I know</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Title" xml:space="preserve">
+        <value>Test Notification</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Body" xml:space="preserve">
+        <value>This is a test notification</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Title" xml:space="preserve">
+        <value>Public IP Changed</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Body_Template" xml:space="preserve">
+        <value>Old: {0} New: {1}</value>
+    </data>
+    <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
+        <value>Publish {0} "{1}" Failed</value>
+    </data>
+</root>

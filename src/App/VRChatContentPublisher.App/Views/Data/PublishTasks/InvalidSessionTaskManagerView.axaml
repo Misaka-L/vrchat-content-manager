@@ -4,24 +4,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:publishTasks="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.PublishTasks"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:DataType="publishTasks:InvalidSessionTaskManagerViewModel"
              x:Class="VRChatContentPublisher.App.Views.Data.PublishTasks.InvalidSessionTaskManagerView">
 
     <StackPanel Margin="8,8,8,0" Spacing="8" VerticalAlignment="Center">
-        <StackPanel>
-            <avalonia:MaterialIcon Kind="Error" Height="64" Width="64" />
-            <TextBlock Text="Failed to get task manager for this user session"
+        <StackPanel Spacing="4">
+            <avalonia:MaterialIcon Kind="Error" Height="48" Width="48" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Initialize_Error_Title}}"
                        TextWrapping="Wrap" Classes="Headline6" TextAlignment="Center" />
             <TextBlock ToolTip.Tip="{Binding ExceptionString}"
-                       Classes="Body2" Text="{Binding ExceptionMessage}"
+                       Classes="Body2" Text="{Binding ExceptionMessage, FallbackValue='Initialize failed due to unknown error'}"
                        Opacity="0.8" TextAlignment="Center" TextWrapping="Wrap" />
         </StackPanel>
 
-        <StackPanel Spacing="4">
-            <TextBlock Text="It may case by session expired or invalid. You can try to fix this by click Repair button."
-                       Opacity="0.8" TextWrapping="Wrap" TextAlignment="Center" />
-            <Button Content="Repair" HorizontalAlignment="Center"
+        <StackPanel Spacing="8">
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Initialize_Error_Description}}"
+                Opacity="0.8" TextWrapping="Wrap" TextAlignment="Center" />
+            <Button Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text}}" HorizontalAlignment="Center"
                     Command="{Binding RepairCommand}" />
         </StackPanel>
     </StackPanel>

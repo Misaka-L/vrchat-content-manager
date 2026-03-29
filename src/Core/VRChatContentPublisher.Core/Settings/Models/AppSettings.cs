@@ -12,6 +12,8 @@ public sealed class AppSettings
     public bool SendNotificationOnTaskFailed { get; set; } = true;
     public bool SendNotificationOnPublicIpChanged { get; set; } = true;
 
+    public string? AppCulture { get; set; }
+
     public string ConnectInstanceName { get; set; } = RandomWordsUtils.GetRandomWords();
     public int RpcServerPort { get; set; } = 59328;
 

@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option" xml:space="preserve">
+        <value>zh-CN</value>
+    </data>
+    <data name="Common_Content_Type_Avatar" xml:space="preserve">
+        <value>虚拟形象</value>
+    </data>
+    <data name="Common_Content_Type_World" xml:space="preserve">
+        <value>世界</value>
+    </data>
+    <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
+        <value>返回</value>
+    </data>
+    <data name="Pages_Tasks_Title" xml:space="preserve">
+        <value>任务</value>
+    </data>
+    <data name="Pages_Add_Account_Title_Headline1" xml:space="preserve">
+        <value>登录到你的</value>
+    </data>
+    <data name="Pages_Add_Account_Title_Headline2_Bold" xml:space="preserve">
+        <value>VRChat 账号</value>
+    </data>
+    <data name="Pages_Add_Account_Username_Or_Email_Field_Label" xml:space="preserve">
+        <value>用户名或邮箱</value>
+    </data>
+    <data name="Pages_Add_Account_Password_Field_Label" xml:space="preserve">
+        <value>密码</value>
+    </data>
+    <data name="Pages_Add_Account_Login_Button_Text" xml:space="preserve">
+        <value>登录</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
+        <value>在用 Pico, Oculus, Steam 或 Viveport 账号?</value>
+    </data>
+    <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Description" xml:space="preserve">
+        <value>请跟随以下文章指引，将你的 Pico, Oculus, Steam 或 Viveport 账号与你的 VRChat 账号关联：</value>
+    </data>
+    <data name="Pages_Add_Account_Alert_Login_Failed_Title" xml:space="preserve">
+        <value>登录失败</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Title" xml:space="preserve">
+        <value>需要一次性验证码</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Code_Field_Watermark" xml:space="preserve">
+        <value>验证码</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_Totp" xml:space="preserve">
+        <value>请检查你的 TOTP App</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Require_EmailOtp" xml:space="preserve">
+        <value>请检查你的邮箱</value>
+    </data>
+    <data name="Pages_Add_Account_Otp_Dialog_Alert_Failed_To_Verify_Code" xml:space="preserve">
+        <value>无法验证你提供的验证码</value>
+    </data>
+    <data name="Pages_Settings_Title" xml:space="preserve">
+        <value>设置</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Title" xml:space="preserve">
+        <value>账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Add_New_Account" xml:space="preserve">
+        <value>登录新的账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip" xml:space="preserve">
+        <value>修复该账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
+        <value>移除该账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip" xml:space="preserve">
+        <value>你不能移除一个有未完成任务的账号</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
+        <value>设置该账号的标签页为任务页的默认标签页</value>
+    </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Already_Set_Button_Tooltip" xml:space="preserve">
+        <value>该账号的标签页已经是任务页的默认标签页了</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Title" xml:space="preserve">
+        <value>外观与语言</value>
+    </data>
+    <data name="Pages_Settings_Appearance_App_Language" xml:space="preserve">
+        <value>应用语言</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Language_Selector_Follow_System" xml:space="preserve">
+        <value>跟随系统语言设置</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar" xml:space="preserve">
+        <value>使用彩色循环背景顶栏</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Use_Borderless_Window" xml:space="preserve">
+        <value>使用无边框窗口</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Title" xml:space="preserve">
+        <value>任务页中任务的排序方式</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First" xml:space="preserve">
+        <value>创建时间降序</value>
+    </data>
+    <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
+        <value>创建时间升序</value>
+    </data>
+    <data name="Pages_Settings_Connect_Title" xml:space="preserve">
+        <value>RPC 服务器</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Title" xml:space="preserve">
+        <value>更改服务器端口需要重新配对</value>
+    </data>
+    <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description" xml:space="preserve">
+        <value>修改端口后必须重新和 App 配对。</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Watermark" xml:space="preserve">
+        <value>例如：伟大戚风</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Name_Field_Label" xml:space="preserve">
+        <value>服务器名称</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Field_Label" xml:space="preserve">
+        <value>服务器端口</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Button_Text" xml:space="preserve">
+        <value>应用设置</value>
+    </data>
+    <data name="Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text" xml:space="preserve">
+        <value>恢复默认服务器端口</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
+        <value>服务器名称为必填项</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Port_Out_Of_Range" xml:space="preserve">
+        <value>端口号必须在 {0} 到 {1} 之间</value>
+    </data>
+    <data name="Pages_Settings_Connect_Apply_Error_Unknown_Error" xml:space="preserve">
+        <value>由于未知错误无法应用 RPC 服务器设置</value>
+    </data>
+    <data name="Pages_Settings_Notification_Title" xml:space="preserve">
+        <value>通知</value>
+    </data>
+    <data name="Pages_Settings_Notification_Enable_Notifications_Toggle_Label" xml:space="preserve">
+        <value>启用通知</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Test_Notification" xml:space="preserve">
+        <value>发送测试通知</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Title" xml:space="preserve">
+        <value>发生以下情况时发送通知</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup" xml:space="preserve">
+        <value>App 启动时账号会话过期</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
+        <value>内容发布任务发生错误</value>
+    </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
+        <value>公网 IP 变动</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Title" xml:space="preserve">
+        <value>Http 代理</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Label" xml:space="preserve">
+        <value>代理模式</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Follow_System_Settings" xml:space="preserve">
+        <value>跟随系统代理设置</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_No_Proxy" xml:space="preserve">
+        <value>不使用代理</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Proxy_Mode_Selector_Custom_Porxy" xml:space="preserve">
+        <value>自定义代理</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field" xml:space="preserve">
+        <value>自定义 HTTP 代理 URI</value>
+    </data>
+    <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
+        <value>HTTP 代理 URI 必须是 http:// 或 https:// 链接</value>
+    </data>
+    <data name="Pages_Settings_Debug_Title" xml:space="preserve">
+        <value>调试</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Logs_Folder_Button_Text" xml:space="preserve">
+        <value>打开日志文件夹</value>
+    </data>
+    <data name="Pages_Settings_Debug_Open_Network_Diagnostics_Window" xml:space="preserve">
+        <value>打开网络诊断窗口</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
+        <value>在此输入日志中加密后的 IP</value>
+    </data>
+    <data name="Pages_Settings_Debug_Encrypted_IP_Button_Text" xml:space="preserve">
+        <value>解密</value>
+    </data>
+    <data name="Pages_Settings_About_Title" xml:space="preserve">
+        <value>关于该软件</value>
+    </data>
+    <data name="Pages_Settings_PairedClients_Title" xml:space="preserve">
+        <value>已配对的客户端</value>
+    </data>
+    <data name="Pages_Settings_PairedClients_Client_Item_Expired_At_Text_Template" xml:space="preserve">
+        <value>该客户端的会话将于 {0} 过期</value>
+    </data>
+    <data name="Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip" xml:space="preserve">
+        <value>撤销授权该客户端</value>
+    </data>
+    <data name="Pages_Settings_About_Slogan" xml:space="preserve">
+        <value>更高效的发布 VRChat 内容</value>
+    </data>
+    <data name="Pages_Settings_Copyright" xml:space="preserve">
+        <value>以 GPL-3.0 许可证许可</value>
+    </data>
+    <data name="Pages_Settings_About_Gitub_Link_Text" xml:space="preserve">
+        <value>VRChat Content Publisher 的 Github 主页</value>
+    </data>
+    <data name="Pages_Settings_About_Build_Commit" xml:space="preserve">
+        <value>构建提交 SHA</value>
+    </data>
+    <data name="Pages_Settings_About_Build_At" xml:space="preserve">
+        <value>构建于</value>
+    </data>
+    <data name="Pages_Settings_About_Acknowledgement_Title" xml:space="preserve">
+        <value>鸣谢</value>
+    </data>
+    <data name="Pages_Settings_About_AssetsTools_Unity_AssetBundle_Processing_Powered_By" xml:space="preserve">
+        <value>Unity AssetBundle 处理能力由以下软件强力驱动</value>
+    </data>
+    <data name="Pages_Settings_About_AssetsTools_Modify_To_Meet_VCP_Requirements" xml:space="preserve">
+        <value>为满足 VRChat Content Publisher 需求做了部分修改</value>
+    </data>
+    <data name="Pages_Settings_About_VRChat_API_Documentation_Provided_By" xml:space="preserve">
+        <value>VRChat API 文档由以下群组提供</value>
+    </data>
+    <data name="Pages_Settings_About_Thanks_To_Those_Open_Soure_Software" xml:space="preserve">
+        <value>VCP 的诞生离不开这些开源软件</value>
+    </data>
+    <data name="Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters" xml:space="preserve">
+        <value>特别感谢我们的早期支持者</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By" xml:space="preserve">
+        <value>请考虑通过以下方式支持开发</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Donate" xml:space="preserve">
+        <value>捐赠</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Feedback" xml:space="preserve">
+        <value>提供反馈</value>
+    </data>
+    <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
+        <value>贡献代码</value>
+    </data>
+    <data name="Pages_Guide_Shared_Steps_Step_1_Title" xml:space="preserve">
+        <value>Step.1</value>
+    </data>
+    <data name="Pages_Guide_Shared_Steps_Step_2_Title" xml:space="preserve">
+        <value>Step.2</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Headline1_Bold" xml:space="preserve">
+        <value>为你的创作赋能</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Headline2_Light" xml:space="preserve">
+        <value>更快更高效的发布你的内容</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Next_Page_Button_Text" xml:space="preserve">
+        <value>下一步</value>
+    </data>
+    <data name="Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text" xml:space="preserve">
+        <value>跳过</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Headline1_Light" xml:space="preserve">
+        <value>连接 Unity 和 App</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Headline2_Bold" xml:space="preserve">
+        <value>安装 Connect 软件包</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Add_VPM_Repository_Title" xml:space="preserve">
+        <value>添加 VPM 仓库</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint" xml:space="preserve">
+        <value>VPM 仓库 URL</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Add_To_Package_Manager_Button_Text" xml:space="preserve">
+        <value>添加到包管理器</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_1_Copy_Repository_URL_Button_Text" xml:space="preserve">
+        <value>复制 URL</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_Install_Connect_Package_Title" xml:space="preserve">
+        <value>安装 Connect 软件包</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Worlds_Project_Caption" xml:space="preserve">
+        <value>世界（Worlds）项目</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Avatars_Project_Caption" xml:space="preserve">
+        <value>虚拟形象（Avatars）项目</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Step_2_For_Project_With_CAU_Caption" xml:space="preserve">
+        <value>如果你正在使用 Continuous Avatar Uploader</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Next_Button_Text" xml:space="preserve">
+        <value>下一步</value>
+    </data>
+    <data name="Pages_Guide_Setup_Unity_Skip_Button_Text" xml:space="preserve">
+        <value>跳过</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Headline1_Light" xml:space="preserve">
+        <value>设置即将完成</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Headline2_Bold" xml:space="preserve">
+        <value>连接 Unity 和 App</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Open_Connect_Settings_Title" xml:space="preserve">
+        <value>打开连接设置</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Step_1_Description" xml:space="preserve">
+        <value>选择 Tools（工具）> VRChat Content Publisher Connect > Settings 打开连接设置</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Next_Button_Text" xml:space="preserve">
+        <value>下一步</value>
+    </data>
+    <data name="Pages_Guide_Open_Connect_Settings_In_Unity_Skip_Button_Text" xml:space="preserve">
+        <value>跳过</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Headline1_Light" xml:space="preserve">
+        <value>设置即将完成</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Headline2_Bold" xml:space="preserve">
+        <value>连接 Unity 和 App</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Step_2_Connect_To_App_Title" xml:space="preserve">
+        <value>连接到 App</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Step_2_Description" xml:space="preserve">
+        <value>在 Unity 里输入以下，然后点击 Connect 按钮。</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint" xml:space="preserve">
+        <value>Host URL</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text" xml:space="preserve">
+        <value>复制 URL</value>
+    </data>
+    <data name="Pages_Guide_Connect_Unity_To_App_Skip_Button_Text" xml:space="preserve">
+        <value>跳过</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Message" xml:space="preserve">
+        <value>你目前的公网 IP 和上次登录使用的 IP 不符。你可能需要点击“修复账号”重新登录你的账号。
+注：如果你切换回了上次使用的公网 IP，你可以直接点击“修复账号”按钮而无需重新登录。</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text" xml:space="preserve">
+        <value>显示 IP</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text" xml:space="preserve">
+        <value>我知道了</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text" xml:space="preserve">
+        <value>当前的公网 IP:</value>
+    </data>
+    <data name="Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text" xml:space="preserve">
+        <value>上一次登录使用的公网 IP:</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Title" xml:space="preserve">
+        <value>你还没有登录任何 VRChat 账号</value>
+    </data>
+    <data name="Pages_Tasks_No_VRChat_Account_Exist_Login_Button_Text" xml:space="preserve">
+        <value>登录</value>
+    </data>
+    <data name="Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip" xml:space="preserve">
+        <value>添加新的账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Title" xml:space="preserve">
+        <value>无法初始化该账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Description" xml:space="preserve">
+        <value>网络错误、公网 IP 变动或会话过期都可能导致该问题
+点击修复账号按钮来决定重试或重新登录</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text" xml:space="preserve">
+        <value>修复账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip" xml:space="preserve">
+        <value>正在进行的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip" xml:space="preserve">
+        <value>已完成的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip" xml:space="preserve">
+        <value>失败的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip" xml:space="preserve">
+        <value>取消的任务的数量</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_Text" xml:space="preserve">
+        <value>批量操作</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks" xml:space="preserve">
+        <value>移除所有已完成的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks" xml:space="preserve">
+        <value>移除所有失败的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks" xml:space="preserve">
+        <value>移除所有取消的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks" xml:space="preserve">
+        <value>移除所有可移除的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks" xml:space="preserve">
+        <value>重试所有可重试的任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title" xml:space="preserve">
+        <value>账号会话过期或无效</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>在修复账号前，不允许任何操作。</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
+        <value>修复账号</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>在账号会话过期或失效时不允许操作任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
+        <value>该账号不被允许发布内容</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description" xml:space="preserve">
+        <value>你的 VRChat 账号必须有 &quot;萌新（New User）&quot; 或更高的信誉级别才能发布内容。
+VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，但是很有可能会失败。
+
+如果你满足了以上要求但是仍然看到这个提升或无法发布内容。
+请尝试用 VRChat SDK 发布内容。如果失败了，请联系 VRChat 支持。如果使用 SDK 能成功发布内容，请在 Github 上创建一个 Issue 来报告这个问题。</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text" xml:space="preserve">
+        <value>了解更多</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist" xml:space="preserve">
+        <value>这个账号没有发布任务</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template" xml:space="preserve">
+        <value>任务创建于 {0}</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Debug_Button_Tooltip" xml:space="preserve">
+        <value>调试</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Remove_Task_Button_Tooltip" xml:space="preserve">
+        <value>移除</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip" xml:space="preserve">
+        <value>重试</value>
+    </data>
+    <data name="Pages_Tasks_Account_Tab_Task_Item_Cancel_Task_Button_Tooltip" xml:space="preserve">
+        <value>取消</value>
+    </data>
+    <data name="Pages_Home_App_Bar_Toggle_Borderless_Window_Button_Tooltip" xml:space="preserve">
+        <value>开关无边框窗口</value>
+    </data>
+    <data name="Pages_Home_App_Bar_Toggle_Window_Pin_Button_Tooltip" xml:space="preserve">
+        <value>使用无边框窗口时：开关阻止窗口消失
+不使用无边框窗口时：开关窗口置顶</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
+        <value>认证请求识别码</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Enter_Code_In_Client" xml:space="preserve">
+        <value>在客户端输入以下验证码完成配对</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Security_Warning" xml:space="preserve">
+        <value>你只应该在配对请求来自你信任的客户端时输入验证码</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Request_From_Client" xml:space="preserve">
+        <value>请求来自该客户端</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Close_Dialog_Button" xml:space="preserve">
+        <value>关闭</value>
+    </data>
+    <data name="Dialog_Request_Challenge_Copy_Code_Button" xml:space="preserve">
+        <value>复制验证码</value>
+    </data>
+    <data name="Dialog_Shutdown_Shutdown_In_Progress_Text" xml:space="preserve">
+        <value>正在退出...</value>
+    </data>
+    <data name="Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>有未完成的内容发布任务
+你真的想退出 App 吗？</value>
+    </data>
+    <data name="Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>坚持退出！我知道有未完成的内容发布任务！</value>
+    </data>
+    <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
+        <value>不退出</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title" xml:space="preserve">
+        <value>RPC 服务器被迫变更端口</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Description" xml:space="preserve">
+        <value>RPC 服务器无法在设置的端口启动，这可能是因为端口被占用了。
+请注意你需要重新和 App 配对，或者你可以在解决这个问题之后把端口改回来。</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_User_Settings_Port" xml:space="preserve">
+        <value>用户设置的端口</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Current_Port" xml:space="preserve">
+        <value>当前的端口</value>
+    </data>
+    <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
+        <value>我知道了</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Title" xml:space="preserve">
+        <value>测试通知</value>
+    </data>
+    <data name="Notifications_Settings_Test_Notification_Body" xml:space="preserve">
+        <value>这是一条测试通知</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Title" xml:space="preserve">
+        <value>公网 IP 变更</value>
+    </data>
+    <data name="Notifications_Public_IP_Changed_Body_Template" xml:space="preserve">
+        <value>旧 IP: {0} 新 IP: {1}</value>
+    </data>
+    <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
+        <value>发布 {0} "{1}" 失败</value>
+    </data>
+</root>

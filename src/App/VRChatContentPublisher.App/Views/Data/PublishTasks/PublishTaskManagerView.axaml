@@ -4,7 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:publishTasks="clr-namespace:VRChatContentPublisher.App.ViewModels.Data.PublishTasks"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="650"
              x:DataType="publishTasks:PublishTaskManagerViewModel"
              x:Class="VRChatContentPublisher.App.Views.Data.PublishTasks.PublishTaskManagerView">
 
@@ -20,23 +21,38 @@
     <Grid RowDefinitions="Auto,Auto,*">
         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="4" Margin="8,8,8,0">
             <StackPanel Orientation="Horizontal" Spacing="4">
-                <avalonia:MaterialIcon Kind="ProgressUpload" Foreground="#7986CB" />
-                <TextBlock Text="{Binding InProgressTaskCount}"
-                           ToolTip.Tip="Tasks in progress" Foreground="#7986CB" />
-                <avalonia:MaterialIcon Kind="ProgressCheck" Foreground="#00c853" />
-                <TextBlock Text="{Binding CompletedTaskCount}"
-                           ToolTip.Tip="Tasks completed" Foreground="#00c853" />
-                <avalonia:MaterialIcon Kind="ProgressAlert" Foreground="#EF5350" />
-                <TextBlock Text="{Binding FailedTaskCount}"
-                           ToolTip.Tip="Tasks failed" Foreground="#EF5350" />
-                <avalonia:MaterialIcon Kind="ProgressClose" />
-                <TextBlock Text="{Binding CanceledTaskCount}"
-                           ToolTip.Tip="Tasks canceled" />
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressUpload" Foreground="#7986CB" />
+                    <TextBlock Text="{Binding InProgressTaskCount}"
+                               Foreground="#7986CB"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressCheck" Foreground="#00c853" />
+                    <TextBlock Text="{Binding CompletedTaskCount}"
+                               Foreground="#00c853" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressAlert" Foreground="#EF5350" />
+                    <TextBlock Text="{Binding FailedTaskCount}"
+                               Foreground="#EF5350" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressClose" />
+                    <TextBlock Text="{Binding CanceledTaskCount}" />
+                </StackPanel>
             </StackPanel>
             <Border Grid.Column="1" Height="1" Background="{DynamicResource MaterialDesignBodyLight}" />
             <StackPanel Grid.Column="2" Orientation="Horizontal">
                 <Button
-                    Content="{Binding CurrentPageSortModeText}"
+                    Content="{I18N {Binding CurrentPageSortModeText}}"
                     Command="{Binding ToggleSortModeCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
                     Padding="0" />
@@ -44,7 +60,7 @@
                 <Button
                     ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
                     ToolTip.ShowOnDisabled="True"
-                    ToolTip.Tip="No further interactions are allowed when session is expired or invalid."
+                    ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip}}"
                     Theme="{StaticResource MaterialFlatButton}"
                     Padding="0">
                     <Button.IsEnabled>
@@ -56,20 +72,40 @@
                     <Button.Flyout>
                         <MenuFlyout>
                             <MenuItem
-                                Header="{avalonia:MaterialIconTextExt Kind=DeleteSweep, Text=Remove Completed tasks}"
-                                Command="{Binding RemoveCompletedTasksCommand}" />
-                            <MenuItem Header="Remove Failed tasks" Command="{Binding RemoveFailedTasksCommand}" />
-                            <MenuItem Header="Remove Cancelled tasks" Command="{Binding RemoveCancelledTasksCommand}" />
-                            <MenuItem Header="Remove All removable tasks"
-                                      Command="{Binding RemoveAllRemovableTasksCommand}" />
+                                Command="{Binding RemoveCompletedTasksCommand}">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <avalonia:MaterialIcon Kind="DeleteSweep" />
+                                        <TextBlock
+                                            Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks}}" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                            <MenuItem
+                                Header="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_Failed_Tasks}}"
+                                Command="{Binding RemoveFailedTasksCommand}" />
+                            <MenuItem
+                                Header="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks}}"
+                                Command="{Binding RemoveCancelledTasksCommand}" />
+                            <MenuItem
+                                Header="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks}}"
+                                Command="{Binding RemoveAllRemovableTasksCommand}" />
                             <MenuItem Header="-" />
                             <MenuItem
-                                Header="{avalonia:MaterialIconTextExt Kind=Refresh, Text=Retry all failed/cancelled tasks}"
-                                Command="{Binding RetryAllTasksCommand}" />
+                                Command="{Binding RetryAllTasksCommand}">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal" Spacing="4">
+                                        <avalonia:MaterialIcon Kind="Refresh" />
+                                        <TextBlock
+                                            Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks}}" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
                         </MenuFlyout>
                     </Button.Flyout>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="Action" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Button_Text}}" />
                         <avalonia:MaterialIcon Kind="ChevronDown" />
                     </StackPanel>
                 </Button>
@@ -85,16 +121,17 @@
                                                Foreground="White" VerticalAlignment="Top"
                                                Margin="0,2,0,0" />
                         <TextBlock Grid.Column="1"
-                                   Text="Session is expired or invalid" FontWeight="Bold" FontSize="18"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title}}"
+                                   FontWeight="Bold" FontSize="18"
                                    TextWrapping="Wrap"
                                    Foreground="White" />
                     </Grid>
                     <TextBlock
-                        Text="This session is expired or invalid and no further interactions are allowed before repair."
+                        Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description}}"
                         Foreground="White" TextWrapping="Wrap" />
                     <Button Theme="{StaticResource MaterialFlatButton}" Foreground="White"
                             Command="{Binding RepairSessionCommand}"
-                            Content="Repair"
+                            Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text}}"
                             HorizontalAlignment="Right" />
                 </StackPanel>
             </Border>
@@ -107,22 +144,15 @@
                                                Foreground="White" VerticalAlignment="Top"
                                                Margin="0,2,0,0" />
                         <TextBlock Grid.Column="1"
-                                   Text="This account doesn't have permission to publish content" FontWeight="Bold"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title}}"
+                                   FontWeight="Bold"
                                    FontSize="18"
                                    Foreground="White" TextWrapping="Wrap" />
                     </Grid>
-                    <TextBlock
-                        Foreground="White" TextWrapping="Wrap">
-                        <Run>Your VRChat account must have a trust rank of &quot;New User&quot; or higher to publish content.</Run>
-                        <LineBreak /><LineBreak />
-                        <Run>VRChat Content Publisher won't prevent you from publish content for this account, but it will likely fail.</Run>
-                        <LineBreak /><LineBreak />
-                        <Run>If you still saw this when you have meet the requirement.</Run>
-                        <LineBreak /><LineBreak />
-                        <Run>Please try again using VRChat SDK, if fail, contact VRChat Support, if not, create a issues on github report this.</Run>
-                    </TextBlock>
+                    <TextBlock Foreground="White" TextWrapping="Wrap"
+                               Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Description}}" />
                     <Button Theme="{StaticResource MaterialFlatButton}" Foreground="White"
-                            Content="Learn more"
+                            Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text}}"
                             HorizontalAlignment="Right">
                         <Interaction.Behaviors>
                             <ButtonClickEventTriggerBehavior>
@@ -137,15 +167,17 @@
             <StackPanel IsVisible="{Binding !TotalTaskCount}"
                         VerticalAlignment="Center" Spacing="8">
                 <avalonia:MaterialIcon Kind="HeadQuestionOutline" Height="36" Width="36" />
-                <TextBlock Text="No tasks for this account for now" TextAlignment="Center"
-                           Classes="Headline6" Opacity="0.8" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Placeholder_No_Tasks_Exist}}"
+                    TextAlignment="Center"
+                    Classes="Headline6" Opacity="0.8" />
             </StackPanel>
             <ScrollViewer IsVisible="{Binding TotalTaskCount}">
                 <ItemsControl ItemsSource="{Binding Tasks}"
                               IsEnabled="{Binding IsInteractionAllowed}"
                               ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
                               ToolTip.ShowOnDisabled="True"
-                              ToolTip.Tip="No further interactions are allowed when session is expired or invalid.">
+                              ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />

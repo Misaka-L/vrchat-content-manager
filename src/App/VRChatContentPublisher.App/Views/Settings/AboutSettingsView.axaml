@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:AboutSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.AboutSettingsView">
@@ -27,64 +28,66 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel>
-                <TextBlock Text="A More Efficient Way to publish your VRChat Contents"
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Slogan}}"
                            Opacity="0.8" TextWrapping="Wrap" HorizontalAlignment="Center" />
-                <HyperlinkButton Content="Licensed under GPL-3.0 license" HorizontalAlignment="Center"
+                <HyperlinkButton Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Copyright}}" HorizontalAlignment="Center"
                                  Command="{Binding NavigateToLicenseCommand}" />
             </StackPanel>
         </StackPanel>
 
-        <HyperlinkButton Content="VRChat Content Publisher on Github"
+        <HyperlinkButton Content="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Gitub_Link_Text}}"
                          NavigateUri="https://github.com/project-vrcz/content-publisher"
                          HorizontalAlignment="Center" />
 
         <StackPanel Spacing="2">
             <StackPanel>
-                <TextBlock Text="Build Commit" Opacity="0.8" />
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Build_Commit}}" Opacity="0.8" />
                 <SelectableTextBlock Text="{Binding AppCommitHash}" />
             </StackPanel>
             <StackPanel>
-                <TextBlock Text="Build at" Opacity="0.8" />
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Build_At}}" Opacity="0.8" />
                 <SelectableTextBlock Text="{Binding AppBuildDate}" />
             </StackPanel>
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="4">
             <avalonia:MaterialIcon Kind="Heart" Height="24" Width="24" />
-            <TextBlock Text="Acknowledgement" VerticalAlignment="Center" FontSize="18" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Acknowledgement_Title}}" VerticalAlignment="Center"
+                       FontSize="18" />
         </StackPanel>
 
-        <StackPanel Spacing="2" HorizontalAlignment="Center">
-            <TextBlock Text="Unity AssetBundle Processing Powered by" TextAlignment="Center" />
-            <HyperlinkButton Content="AssetsTools.NET (MIT License Copyright (c) 2020 nesrak1)"
-                             NavigateUri="https://github.com/nesrak1/AssetsTools.NET"
-                             HorizontalAlignment="Center" />
-            <HyperlinkButton Content="Modified to meet VRChat Content Publisher requirements"
-                             HorizontalAlignment="Center"
-                             NavigateUri="https://github.com/project-vrcz/AssetsTools.NET" />
+        <StackPanel Spacing="8" HorizontalAlignment="Center">
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_AssetsTools_Unity_AssetBundle_Processing_Powered_By}}"
+                       TextAlignment="Center" />
+            <StackPanel>
+                <HyperlinkButton Content="AssetsTools.NET (MIT License Copyright (c) 2020 nesrak1)"
+                                 NavigateUri="https://github.com/nesrak1/AssetsTools.NET"
+                                 HorizontalAlignment="Center" />
+                <HyperlinkButton Content="{I18N {x:Static localization:LangKeys.Pages_Settings_About_AssetsTools_Modify_To_Meet_VCP_Requirements}}"
+                                 HorizontalAlignment="Center"
+                                 NavigateUri="https://github.com/project-vrcz/AssetsTools.NET" />
+            </StackPanel>
         </StackPanel>
 
         <StackPanel>
-            <TextBlock Text="VRChat API documentation provided by" TextAlignment="Center" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_VRChat_API_Documentation_Provided_By}}" TextAlignment="Center" />
             <HyperlinkButton Content="VRChat.community"
                              NavigateUri="https://vrchat.community/"
                              HorizontalAlignment="Center" />
         </StackPanel>
 
-        <StackPanel Spacing="2">
-            <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
-                <TextBlock Text="Thanks to those" />
-                <HyperlinkButton Content="Open source software" Margin="0" Padding="0">
-                    <Interaction.Behaviors>
-                        <ButtonClickEventTriggerBehavior>
-                            <LaunchUriOrFileAction Path="{Binding ThirdPartNoticePath}" />
-                        </ButtonClickEventTriggerBehavior>
-                    </Interaction.Behaviors>
-                </HyperlinkButton>
-            </StackPanel>
+        <StackPanel Spacing="8">
+            <HyperlinkButton Content="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Thanks_To_Those_Open_Soure_Software}}"
+                             Margin="0" Padding="0" HorizontalAlignment="Center">
+                <Interaction.Behaviors>
+                    <ButtonClickEventTriggerBehavior>
+                        <LaunchUriOrFileAction Path="{Binding ThirdPartNoticePath}" />
+                    </ButtonClickEventTriggerBehavior>
+                </Interaction.Behaviors>
+            </HyperlinkButton>
 
             <StackPanel>
-                <TextBlock Text="Special thanks to our early adopters" HorizontalAlignment="Center" />
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters}}" HorizontalAlignment="Center" />
                 <WrapPanel ItemSpacing="2" HorizontalAlignment="Center">
                     <HyperlinkButton Content="@小川糸" />
                     <HyperlinkButton Content="@ColorlessColor" NavigateUri="https://github.com/ColorlessColor" />
@@ -97,12 +100,12 @@
         </StackPanel>
 
         <StackPanel>
-            <TextBlock Text="Please consider support development by" HorizontalAlignment="Center" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Consider_Support_By}}" HorizontalAlignment="Center" />
             <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8" HorizontalAlignment="Center">
-                <HyperlinkButton Content="Donate" NavigateUri="https://afdian.com/a/Misaka-L" />
-                <HyperlinkButton Grid.Column="1" Content="Feedback"
+                <HyperlinkButton Content="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Consider_Support_By_Content_Donate}}" NavigateUri="https://afdian.com/a/Misaka-L" />
+                <HyperlinkButton Grid.Column="1" Content="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Consider_Support_By_Content_Feedback}}"
                                  NavigateUri="https://github.com/project-vrcz/content-publisher/issues/new/choose" />
-                <HyperlinkButton Grid.Column="2" Content="Contribute"
+                <HyperlinkButton Grid.Column="2" Content="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Consider_Support_By_Content_Contribute}}"
                                  NavigateUri="https://github.com/project-vrcz/content-publisher/blob/main/CONTRIBUTING.md" />
             </Grid>
         </StackPanel>
