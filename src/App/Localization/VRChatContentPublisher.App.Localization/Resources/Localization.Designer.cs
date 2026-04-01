@@ -78,6 +78,53 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please make sure you know what you are doing before using this feature..
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Description {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This feature are only for advanced users.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Title {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;auth&quot; and &quot;twoFactorAuth&quot; cookies are required.
+        ///One cookie per line in format of &quot;key=value&quot;.
+        ///Will only apply for &quot;api.vrchat.com&quot;..
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cookies Required.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Alert_Require_Cookies_Title {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Alert_Require_Cookies_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Cancel_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cancel_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string Dialog_Request_Challenge_Close_Dialog_Button {
@@ -284,6 +331,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Add_Account_Login_Button_Text {
             get {
                 return ResourceManager.GetString("Pages_Add_Account_Login_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login using cookies.
+        /// </summary>
+        internal static string Pages_Add_Account_Login_Using_Cookies_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Add_Account_Login_Using_Cookies_Button_Text", resourceCulture);
             }
         }
         

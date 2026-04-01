@@ -1,0 +1,78 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
+             x:DataType="dialogs:LoginWithCookiesDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Dialogs.LoginWithCookiesDialog">
+
+    <StackPanel Width="300">
+        <StackPanel Spacing="4">
+            <Border Background="#FF6D00" CornerRadius="8">
+                <StackPanel Margin="8" Spacing="4">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
+                        <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                               Foreground="White" VerticalAlignment="Top"
+                                               Margin="0,2,0,0" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Title}}"
+                                   FontWeight="Bold"
+                                   FontSize="18"
+                                   Foreground="White" TextWrapping="Wrap" />
+                    </Grid>
+                    <TextBlock Foreground="White" TextWrapping="Wrap"
+                               Text="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Description}}" />
+                </StackPanel>
+            </Border>
+
+            <Border Background="#3f51b5" CornerRadius="8">
+                <StackPanel Margin="8" Spacing="4">
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="4">
+                        <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                               Foreground="White" VerticalAlignment="Top"
+                                               Margin="0,2,0,0" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Alert_Require_Cookies_Title}}"
+                                   FontWeight="Bold"
+                                   FontSize="18"
+                                   Foreground="White" TextWrapping="Wrap" />
+                    </Grid>
+                    <TextBlock Foreground="White" TextWrapping="Wrap"
+                               Text="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description}}" />
+                </StackPanel>
+            </Border>
+
+            <Border IsVisible="{Binding HasError}"
+                    Background="#d50000" CornerRadius="8">
+                <StackPanel Margin="8" Spacing="4">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                               Foreground="White" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Alert_Login_Failed_Title}}"
+                            FontWeight="Bold" FontSize="18"
+                            Foreground="White" />
+                    </StackPanel>
+                    <TextBlock Text="{Binding ErrorMessage}" Foreground="White" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <TextBox Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                 Watermark="auth=authcookie_****&#x0a;twoFactorAuth=****" AcceptsReturn="True" Height="200"
+                 Text="{Binding CookiesText}" />
+
+        <StackPanel Spacing="4" Margin="0,8,0,0">
+            <Button Content="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Login_Button_Text}}"
+                    Command="{Binding LoginCommand}" />
+            <Button Content="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cancel_Button_Text}}"
+                    Theme="{StaticResource MaterialOutlineButton}"
+                    Classes="light"
+                    Command="{Binding RequestCloseCommand}" />
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

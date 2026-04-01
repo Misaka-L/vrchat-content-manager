@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Auth;
+using VRChatContentPublisher.Core.Services.VRChatApi;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -8,6 +9,8 @@ namespace VRChatContentPublisher.Core.Services.UserSession;
 
 public sealed class UserSessionManagerService(
     UserSessionFactory sessionFactory,
+    UserSessionHttpClientFactory sessionHttpClientFactory,
+    VRChatApiClientFactory apiClientFactory,
     IWritableOptions<UserSessionStorage> userSessionStorage,
     ILogger<UserSessionManagerService> logger)
 {
@@ -33,7 +36,8 @@ public sealed class UserSessionManagerService(
                     cookieContainer.Add(cookie);
                 }
 
-            var session = CreateOrGetSession(sessionItem.UserName, userId, cookieContainer, sessionItem.GetApiUserModel());
+            var session = CreateOrGetSession(sessionItem.UserName, userId, cookieContainer,
+                sessionItem.GetApiUserModel());
             try
             {
                 await session.CreateOrGetSessionScopeAsync();
@@ -116,8 +120,57 @@ public sealed class UserSessionManagerService(
         );
     }
 
-    public UserSessionService CreateOrGetSession(string userNameOrEmail, string? userId = null, CookieContainer?
-        cookieContainer = null, CurrentUser? user = null)
+    public async ValueTask<UserSessionService> CreateOrGetSessionFromCookiesAsync(Dictionary<string, string> cookies)
+    {
+        var cookieContainer = new CookieContainer();
+        foreach (var cookie in cookies)
+        {
+            cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", "api.vrchat.cloud"));
+        }
+
+        using var httpClient = sessionHttpClientFactory.Create(
+            cookieContainer,
+            "detect-from-cookies",
+            logger,
+            _ => Task.CompletedTask
+        );
+
+        var apiClient = apiClientFactory.Create(httpClient);
+
+        CurrentUser user;
+        try
+        {
+            user = await apiClient.GetCurrentUser();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Create session from cookies failed: Failed to get user information from cookies");
+            throw;
+        }
+
+        var session = CreateOrGetSession(user.UserName, user.Id, cookieContainer, user);
+
+        try
+        {
+            await session.CreateOrGetSessionScopeAsync();
+        }
+        catch (Exception ex)
+        {
+            await RemoveSessionAsync(session);
+
+            logger.LogError(ex, "Create session from cookies failed: Failed to create session scope");
+            throw;
+        }
+
+        return session;
+    }
+
+    public UserSessionService CreateOrGetSession(
+        string userNameOrEmail,
+        string? userId = null,
+        CookieContainer? cookieContainer = null,
+        CurrentUser? user = null
+    )
     {
         if (_sessions.FirstOrDefault(session =>
                 (session.UserId is not null && userId == session.UserId) ||
@@ -276,7 +329,8 @@ public sealed class UserSessionManagerService(
 
         var defaultUserNameOrEmail = userSessionStorage.Value.DefaultAccountUserNameOrEmail;
         if (!string.IsNullOrWhiteSpace(defaultUserNameOrEmail) &&
-            _sessions.FirstOrDefault(session => session.UserNameOrEmail == defaultUserNameOrEmail) is { } sessionByUserName)
+            _sessions.FirstOrDefault(session => session.UserNameOrEmail == defaultUserNameOrEmail) is
+                { } sessionByUserName)
         {
             return sessionByUserName;
         }

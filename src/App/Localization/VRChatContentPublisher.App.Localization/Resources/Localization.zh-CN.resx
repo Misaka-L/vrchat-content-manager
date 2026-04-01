@@ -48,6 +48,9 @@
     <data name="Pages_Add_Account_Login_Button_Text" xml:space="preserve">
         <value>登录</value>
     </data>
+    <data name="Pages_Add_Account_Login_Using_Cookies_Button_Text" xml:space="preserve">
+        <value>使用 Cookie 登录</value>
+    </data>
     <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
         <value>在用 Pico, Oculus, Steam 或 Viveport 账号?</value>
     </data>
@@ -545,5 +548,22 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Tray_Menu_Show_Shutdown_App" xml:space="preserve">
         <value>退出</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Title" xml:space="preserve">
+        <value>仅供高级用户使用</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Description" xml:space="preserve">
+        <value>在干任何事之前请确保你完全理解你在干什么。</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_Require_Cookies_Title" xml:space="preserve">
+        <value>Cookies 要求</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description" xml:space="preserve">
+        <value>需要 "auth" 和 "twoFactorAuth" Cookies。
+一行一个 Cookie，格式为 "key=value"。
+仅会作用于 "api.vrchat.com"。</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cancel_Button_Text" xml:space="preserve">
+        <value>取消</value>
     </data>
 </root>
