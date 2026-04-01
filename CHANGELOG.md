@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Adjust spacing between toggle and label. [`#251`](https://github.com/project-vrcz/content-publisher/pull/251)
+
 ### Added
 
 - i18n support for tray menu. [`#250`](https://github.com/project-vrcz/content-publisher/pull/250)

@@ -56,6 +56,10 @@
         <Style Selector="MenuItem avalonia|MaterialIconText TextBlock">
             <Setter Property="FontSize" Value="16" />
         </Style>
+        
+        <Style Selector="ToggleSwitch > TextBlock">
+            <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
     </Application.Styles>
 
     <TrayIcon.Icons>
