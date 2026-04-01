@@ -6,6 +6,7 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:converters="clr-namespace:VRChatContentPublisher.App.Converters"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              RequestedThemeVariant="Default">
 
     <Application.Resources>
@@ -64,10 +65,13 @@
                       Clicked="ShowWindowClicked">
                 <TrayIcon.Menu>
                     <NativeMenu>
-                        <NativeMenuItem Header="Open Logs Folder" Click="OpenLogsFolderClicked" />
+                        <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Open_Logs_Folder}}"
+                                        Click="OpenLogsFolderClicked" />
                         <NativeMenuItemSeparator />
-                        <NativeMenuItem Header="Show Window" Click="ShowWindowClicked" />
-                        <NativeMenuItem Header="Exit" Click="ExitAppClicked" />
+                        <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Main_Window}}"
+                                        Click="ShowWindowClicked" />
+                        <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Shutdown_App}}"
+                                        Click="ExitAppClicked" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

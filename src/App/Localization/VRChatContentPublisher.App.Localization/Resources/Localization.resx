@@ -545,4 +545,13 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
         <value>Publish {0} "{1}" Failed</value>
     </data>
+    <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
+        <value>Open Logs Folder</value>
+    </data>
+    <data name="Tray_Menu_Show_Main_Window" xml:space="preserve">
+        <value>Show Window</value>
+    </data>
+    <data name="Tray_Menu_Show_Shutdown_App" xml:space="preserve">
+        <value>Exit</value>
+    </data>
 </root>
