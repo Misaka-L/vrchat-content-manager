@@ -59,8 +59,17 @@
                          UseFloatingWatermark="True" Theme="{StaticResource OutlineTextBox}"
                          Text="{Binding Password}" />
             </StackPanel>
-            <Button Content="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Login_Button_Text}}"
-                    Command="{Binding LoginCommand}" />
+
+            <StackPanel Spacing="8">
+                <Button Content="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Login_Button_Text}}"
+                        Command="{Binding LoginCommand}" />
+                <Button
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Login_Using_Cookies_Button_Text}}"
+                    Theme="{StaticResource MaterialOutlineButton}"
+                    Classes="light"
+                    Command="{Binding LoginWithCookiesCommand}" />
+            </StackPanel>
+
             <StackPanel Spacing="12">
                 <Border Height="1" Background="{DynamicResource MaterialDesignBodyLight}" Opacity="0.4" />
                 <StackPanel Spacing="8">

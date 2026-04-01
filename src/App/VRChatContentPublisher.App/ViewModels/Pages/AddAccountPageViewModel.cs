@@ -11,6 +11,7 @@ namespace VRChatContentPublisher.App.ViewModels.Pages;
 public sealed partial class AddAccountPageViewModel(
     ILogger<AddAccountPageViewModel> logger,
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogFactory,
+    LoginWithCookiesDialogViewModelFactory loginWithCookiesDialogFactory,
     UserSessionManagerService userSessionManagerService,
     DialogService dialogService,
     Action onRequestBack,
@@ -27,6 +28,18 @@ public sealed partial class AddAccountPageViewModel(
     private void Back()
     {
         onRequestBack();
+    }
+
+    [RelayCommand]
+    private async Task LoginWithCookies()
+    {
+        var dialogViewModel = loginWithCookiesDialogFactory.Create();
+        var result = await dialogService.ShowDialogAsync(dialogViewModel);
+
+        if (result is true)
+        {
+            onRequestDone();
+        }
     }
 
     [RelayCommand]
@@ -120,6 +133,7 @@ public sealed partial class AddAccountPageViewModel(
 
 public sealed class AddAccountPageViewModelFactory(
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogFactory,
+    LoginWithCookiesDialogViewModelFactory loginWithCookiesDialogFactory,
     UserSessionManagerService userSessionManagerService,
     DialogService dialogService,
     ILogger<AddAccountPageViewModel> logger)
@@ -131,9 +145,11 @@ public sealed class AddAccountPageViewModelFactory(
         return new AddAccountPageViewModel(
             logger,
             twoFactorAuthDialogFactory,
+            loginWithCookiesDialogFactory,
             userSessionManagerService,
             dialogService,
             onRequestBack,
-            onRequestDone);
+            onRequestDone
+        );
     }
 }

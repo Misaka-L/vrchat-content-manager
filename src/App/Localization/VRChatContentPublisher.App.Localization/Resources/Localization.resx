@@ -54,6 +54,9 @@
     <data name="Pages_Add_Account_Login_Button_Text" xml:space="preserve">
         <value>Login</value>
     </data>
+    <data name="Pages_Add_Account_Login_Using_Cookies_Button_Text" xml:space="preserve">
+        <value>Login using cookies</value>
+    </data>
     <data name="Pages_Add_Account_Using_No_VRChat_Account_Tip_Title" xml:space="preserve">
         <value>Using an Pico, Oculus, Steam, or Viveport account?</value>
     </data>
@@ -553,5 +556,22 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Tray_Menu_Show_Shutdown_App" xml:space="preserve">
         <value>Exit</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Title" xml:space="preserve">
+        <value>This feature are only for advanced users</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Description" xml:space="preserve">
+        <value>Please make sure you know what you are doing before using this feature.</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_Require_Cookies_Title" xml:space="preserve">
+        <value>Cookies Required</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description" xml:space="preserve">
+        <value>"auth" and "twoFactorAuth" cookies are required.
+One cookie per line in format of "key=value".
+Will only apply for "api.vrchat.com".</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cancel_Button_Text" xml:space="preserve">
+        <value>Cancel</value>
     </data>
 </root>

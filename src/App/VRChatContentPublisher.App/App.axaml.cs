@@ -90,6 +90,7 @@ public partial class App : Application
         ViewLocator.Register<RequestChallengeDialogViewModel, RequestChallengeDialog>();
         ViewLocator.Register<ExitAppDialogViewModel, ExitAppDialog>();
         ViewLocator.Register<StartupPortChangedDialogViewModel, StartupPortChangedDialog>();
+        ViewLocator.Register<LoginWithCookiesDialogViewModel, LoginWithCookiesDialog>();
 
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();

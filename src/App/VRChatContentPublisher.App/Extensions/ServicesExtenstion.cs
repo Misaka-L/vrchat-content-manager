@@ -37,6 +37,7 @@ public static class ServicesExtenstion
         services.AddTransient<RequestChallengeDialogViewModelFactory>();
         services.AddTransient<StartupPortChangedDialogViewModelFactory>();
         services.AddTransient<ExitAppDialogViewModel>();
+        services.AddTransient<LoginWithCookiesDialogViewModelFactory>();
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
