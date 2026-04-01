@@ -11,7 +11,7 @@
              x:Class="VRChatContentPublisher.App.Pages.AddAccountPage">
 
     <StackPanel>
-        <Border Height="140">
+        <Border>
             <Border.Background>
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
