@@ -1601,5 +1601,32 @@ namespace VRChatContentPublisher.App.Localization.Resources {
                 return ResourceManager.GetString("Pages_Tasks_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open Logs Folder.
+        /// </summary>
+        internal static string Tray_Menu_Open_Logs_Folder {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Open_Logs_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Window.
+        /// </summary>
+        internal static string Tray_Menu_Show_Main_Window {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Show_Main_Window", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string Tray_Menu_Show_Shutdown_App {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Show_Shutdown_App", resourceCulture);
+            }
+        }
     }
 }
