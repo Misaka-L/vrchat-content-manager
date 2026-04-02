@@ -444,7 +444,7 @@
         <value>你的 VRChat 账号必须有 &quot;萌新（New User）&quot; 或更高的信誉级别才能发布内容。
 VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，但是很有可能会失败。
 
-如果你满足了以上要求但是仍然看到这个提升或无法发布内容。
+如果你满足了以上要求，但是仍然看到这个提示或无法发布内容。
 请尝试用 VRChat SDK 发布内容。如果失败了，请联系 VRChat 支持。如果使用 SDK 能成功发布内容，请在 Github 上创建一个 Issue 来报告这个问题。</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Learn_More_Button_Text" xml:space="preserve">
