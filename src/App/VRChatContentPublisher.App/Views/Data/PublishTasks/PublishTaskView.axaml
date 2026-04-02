@@ -66,6 +66,7 @@
                     IsVisible="{Binding Status, Converter={StaticResource CanContentPublishTaskRetryConverter}}"
                     Theme="{StaticResource MaterialFlatButton}"
                     Content="{avalonia:MaterialIconExt Kind=Refresh, Size=24}" Width="32" Height="32"
+                    IsEnabled="{Binding CanRetry}"
                     ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Task_Item_Retry_Task_Button_Tooltip}}"
                     ToolTip.ShowOnDisabled="True" />
 

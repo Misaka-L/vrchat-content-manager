@@ -26,7 +26,7 @@
                             ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip}}">
                     <avalonia:MaterialIcon Kind="ProgressUpload" Foreground="#7986CB" />
                     <TextBlock Text="{Binding InProgressTaskCount}"
-                               Foreground="#7986CB"/>
+                               Foreground="#7986CB" />
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Spacing="4"
                             IsHitTestVisible="True" Background="Transparent"
@@ -58,17 +58,12 @@
                     Padding="0" />
                 <Border Width="5" Height="1" Margin="5,0,5,0" Background="{DynamicResource MaterialDesignBodyLight}" />
                 <Button
-                    ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
+                    ToolTip.ServiceEnabled="{Binding !IsRetryAllowed}"
                     ToolTip.ShowOnDisabled="True"
                     ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip}}"
                     Theme="{StaticResource MaterialFlatButton}"
+                    IsEnabled="{Binding IsAnyTaskExisting}"
                     Padding="0">
-                    <Button.IsEnabled>
-                        <MultiBinding Converter="{x:Static BoolConverters.And}">
-                            <Binding Path="IsInteractionAllowed" />
-                            <Binding Path="IsAnyTaskExisting" />
-                        </MultiBinding>
-                    </Button.IsEnabled>
                     <Button.Flyout>
                         <MenuFlyout>
                             <MenuItem
@@ -92,7 +87,8 @@
                                 Command="{Binding RemoveAllRemovableTasksCommand}" />
                             <MenuItem Header="-" />
                             <MenuItem
-                                Command="{Binding RetryAllTasksCommand}">
+                                Command="{Binding RetryAllTasksCommand}"
+                                IsEnabled="{Binding IsRetryAllowed}">
                                 <MenuItem.Header>
                                     <StackPanel Orientation="Horizontal" Spacing="4">
                                         <avalonia:MaterialIcon Kind="Refresh" />
@@ -112,7 +108,7 @@
             </StackPanel>
         </Grid>
         <StackPanel Grid.Row="1">
-            <Border IsVisible="{Binding !IsInteractionAllowed}"
+            <Border IsVisible="{Binding !IsRetryAllowed}"
                     Background="#d50000" Margin="8,8,8,0"
                     CornerRadius="8">
                 <StackPanel Margin="8" Spacing="4">
@@ -174,8 +170,7 @@
             </StackPanel>
             <ScrollViewer IsVisible="{Binding TotalTaskCount}">
                 <ItemsControl ItemsSource="{Binding Tasks}"
-                              IsEnabled="{Binding IsInteractionAllowed}"
-                              ToolTip.ServiceEnabled="{Binding !IsInteractionAllowed}"
+                              ToolTip.ServiceEnabled="{Binding !IsRetryAllowed}"
                               ToolTip.ShowOnDisabled="True"
                               ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description}}">
                     <ItemsControl.ItemsPanel>

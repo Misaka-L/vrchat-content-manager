@@ -32,6 +32,8 @@ public sealed class ContentPublishTaskService
     public string ContentType { get; }
     public string ContentPlatform { get; }
 
+    public bool CanPublish => _contentPublisher.CanPublish();
+
     #endregion
 
     #region Progress

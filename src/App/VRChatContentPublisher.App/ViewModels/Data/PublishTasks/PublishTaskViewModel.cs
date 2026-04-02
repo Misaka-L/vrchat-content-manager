@@ -1,6 +1,8 @@
 ﻿using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using MessagePipe;
 using VRChatContentPublisher.App.Views;
+using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 
@@ -8,8 +10,9 @@ namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 
 public sealed partial class PublishTaskViewModel(
     ContentPublishTaskService publishTaskService,
-    TaskManagerService taskManagerService)
-    : ViewModelBase
+    TaskManagerService taskManagerService,
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+) : ViewModelBase
 {
     public string TaskId => publishTaskService.TaskId;
 
@@ -17,6 +20,8 @@ public sealed partial class PublishTaskViewModel(
     public string ContentName => publishTaskService.ContentName;
     public string ContentType => publishTaskService.ContentType;
     public string ContentPlatform => publishTaskService.ContentPlatform;
+
+    public bool CanRetry => publishTaskService.CanPublish;
 
     public string ProgressText => publishTaskService.ProgressText;
     public double? ProgressValue => publishTaskService.ProgressValue * 100;
@@ -26,10 +31,15 @@ public sealed partial class PublishTaskViewModel(
 
     public ContentPublishTaskStatus Status => publishTaskService.Status;
 
+    private IDisposable? eventSubscription;
+
     [RelayCommand]
     private void Load()
     {
         publishTaskService.ProgressChanged += OnTaskProgressChanged;
+
+        eventSubscription =
+            sessionStateChangedSubscriber.Subscribe(args => OnPropertyChanged(nameof(CanRetry)));
 
         // to fix some kind of initial state not updated
         NotifyTaskChanged();
@@ -39,6 +49,9 @@ public sealed partial class PublishTaskViewModel(
     private void Unload()
     {
         publishTaskService.ProgressChanged -= OnTaskProgressChanged;
+
+        eventSubscription?.Dispose();
+        eventSubscription = null;
     }
 
     [RelayCommand]
@@ -82,13 +95,14 @@ public sealed partial class PublishTaskViewModel(
         OnPropertyChanged(nameof(ProgressValue));
         OnPropertyChanged(nameof(IsIndeterminate));
         OnPropertyChanged(nameof(Status));
+        OnPropertyChanged(nameof(CanRetry));
     }
 }
 
-public sealed class PublishTaskViewModelFactory
+public sealed class PublishTaskViewModelFactory(ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber)
 {
     public PublishTaskViewModel Create(
         ContentPublishTaskService publishTaskService,
-        TaskManagerService taskManagerService)
-        => new(publishTaskService, taskManagerService);
+        TaskManagerService taskManagerService
+    ) => new(publishTaskService, taskManagerService, sessionStateChangedSubscriber);
 }
