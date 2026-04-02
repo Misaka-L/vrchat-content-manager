@@ -26,6 +26,11 @@ public sealed class AvatarContentPublisher(
     public string GetContentName() => name;
     public string GetContentPlatform() => platform;
 
+    public bool CanPublish()
+    {
+        return userSessionService.State == UserSessionState.LoggedIn;
+    }
+
     public ValueTask BeforePublishTaskAsync(string? thumbnailFileId,
         string? description,
         string[]? tags,

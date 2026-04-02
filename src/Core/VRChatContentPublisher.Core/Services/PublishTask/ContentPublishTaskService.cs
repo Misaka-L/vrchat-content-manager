@@ -138,6 +138,9 @@ public sealed class ContentPublishTaskService
 
                 if (CurrentStage == PublishTaskStage.ContentPublishing)
                 {
+                    if (!_contentPublisher.CanPublish())
+                        throw new InvalidOperationException("Account session expired or invalid.");
+
                     using (_logger.BeginScope(
                                "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
                                CurrentStage,

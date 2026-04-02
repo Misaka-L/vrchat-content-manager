@@ -35,6 +35,11 @@ public sealed class WorldContentPublisher(
     public string GetContentName() => worldName;
     public string GetContentPlatform() => platform;
 
+    public bool CanPublish()
+    {
+        return userSessionService.State == UserSessionState.LoggedIn;
+    }
+
     public async ValueTask BeforePublishTaskAsync(
         string? thumbnailFileId,
         string? description,
@@ -66,7 +71,7 @@ public sealed class WorldContentPublisher(
             throw new ArgumentException("Could not find the provided thumbnail file.", nameof(thumbnailFileId));
 
         var imageUrl = await UploadThumbnailFileAsync(null, thumbnailFile, awsClient, null, cancellationToken);
-        
+
         logger.LogInformation("Send create world request for {WorldId}", worldId);
         await _apiClient.CreateWorldAsync(new CreateWorldRequest(
             worldId,
