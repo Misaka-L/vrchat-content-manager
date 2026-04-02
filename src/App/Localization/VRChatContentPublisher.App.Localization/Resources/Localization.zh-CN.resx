@@ -432,13 +432,10 @@
         <value>账号会话过期或无效</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description" xml:space="preserve">
-        <value>在修复账号前，不允许任何操作。</value>
+        <value>在修复账号前，正在上传阶段的任务会被取消且不允许重试任何任务。</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
         <value>修复账号</value>
-    </data>
-    <data name="Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description" xml:space="preserve">
-        <value>在账号会话过期或失效时不允许操作任务</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
         <value>该账号不被允许发布内容</value>

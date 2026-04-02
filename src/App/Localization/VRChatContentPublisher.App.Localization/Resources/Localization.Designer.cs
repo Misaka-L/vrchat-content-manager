@@ -1346,15 +1346,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No further interactions are allowed when session is expired or invalid..
-        /// </summary>
-        internal static string Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip {
-            get {
-                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Remove All Removable Tasks.
         /// </summary>
         internal static string Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks {
@@ -1432,6 +1423,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tasks in publish stage will be cancel and no retry allowed before account repaired..
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Repair.
         /// </summary>
         internal static string Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text {
@@ -1446,15 +1446,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title {
             get {
                 return ResourceManager.GetString("Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No further interactions are allowed before account repaired..
-        /// </summary>
-        internal static string Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description {
-            get {
-                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description", resourceCulture);
             }
         }
         

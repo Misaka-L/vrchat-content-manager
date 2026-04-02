@@ -58,9 +58,6 @@
                     Padding="0" />
                 <Border Width="5" Height="1" Margin="5,0,5,0" Background="{DynamicResource MaterialDesignBodyLight}" />
                 <Button
-                    ToolTip.ServiceEnabled="{Binding !IsRetryAllowed}"
-                    ToolTip.ShowOnDisabled="True"
-                    ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip}}"
                     Theme="{StaticResource MaterialFlatButton}"
                     IsEnabled="{Binding IsAnyTaskExisting}"
                     Padding="0">
@@ -123,7 +120,7 @@
                                    Foreground="White" />
                     </Grid>
                     <TextBlock
-                        Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description}}"
+                        Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description}}"
                         Foreground="White" TextWrapping="Wrap" />
                     <Button Theme="{StaticResource MaterialFlatButton}" Foreground="White"
                             Command="{Binding RepairSessionCommand}"
@@ -169,10 +166,7 @@
                     Classes="Headline6" Opacity="0.8" />
             </StackPanel>
             <ScrollViewer IsVisible="{Binding TotalTaskCount}">
-                <ItemsControl ItemsSource="{Binding Tasks}"
-                              ToolTip.ServiceEnabled="{Binding !IsRetryAllowed}"
-                              ToolTip.ShowOnDisabled="True"
-                              ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description}}">
+                <ItemsControl ItemsSource="{Binding Tasks}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel />

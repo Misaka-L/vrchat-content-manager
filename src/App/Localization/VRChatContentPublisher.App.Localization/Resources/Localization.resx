@@ -421,9 +421,6 @@ Click Repair Account to re-try or login again.</value>
     <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_Text" xml:space="preserve">
         <value>Action</value>
     </data>
-    <data name="Pages_Tasks_Account_Tab_Action_Menu_Button_When_Sessino_Expired_Tooltip" xml:space="preserve">
-        <value>No further interactions are allowed when session is expired or invalid.</value>
-    </data>
     <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Completed_Tasks" xml:space="preserve">
         <value>Remove Completed Tasks</value>
     </data>
@@ -445,8 +442,8 @@ Click Repair Account to re-try or login again.</value>
     <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
         <value>Repair</value>
     </data>
-    <data name="Pages_Tasks_Account_Tab_Common_Session_Expired_Or_Invalid_Description" xml:space="preserve">
-        <value>No further interactions are allowed before account repaired.</value>
+    <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description" xml:space="preserve">
+        <value>Tasks in publish stage will be cancel and no retry allowed before account repaired.</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
         <value>Account are not allowed to publish content</value>
