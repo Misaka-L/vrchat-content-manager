@@ -11,11 +11,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - UI/UX Improvement.
   - Adjust spacing between toggle and label. [`#251`](https://github.com/project-vrcz/content-publisher/pull/251)
   - Adjust page header height and chinese text for login page. [`#252`](https://github.com/project-vrcz/content-publisher/pull/252)
+- Allow all task action (Cancel, remove and debug) except of retry when session expired, instead of prevent all interactions. [`#257`](https://github.com/project-vrcz/content-publisher/pull/257)
 
 ### Added
 
 - i18n support for tray menu. [`#250`](https://github.com/project-vrcz/content-publisher/pull/250)
 - Login using cookies. [`#253`](https://github.com/project-vrcz/content-publisher/pull/253)
+- Better session expired handle logic for tasks. [`#257`](https://github.com/project-vrcz/content-publisher/pull/257)
+  - Cancel all task in publish state when session expired automatically.
+  - Prevent task enter publish stage if session expired.
 
 ## [2.7.0] - 2026-03-29
 

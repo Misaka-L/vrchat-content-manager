@@ -32,6 +32,8 @@ public sealed class ContentPublishTaskService
     public string ContentType { get; }
     public string ContentPlatform { get; }
 
+    public bool CanPublish => _contentPublisher.CanPublish();
+
     #endregion
 
     #region Progress
@@ -138,6 +140,9 @@ public sealed class ContentPublishTaskService
 
                 if (CurrentStage == PublishTaskStage.ContentPublishing)
                 {
+                    if (!_contentPublisher.CanPublish())
+                        throw new InvalidOperationException("Account session expired or invalid.");
+
                     using (_logger.BeginScope(
                                "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
                                CurrentStage,

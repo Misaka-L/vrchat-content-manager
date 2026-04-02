@@ -37,7 +37,7 @@ public sealed partial class PublishTaskManagerViewModel(
     public int InProgressTaskCount => Tasks.Count(t =>
         t.Status is ContentPublishTaskStatus.InProgress or ContentPublishTaskStatus.Pending);
 
-    public bool IsInteractionAllowed => UserSessionService.State == UserSessionState.LoggedIn;
+    public bool IsRetryAllowed => UserSessionService.State == UserSessionState.LoggedIn;
 
     public bool IsContentPublishAllowed =>
         UserSessionService.CurrentUser?.CanPublishAvatar() == true &&
@@ -246,7 +246,7 @@ public sealed partial class PublishTaskManagerViewModel(
 
     private void NotifyUserSessionChanged()
     {
-        OnPropertyChanged(nameof(IsInteractionAllowed));
+        OnPropertyChanged(nameof(IsRetryAllowed));
         OnPropertyChanged(nameof(IsContentPublishAllowed));
     }
 

@@ -6,6 +6,8 @@ public interface IContentPublisher
     string GetContentName();
     string GetContentPlatform();
 
+    bool CanPublish();
+
     ValueTask BeforePublishTaskAsync(
         string? thumbnailFileId,
         string? description,
