@@ -8,8 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Adjust spacing between toggle and label. [`#251`](https://github.com/project-vrcz/content-publisher/pull/251)
-- Adjust page header height and chinese text for login page. [`#252`](https://github.com/project-vrcz/content-publisher/pull/252)
+- UI/UX Improvement.
+  - Adjust spacing between toggle and label. [`#251`](https://github.com/project-vrcz/content-publisher/pull/251)
+  - Adjust page header height and chinese text for login page. [`#252`](https://github.com/project-vrcz/content-publisher/pull/252)
 
 ### Added
 
