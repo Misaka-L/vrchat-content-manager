@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MessagePipe;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Services;
+using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Avatars;
@@ -17,8 +19,9 @@ public sealed class AvatarContentPublisher(
     string unityVersion,
     UserSessionService userSessionService,
     ILogger<AvatarContentPublisher> logger,
-    IFileService tempFileService)
-    : IContentPublisher
+    IFileService tempFileService,
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+) : IContentPublisher
 {
     private readonly VRChatApiClient _apiClient = userSessionService.GetApiClient();
 
@@ -55,6 +58,14 @@ public sealed class AvatarContentPublisher(
         PublishStageProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default)
     {
+        using var sessionValidScope = new EnsureSessionValidScope(
+            userSessionService.UserNameOrEmail,
+            sessionStateChangedSubscriber,
+            cancellationToken
+        );
+
+        cancellationToken = sessionValidScope.CancellationToken;
+
         await using var bundleFileStream = await tempFileService.GetFileAsync(bundleFileId);
         var thumbnailFile = thumbnailFileId is not null
             ? await tempFileService.GetFileWithNameAsync(thumbnailFileId)
@@ -202,7 +213,11 @@ public sealed class AvatarContentPublisher(
     }
 }
 
-public sealed class AvatarContentPublisherFactory(ILogger<AvatarContentPublisher> logger, IFileService tempFileService)
+public sealed class AvatarContentPublisherFactory(
+    ILogger<AvatarContentPublisher> logger,
+    IFileService tempFileService,
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+)
 {
     public AvatarContentPublisher Create(
         UserSessionService userSession,
@@ -218,7 +233,8 @@ public sealed class AvatarContentPublisherFactory(ILogger<AvatarContentPublisher
             unityVersion,
             userSession,
             logger,
-            tempFileService
+            tempFileService,
+            sessionStateChangedSubscriber
         );
     }
 }

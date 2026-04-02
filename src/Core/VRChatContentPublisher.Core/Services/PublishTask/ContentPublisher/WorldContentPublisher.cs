@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MessagePipe;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Services;
+using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.UnityPackages;
@@ -23,8 +25,9 @@ public sealed class WorldContentPublisher(
     string[]? udonProducts,
     UserSessionService userSessionService,
     ILogger<WorldContentPublisher> logger,
-    IFileService tempFileService)
-    : IContentPublisher
+    IFileService tempFileService,
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+) : IContentPublisher
 {
     private readonly string[] _udonProducts = udonProducts ?? [];
 
@@ -104,6 +107,14 @@ public sealed class WorldContentPublisher(
         PublishStageProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default)
     {
+        using var sessionValidScope = new EnsureSessionValidScope(
+            userSessionService.UserNameOrEmail,
+            sessionStateChangedSubscriber,
+            cancellationToken
+        );
+
+        cancellationToken = sessionValidScope.CancellationToken;
+
         await using var bundleFileStream = await tempFileService.GetFileAsync(bundleFileId);
         var thumbnailFile = thumbnailFileId is not null
             ? await tempFileService.GetFileWithNameAsync(thumbnailFileId)
@@ -262,7 +273,11 @@ public sealed class WorldContentPublisher(
     }
 }
 
-public sealed class WorldContentPublisherFactory(ILogger<WorldContentPublisher> logger, IFileService tempFileService)
+public sealed class WorldContentPublisherFactory(
+    ILogger<WorldContentPublisher> logger,
+    IFileService tempFileService,
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+)
 {
     public WorldContentPublisher Create(
         UserSessionService userSessionService,
@@ -288,7 +303,8 @@ public sealed class WorldContentPublisherFactory(ILogger<WorldContentPublisher> 
             udonProducts,
             userSessionService,
             logger,
-            tempFileService
+            tempFileService,
+            sessionStateChangedSubscriber
         );
     }
 }
