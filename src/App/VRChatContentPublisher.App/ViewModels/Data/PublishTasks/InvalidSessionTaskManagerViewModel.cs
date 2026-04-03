@@ -10,7 +10,7 @@ public sealed partial class InvalidSessionTaskManagerViewModel(
     Exception exception,
     UserSessionService userSessionService,
     NavigationService navigationService,
-    SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory
+    LoginPageViewModelFactory loginPageViewModelFactory
 )
     : ViewModelBase, IPublishTaskManagerViewModel
 {
@@ -28,10 +28,10 @@ public sealed partial class InvalidSessionTaskManagerViewModel(
         if (await userSessionService.TryRepairAsync())
             return;
 
-        var page = fixAccountPageViewModelFactory.Create(
-            userSessionService,
+        var page = loginPageViewModelFactory.Create(
             navigationService.Navigate<HomePageViewModel>,
-            navigationService.Navigate<HomePageViewModel>
+            navigationService.Navigate<HomePageViewModel>,
+            userSessionService.UserNameOrEmail
         );
 
         navigationService.Navigate(page);
@@ -40,7 +40,7 @@ public sealed partial class InvalidSessionTaskManagerViewModel(
 
 public sealed class InvalidSessionTaskManagerViewModelFactory(
     NavigationService navigationService,
-    SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory
+    LoginPageViewModelFactory loginPageViewModelFactory
 )
 {
     public InvalidSessionTaskManagerViewModel Create(Exception exception, UserSessionService userSessionService)
@@ -49,7 +49,7 @@ public sealed class InvalidSessionTaskManagerViewModelFactory(
             exception,
             userSessionService,
             navigationService,
-            fixAccountPageViewModelFactory
+            loginPageViewModelFactory
         );
     }
 }

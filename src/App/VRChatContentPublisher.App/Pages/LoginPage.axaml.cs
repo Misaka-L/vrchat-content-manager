@@ -2,9 +2,9 @@
 
 namespace VRChatContentPublisher.App.Pages;
 
-public partial class AddAccountPage : UserControl
+public partial class LoginPage : UserControl
 {
-    public AddAccountPage()
+    public LoginPage()
     {
         InitializeComponent();
     }

@@ -14,7 +14,7 @@ namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 public sealed partial class HomeTasksPageViewModel(
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
-    AddAccountPageViewModelFactory addAccountPageViewModelFactory,
+    LoginPageViewModelFactory loginPageViewModelFactory,
     PublishTaskManagerContainerViewModelFactory containerViewModelFactory,
     ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber,
     PublicIpCheckerService publicIpCheckerService) : PageViewModelBase
@@ -86,7 +86,7 @@ public sealed partial class HomeTasksPageViewModel(
     [RelayCommand]
     private void Login()
     {
-        var addAccountPage = addAccountPageViewModelFactory.Create(
+        var addAccountPage = loginPageViewModelFactory.Create(
             navigationService.Navigate<HomePageViewModel>,
             navigationService.Navigate<HomePageViewModel>
         );

@@ -81,8 +81,7 @@ public partial class App : Application
         ViewLocator.Register<GuideConnectUnityPageViewModel, GuideConnectUnityPage>();
 
         // Settings Pages
-        ViewLocator.Register<SettingsFixAccountPageViewModel, SettingsFixAccountPage>();
-        ViewLocator.Register<AddAccountPageViewModel, AddAccountPage>();
+        ViewLocator.Register<LoginPageViewModel, LoginPage>();
         ViewLocator.Register<LicensePageViewModel, LicensePage>();
 
         // Dialogs

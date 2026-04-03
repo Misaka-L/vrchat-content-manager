@@ -12,7 +12,7 @@ public sealed partial class AccountsSettingsViewModel(
     UserSessionManagerService userSessionManagerService,
     UserSessionViewModelFactory userSessionViewModelFactory,
     NavigationService navigationService,
-    AddAccountPageViewModelFactory addAccountPageViewModelFactory
+    LoginPageViewModelFactory loginPageViewModelFactory
 ) : ViewModelBase
 {
     [ObservableProperty] public partial AvaloniaList<UserSessionViewModel> UserSessions { get; private set; } = [];
@@ -49,7 +49,7 @@ public sealed partial class AccountsSettingsViewModel(
     [RelayCommand]
     private void AddNewAccount()
     {
-        var addAccountPageViewModel = addAccountPageViewModelFactory.Create(
+        var addAccountPageViewModel = loginPageViewModelFactory.Create(
             navigationService.Navigate<SettingsPageViewModel>,
             navigationService.Navigate<SettingsPageViewModel>);
 

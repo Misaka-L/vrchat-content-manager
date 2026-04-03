@@ -7,8 +7,8 @@
              xmlns:pages="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="800"
-             x:DataType="pages:AddAccountPageViewModel"
-             x:Class="VRChatContentPublisher.App.Pages.AddAccountPage">
+             x:DataType="pages:LoginPageViewModel"
+             x:Class="VRChatContentPublisher.App.Pages.LoginPage">
 
     <StackPanel>
         <Border>
@@ -50,14 +50,17 @@
                 </Border>
                 <TextBox
                     assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Username_Or_Email_Field_Label}}"
+                    IsReadOnly="{Binding IsUsernameReadonly}"
+                    IsEnabled="{Binding !IsUsernameReadonly}"
                     Classes="outline" UseFloatingWatermark="True"
                     Theme="{StaticResource OutlineTextBox}"
                     Text="{Binding Username}" />
-                <TextBox PasswordChar="*"
-                         assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Password_Field_Label}}"
-                         Classes="outline"
-                         UseFloatingWatermark="True" Theme="{StaticResource OutlineTextBox}"
-                         Text="{Binding Password}" />
+                <TextBox
+                    assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Password_Field_Label}}"
+                    PasswordChar="*"
+                    Classes="outline"
+                    UseFloatingWatermark="True" Theme="{StaticResource OutlineTextBox}"
+                    Text="{Binding Password}" />
             </StackPanel>
 
             <StackPanel Spacing="8">
