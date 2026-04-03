@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Typo in login with cookies alert. [`#261`](https://github.com/project-vrcz/content-publisher/pull/261)
+- Exit app with invalid or expired session took very long time. [`#267`](https://github.com/project-vrcz/content-publisher/pull/267)
 
 ## [2.8.1] - 2026-04-03
 
