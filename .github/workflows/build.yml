@@ -15,6 +15,9 @@ on:
       - src/**
       - .github/workflows/build.yml
 
+permissions:
+  contents: read
+
 jobs:
   build:
     strategy:
@@ -57,18 +60,21 @@ jobs:
         working-directory: ${{ env.src_dir }}
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vrchat-content-publisher-app-${{ matrix.rid }}
           path: |
             ${{ env.output_dir }}
             !${{ env.output_dir }}/**/*.pdb
+            !${{ env.output_dir }}/**/*.dbg
 
       - name: Upload PDB
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vrchat-content-publisher-app-${{ matrix.rid }}-pdb
-          path: ${{ env.output_dir }}/**/*.pdb
+          path: |
+            ${{ env.output_dir }}/**/*.pdb
+            ${{ env.output_dir }}/**/*.dbg
 
   make-nsis-windows-installer:
     needs: build
@@ -86,7 +92,7 @@ jobs:
 
     steps:
       - name: Download Build Artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: vrchat-content-publisher-app-win-x64
           path: ${{ env.artifact_dir }}
@@ -106,7 +112,7 @@ jobs:
           path: ${{ env.repo_dir }}
 
       - name: Install NSIS
-        uses: repolevedavaj/install-nsis@618f596b61aeb0254a327cceba89036242b79758
+        uses: repolevedavaj/install-nsis@a55ed92772254d1e51d880f85ce9b5719f907801
         with:
           nsis-version: 3.11
 
@@ -120,7 +126,7 @@ jobs:
         run: makensis ${{ env.installer_script }}
 
       - name: Upload Installer Artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: vrchat-content-publisher-app-win-x64-installer
           path: ${{ env.installer_working_dir }}/${{ env.installer_output_name }}
