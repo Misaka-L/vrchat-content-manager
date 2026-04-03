@@ -66,12 +66,15 @@ jobs:
           path: |
             ${{ env.output_dir }}
             !${{ env.output_dir }}/**/*.pdb
+            !${{ env.output_dir }}/**/*.dbg
 
       - name: Upload PDB
         uses: actions/upload-artifact@v7
         with:
           name: vrchat-content-publisher-app-${{ matrix.rid }}-pdb
-          path: ${{ env.output_dir }}/**/*.pdb
+          path: |
+            ${{ env.output_dir }}/**/*.pdb
+            ${{ env.output_dir }}/**/*.dbg
 
   make-nsis-windows-installer:
     needs: build
