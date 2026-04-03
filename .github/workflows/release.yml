@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: ${{ env.repo_dir }}
           submodules: recursive
@@ -61,7 +61,7 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Update Version in .csproj
-        uses: vers-one/dotnet-project-version-updater@6d4de57b8f089d58a00b6ede1f3f05c77bb8e541
+        uses: vers-one/dotnet-project-version-updater@cba3f00eab99017c431b3817a9d71b3a489cff30
         with:
           tags: csproj.Version
           version: ${{ inputs.new-version}}
@@ -78,14 +78,14 @@ jobs:
 
       - name: Upload CHANGELOG.md
         id: upload-changelog
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.changelog_artifact_name }}
           path: ${{ env.repo_dir }}/CHANGELOG.md
 
       - name: Upload Release Note
         id: upload-release-note
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ env.release_note_artifact_name }}
           path: ${{ env.path_to_release_note }}
@@ -123,7 +123,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: ${{ env.repo_dir }}
           ref: ${{ env.releasing_branch }}
@@ -136,7 +136,7 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
       - name: Download Artifact
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           path: ${{ env.artifact_download_path }}
           pattern: ${{ env.assets_to_release_artifact_pattern }}
@@ -157,7 +157,7 @@ jobs:
         shell: bash
 
       - name: Download Release Note
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v8
         with:
           artifact-ids: ${{ needs.update-changelog.outputs.release-note-artifact-id }}
           path: ${{ env.note_path }}
@@ -204,7 +204,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           ref: ${{ env.releasing_branch }}
           fetch-depth: 2
