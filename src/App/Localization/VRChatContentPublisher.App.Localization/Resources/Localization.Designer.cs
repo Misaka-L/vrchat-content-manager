@@ -98,7 +98,7 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to &quot;auth&quot; and &quot;twoFactorAuth&quot; cookies are required.
         ///One cookie per line in format of &quot;key=value&quot;.
-        ///Will only apply for &quot;api.vrchat.com&quot;..
+        ///Will only apply for &quot;api.vrchat.cloud&quot;..
         /// </summary>
         internal static string Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description {
             get {
