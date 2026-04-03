@@ -566,7 +566,7 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description" xml:space="preserve">
         <value>"auth" and "twoFactorAuth" cookies are required.
 One cookie per line in format of "key=value".
-Will only apply for "api.vrchat.com".</value>
+Will only apply for "api.vrchat.cloud".</value>
     </data>
     <data name="Dialog_Login_Using_Cookies_Cancel_Button_Text" xml:space="preserve">
         <value>Cancel</value>
