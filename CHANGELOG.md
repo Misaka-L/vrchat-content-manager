@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Task will always fail if retry after fail before record updated and after file uploaded. [`#259`](https://github.com/project-vrcz/content-publisher/pull/259)
+
 ## [2.8.0] - 2026-04-02
 
 ### Changed

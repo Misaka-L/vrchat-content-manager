@@ -40,19 +40,23 @@ public partial class VRChatApiClient
 
         if (existingFileVersion.Length > 0)
         {
-            logger.LogInformation("File with same MD5 already exists for file {FileId}", fileId);
-            if (existingFileVersion.FirstOrDefault(version => version.Status == "complete") is { } completeVersion)
-            {
-                logger.LogInformation("Existing file version {Version} is already complete for file {FileId}",
-                    completeVersion.Version, fileId);
+            logger.LogWarning("File with same MD5 already exists for file {FileId}", fileId);
+            if (existingFileVersion.FirstOrDefault(version => version.Status == "complete") is not { } completeVersion)
+                throw new UnexpectedApiBehaviourException(
+                    "One or more file version with the same md5 already exists but is not complete. " +
+                    "Which should not happen since we have cleaned up incomplete file versions.");
 
+            if (completeVersion.Version != currentAssetFile.Versions.Select(v => v.Version).Max())
+            {
                 throw new InvalidOperationException(
                     "One or more file version with the same md5 already exists and is complete.");
             }
 
-            throw new UnexpectedApiBehaviourException(
-                "One or more file version with the same md5 already exists but is not complete. " +
-                "Which should not happen since we have cleaned up incomplete file versions.");
+            logger.LogWarning(
+                "Existing file version {Version} is already complete for file {FileId}, and it's the latest one, so skipping upload and reuse this file version.",
+                completeVersion.Version, fileId);
+
+            return completeVersion;
         }
 
         // Step 3. Caulate file signature
