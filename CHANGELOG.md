@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.8.2] - 2026-04-03
+
 ### Added
 
 - Reuse login page for account repair. [`#266`](https://github.com/project-vrcz/content-publisher/pull/266)
@@ -399,7 +401,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.8.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.8.2...HEAD
+[2.8.2]: https://github.com/project-vrcz/content-publisher/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/project-vrcz/content-publisher/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/project-vrcz/content-publisher/compare/v2.7.0...v2.8.0
 [2.7.0]: https://github.com/project-vrcz/content-publisher/compare/v2.6.1...v2.7.0
