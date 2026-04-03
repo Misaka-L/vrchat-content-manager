@@ -23,10 +23,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: windows-latest
+          - os: blacksmith-4vcpu-windows-2025
             rid: win-x64
             target-framework: net10.0-windows10.0.17763.0
-          - os: ubuntu-latest
+          - os: blacksmith-4vcpu-ubuntu-2404
             rid: linux-x64
             target-framework: net10.0
 
@@ -78,7 +78,7 @@ jobs:
 
   make-nsis-windows-installer:
     needs: build
-    runs-on: windows-latest
+    runs-on: blacksmith-2vcpu-windows-2025
 
     env:
       repo_dir: ${{ github.workspace }}/repo

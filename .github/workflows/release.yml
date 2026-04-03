@@ -32,7 +32,7 @@ jobs:
     permissions:
       contents: write
 
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
 
     outputs:
       changelog-artifact-id: ${{ steps.upload-changelog.outputs.artifact-id }}
@@ -110,7 +110,7 @@ jobs:
 
   create-release:
     needs: [update-changelog, build]
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
 
     permissions:
       contents: write
@@ -200,7 +200,7 @@ jobs:
     permissions:
       contents: write
 
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
 
     steps:
       - name: Checkout
