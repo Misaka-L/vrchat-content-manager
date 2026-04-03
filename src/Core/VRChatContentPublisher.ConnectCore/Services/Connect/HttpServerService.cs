@@ -65,6 +65,11 @@ public sealed class HttpServerService
         if (_kestrelServer is not null)
             throw new InvalidOperationException("HTTP server is already started.");
 
+        if (!IsPortAvailable(port))
+        {
+            throw new InvalidOperationException("Port is not available.");
+        }
+
         var server = CreateServer(port);
 
         try
@@ -92,8 +97,10 @@ public sealed class HttpServerService
         _logger.LogInformation("HTTP server stopped.");
     }
 
-    public async Task<(bool IsSuccess, string? ErrorMessage)> RebindAsync(int targetPort,
-        CancellationToken cancellationToken = default)
+    public async Task<(bool IsSuccess, string? ErrorMessage)> RebindAsync(
+        int targetPort,
+        CancellationToken cancellationToken = default
+    )
     {
         if (!IsValidUserPort(targetPort))
             return (false, $"Port must be between {MinUserPort} and {MaxUserPort}.");
@@ -103,6 +110,11 @@ public sealed class HttpServerService
 
         if (CurrentPort.Value == targetPort)
             return (true, null);
+
+        if (!IsPortAvailable(targetPort))
+        {
+            throw new InvalidOperationException("Port is not available.");
+        }
 
         var previousServer = _kestrelServer;
         var previousPort = CurrentPort.Value;
@@ -169,18 +181,30 @@ public sealed class HttpServerService
         return !IsPortAvailable(port);
     }
 
-    private static bool IsPortAvailable(int port)
+    private bool IsPortAvailable(int port)
     {
         try
         {
             using var tcpListener = new TcpListener(IPAddress.Loopback, port);
             tcpListener.Start();
-            return true;
         }
-        catch (SocketException)
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "Port {Port} not available for interface {Interface}", port, "IPv4 Loopback");
             return false;
         }
+
+        try
+        {
+            using var tcpListener = new TcpListener(IPAddress.IPv6Loopback, port);
+            tcpListener.Start();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Port {Port} not available for interface {Interface}", port, "IPv6 Loopback");
+        }
+
+        return true;
     }
 
     private KestrelServer CreateServer(int port)
