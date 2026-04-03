@@ -24,6 +24,9 @@ env:
   assets_to_release_artifact_pattern: vrchat-content-publisher-app-*
   release_git_tag: v${{ inputs.new-version }}
 
+permissions:
+  contents: read
+
 jobs:
   update-changelog:
     permissions:
