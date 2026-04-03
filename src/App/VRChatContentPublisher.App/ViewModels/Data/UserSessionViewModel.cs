@@ -14,7 +14,7 @@ public sealed partial class UserSessionViewModel(
     UserSessionService userSessionService,
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
-    SettingsFixAccountPageViewModelFactory settingsFixAccountPageViewModelFactory) : ViewModelBase
+    LoginPageViewModelFactory loginPageViewModelFactory) : ViewModelBase
 {
     public string? UserId => userSessionService.UserId;
     public string UserNameOrEmail => userSessionService.UserNameOrEmail;
@@ -32,7 +32,8 @@ public sealed partial class UserSessionViewModel(
 
     public string RemoveButtonTooltip => CanRemove
         ? LangKeys.Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip
-        : LangKeys.Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip;
+        : LangKeys
+            .Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip;
 
     public string? ProfilePictureUrl
     {
@@ -102,10 +103,10 @@ public sealed partial class UserSessionViewModel(
         if (await userSessionService.TryRepairAsync())
             return;
 
-        var fixPageViewModel = settingsFixAccountPageViewModelFactory.Create(
-            userSessionService,
+        var fixPageViewModel = loginPageViewModelFactory.Create(
             navigationService.Navigate<SettingsPageViewModel>,
-            navigationService.Navigate<SettingsPageViewModel>
+            navigationService.Navigate<SettingsPageViewModel>,
+            userSessionService.UserNameOrEmail
         );
 
         navigationService.Navigate(fixPageViewModel);
@@ -136,7 +137,7 @@ public sealed partial class UserSessionViewModel(
 public sealed class UserSessionViewModelFactory(
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
-    SettingsFixAccountPageViewModelFactory settingsFixAccountPageViewModelFactory)
+    LoginPageViewModelFactory loginPageViewModelFactory)
 {
     public UserSessionViewModel Create(UserSessionService userSessionService)
     {
@@ -144,6 +145,7 @@ public sealed class UserSessionViewModelFactory(
             userSessionService,
             userSessionManagerService,
             navigationService,
-            settingsFixAccountPageViewModelFactory);
+            loginPageViewModelFactory
+        );
     }
 }

@@ -20,7 +20,7 @@ public sealed partial class PublishTaskManagerViewModel(
     UserSessionService userSessionService,
     TaskManagerService taskManagerService,
     PublishTaskViewModelFactory taskFactory,
-    SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory,
+    LoginPageViewModelFactory loginPageViewModelFactory,
     NavigationService navigationService,
     string userDisplayName)
     : ViewModelBase, IPublishTaskManagerViewModel
@@ -200,10 +200,10 @@ public sealed partial class PublishTaskManagerViewModel(
         if (await userSessionService.TryRepairAsync())
             return;
 
-        var page = fixAccountPageViewModelFactory.Create(
-            userSessionService,
+        var page = loginPageViewModelFactory.Create(
             navigationService.Navigate<HomePageViewModel>,
-            navigationService.Navigate<HomePageViewModel>
+            navigationService.Navigate<HomePageViewModel>,
+            userSessionService.UserNameOrEmail
         );
 
         navigationService.Navigate(page);
@@ -264,7 +264,7 @@ public sealed partial class PublishTaskManagerViewModel(
 public sealed class PublishTaskManagerViewModelFactory(
     IWritableOptions<AppSettings> appSettings,
     PublishTaskViewModelFactory taskFactory,
-    SettingsFixAccountPageViewModelFactory fixAccountPageViewModelFactory,
+    LoginPageViewModelFactory loginPageViewModelFactory,
     NavigationService navigationService)
 {
     public PublishTaskManagerViewModel Create(
@@ -276,7 +276,7 @@ public sealed class PublishTaskManagerViewModelFactory(
         userSessionService,
         taskManagerService,
         taskFactory,
-        fixAccountPageViewModelFactory,
+        loginPageViewModelFactory,
         navigationService,
         userDisplayName
     );

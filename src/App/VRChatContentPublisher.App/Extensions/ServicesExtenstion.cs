@@ -70,8 +70,7 @@ public static class ServicesExtenstion
         services.AddTransient<GuideConnectUnityPageViewModel>();
 
         // Settings Pages
-        services.AddTransient<AddAccountPageViewModelFactory>();
-        services.AddTransient<SettingsFixAccountPageViewModelFactory>();
+        services.AddTransient<LoginPageViewModelFactory>();
         services.AddTransient<LicensePageViewModel>();
 
         // Settings Sections

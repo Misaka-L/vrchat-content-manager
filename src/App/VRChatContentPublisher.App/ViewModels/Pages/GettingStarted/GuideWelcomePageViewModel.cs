@@ -6,7 +6,7 @@ namespace VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 
 public sealed partial class GuideWelcomePageViewModel(
     NavigationService navigationService,
-    AddAccountPageViewModelFactory addAccountPageViewModelFactory) : PageViewModelBase
+    LoginPageViewModelFactory loginPageViewModelFactory) : PageViewModelBase
 {
     public string AppVersion => AppVersionUtils.GetAppVersion();
 
@@ -19,7 +19,7 @@ public sealed partial class GuideWelcomePageViewModel(
     [RelayCommand]
     private void NextPage()
     {
-        var addAccountPageViewModel = addAccountPageViewModelFactory.Create(
+        var addAccountPageViewModel = loginPageViewModelFactory.Create(
             navigationService.Navigate<GuideWelcomePageViewModel>,
             navigationService.Navigate<GuideSetupUnityPageViewModel>);
 

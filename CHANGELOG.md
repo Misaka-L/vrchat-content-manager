@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Reuse login page for account repair. [`#266`](https://github.com/project-vrcz/content-publisher/pull/266)
+  - i18n support for account repair.
+  - Use cookies for account repair.
+
 ### Fixed
 
 - Typo in login with cookies alert. [`#261`](https://github.com/project-vrcz/content-publisher/pull/261)

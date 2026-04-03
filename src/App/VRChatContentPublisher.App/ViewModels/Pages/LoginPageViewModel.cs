@@ -8,17 +8,22 @@ using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages;
 
-public sealed partial class AddAccountPageViewModel(
-    ILogger<AddAccountPageViewModel> logger,
+public sealed partial class LoginPageViewModel(
+    ILogger<LoginPageViewModel> logger,
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogFactory,
     LoginWithCookiesDialogViewModelFactory loginWithCookiesDialogFactory,
     UserSessionManagerService userSessionManagerService,
     DialogService dialogService,
     Action onRequestBack,
-    Action onRequestDone)
+    Action onRequestDone,
+    string? username)
     : PageViewModelBase
 {
-    [ObservableProperty] public partial string Username { get; set; } = "";
+    [ObservableProperty]
+    public partial string Username { get; set; } = string.IsNullOrWhiteSpace(username) ? "" : username;
+
+    public bool IsUsernameReadonly => !string.IsNullOrWhiteSpace(username);
+
     [ObservableProperty] public partial string Password { get; set; } = "";
 
     [ObservableProperty] public partial bool HasError { get; private set; }
@@ -45,7 +50,7 @@ public sealed partial class AddAccountPageViewModel(
     [RelayCommand]
     private async Task Login()
     {
-        if (userSessionManagerService.IsSessionExists(Username))
+        if (!IsUsernameReadonly && userSessionManagerService.IsSessionExists(Username))
         {
             logger.LogWarning("Attempt to add an existing account: {Username}", Username);
             SetError("An account with this username/email already exists.");
@@ -131,25 +136,28 @@ public sealed partial class AddAccountPageViewModel(
     }
 }
 
-public sealed class AddAccountPageViewModelFactory(
+public sealed class LoginPageViewModelFactory(
     TwoFactorAuthDialogViewModelFactory twoFactorAuthDialogFactory,
     LoginWithCookiesDialogViewModelFactory loginWithCookiesDialogFactory,
     UserSessionManagerService userSessionManagerService,
     DialogService dialogService,
-    ILogger<AddAccountPageViewModel> logger)
+    ILogger<LoginPageViewModel> logger)
 {
-    public AddAccountPageViewModel Create(
+    public LoginPageViewModel Create(
         Action onRequestBack,
-        Action onRequestDone)
+        Action onRequestDone,
+        string? username = null
+    )
     {
-        return new AddAccountPageViewModel(
+        return new LoginPageViewModel(
             logger,
             twoFactorAuthDialogFactory,
             loginWithCookiesDialogFactory,
             userSessionManagerService,
             dialogService,
             onRequestBack,
-            onRequestDone
+            onRequestDone,
+            username
         );
     }
 }
