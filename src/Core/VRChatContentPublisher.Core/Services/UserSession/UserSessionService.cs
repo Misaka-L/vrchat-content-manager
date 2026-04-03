@@ -26,6 +26,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
     public event EventHandler<UserSessionState>? StateChanged;
     public event EventHandler<CurrentUser?>? CurrentUserUpdated;
     public UserSessionState State { get; set; } = UserSessionState.Pending;
+    public bool IsScopeInitialized => _sessionScope is not null;
 
     private readonly SemaphoreSlim _createOrGetScopeLock = new(1, 1);
 

@@ -7,13 +7,17 @@ using VRChatContentPublisher.Core.Services.UserSession;
 namespace VRChatContentPublisher.App.ViewModels.Dialogs;
 
 public sealed partial class ExitAppDialogViewModel(
-    UserSessionManagerService sessionManagerService) : DialogViewModelBase
+    UserSessionManagerService sessionManagerService
+) : DialogViewModelBase
 {
     [RelayCommand]
     private async Task Load()
     {
         foreach (var session in sessionManagerService.Sessions)
         {
+            if (!session.IsScopeInitialized)
+                continue;
+
             try
             {
                 var scope = await session.CreateOrGetSessionScopeAsync();
