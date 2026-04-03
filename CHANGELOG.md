@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Typo in login with cookies alert. [`#261`](https://github.com/project-vrcz/content-publisher/pull/261)
 - Exit app with invalid or expired session took very long time. [`#267`](https://github.com/project-vrcz/content-publisher/pull/267)
+- Bind to IPv4 localhost fail silently if bind to IPv6 succeed. [`#268`](https://github.com/project-vrcz/content-publisher/pull/268)
 
 ## [2.8.1] - 2026-04-03
 
