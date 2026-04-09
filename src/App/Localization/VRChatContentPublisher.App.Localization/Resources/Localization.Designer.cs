@@ -78,6 +78,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add Cookie.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Add_Cookie_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Add_Cookie_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please make sure you know what you are doing before using this feature..
         /// </summary>
         internal static string Dialog_Login_Using_Cookies_Alert_For_Advanced_Users_Only_Description {
@@ -96,9 +105,7 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;auth&quot; and &quot;twoFactorAuth&quot; cookies are required.
-        ///One cookie per line in format of &quot;key=value&quot;.
-        ///Will only apply for &quot;api.vrchat.cloud&quot;..
+        ///   Looks up a localized string similar to Will only apply for &quot;api.vrchat.cloud&quot;..
         /// </summary>
         internal static string Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description {
             get {
@@ -121,6 +128,51 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Dialog_Login_Using_Cookies_Cancel_Button_Text {
             get {
                 return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cancel_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Cookie_Item_Clear_Value_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cookie_Item_Clear_Value_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Cookie_Item_Name_Field_Hint {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cookie_Item_Name_Field_Hint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paste.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Cookie_Item_Paste_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cookie_Item_Paste_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove Cookie.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Cookie_Item_Remove_Cookie_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cookie_Item_Remove_Cookie_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        internal static string Dialog_Login_Using_Cookies_Cookie_Item_Value_Field_Hint {
+            get {
+                return ResourceManager.GetString("Dialog_Login_Using_Cookies_Cookie_Item_Value_Field_Hint", resourceCulture);
             }
         }
         
