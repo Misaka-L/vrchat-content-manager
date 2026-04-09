@@ -109,7 +109,7 @@
         <value>跟随系统语言设置</value>
     </data>
     <data name="Pages_Settings_Appearance_Use_RGB_Cycling_Background_App_Bar" xml:space="preserve">
-        <value>使用彩色循环背景顶栏</value>
+        <value>使用循环 RGB 背景顶栏</value>
     </data>
     <data name="Pages_Settings_Appearance_Use_Borderless_Window" xml:space="preserve">
         <value>使用无边框窗口</value>
