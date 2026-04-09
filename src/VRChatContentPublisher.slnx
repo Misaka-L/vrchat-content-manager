@@ -22,5 +22,16 @@
     <Project Path="Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj" />
     <Project Path="Core/VRChatContentPublisher.IpcCore/VRChatContentPublisher.IpcCore.csproj" />
   </Folder>
-  <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />
+  <Folder Name="/SubModules/">
+    <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />
+  </Folder>
+  <Folder Name="/SubModules/Antelcat.I18N/">
+    <Project Path="Submodules/Antelcat.18N/src/Antelcat.I18N.Abstractions/Antelcat.I18N.Abstractions.csproj" />
+    <Project Path="Submodules/Antelcat.18N/src/Avalonia/Avalonia/Antelcat.I18N.Avalonia.csproj" />
+    <Project Path="Submodules/Antelcat.18N/src/SourceGenerators/Antelcat.I18N.SourceGenerators.csproj" />
+  </Folder>
+  <Folder Name="/SubModules/Material.Icons/">
+    <Project Path="Submodules/Material.Icons/Material.Icons.Avalonia/Material.Icons.Avalonia.csproj" />
+    <Project Path="Submodules/Material.Icons/Material.Icons/Material.Icons.csproj" />
+  </Folder>
 </Solution>

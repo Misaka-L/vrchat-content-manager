@@ -2,7 +2,6 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Platform;
 using VRChatContentPublisher.App.ViewModels;
 
 namespace VRChatContentPublisher.App.Views;
@@ -50,17 +49,15 @@ public partial class MainWindow : Window
         {
             ShowInTaskbar = true;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.PreferSystemChrome;
             ExtendClientAreaToDecorationsHint = false;
-            SystemDecorations = SystemDecorations.Full;
+            WindowDecorations = WindowDecorations.Full;
             Topmost = viewModel.Pinned;
 
             return;
         }
 
         ExtendClientAreaToDecorationsHint = true;
-        SystemDecorations = SystemDecorations.BorderOnly;
-        ExtendClientAreaChromeHints = ExtendClientAreaChromeHints.NoChrome;
+        WindowDecorations = WindowDecorations.BorderOnly;
 #if DEBUG
         ShowInTaskbar = true;
 #else

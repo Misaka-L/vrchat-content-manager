@@ -30,6 +30,7 @@
 
         <!--Hot Reload Support-->
         <PackageReference Include="HotAvalonia" PrivateAssets="All" Publish="True"/>
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" PrivateAssets="All"/>
 
         <!--Mvvm-->
         <PackageReference Include="CommunityToolkit.Mvvm"/>
@@ -37,7 +38,8 @@
 
         <!--UI-->
         <PackageReference Include="Material.Avalonia"/>
-        <PackageReference Include="Material.Icons.Avalonia"/>
+        <!--TODO: Replace with nuget package after upstream updated-->
+        <!--<PackageReference Include="Material.Icons.Avalonia" />-->
 
         <!--App Host-->
         <PackageReference Include="Microsoft.Extensions.Hosting"/>
@@ -58,6 +60,7 @@
         <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Abstraction\VRChatContentPublisher.Platform.Abstraction.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.Core\VRChatContentPublisher.Core.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.IpcCore\VRChatContentPublisher.IpcCore.csproj"/>
+        <ProjectReference Include="..\..\Submodules\Material.Icons\Material.Icons.Avalonia\Material.Icons.Avalonia.csproj" />
         <ProjectReference Include="..\Localization\VRChatContentPublisher.App.Localization\VRChatContentPublisher.App.Localization.csproj" />
     </ItemGroup>
 
