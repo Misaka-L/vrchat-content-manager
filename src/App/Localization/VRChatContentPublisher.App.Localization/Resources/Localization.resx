@@ -564,9 +564,25 @@ Please notice that you need to re-pair with the app, or you can change port back
         <value>Cookies Required</value>
     </data>
     <data name="Dialog_Login_Using_Cookies_Alert_Require_Cookies_Description" xml:space="preserve">
-        <value>"auth" and "twoFactorAuth" cookies are required.
-One cookie per line in format of "key=value".
-Will only apply for "api.vrchat.cloud".</value>
+        <value>Will only apply for "api.vrchat.cloud".</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Add_Cookie_Button_Text" xml:space="preserve">
+        <value>Add Cookie</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cookie_Item_Name_Field_Hint" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cookie_Item_Value_Field_Hint" xml:space="preserve">
+        <value>Value</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cookie_Item_Paste_Button_Tooltip" xml:space="preserve">
+        <value>Paste</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cookie_Item_Clear_Value_Button_Tooltip" xml:space="preserve">
+        <value>Clear</value>
+    </data>
+    <data name="Dialog_Login_Using_Cookies_Cookie_Item_Remove_Cookie_Button_Tooltip" xml:space="preserve">
+        <value>Remove Cookie</value>
     </data>
     <data name="Dialog_Login_Using_Cookies_Cancel_Button_Text" xml:space="preserve">
         <value>Cancel</value>

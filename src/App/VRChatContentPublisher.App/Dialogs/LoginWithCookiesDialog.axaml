@@ -5,11 +5,21 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
-             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="600"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="600"
              x:DataType="dialogs:LoginWithCookiesDialogViewModel"
              x:Class="VRChatContentPublisher.App.Dialogs.LoginWithCookiesDialog">
 
-    <StackPanel Width="300">
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <StackPanel Width="340" Spacing="8">
         <StackPanel Spacing="4">
             <Border Background="#FF6D00" CornerRadius="8">
                 <StackPanel Margin="8" Spacing="4">
@@ -61,9 +71,65 @@
             </Border>
         </StackPanel>
 
-        <TextBox Classes="outline" Theme="{StaticResource OutlineTextBox}"
-                 Watermark="auth=authcookie_****&#x0a;twoFactorAuth=****" AcceptsReturn="True" Height="200"
-                 Text="{Binding CookiesText}" />
+        <StackPanel Spacing="8">
+            <ItemsControl ItemsSource="{Binding Cookies}">
+                <ItemsControl.DataTemplates>
+                    <DataTemplate x:DataType="dialogs:LoginWithCookiesDialogCookieItemViewModel">
+                        <Grid ColumnDefinitions="*, *, Auto" ColumnSpacing="8">
+                            <TextBox
+                                assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Name_Field_Hint}}"
+                                UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                                IsEnabled="{Binding !IsKeyReadOnly}"
+                                IsReadOnly="{Binding IsKeyReadOnly}"
+                                Text="{Binding Name}" />
+                            <TextBox
+                                assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Value_Field_Hint}}"
+                                Grid.Column="1" UseFloatingWatermark="True" Classes="outline"
+                                Theme="{StaticResource OutlineTextBox}"
+                                Text="{Binding Value}">
+                                <TextBox.InnerRightContent>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,5,0">
+                                        <Button Theme="{StaticResource MaterialFlatButton}"
+                                                Content="{avalonia:MaterialIconExt Kind=ContentPaste, Size=18}"
+                                                Height="24" Width="{Binding $self.Bounds.Height}"
+                                                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Paste_Button_Tooltip}}"
+                                                Padding="8">
+                                            <Interaction.Behaviors>
+                                                <ButtonClickEventTriggerBehavior>
+                                                    <GetClipboardTextAction Command="{Binding SetValueCommand}" />
+                                                </ButtonClickEventTriggerBehavior>
+                                            </Interaction.Behaviors>
+                                        </Button>
+                                        <Button Theme="{StaticResource MaterialFlatButton}"
+                                                Content="{avalonia:MaterialIconExt Kind=Close, Size=18}"
+                                                Height="24" Width="{Binding $self.Bounds.Height}" Padding="8"
+                                                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Clear_Value_Button_Tooltip}}"
+                                                Command="{Binding CLearValueCommand}" />
+                                    </StackPanel>
+                                </TextBox.InnerRightContent>
+                            </TextBox>
+                            <Button Grid.Column="2" Content="{avalonia:MaterialIconExt Kind=Minus, Size=24}"
+                                    Theme="{StaticResource MaterialFlatButton}" Height="32"
+                                    Width="{Binding $self.Bounds.Height}"
+                                    Command="{Binding RequestRemoveCommand}"
+                                    IsVisible="{Binding IsRemovable}"
+                                    IsEnabled="{Binding IsRemovable}"
+                                    ToolTip.Tip="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Remove_Cookie_Button_Tooltip}}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.DataTemplates>
+            </ItemsControl>
+
+            <Button Command="{Binding AddCookieCommand}"
+                    Theme="{StaticResource MaterialOutlineButton}" Classes="light">
+                <StackPanel Orientation="Horizontal">
+                    <avalonia:MaterialIcon Kind="Plus" />
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Add_Cookie_Button_Text}}"
+                        VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+        </StackPanel>
 
         <StackPanel Spacing="4" Margin="0,8,0,0">
             <Button Content="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Login_Button_Text}}"
