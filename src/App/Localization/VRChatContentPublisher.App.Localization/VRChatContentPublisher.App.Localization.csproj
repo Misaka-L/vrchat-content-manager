@@ -5,21 +5,28 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Antelcat.I18N.Avalonia"/>
+        <!--TODO: Replace with nuget package after upstream updated-->
+        <!--<PackageReference Include="Antelcat.I18N.Avalonia"/>-->
+        <ProjectReference Include="..\..\..\Submodules\Antelcat.18N\src\Avalonia\Avalonia\Antelcat.I18N.Avalonia.csproj"/>
+        <ProjectReference
+                OutputItemType="Analyzer"
+                ReferenceOutputAssembly="false"
+                Include="..\..\..\Submodules\Antelcat.18N\src\SourceGenerators\Antelcat.I18N.SourceGenerators.csproj"
+        />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Update="Resources\Localization.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Localization.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
         <Compile Update="Resources\Localization.Designer.cs">
-          <DesignTime>True</DesignTime>
-          <AutoGen>True</AutoGen>
-          <DependentUpon>Localization.resx</DependentUpon>
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Localization.resx</DependentUpon>
         </Compile>
     </ItemGroup>
 
