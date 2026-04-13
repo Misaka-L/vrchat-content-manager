@@ -47,7 +47,7 @@
                                    TextWrapping="Wrap" />
                     </StackPanel>
                 </Border>
-                <TextBox UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                <TextBox UseFloatingPlaceholder="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
                          assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint}}"
                          IsReadOnly="True" Text="{Binding VpmRepositoryUrl}" />
 
