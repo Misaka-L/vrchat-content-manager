@@ -63,7 +63,7 @@
     <data name="Pages_Add_Account_Otp_Dialog_Title" xml:space="preserve">
         <value>需要一次性验证码</value>
     </data>
-    <data name="Pages_Add_Account_Otp_Dialog_Code_Field_Watermark" xml:space="preserve">
+    <data name="Pages_Add_Account_Otp_Dialog_Code_Field_PlaceholderText" xml:space="preserve">
         <value>验证码</value>
     </data>
     <data name="Pages_Add_Account_Otp_Dialog_Require_Totp" xml:space="preserve">
@@ -132,7 +132,7 @@
     <data name="Pages_Settings_Connect_Alert_Change_Port_Require_Reconnect_Description" xml:space="preserve">
         <value>修改端口后必须重新和 App 配对。</value>
     </data>
-    <data name="Pages_Settings_Connect_Server_Name_Field_Watermark" xml:space="preserve">
+    <data name="Pages_Settings_Connect_Server_Name_Field_PlaceholderText" xml:space="preserve">
         <value>例如：伟大戚风</value>
     </data>
     <data name="Pages_Settings_Connect_Server_Name_Field_Label" xml:space="preserve">

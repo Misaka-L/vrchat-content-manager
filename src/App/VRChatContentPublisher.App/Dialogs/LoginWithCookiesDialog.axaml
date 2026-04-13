@@ -78,13 +78,13 @@
                         <Grid ColumnDefinitions="*, *, Auto" ColumnSpacing="8">
                             <TextBox
                                 assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Name_Field_Hint}}"
-                                UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                                UseFloatingPlaceholder="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
                                 IsEnabled="{Binding !IsKeyReadOnly}"
                                 IsReadOnly="{Binding IsKeyReadOnly}"
                                 Text="{Binding Name}" />
                             <TextBox
                                 assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Dialog_Login_Using_Cookies_Cookie_Item_Value_Field_Hint}}"
-                                Grid.Column="1" UseFloatingWatermark="True" Classes="outline"
+                                Grid.Column="1" UseFloatingPlaceholder="True" Classes="outline"
                                 Theme="{StaticResource OutlineTextBox}"
                                 Text="{Binding Value}">
                                 <TextBox.InnerRightContent>

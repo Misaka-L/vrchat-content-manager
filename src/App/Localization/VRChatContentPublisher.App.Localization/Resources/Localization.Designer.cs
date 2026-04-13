@@ -407,9 +407,9 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Code.
         /// </summary>
-        internal static string Pages_Add_Account_Otp_Dialog_Code_Field_Watermark {
+        internal static string Pages_Add_Account_Otp_Dialog_Code_Field_PlaceholderText {
             get {
-                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Code_Field_Watermark", resourceCulture);
+                return ResourceManager.GetString("Pages_Add_Account_Otp_Dialog_Code_Field_PlaceholderText", resourceCulture);
             }
         }
         
@@ -1138,9 +1138,9 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to e.g Greatest Chiffon.
         /// </summary>
-        internal static string Pages_Settings_Connect_Server_Name_Field_Watermark {
+        internal static string Pages_Settings_Connect_Server_Name_Field_PlaceholderText {
             get {
-                return ResourceManager.GetString("Pages_Settings_Connect_Server_Name_Field_Watermark", resourceCulture);
+                return ResourceManager.GetString("Pages_Settings_Connect_Server_Name_Field_PlaceholderText", resourceCulture);
             }
         }
         

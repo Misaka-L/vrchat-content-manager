@@ -30,7 +30,7 @@
         </Border>
 
         <TextBox Text="{Binding ConnectInstanceName}"
-                 UseFloatingWatermark="True" Watermark="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Name_Field_Watermark}}"
+                 UseFloatingPlaceholder="True" PlaceholderText="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Name_Field_PlaceholderText}}"
                  Classes="outline"
                  assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Name_Field_Label}}"
                  Theme="{StaticResource OutlineTextBox}">
@@ -56,7 +56,7 @@
         </Border>
 
         <TextBox Text="{Binding RpcServerPort}"
-                 UseFloatingWatermark="True" Watermark="1024-65535" Classes="outline"
+                 UseFloatingPlaceholder="True" PlaceholderText="1024-65535" Classes="outline"
                  assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Port_Field_Label}}"
                  Theme="{StaticResource OutlineTextBox}">
             <Interaction.Behaviors>

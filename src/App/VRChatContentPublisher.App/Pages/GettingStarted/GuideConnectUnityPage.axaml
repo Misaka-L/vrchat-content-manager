@@ -51,7 +51,7 @@
                 <TextBlock
                     Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Step_2_Description}}"
                     TextWrapping="Wrap" />
-                <TextBox UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                <TextBox UseFloatingPlaceholder="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
                          assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Host_URL_Field_Hint}}"
                          IsReadOnly="True" Text="{Binding HostUri}" />
 

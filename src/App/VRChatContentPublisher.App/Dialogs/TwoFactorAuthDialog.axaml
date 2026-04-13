@@ -56,9 +56,9 @@
                      MaxLength="6" AcceptsReturn="False" AcceptsTab="False"
                      MaxLines="1" TextWrapping="NoWrap" Width="200" FontSize="24"
                      TextAlignment="Center" HorizontalAlignment="Center"
-                     UseFloatingWatermark="False" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                     UseFloatingPlaceholder="False" Classes="outline" Theme="{StaticResource OutlineTextBox}"
                      TextChanged="Totp_OnTextChanged" KeyDown="Totp_OnKeyDown"
-                     Watermark="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Code_Field_Watermark}}" />
+                     PlaceholderText="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Otp_Dialog_Code_Field_PlaceholderText}}" />
         </StackPanel>
     </Grid>
 </UserControl>

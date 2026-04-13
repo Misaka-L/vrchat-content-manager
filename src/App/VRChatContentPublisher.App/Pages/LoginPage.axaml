@@ -52,14 +52,14 @@
                     assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Username_Or_Email_Field_Label}}"
                     IsReadOnly="{Binding IsUsernameReadonly}"
                     IsEnabled="{Binding !IsUsernameReadonly}"
-                    Classes="outline" UseFloatingWatermark="True"
+                    Classes="outline" UseFloatingPlaceholder="True"
                     Theme="{StaticResource OutlineTextBox}"
                     Text="{Binding Username}" />
                 <TextBox
                     assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Password_Field_Label}}"
                     PasswordChar="*"
                     Classes="outline"
-                    UseFloatingWatermark="True" Theme="{StaticResource OutlineTextBox}"
+                    UseFloatingPlaceholder="True" Theme="{StaticResource OutlineTextBox}"
                     Text="{Binding Password}" />
             </StackPanel>
 

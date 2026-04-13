@@ -33,7 +33,7 @@
                 </EventTriggerBehavior>
             </Interaction.Behaviors>
         </ComboBox>
-        <TextBox UseFloatingWatermark="True" Classes="outline dense" Theme="{StaticResource OutlineTextBox}"
+        <TextBox UseFloatingPlaceholder="True" Classes="outline dense" Theme="{StaticResource OutlineTextBox}"
                  assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Custom_Proxy_URI_Field}}"
                  Text="{Binding ProxyUri}"
                  IsVisible="{Binding IsCustomProxySelected}">

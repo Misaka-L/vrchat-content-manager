@@ -24,7 +24,7 @@
 
         <TextBox
             assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Encrypted_IP_Field_Label}}"
-            UseFloatingWatermark="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+            UseFloatingPlaceholder="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
             Text="{Binding EncryptedIpText}" />
         <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Encrypted_IP_Button_Text}}"
                 Command="{Binding DecryptIpCommand}" />
