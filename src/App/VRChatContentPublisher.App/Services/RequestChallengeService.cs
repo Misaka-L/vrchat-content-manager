@@ -1,6 +1,7 @@
 ﻿using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Messaging;
 using VRChatContentPublisher.App.Messages.Connect;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Challenge;
 

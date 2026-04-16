@@ -13,7 +13,7 @@ using VRChatContentPublisher.App.Pages;
 using VRChatContentPublisher.App.Pages.GettingStarted;
 using VRChatContentPublisher.App.Pages.HomeTab;
 using VRChatContentPublisher.App.Pages.Settings;
-using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;

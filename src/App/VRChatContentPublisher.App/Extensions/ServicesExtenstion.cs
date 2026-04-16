@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.NotificationSender;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
@@ -39,6 +40,7 @@ public static class ServicesExtenstion
 
         // Dialog
         services.AddSingleton<DialogService>();
+        services.AddHostedService<DialogBackgroundService>();
 
         // Dialogs
         services.AddTransient<TwoFactorAuthDialogViewModelFactory>();

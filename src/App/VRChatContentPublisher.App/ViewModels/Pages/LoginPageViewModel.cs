@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Services.UserSession;
