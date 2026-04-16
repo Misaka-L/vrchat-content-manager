@@ -11,6 +11,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Rework Login with Cookies input fields. [`#275`](https://github.com/project-vrcz/content-publisher/pull/275)
 - Update Use RGB Cycling background App Bar settings text for chinese. [`#276`](https://github.com/project-vrcz/content-publisher/pull/276)
 
+## [2.9.0-beta.1] - 2026-04-16
+
+### Changed
+
+- Rework Login with Cookies input fields. [`#275`](https://github.com/project-vrcz/content-publisher/pull/275)
+- Update Use RGB Cycling background App Bar settings text for chinese. [`#276`](https://github.com/project-vrcz/content-publisher/pull/276)
+
 ## [2.8.2] - 2026-04-03
 
 ### Added
@@ -406,7 +413,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.8.2...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.1...HEAD
+[2.9.0-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.8.2...v2.9.0-beta.1
 [2.8.2]: https://github.com/project-vrcz/content-publisher/compare/v2.8.1...v2.8.2
 [2.8.1]: https://github.com/project-vrcz/content-publisher/compare/v2.8.0...v2.8.1
 [2.8.0]: https://github.com/project-vrcz/content-publisher/compare/v2.7.0...v2.8.0
