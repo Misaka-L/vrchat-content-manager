@@ -2,7 +2,9 @@ using Antelcat.I18N.Avalonia;
 using MessagePipe;
 using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.App.Localization;
+using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Events.PublicIp;
+using VRChatContentPublisher.Core.Services.PublicIp;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -11,6 +13,9 @@ namespace VRChatContentPublisher.App.Services.NotificationSender;
 public sealed class PublicIpChangedNotificationSenderService(
     IWritableOptions<AppSettings> appSettings,
     AppNotificationService appNotificationService,
+    InAppNotificationService inAppNotificationService,
+    PublicIpChangedInAppNotificationViewModelFactory notificationFactory,
+    PublicIpCheckerService publicIpCheckerService,
     ISubscriber<PublicIpChangedEvent> ipChangedSubscriber)
     : IHostedService
 {
@@ -18,8 +23,12 @@ public sealed class PublicIpChangedNotificationSenderService(
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
+        TrySendInAppNotification();
+
         _subscription = ipChangedSubscriber.Subscribe(args =>
         {
+            TrySendInAppNotification();
+
             if (!appSettings.Value.SendNotificationOnPublicIpChanged)
                 return;
 
@@ -34,6 +43,17 @@ public sealed class PublicIpChangedNotificationSenderService(
         });
 
         return Task.CompletedTask;
+    }
+
+    private void TrySendInAppNotification()
+    {
+        if (publicIpCheckerService.IsWarningDismissed)
+            return;
+
+        if (inAppNotificationService.Notifications.Any(x => x is PublicIpChangedInAppNotificationViewModel))
+            return;
+
+        inAppNotificationService.SendNotification(notificationFactory.Create());
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

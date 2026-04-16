@@ -1,0 +1,66 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:inAppNotifications="clr-namespace:VRChatContentPublisher.App.ViewModels.InAppNotifications"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="150"
+             x:DataType="inAppNotifications:PublicIpChangedInAppNotificationViewModel"
+             x:Class="VRChatContentPublisher.App.Views.InAppNotifications.PublicIpChangedInAppNotificationView">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <Border Background="#FF6D00">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8">
+            <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top"
+                                   Margin="0,0,8,0" />
+            <TextBlock Grid.Column="1"
+                       Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Message}}"
+                       Foreground="White"
+                       VerticalAlignment="Top"
+                       TextWrapping="Wrap" />
+            <StackPanel Grid.Column="2">
+                <Button
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Foreground="White"
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text}}"
+                    VerticalAlignment="Center">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <SelectableTextBlock Foreground="{DynamicResource MaterialBodyBrush}">
+                                    <Bold>
+                                        <Run
+                                            Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text}}" />
+                                    </Bold>
+                                    <Run Text="{Binding LastPublicIp, FallbackValue=N/A}" />
+                                </SelectableTextBlock>
+                                <SelectableTextBlock Foreground="{DynamicResource MaterialBodyBrush}">
+                                    <Bold>
+                                        <Run
+                                            Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text}}" />
+                                    </Bold>
+                                    <Run Text="{Binding LastPreviousPublicIp, FallbackValue=N/A}" />
+                                </SelectableTextBlock>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <Button
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Foreground="White"
+                    Command="{Binding DismissCommand}"
+                    Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text}}"
+                    VerticalAlignment="Center" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

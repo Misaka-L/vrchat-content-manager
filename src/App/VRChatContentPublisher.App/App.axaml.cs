@@ -19,6 +19,7 @@ using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
+using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
@@ -28,6 +29,7 @@ using VRChatContentPublisher.App.Views;
 using VRChatContentPublisher.App.Views.Data.Connect;
 using VRChatContentPublisher.App.Views.Data.PublishTasks;
 using VRChatContentPublisher.App.Views.Data.Settings;
+using VRChatContentPublisher.App.Views.InAppNotifications;
 using VRChatContentPublisher.App.Views.Settings;
 using VRChatContentPublisher.Core;
 using VRChatContentPublisher.Core.Services.App;
@@ -109,6 +111,9 @@ public partial class App : Application
         ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
         ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();
         ViewLocator.Register<DebugSettingsViewModel, DebugSettingsView>();
+
+        // In App Notification
+        ViewLocator.Register<PublicIpChangedInAppNotificationViewModel, PublicIpChangedInAppNotificationView>();
 
         AvaloniaXamlLoader.Load(this);
 

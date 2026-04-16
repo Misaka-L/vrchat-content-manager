@@ -6,6 +6,7 @@ using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
+using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.App.ViewModels.NetworkDiagnostic;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
@@ -26,6 +27,13 @@ public static class ServicesExtenstion
         services.AddSingleton<AppWindowService>();
         services.AddSingleton<AppNotificationService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
+
+        services.AddSingleton<InAppNotificationService>();
+
+        // In App Notification
+        services.AddTransient<PublicIpChangedInAppNotificationViewModelFactory>();
+
+        // Notification Senders
         services.AddHostedService<TaskFailedNotificationSenderService>();
         services.AddHostedService<PublicIpChangedNotificationSenderService>();
 
