@@ -10,9 +10,10 @@ public sealed class PublicIpCheckerService(
     CloudflareTracePublicIpProvider publicIpProvider,
     IIpCryptService ipCryptService,
     IWritableOptions<PublicIpStateStorage> ipStateStorage,
-    IPublisher<PublicIpChangedEvent> ipChangedPublisher,
     ILogger<PublicIpCheckerService> logger)
 {
+    public event EventHandler<PublicIpChangedEvent>? PublicIpChanged;
+
     public bool IsWarningDismissed => ipStateStorage.Value.IsWarningDismissed;
     public DateTimeOffset? LastCheckedAtUtc => ipStateStorage.Value.LastCheckedAtUtc;
     public DateTimeOffset? LastChangedAtUtc => ipStateStorage.Value.LastChangedAtUtc;
@@ -72,7 +73,7 @@ public sealed class PublicIpCheckerService(
                 encryptedOldIp,
                 encryptedNewIp);
 
-            ipChangedPublisher.Publish(new PublicIpChangedEvent(
+            PublicIpChanged?.Invoke(this, new PublicIpChangedEvent(
                 previousIp,
                 currentIp,
                 encryptedOldIp,

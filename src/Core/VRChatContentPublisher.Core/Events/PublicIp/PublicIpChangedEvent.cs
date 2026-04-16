@@ -5,7 +5,7 @@ public sealed class PublicIpChangedEvent(
     string newIpPlaintext,
     string oldIpEncrypted,
     string newIpEncrypted,
-    DateTimeOffset detectedAtUtc)
+    DateTimeOffset detectedAtUtc) : EventArgs
 {
     public string OldIpPlaintext => oldIpPlaintext;
     public string NewIpPlaintext => newIpPlaintext;
