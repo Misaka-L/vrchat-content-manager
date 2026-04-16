@@ -1,12 +1,11 @@
 ﻿using System.Collections.ObjectModel;
+using Avalonia.Collections;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MessagePipe;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
-using VRChatContentPublisher.Core.Events.PublicIp;
-using VRChatContentPublisher.Core.Services.PublicIp;
+using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
@@ -16,17 +15,15 @@ public sealed partial class HomeTasksPageViewModel(
     NavigationService navigationService,
     LoginPageViewModelFactory loginPageViewModelFactory,
     PublishTaskManagerContainerViewModelFactory containerViewModelFactory,
-    ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber,
-    PublicIpCheckerService publicIpCheckerService) : PageViewModelBase
+    InAppNotificationService inAppNotificationService) : PageViewModelBase
 {
+    public IAvaloniaReadOnlyList<InAppNotificationViewModelBase> Notifications =>
+        inAppNotificationService.Notifications;
+
     public ObservableCollection<PublishTaskManagerContainerViewModel> TaskManagers { get; } = [];
 
     [ObservableProperty]
     public partial PublishTaskManagerContainerViewModel? SelectedTaskManagerContainerViewModel { get; set; }
-
-    public bool IsPublicIpWarningVisible => !publicIpCheckerService.IsWarningDismissed;
-    public string? LastPublicIp => publicIpCheckerService.LastPublicIp;
-    public string? LastPreviousPublicIp => publicIpCheckerService.LastPreviousIp;
 
     private IDisposable? _publicIpChangedSubscription;
 
@@ -57,7 +54,6 @@ public sealed partial class HomeTasksPageViewModel(
 
         userSessionManagerService.SessionCreated += OnUserSessionCreated;
         userSessionManagerService.SessionRemoved += OnUserSessionRemoved;
-        _publicIpChangedSubscription = publicIpChangedSubscriber.Subscribe(OnPublicIpChanged);
 
         UpdateSelectedTaskManager(preferDefaultSession);
         _firstLoad = false;
@@ -71,16 +67,6 @@ public sealed partial class HomeTasksPageViewModel(
 
         _publicIpChangedSubscription?.Dispose();
         _publicIpChangedSubscription = null;
-    }
-
-    [RelayCommand]
-    private async Task DismissPublicIpWarning()
-    {
-        await publicIpCheckerService.DismissWarningAsync();
-
-        OnPropertyChanged(nameof(LastPublicIp));
-        OnPropertyChanged(nameof(LastPreviousPublicIp));
-        OnPropertyChanged(nameof(IsPublicIpWarningVisible));
     }
 
     [RelayCommand]
@@ -147,15 +133,5 @@ public sealed partial class HomeTasksPageViewModel(
     {
         var containerViewModel = containerViewModelFactory.Create(session);
         TaskManagers.Add(containerViewModel);
-    }
-
-    private void OnPublicIpChanged(PublicIpChangedEvent args)
-    {
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            OnPropertyChanged(nameof(LastPublicIp));
-            OnPropertyChanged(nameof(LastPreviousPublicIp));
-            OnPropertyChanged(nameof(IsPublicIpWarningVisible));
-        });
     }
 }

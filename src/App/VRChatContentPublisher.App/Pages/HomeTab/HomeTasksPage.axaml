@@ -22,53 +22,7 @@
     </Interaction.Behaviors>
 
     <Grid RowDefinitions="Auto,*">
-        <Border Grid.Row="0"
-                IsVisible="{Binding IsPublicIpWarningVisible}"
-                Background="#FF6D00">
-            <Grid ColumnDefinitions="Auto,*,Auto" Margin="8">
-                <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top"
-                                       Margin="0,0,8,0" />
-                <TextBlock Grid.Column="1"
-                           Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Message}}"
-                           Foreground="White"
-                           VerticalAlignment="Top"
-                           TextWrapping="Wrap" />
-                <StackPanel Grid.Column="2">
-                    <Button
-                        Theme="{StaticResource MaterialFlatButton}"
-                        Foreground="White"
-                        Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Show_IP_Button_Text}}"
-                        VerticalAlignment="Center">
-                        <Button.Flyout>
-                            <Flyout>
-                                <StackPanel>
-                                    <SelectableTextBlock Foreground="{DynamicResource MaterialBodyBrush}">
-                                        <Bold>
-                                            <Run
-                                                Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Current_Public_IP_Text}}" />
-                                        </Bold>
-                                        <Run Text="{Binding LastPublicIp, FallbackValue=N/A}" />
-                                    </SelectableTextBlock>
-                                    <SelectableTextBlock Foreground="{DynamicResource MaterialBodyBrush}">
-                                        <Bold>
-                                            <Run
-                                                Text="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Last_Public_IP_Text}}" />
-                                        </Bold>
-                                        <Run Text="{Binding LastPreviousPublicIp, FallbackValue=N/A}" />
-                                    </SelectableTextBlock>
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                    <Button
-                        Theme="{StaticResource MaterialFlatButton}"
-                        Foreground="White"
-                        Command="{Binding DismissPublicIpWarningCommand}"
-                        Content="{I18N {x:Static localization:LangKeys.Pages_Tasks_Alert_Public_IP_Changed_Dismiss_Button_Text}}"
-                        VerticalAlignment="Center" />
-                </StackPanel>
-            </Grid>
-        </Border>
+        <ItemsControl ItemsSource="{Binding Notifications}" />
 
         <Panel Grid.Row="1">
             <Grid RowDefinitions="Auto,*"
