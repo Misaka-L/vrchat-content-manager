@@ -4,6 +4,3 @@
 [submodule "src/Submodules/Antelcat.18N"]
 	path = src/Submodules/Antelcat.18N
 	url = https://github.com/Misaka-L/Antelcat.18N.git
-[submodule "src/Submodules/Material.Icons"]
-	path = src/Submodules/Material.Icons
-	url = https://github.com/project-vrcz/Material.Icons.git

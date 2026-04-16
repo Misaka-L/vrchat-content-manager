@@ -18,7 +18,7 @@
     <!--UI-->
     <PackageVersion Include="Material.Avalonia" Version="3.15.1" />
     <!--TODO: Replace with nuget package after upstream updated-->
-    <!--<PackageVersion Include="Material.Icons.Avalonia" Version="2.4.1" />-->
+    <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.3" />
     <!--App Host-->
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
     <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0" />
