@@ -38,8 +38,7 @@
 
         <!--UI-->
         <PackageReference Include="Material.Avalonia"/>
-        <!--TODO: Replace with nuget package after upstream updated-->
-        <!--<PackageReference Include="Material.Icons.Avalonia" />-->
+        <PackageReference Include="Material.Icons.Avalonia" />
 
         <!--App Host-->
         <PackageReference Include="Microsoft.Extensions.Hosting"/>
@@ -60,7 +59,6 @@
         <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Abstraction\VRChatContentPublisher.Platform.Abstraction.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.Core\VRChatContentPublisher.Core.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.IpcCore\VRChatContentPublisher.IpcCore.csproj"/>
-        <ProjectReference Include="..\..\Submodules\Material.Icons\Material.Icons.Avalonia\Material.Icons.Avalonia.csproj" />
         <ProjectReference Include="..\Localization\VRChatContentPublisher.App.Localization\VRChatContentPublisher.App.Localization.csproj" />
     </ItemGroup>
 

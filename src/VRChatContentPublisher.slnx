@@ -30,8 +30,4 @@
     <Project Path="Submodules/Antelcat.18N/src/Avalonia/Avalonia/Antelcat.I18N.Avalonia.csproj" />
     <Project Path="Submodules/Antelcat.18N/src/SourceGenerators/Antelcat.I18N.SourceGenerators.csproj" />
   </Folder>
-  <Folder Name="/SubModules/Material.Icons/">
-    <Project Path="Submodules/Material.Icons/Material.Icons.Avalonia/Material.Icons.Avalonia.csproj" />
-    <Project Path="Submodules/Material.Icons/Material.Icons/Material.Icons.csproj" />
-  </Folder>
 </Solution>
