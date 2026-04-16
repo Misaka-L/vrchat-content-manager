@@ -587,4 +587,25 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Login_Using_Cookies_Cancel_Button_Text" xml:space="preserve">
         <value>Cancel</value>
     </data>
+    <data name="Dialog_Update_Available_Headline" xml:space="preserve">
+        <value>New Update Available</value>
+    </data>
+    <data name="Dialog_Update_Available_Download_Update_Button_Text" xml:space="preserve">
+        <value>Download</value>
+    </data>
+    <data name="Dialog_Update_Available_Skip_Version_Button_Text" xml:space="preserve">
+        <value>Skip this version</value>
+    </data>
+    <data name="Dialog_Update_Available_Cancel_Button_Text" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="In_App_Notifications_New_Version_Available_Title" xml:space="preserve">
+        <value>New version v{0} is available!</value>
+    </data>
+    <data name="In_App_Notifications_New_Version_Available_View_Button_Text" xml:space="preserve">
+        <value>View</value>
+    </data>
+    <data name="In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip" xml:space="preserve">
+        <value>Dismiss</value>
+    </data>
 </root>

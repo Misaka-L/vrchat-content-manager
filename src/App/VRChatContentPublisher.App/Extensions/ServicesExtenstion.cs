@@ -2,6 +2,7 @@
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.NotificationSender;
+using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
@@ -33,6 +34,7 @@ public static class ServicesExtenstion
 
         // In App Notification
         services.AddTransient<PublicIpChangedInAppNotificationViewModelFactory>();
+        services.AddTransient<UpdateAvailableAppNotificationViewModelFactory>();
 
         // Notification Senders
         services.AddHostedService<TaskFailedNotificationSenderService>();
@@ -48,6 +50,7 @@ public static class ServicesExtenstion
         services.AddTransient<StartupPortChangedDialogViewModelFactory>();
         services.AddTransient<ExitAppDialogViewModel>();
         services.AddTransient<LoginWithCookiesDialogViewModelFactory>();
+        services.AddTransient<ConfirmUpdateDialogViewModelFactory>();
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
@@ -95,6 +98,10 @@ public static class ServicesExtenstion
 
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();
+
+        // Update Check
+        services.AddSingleton<AppUpdateCheckService>();
+        services.AddHostedService<AppUpdateCheckBackgroundService>();
 
         return services;
     }

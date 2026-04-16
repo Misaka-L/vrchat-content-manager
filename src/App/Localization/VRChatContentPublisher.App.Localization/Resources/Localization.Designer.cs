@@ -314,6 +314,69 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string Dialog_Update_Available_Cancel_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Cancel_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        internal static string Dialog_Update_Available_Download_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Download_Update_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Update Available.
+        /// </summary>
+        internal static string Dialog_Update_Available_Headline {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Headline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip this version.
+        /// </summary>
+        internal static string Dialog_Update_Available_Skip_Version_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Skip_Version_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismiss.
+        /// </summary>
+        internal static string In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New version v{0} is available!.
+        /// </summary>
+        internal static string In_App_Notifications_New_Version_Available_Title {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_New_Version_Available_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        internal static string In_App_Notifications_New_Version_Available_View_Button_Text {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_New_Version_Available_View_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to en.
         /// </summary>
         internal static string Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option {

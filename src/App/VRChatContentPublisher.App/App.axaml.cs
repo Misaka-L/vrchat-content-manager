@@ -1,10 +1,8 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
-using Avalonia.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Dialogs;
@@ -92,6 +90,7 @@ public partial class App : Application
         ViewLocator.Register<ExitAppDialogViewModel, ExitAppDialog>();
         ViewLocator.Register<StartupPortChangedDialogViewModel, StartupPortChangedDialog>();
         ViewLocator.Register<LoginWithCookiesDialogViewModel, LoginWithCookiesDialog>();
+        ViewLocator.Register<UpdateAvailableDialogViewModel, UpdateAvailableDialog>();
 
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
@@ -114,6 +113,7 @@ public partial class App : Application
 
         // In App Notification
         ViewLocator.Register<PublicIpChangedInAppNotificationViewModel, PublicIpChangedInAppNotificationView>();
+        ViewLocator.Register<UpdateAvailableAppNotificationViewModel, UpdateAvailableAppNotificationView>();
 
         AvaloniaXamlLoader.Load(this);
 

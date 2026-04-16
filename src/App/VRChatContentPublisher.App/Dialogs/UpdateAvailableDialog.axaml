@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="420"
+             x:DataType="dialogs:UpdateAvailableDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Dialogs.UpdateAvailableDialog">
+
+    <Grid Width="340" Height="360" RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="4">
+        <Border BorderBrush="{DynamicResource MaterialDesignBodyLight}"
+                BorderThickness="0,0,0,1" Padding="0,0,0,4">
+            <StackPanel>
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Headline}}"
+                           Classes="Subtitle2" />
+                <TextBlock Text="{Binding Version, StringFormat='v{0}'}"
+                           Classes="Headline5" />
+            </StackPanel>
+        </Border>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+            <SelectableTextBlock Text="{Binding Notes}" />
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Spacing="4">
+            <Button
+                Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Download_Update_Button_Text}}" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                <Button
+                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Skip_Version_Button_Text}}"
+                    Theme="{StaticResource MaterialFlatButton}" />
+                <Button Grid.Column="1"
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding RequestCloseCommand}" />
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>
