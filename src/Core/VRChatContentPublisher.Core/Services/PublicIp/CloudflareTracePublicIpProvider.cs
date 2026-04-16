@@ -2,12 +2,13 @@ using System.Net;
 
 namespace VRChatContentPublisher.Core.Services.PublicIp;
 
-public sealed class CloudflareTracePublicIpProvider(HttpClient httpClient)
+public sealed class CloudflareTracePublicIpProvider(IHttpClientFactory httpClientFactory)
 {
     private const string TraceEndpoint = "https://api.vrchat.cloud/cdn-cgi/trace";
 
     public async ValueTask<string> GetCurrentPublicIpAsync(CancellationToken cancellationToken = default)
     {
+        using var httpClient = httpClientFactory.CreateClient(nameof(CloudflareTracePublicIpProvider));
         using var response = await httpClient.GetAsync(TraceEndpoint, cancellationToken);
         response.EnsureSuccessStatusCode();
 
