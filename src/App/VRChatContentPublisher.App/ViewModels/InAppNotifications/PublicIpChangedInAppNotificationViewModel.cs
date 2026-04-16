@@ -1,39 +1,36 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
-using MessagePipe;
 using VRChatContentPublisher.Core.Events.PublicIp;
 using VRChatContentPublisher.Core.Services.PublicIp;
 
 namespace VRChatContentPublisher.App.ViewModels.InAppNotifications;
 
 public sealed partial class PublicIpChangedInAppNotificationViewModel(
-    PublicIpCheckerService publicIpCheckerService,
-    ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber
+    PublicIpCheckerService publicIpCheckerService
 ) : InAppNotificationViewModelBase
 {
     public string? LastPublicIp => publicIpCheckerService.LastPublicIp;
     public string? LastPreviousPublicIp => publicIpCheckerService.LastPreviousIp;
 
-    private IDisposable? _eventSubscription;
-
     [RelayCommand]
     private void Load()
     {
-        _eventSubscription = publicIpChangedSubscriber.Subscribe(_ =>
-        {
-            Dispatcher.UIThread.Invoke(() =>
-            {
-                OnPropertyChanged(nameof(LastPublicIp));
-                OnPropertyChanged(nameof(LastPreviousPublicIp));
-            });
-        });
+        publicIpCheckerService.PublicIpChanged += OnPublicIpChanged;
     }
 
     [RelayCommand]
     private void Unload()
     {
-        _eventSubscription?.Dispose();
-        _eventSubscription = null;
+        publicIpCheckerService.PublicIpChanged -= OnPublicIpChanged;
+    }
+
+    private void OnPublicIpChanged(object? sender, PublicIpChangedEvent e)
+    {
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            OnPropertyChanged(nameof(LastPublicIp));
+            OnPropertyChanged(nameof(LastPreviousPublicIp));
+        });
     }
 
     [RelayCommand]
@@ -45,9 +42,8 @@ public sealed partial class PublicIpChangedInAppNotificationViewModel(
 }
 
 public sealed class PublicIpChangedInAppNotificationViewModelFactory(
-    PublicIpCheckerService publicIpCheckerService,
-    ISubscriber<PublicIpChangedEvent> publicIpChangedSubscriber
+    PublicIpCheckerService publicIpCheckerService
 )
 {
-    public PublicIpChangedInAppNotificationViewModel Create() => new(publicIpCheckerService, publicIpChangedSubscriber);
+    public PublicIpChangedInAppNotificationViewModel Create() => new(publicIpCheckerService);
 }
