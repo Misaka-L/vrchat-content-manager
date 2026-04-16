@@ -39,6 +39,7 @@
         <!--UI-->
         <PackageReference Include="Material.Avalonia"/>
         <PackageReference Include="Material.Icons.Avalonia" />
+        <PackageReference Include="Markdown.Avalonia" />
 
         <!--App Host-->
         <PackageReference Include="Microsoft.Extensions.Hosting"/>
