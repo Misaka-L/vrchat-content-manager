@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Avalonia.Threading;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
@@ -40,7 +41,17 @@ public sealed class AppUpdateCheckService(
         }
 
         logger.LogInformation("New version {Version} is available", update.Version);
-        inAppNotificationService.SendNotification(notificationFactory.Create(update));
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            if (inAppNotificationService.Notifications
+                    .FirstOrDefault(x => x is UpdateAvailableAppNotificationViewModel)
+                is { } vm)
+            {
+                inAppNotificationService.RemoveNotification(vm);
+            }
+
+            inAppNotificationService.SendNotification(notificationFactory.Create(update));
+        });
 
         return update;
     }

@@ -15,12 +15,17 @@ public sealed class InAppNotificationService
         _notifications.Add(notification);
     }
 
+    public void RemoveNotification(InAppNotificationViewModelBase notification)
+    {
+        notification.CloseRequested -= NotificationOnCloseRequested;
+        _notifications.Remove(notification);
+    }
+
     private void NotificationOnCloseRequested(object? sender, EventArgs e)
     {
         if (sender is InAppNotificationViewModelBase notification)
         {
-            notification.CloseRequested -= NotificationOnCloseRequested;
-            _notifications.Remove(notification);
+            RemoveNotification(notification);
         }
     }
 }
