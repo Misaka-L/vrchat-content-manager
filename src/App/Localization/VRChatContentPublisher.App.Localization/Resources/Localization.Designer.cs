@@ -1516,6 +1516,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear version skip and Check for update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download update at background.
         /// </summary>
         internal static string Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label {

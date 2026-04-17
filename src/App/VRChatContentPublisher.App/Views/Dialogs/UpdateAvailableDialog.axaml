@@ -35,7 +35,8 @@
             <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
                 <Button
                     Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Skip_Version_Button_Text}}"
-                    Theme="{StaticResource MaterialFlatButton}" />
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Command="{Binding MarkVersionAsSkippedCommand}" />
                 <Button Grid.Column="1"
                         Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
                         Theme="{StaticResource MaterialFlatButton}"

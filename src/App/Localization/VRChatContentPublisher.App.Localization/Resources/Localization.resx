@@ -239,6 +239,9 @@
     <data name="Pages_Settings_Software_Update_Check_For_Update_Button_Text" xml:space="preserve">
         <value>Check for update</value>
     </data>
+    <data name="Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text" xml:space="preserve">
+        <value>Clear version skip and Check for update</value>
+    </data>
     <data name="Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template" xml:space="preserve">
         <value>Failed to check for update: {0}</value>
     </data>

@@ -222,6 +222,9 @@
     <data name="Pages_Settings_Software_Update_Check_For_Update_Button_Text" xml:space="preserve">
         <value>检查更新</value>
     </data>
+    <data name="Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text" xml:space="preserve">
+        <value>清除跳过版本并检查更新</value>
+    </data>
     <data name="Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template" xml:space="preserve">
         <value>检查更新失败：{0}</value>
     </data>

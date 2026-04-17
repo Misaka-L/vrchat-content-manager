@@ -2,7 +2,9 @@ using Antelcat.I18N.Avalonia;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Update;
+using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Core.Utils;
@@ -11,7 +13,9 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed partial class UpdateSettingsViewModel(
     IWritableOptions<AppSettings> appSettings,
-    AppUpdateCheckService appUpdateCheckService
+    AppUpdateCheckService appUpdateCheckService,
+    ConfirmUpdateDialogViewModelFactory dialogFactory,
+    DialogService dialogService
 ) : ViewModelBase
 {
     public UpdateSettingsUpdateCheckModeViewModel UpdateCheckMode
@@ -63,17 +67,27 @@ public sealed partial class UpdateSettingsViewModel(
     [ObservableProperty] public partial string? StatusText { get; private set; }
 
     [RelayCommand]
+    private async Task ClearVersionSkipAndCheckForUpdate()
+    {
+        await appSettings.UpdateAsync(s => s.SkipVersion = null);
+        await CheckForUpdate();
+    }
+
+    [RelayCommand]
     private async Task CheckForUpdate()
     {
         try
         {
-            var update = await appUpdateCheckService.CheckForUpdateAsync(true);
+            var update = await appUpdateCheckService.CheckForUpdateAsync();
 
-            // Update Check Service will sned in-app notification and show dialog
-            if (update.Version != AppVersionUtils.GetAppVersion())
+            if (update is null)
+            {
+                StatusText = LangKeys.Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated;
                 return;
+            }
 
-            StatusText = LangKeys.Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated;
+            StatusText = null;
+            await dialogService.ShowDialogAsync(dialogFactory.Create(update));
         }
         catch (Exception ex)
         {

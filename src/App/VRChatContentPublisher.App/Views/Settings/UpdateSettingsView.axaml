@@ -29,8 +29,12 @@
         <Button
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Button_Text}}"
             Command="{Binding CheckForUpdateCommand}" />
+        <Button
+            Theme="{StaticResource MaterialOutlineButton}" Classes="light"
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text}}"
+            Command="{Binding ClearVersionSkipAndCheckForUpdateCommand}" />
         <TextBlock IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                   Text="{I18N {Binding StatusText}}" />
+                   Text="{I18N {CompiledBinding StatusText}}" />
     </StackPanel>
 
 </UserControl>

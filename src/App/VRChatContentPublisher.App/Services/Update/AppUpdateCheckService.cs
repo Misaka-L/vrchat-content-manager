@@ -1,8 +1,6 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
-using VRChatContentPublisher.App.Services.Dialog;
-using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Settings;
@@ -16,9 +14,7 @@ public sealed class AppUpdateCheckService(
     IWritableOptions<AppSettings> appSettings,
     IHttpClientFactory httpClientFactory,
     InAppNotificationService inAppNotificationService,
-    UpdateAvailableAppNotificationViewModelFactory notificationFactory,
-    ConfirmUpdateDialogViewModelFactory dialogFactory,
-    DialogService dialogService
+    UpdateAvailableAppNotificationViewModelFactory notificationFactory
 )
 {
     private const string StableChannelUpdateApiUrl =
@@ -27,29 +23,24 @@ public sealed class AppUpdateCheckService(
     private const string PreviewChannelUpdateApiUrl =
         "https://project-vrcz.misakal.xyz/api/content-publisher/updater-beta.json";
 
-    public async ValueTask<AppUpdateInformation> CheckForUpdateAsync(bool isManual = false)
+    public async ValueTask<AppUpdateInformation?> CheckForUpdateAsync()
     {
         var update = await GetUpdateInformationAsync();
 
         if (update.Version == AppVersionUtils.GetAppVersion())
         {
             logger.LogInformation("Current version {Version} is up to date, no update available", update.Version);
-            return update;
+            return null;
         }
 
-        if (!isManual && update.Version == appSettings.Value.SkipVersion)
+        if (update.Version == appSettings.Value.SkipVersion)
         {
             logger.LogInformation("Skip Version {Version} is set, skipping update notification", update.Version);
-            return update;
+            return null;
         }
 
         logger.LogInformation("New version {Version} is available", update.Version);
         inAppNotificationService.SendNotification(notificationFactory.Create(update));
-
-        if (isManual)
-        {
-            _ = dialogService.ShowDialogAsync(dialogFactory.Create(update)).AsTask();
-        }
 
         return update;
     }
