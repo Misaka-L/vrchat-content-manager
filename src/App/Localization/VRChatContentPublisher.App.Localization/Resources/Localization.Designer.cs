@@ -350,6 +350,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Released at {0}.
+        /// </summary>
+        internal static string Dialog_Update_Available_Subtitle_Release_Date_Template {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Subtitle_Release_Date_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dismiss.
         /// </summary>
         internal static string In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip {

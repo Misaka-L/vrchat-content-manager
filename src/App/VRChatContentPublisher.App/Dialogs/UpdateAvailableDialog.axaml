@@ -16,6 +16,14 @@
                            Classes="Subtitle2" />
                 <TextBlock Text="{Binding Version, StringFormat='v{0}'}"
                            Classes="Headline5" />
+                <TextBlock Classes="Caption" Opacity="0.8">
+                    <TextBlock.Text>
+                        <I18N
+                            Key="{x:Static localization:LangKeys.Dialog_Update_Available_Subtitle_Release_Date_Template}">
+                            <Binding Path="ReleaseDate" StringFormat="f" />
+                        </I18N>
+                    </TextBlock.Text>
+                </TextBlock>
             </StackPanel>
         </Border>
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">

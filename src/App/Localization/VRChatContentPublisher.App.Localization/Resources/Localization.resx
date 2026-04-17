@@ -590,6 +590,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Update_Available_Headline" xml:space="preserve">
         <value>New Update Available</value>
     </data>
+    <data name="Dialog_Update_Available_Subtitle_Release_Date_Template" xml:space="preserve">
+        <value>Released at {0}</value>
+    </data>
     <data name="Dialog_Update_Available_Download_Update_Button_Text" xml:space="preserve">
         <value>Download</value>
     </data>
