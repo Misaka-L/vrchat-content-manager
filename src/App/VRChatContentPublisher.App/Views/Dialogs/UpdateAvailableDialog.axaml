@@ -6,7 +6,7 @@
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="420"
              x:DataType="dialogs:UpdateAvailableDialogViewModel"
-             x:Class="VRChatContentPublisher.App.Dialogs.UpdateAvailableDialog">
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.UpdateAvailableDialog">
 
     <Grid Width="340" Height="360" RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="4">
         <Border BorderBrush="{DynamicResource MaterialDesignBodyLight}"

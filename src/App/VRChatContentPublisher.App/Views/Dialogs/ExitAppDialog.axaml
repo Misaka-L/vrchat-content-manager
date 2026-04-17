@@ -6,7 +6,7 @@
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="600"
              x:DataType="dialogs:ExitAppDialogViewModel"
-             x:Class="VRChatContentPublisher.App.Dialogs.ExitAppDialog">
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.ExitAppDialog">
 
     <Interaction.Behaviors>
         <!-- Change to AttachedToVisualTreeTrigger will lead to NullReferenceException -->

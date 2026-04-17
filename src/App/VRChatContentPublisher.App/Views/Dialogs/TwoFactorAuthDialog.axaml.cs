@@ -2,7 +2,7 @@
 using Avalonia.Input;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 
-namespace VRChatContentPublisher.App.Dialogs;
+namespace VRChatContentPublisher.App.Views.Dialogs;
 
 public partial class TwoFactorAuthDialog : UserControl
 {

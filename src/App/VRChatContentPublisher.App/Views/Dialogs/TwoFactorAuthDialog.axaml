@@ -8,7 +8,7 @@
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="dialogs:TwoFactorAuthDialogViewModel"
-             x:Class="VRChatContentPublisher.App.Dialogs.TwoFactorAuthDialog">
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.TwoFactorAuthDialog">
 
     <Grid Width="320" Height="320">
         <Button

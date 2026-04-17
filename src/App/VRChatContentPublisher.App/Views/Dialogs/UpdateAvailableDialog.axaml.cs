@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace VRChatContentPublisher.App.Dialogs;
+namespace VRChatContentPublisher.App.Views.Dialogs;
 
 public partial class UpdateAvailableDialog : UserControl
 {
