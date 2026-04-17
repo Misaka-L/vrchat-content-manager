@@ -13,7 +13,8 @@ public sealed partial class SettingsPageViewModel(
     SessionsSettingsViewModel sessionsSettingsViewModel,
     AboutSettingsViewModel aboutSettingsViewModel,
     HttpProxySettingsViewModel httpProxySettingsViewModel,
-    DebugSettingsViewModel debugSettingsViewModel) : PageViewModelBase
+    DebugSettingsViewModel debugSettingsViewModel,
+    UpdateSettingsViewModel updateSettingsViewModel) : PageViewModelBase
 {
     public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
     public AppearanceSettingsViewModel AppearanceSettingsViewModel { get; } = appearanceSettingsViewModel;
@@ -23,6 +24,7 @@ public sealed partial class SettingsPageViewModel(
     public HttpProxySettingsViewModel HttpProxySettingsViewModel { get; } = httpProxySettingsViewModel;
     public AboutSettingsViewModel AboutSettingsViewModel { get; } = aboutSettingsViewModel;
     public DebugSettingsViewModel DebugSettingsViewModel { get; } = debugSettingsViewModel;
+    public UpdateSettingsViewModel UpdateSettingsViewModel { get; } = updateSettingsViewModel;
     
     [RelayCommand]
     private void NavigateToHome()

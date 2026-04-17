@@ -48,6 +48,9 @@
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Title}}">
                     <ContentControl Content="{Binding HttpProxySettingsViewModel}" />
                 </Expander>
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Title}}">
+                    <ContentControl Content="{Binding UpdateSettingsViewModel}" />
+                </Expander>
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Title}}">
                     <ContentControl Content="{Binding DebugSettingsViewModel}" />
                 </Expander>

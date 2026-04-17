@@ -1452,6 +1452,97 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At start and background.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_At_Start_And_Background {
+            get {
+                return ResourceManager.GetString(("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_At_Start_And_Backg" +
+                        "round"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Manual {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Manual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only at start.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Only_At_Start {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Only_At_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Check Update Mode.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to check for update: {0}.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Already up-to-dated.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check for update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Update_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download update at background.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receive pre-release update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software Update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Pages_Settings_Title {

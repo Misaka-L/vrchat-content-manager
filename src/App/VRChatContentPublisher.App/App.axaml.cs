@@ -110,6 +110,7 @@ public partial class App : Application
         ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
         ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();
         ViewLocator.Register<DebugSettingsViewModel, DebugSettingsView>();
+        ViewLocator.Register<UpdateSettingsViewModel, UpdateSettingsView>();
 
         // In App Notification
         ViewLocator.Register<PublicIpChangedInAppNotificationViewModel, PublicIpChangedInAppNotificationView>();

@@ -215,6 +215,36 @@
     <data name="Pages_Settings_Http_Proxy_Custom_Proxy_URI_Vlidation_Failed_Message" xml:space="preserve">
         <value>HTTP Proxy URI must be a http or https URI.</value>
     </data>
+    <data name="Pages_Settings_Software_Update_Title" xml:space="preserve">
+        <value>Software Update</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Title" xml:space="preserve">
+        <value>Auto Check Update Mode</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Manual" xml:space="preserve">
+        <value>Manual</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Only_At_Start" xml:space="preserve">
+        <value>Only at start</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_At_Start_And_Background" xml:space="preserve">
+        <value>At start and background</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label" xml:space="preserve">
+        <value>Download update at background</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label" xml:space="preserve">
+        <value>Receive pre-release update</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Check_For_Update_Button_Text" xml:space="preserve">
+        <value>Check for update</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template" xml:space="preserve">
+        <value>Failed to check for update: {0}</value>
+    </data>
+    <data name="Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated" xml:space="preserve">
+        <value>Already up-to-dated</value>
+    </data>
     <data name="Pages_Settings_Debug_Title" xml:space="preserve">
         <value>Debug</value>
     </data>
