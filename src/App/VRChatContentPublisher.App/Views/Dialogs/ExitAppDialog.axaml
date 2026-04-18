@@ -8,22 +8,8 @@
              x:DataType="dialogs:ExitAppDialogViewModel"
              x:Class="VRChatContentPublisher.App.Views.Dialogs.ExitAppDialog">
 
-    <Interaction.Behaviors>
-        <!-- Change to AttachedToVisualTreeTrigger will lead to NullReferenceException -->
-        <EventTrigger EventName="Loaded">
-            <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </EventTrigger>
-    </Interaction.Behaviors>
-
     <Panel>
-        <StackPanel IsVisible="{Binding LoadCommand.IsRunning}"
-                    Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-            <ProgressBar Classes="circular" IsIndeterminate="True" VerticalAlignment="Center" />
-            <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Shutdown_Shutdown_In_Progress_Text}}"
-                       VerticalAlignment="Center" />
-        </StackPanel>
-        <StackPanel IsVisible="{Binding !LoadCommand.IsRunning}"
-                    Spacing="24" Margin="8">
+        <StackPanel Spacing="24" Margin="8">
             <TextBlock
                 Text="{I18N {x:Static localization:LangKeys.Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks}}"
                 Classes="Headline6" TextAlignment="Center" TextWrapping="Wrap" />

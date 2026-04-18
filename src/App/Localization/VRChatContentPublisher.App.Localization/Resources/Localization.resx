@@ -534,9 +534,6 @@ Normal Window: Toggle window on top.</value>
     <data name="Dialog_Request_Challenge_Copy_Code_Button" xml:space="preserve">
         <value>Copy</value>
     </data>
-    <data name="Dialog_Shutdown_Shutdown_In_Progress_Text" xml:space="preserve">
-        <value>Shutting down...</value>
-    </data>
     <data name="Dialog_Shutdown_Ask_User_To_Confirm_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
         <value>There are uncompleted publish tasks.
 Are you really sure you want to shutdown the app?</value>

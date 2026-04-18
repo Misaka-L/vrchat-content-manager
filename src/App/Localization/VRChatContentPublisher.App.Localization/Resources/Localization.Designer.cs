@@ -305,15 +305,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shutting down....
-        /// </summary>
-        internal static string Dialog_Shutdown_Shutdown_In_Progress_Text {
-            get {
-                return ResourceManager.GetString("Dialog_Shutdown_Shutdown_In_Progress_Text", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string Dialog_Update_Available_Cancel_Button_Text {
