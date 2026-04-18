@@ -17,9 +17,9 @@ public sealed class DialogBackgroundService(DialogService dialogService) : Backg
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {
-                var result = await DialogHost.Show(item.Dialog);
+                var result = await DialogHost.Show(item.Dialog, dialogService.DialogHostId);
                 item.TaskCompletionSource.SetResult(result);
-            });
+            }, DispatcherPriority.Default, stoppingToken);
         }
     }
 }
