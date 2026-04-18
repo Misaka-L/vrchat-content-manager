@@ -26,6 +26,7 @@ public static class ServicesExtenstion
     {
         services.AddSingleton<AppWebImageLoader>();
 
+        services.AddSingleton<AppLifetimeService>();
         services.AddSingleton<AppWindowService>();
         services.AddSingleton<AppNotificationService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());

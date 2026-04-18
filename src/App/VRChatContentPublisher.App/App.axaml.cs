@@ -10,6 +10,7 @@ using VRChatContentPublisher.App.Pages;
 using VRChatContentPublisher.App.Pages.GettingStarted;
 using VRChatContentPublisher.App.Pages.HomeTab;
 using VRChatContentPublisher.App.Pages.Settings;
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
@@ -150,18 +151,28 @@ public partial class App : Application
 
     private async void ExitAppClicked(object? sender, EventArgs e)
     {
-        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        try
+        {
+            var lifetimeService = _serviceProvider.GetRequiredService<AppLifetimeService>();
 
-        var dialogService = _serviceProvider.GetRequiredService<DialogService>();
-        var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
+            if (!await lifetimeService.IsSafeToShutdownAsync())
+            {
+                var appWindowService = _serviceProvider.GetRequiredService<AppWindowService>();
+                var dialogService = _serviceProvider.GetRequiredService<DialogService>();
+                var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
 
-        desktop.MainWindow?.Show();
-        desktop.MainWindow?.Activate();
+                await appWindowService.ActivateMainWindowAsync();
 
-        if (await dialogService.ShowDialogAsync(exitAppDialogViewModel) is not true)
-            return;
+                await dialogService.ShowDialogAsync(exitAppDialogViewModel);
+                return;
+            }
 
-        desktop.Shutdown();
+            lifetimeService.Shutdown();
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void OpenLogsFolderClicked(object? sender, EventArgs e)
