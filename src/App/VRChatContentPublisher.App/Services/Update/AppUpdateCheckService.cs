@@ -2,7 +2,6 @@ using System.Net.Http.Json;
 using Avalonia.Threading;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
-using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
@@ -14,9 +13,7 @@ public sealed class AppUpdateCheckService(
     ILogger<AppUpdateCheckService> logger,
     IWritableOptions<AppSettings> appSettings,
     IHttpClientFactory httpClientFactory,
-    AppUpdateService appUpdateService,
-    InAppNotificationService inAppNotificationService,
-    UpdateAvailableAppNotificationViewModelFactory notificationFactory
+    AppUpdateService appUpdateService
 )
 {
     private const string StableChannelUpdateApiUrl =
