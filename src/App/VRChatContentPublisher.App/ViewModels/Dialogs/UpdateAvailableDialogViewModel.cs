@@ -1,5 +1,8 @@
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Models.Update;
+using VRChatContentPublisher.App.Services.Update;
+using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -7,12 +10,40 @@ namespace VRChatContentPublisher.App.ViewModels.Dialogs;
 
 public sealed partial class UpdateAvailableDialogViewModel(
     AppUpdateInformation updateInformation,
-    IWritableOptions<AppSettings> appSettings
+    AppUpdateService appUpdateService,
+    IWritableOptions<AppSettings> appSettings,
+    UpdateDownloadProgressViewModel updateDownloadProgressViewModel
 ) : DialogViewModelBase
 {
+    public UpdateDownloadProgressViewModel UpdateDownloadProgressViewModel => updateDownloadProgressViewModel;
+
     public string Version => updateInformation.Version;
     public string Notes => updateInformation.Notes;
     public DateTimeOffset ReleaseDate => updateInformation.ReleaseDate;
+
+    public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
+
+    public bool IsUpdateAvailableForDownloadOrInstall =>
+        appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall or AppUpdateServiceState.Idle;
+
+    public bool ShowSkipVersionButton => appUpdateService.UpdateState is AppUpdateServiceState.Idle;
+
+    public string UpdateButtonText => IsWaitingForInstall
+        ? LangKeys.Dialog_Update_Available_Download_Install_Update_Button_Text
+        : LangKeys.Dialog_Update_Available_Download_Update_Button_Text;
+
+    [RelayCommand]
+    private void Load()
+    {
+        updateDownloadProgressViewModel.ShowWhatNewsButton = false;
+        appUpdateService.OnUpdateStateChanged += OnUpdateStateChanged;
+    }
+
+    [RelayCommand]
+    private void Unload()
+    {
+        appUpdateService.OnUpdateStateChanged -= OnUpdateStateChanged;
+    }
 
     [RelayCommand]
     private async Task MarkVersionAsSkippedAsync()
@@ -20,14 +51,41 @@ public sealed partial class UpdateAvailableDialogViewModel(
         await appSettings.UpdateAsync(s => s.SkipVersion = updateInformation.Version);
         RequestClose();
     }
+
+    [RelayCommand]
+    private async Task StartDownloadOrInstallUpdate()
+    {
+        if (IsWaitingForInstall)
+        {
+            await appUpdateService.InstallUpdateAsync();
+            return;
+        }
+
+        appUpdateService.StartDownloadUpdate(updateInformation);
+    }
+
+    private void OnUpdateStateChanged(object? sender, AppUpdateServiceState e)
+    {
+        OnPropertyChanged(nameof(IsUpdateAvailableForDownloadOrInstall));
+        OnPropertyChanged(nameof(ShowSkipVersionButton));
+        OnPropertyChanged(nameof(IsWaitingForInstall));
+        OnPropertyChanged(nameof(UpdateButtonText));
+    }
 }
 
-public sealed class ConfirmUpdateDialogViewModelFactory(
-    IWritableOptions<AppSettings> appSettings
+public sealed class UpdateAvailableDialogViewModelFactory(
+    AppUpdateService appUpdateService,
+    IWritableOptions<AppSettings> appSettings,
+    UpdateDownloadProgressViewModel updateDownloadProgressViewModel
 )
 {
     public UpdateAvailableDialogViewModel Create(AppUpdateInformation updateInformation)
     {
-        return new UpdateAvailableDialogViewModel(updateInformation, appSettings);
+        return new UpdateAvailableDialogViewModel(
+            updateInformation,
+            appUpdateService,
+            appSettings,
+            updateDownloadProgressViewModel
+        );
     }
 }

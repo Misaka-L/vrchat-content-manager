@@ -5,9 +5,18 @@
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:DataType="settings:UpdateSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.UpdateSettingsView">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
 
     <StackPanel Spacing="8" Margin="8">
         <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
@@ -26,15 +35,22 @@
         <ToggleSwitch
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label}}"
             IsChecked="{Binding ReceivePreReleaseUpdate}" />
-        <Button
-            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Button_Text}}"
-            Command="{Binding CheckForUpdateCommand}" />
-        <Button
-            Theme="{StaticResource MaterialOutlineButton}" Classes="light"
-            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text}}"
-            Command="{Binding ClearVersionSkipAndCheckForUpdateCommand}" />
-        <TextBlock IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                   Text="{I18N {CompiledBinding StatusText}}" />
+
+        <!-- Update Progress Zone -->
+        <ContentControl IsVisible="{Binding !IsIdle}"
+                        Content="{Binding UpdateDownloadProgressViewModel}" />
+
+        <StackPanel Spacing="8" IsVisible="{Binding IsIdle}">
+            <Button
+                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Button_Text}}"
+                Command="{Binding CheckForUpdateCommand}" />
+            <Button
+                Theme="{StaticResource MaterialOutlineButton}" Classes="light"
+                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text}}"
+                Command="{Binding ClearVersionSkipAndCheckForUpdateCommand}" />
+            <TextBlock IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Text="{I18N {CompiledBinding StatusText}}" />
+        </StackPanel>
     </StackPanel>
 
 </UserControl>

@@ -14,6 +14,7 @@ public sealed class AppUpdateCheckService(
     ILogger<AppUpdateCheckService> logger,
     IWritableOptions<AppSettings> appSettings,
     IHttpClientFactory httpClientFactory,
+    AppUpdateService appUpdateService,
     InAppNotificationService inAppNotificationService,
     UpdateAvailableAppNotificationViewModelFactory notificationFactory
 )
@@ -24,8 +25,13 @@ public sealed class AppUpdateCheckService(
     private const string PreviewChannelUpdateApiUrl =
         "https://project-vrcz.misakal.xyz/api/content-publisher/updater-beta.json";
 
+    public event EventHandler<AppUpdateInformation>? OnUpdateAvailableToDownload;
+
     public async ValueTask<AppUpdateInformation?> CheckForUpdateAsync()
     {
+        if (appUpdateService.UpdateState != AppUpdateServiceState.Idle)
+            return null;
+
         var update = await GetUpdateInformationAsync();
 
         if (update.Version == AppVersionUtils.GetAppVersion())
@@ -41,17 +47,16 @@ public sealed class AppUpdateCheckService(
         }
 
         logger.LogInformation("New version {Version} is available", update.Version);
-        Dispatcher.UIThread.Invoke(() =>
-        {
-            if (inAppNotificationService.Notifications
-                    .FirstOrDefault(x => x is UpdateAvailableAppNotificationViewModel)
-                is { } vm)
-            {
-                inAppNotificationService.RemoveNotification(vm);
-            }
 
-            inAppNotificationService.SendNotification(notificationFactory.Create(update));
-        });
+        if (appSettings.Value.DownloadUpdateAtBackground)
+        {
+            logger.LogInformation("Starting download update at background");
+            appUpdateService.StartDownloadUpdate(update);
+        }
+        else
+        {
+            OnUpdateAvailableToDownload?.Invoke(this, update);
+        }
 
         return update;
     }

@@ -8,7 +8,7 @@ namespace VRChatContentPublisher.App.ViewModels.InAppNotifications;
 public sealed partial class UpdateAvailableAppNotificationViewModel(
     AppUpdateInformation updateInformation,
     DialogService dialogService,
-    ConfirmUpdateDialogViewModelFactory dialogFactory
+    UpdateAvailableDialogViewModelFactory availableDialogFactory
 ) : InAppNotificationViewModelBase
 {
     public string Version => updateInformation.Version;
@@ -16,17 +16,17 @@ public sealed partial class UpdateAvailableAppNotificationViewModel(
     [RelayCommand]
     private async Task ShowUpdateDialog()
     {
-        await dialogService.ShowDialogAsync(dialogFactory.Create(updateInformation));
+        await dialogService.ShowDialogAsync(availableDialogFactory.Create(updateInformation));
     }
 }
 
 public sealed class UpdateAvailableAppNotificationViewModelFactory(
     DialogService dialogService,
-    ConfirmUpdateDialogViewModelFactory dialogFactory
+    UpdateAvailableDialogViewModelFactory availableDialogFactory
 )
 {
     public UpdateAvailableAppNotificationViewModel Create(AppUpdateInformation updateInformation)
     {
-        return new UpdateAvailableAppNotificationViewModel(updateInformation, dialogService, dialogFactory);
+        return new UpdateAvailableAppNotificationViewModel(updateInformation, dialogService, availableDialogFactory);
     }
 }

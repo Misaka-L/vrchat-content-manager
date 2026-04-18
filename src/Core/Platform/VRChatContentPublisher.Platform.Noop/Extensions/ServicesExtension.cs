@@ -9,6 +9,7 @@ public static class ServicesExtension
     public static IServiceCollection AddNoopPlatformServices(this IServiceCollection services)
     {
         services.AddSingleton<IDesktopNotificationService, NoopDesktopNotificationService>();
+        services.AddSingleton<IUpdateInstallationService, NoopUpdateInstallationService>();
 
         return services;
     }

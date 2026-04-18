@@ -30,6 +30,8 @@
     <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
     <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+    
+    <PackageVersion Include="Downloader" Version="5.1.0" />
     <!--I18N-->
     <!--TODO: Replace with nuget package after upstream updated-->
     <!--PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-1" />-->

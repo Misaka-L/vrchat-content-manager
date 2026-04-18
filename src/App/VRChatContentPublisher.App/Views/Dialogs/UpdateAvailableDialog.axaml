@@ -8,6 +8,15 @@
              x:DataType="dialogs:UpdateAvailableDialogViewModel"
              x:Class="VRChatContentPublisher.App.Views.Dialogs.UpdateAvailableDialog">
 
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
     <Grid Width="340" Height="360" RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="4">
         <Border BorderBrush="{DynamicResource MaterialDesignBodyLight}"
                 BorderThickness="0,0,0,1" Padding="0,0,0,4">
@@ -31,8 +40,15 @@
         </ScrollViewer>
         <StackPanel Grid.Row="2" Spacing="4">
             <Button
-                Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Download_Update_Button_Text}}" />
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                IsVisible="{Binding IsUpdateAvailableForDownloadOrInstall}"
+                Content="{I18N {CompiledBinding UpdateButtonText}}"
+                Command="{Binding StartDownloadOrInstallUpdateCommand}" />
+
+            <ContentControl IsVisible="{Binding !IsUpdateAvailableForDownloadOrInstall}"
+                            Content="{Binding UpdateDownloadProgressViewModel}" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="4"
+                  IsVisible="{Binding ShowSkipVersionButton}">
                 <Button
                     Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Skip_Version_Button_Text}}"
                     Theme="{StaticResource MaterialFlatButton}"
@@ -42,6 +58,11 @@
                         Theme="{StaticResource MaterialFlatButton}"
                         Command="{Binding RequestCloseCommand}" />
             </Grid>
+
+            <Button IsVisible="{Binding !ShowSkipVersionButton}"
+                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Command="{Binding RequestCloseCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

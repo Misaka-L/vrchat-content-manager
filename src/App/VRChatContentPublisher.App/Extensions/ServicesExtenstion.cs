@@ -16,6 +16,7 @@ using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.App.ViewModels.Settings;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Challenge;
+using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.IpcCore.Services;
 
 namespace VRChatContentPublisher.App.Extensions;
@@ -36,10 +37,12 @@ public static class ServicesExtenstion
         // In App Notification
         services.AddTransient<PublicIpChangedInAppNotificationViewModelFactory>();
         services.AddTransient<UpdateAvailableAppNotificationViewModelFactory>();
+        services.AddTransient<UpdateProgressAppNotificationViewModel>();
 
         // Notification Senders
         services.AddHostedService<TaskFailedNotificationSenderService>();
         services.AddHostedService<PublicIpChangedNotificationSenderService>();
+        services.AddHostedService<AppUpdateNotificationSender>();
 
         // Dialog
         services.AddSingleton<DialogService>();
@@ -51,7 +54,7 @@ public static class ServicesExtenstion
         services.AddTransient<StartupPortChangedDialogViewModelFactory>();
         services.AddTransient<ExitAppDialogViewModel>();
         services.AddTransient<LoginWithCookiesDialogViewModelFactory>();
-        services.AddTransient<ConfirmUpdateDialogViewModelFactory>();
+        services.AddTransient<UpdateAvailableDialogViewModelFactory>();
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
@@ -73,6 +76,8 @@ public static class ServicesExtenstion
         services.AddTransient<PublishTaskManagerContainerViewModelFactory>();
 
         services.AddTransient<RpcClientSessionViewModelFactory>();
+
+        services.AddTransient<UpdateDownloadProgressViewModel>();
 
         // HomePage Tabs
         services.AddSingleton<HomeTasksPageViewModel>();
@@ -104,6 +109,15 @@ public static class ServicesExtenstion
         // Update Check
         services.AddSingleton<AppUpdateCheckService>();
         services.AddHostedService<AppUpdateCheckBackgroundService>();
+        services.AddSingleton<AppUpdateService>();
+
+        services.AddHttpClient(nameof(AppUpdateService), client => client.Timeout = Timeout.InfiniteTimeSpan)
+            .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
+            {
+                UseCookies = false,
+                ConnectTimeout = TimeSpan.FromSeconds(10),
+                Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
+            });
 
         return services;
     }

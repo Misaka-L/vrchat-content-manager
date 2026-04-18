@@ -27,6 +27,27 @@
     <data name="Common_Content_Type_World" xml:space="preserve">
         <value>世界</value>
     </data>
+    <data name="Common_Views_Update_Progress_View_Downloading_Update" xml:space="preserve">
+        <value>正在下载更新...</value>
+    </data>
+    <data name="Common_Views_Update_Progress_View_What_News_Text_Template" xml:space="preserve">
+        <value>v{0} 更新内容</value>
+    </data>
+    <data name="Common_Views_Update_Progress_View_Update_Download_Failed_Title" xml:space="preserve">
+        <value>下载更新失败</value>
+    </data>
+    <data name="Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip" xml:space="preserve">
+        <value>重试</value>
+    </data>
+    <data name="Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip" xml:space="preserve">
+        <value>取消更新</value>
+    </data>
+    <data name="Common_Views_Update_Progress_View_Ready_To_Install_Title" xml:space="preserve">
+        <value>等待安装更新</value>
+    </data>
+    <data name="Common_Views_Update_Progress_View_Install_Update_Button" xml:space="preserve">
+        <value>安装更新</value>
+    </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
         <value>返回</value>
     </data>
@@ -617,6 +638,9 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Dialog_Update_Available_Download_Update_Button_Text" xml:space="preserve">
         <value>下载更新</value>
+    </data>
+    <data name="Dialog_Update_Available_Download_Install_Update_Button_Text" xml:space="preserve">
+        <value>安装更新</value>
     </data>
     <data name="Dialog_Update_Available_Skip_Version_Button_Text" xml:space="preserve">
         <value>跳过该版本</value>

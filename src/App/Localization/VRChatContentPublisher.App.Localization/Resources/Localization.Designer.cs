@@ -78,6 +78,69 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel Update.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading Update....
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Downloading_Update {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Downloading_Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Install_Update_Button {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Install_Update_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update are ready to install.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Ready_To_Install_Title {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Ready_To_Install_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to download update.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Update_Download_Failed_Title {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Update_Download_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s News in v{0}.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_What_News_Text_Template {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_What_News_Text_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Cookie.
         /// </summary>
         internal static string Dialog_Login_Using_Cookies_Add_Cookie_Button_Text {
@@ -310,6 +373,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Dialog_Update_Available_Cancel_Button_Text {
             get {
                 return ResourceManager.GetString("Dialog_Update_Available_Cancel_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Update.
+        /// </summary>
+        internal static string Dialog_Update_Available_Download_Install_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Download_Install_Update_Button_Text", resourceCulture);
             }
         }
         

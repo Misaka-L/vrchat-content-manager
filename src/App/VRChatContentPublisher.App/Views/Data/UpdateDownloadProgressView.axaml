@@ -1,0 +1,115 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:data="clr-namespace:VRChatContentPublisher.App.ViewModels.Data"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d"
+             x:DataType="data:UpdateDownloadProgressViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Data.UpdateDownloadProgressView">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <Panel>
+        <Grid IsVisible="{Binding IsDownloading}"
+              ColumnDefinitions="*,Auto" VerticalAlignment="Center"
+              ColumnSpacing="8">
+            <StackPanel Spacing="2">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Downloading_Update}}" />
+                    <Button Theme="{StaticResource MaterialFlatBubtton}"
+                            Command="{Binding ShowWhatNewsCommand}"
+                            IsVisible="{Binding ShowWhatNewsButton}"
+                            Padding="0" Grid.Column="1">
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <I18N
+                                    Key="{x:Static localization:LangKeys.Common_Views_Update_Progress_View_What_News_Text_Template}">
+                                    <Binding Path="TargetVersion" />
+                                </I18N>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Button>
+                </Grid>
+                <ProgressBar Maximum="{Binding TotalFileSize}"
+                             Value="{Binding DownloadedFileSize}"
+                             Foreground="White" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Text="{Binding DownloadPrecent}" />
+                    <TextBlock Grid.Column="1"
+                               Text="{Binding MebibytePerSecondSpeed, StringFormat='{}{0:N} MiB/s'}" />
+                </Grid>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding CancelUpdateCommand}"
+                        Content="{avalonia:MaterialIconExt Kind=Close, Size=24}"
+                        Height="32" Width="{Binding $self.Bounds.Height}"
+                        ToolTip.Tip="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip}}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsDownloadError}"
+              ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+            <StackPanel Spacing="2">
+                <TextBlock FontWeight="Bold"
+                           Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Update_Download_Failed_Title}}" />
+                <TextBlock
+                    Text="{Binding DownloadError, FallbackValue='Download failed due to unknown error.'}"
+                    ToolTip.Tip="{Binding DownloadError}" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding RetryDownloadUpdateCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="Refresh" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip}}" />
+                    </StackPanel>
+                </Button>
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding CancelUpdateCommand}"
+                        Content="{avalonia:MaterialIconExt Kind=Close}"
+                        ToolTip.Tip="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip}}"
+                        Width="{Binding $self.Bounds.Height}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid IsVisible="{Binding IsWaitingForInstall}"
+              ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+            <StackPanel Spacing="2">
+                <TextBlock FontWeight="Bold"
+                           Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Ready_To_Install_Title}}" />
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding ShowWhatNewsCommand}"
+                        IsVisible="{Binding ShowWhatNewsButton}"
+                        Padding="0" HorizontalContentAlignment="Left">
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <I18N
+                                Key="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_What_News_Text_Template}}">
+                                <Binding Path="TargetVersion" />
+                            </I18N>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Content="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Install_Update_Button}}"
+                        Command="{Binding InstallUpdateCommand}" />
+            </StackPanel>
+        </Grid>
+    </Panel>
+</UserControl>
