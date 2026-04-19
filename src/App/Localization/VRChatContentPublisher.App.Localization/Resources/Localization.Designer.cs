@@ -387,15 +387,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Install Update.
-        /// </summary>
-        internal static string Dialog_Update_Available_Download_Install_Update_Button_Text {
-            get {
-                return ResourceManager.GetString("Dialog_Update_Available_Download_Install_Update_Button_Text", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
         internal static string Dialog_Update_Available_Download_Update_Button_Text {
@@ -410,6 +401,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Dialog_Update_Available_Headline {
             get {
                 return ResourceManager.GetString("Dialog_Update_Available_Headline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Update.
+        /// </summary>
+        internal static string Dialog_Update_Available_Install_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Install_Update_Button_Text", resourceCulture);
             }
         }
         

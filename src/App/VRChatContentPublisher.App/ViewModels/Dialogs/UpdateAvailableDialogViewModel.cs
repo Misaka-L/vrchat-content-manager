@@ -35,7 +35,7 @@ public sealed partial class UpdateAvailableDialogViewModel(
     public bool ShowSkipVersionButton => appUpdateService.UpdateState is AppUpdateServiceState.Idle;
 
     public string UpdateButtonText => IsWaitingForInstall
-        ? LangKeys.Dialog_Update_Available_Download_Install_Update_Button_Text
+        ? LangKeys.Dialog_Update_Available_Install_Update_Button_Text
         : LangKeys.Dialog_Update_Available_Download_Update_Button_Text;
 
     [RelayCommand]

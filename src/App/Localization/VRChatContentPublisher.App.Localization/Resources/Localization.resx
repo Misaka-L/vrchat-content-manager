@@ -650,7 +650,7 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Update_Available_Download_Update_Button_Text" xml:space="preserve">
         <value>Download</value>
     </data>
-    <data name="Dialog_Update_Available_Download_Install_Update_Button_Text" xml:space="preserve">
+    <data name="Dialog_Update_Available_Install_Update_Button_Text" xml:space="preserve">
         <value>Install Update</value>
     </data>
     <data name="Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning" xml:space="preserve">
