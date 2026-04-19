@@ -58,14 +58,14 @@
             </StackPanel>
         </Grid>
 
-        <Grid IsVisible="{Binding IsDownloadError}"
+        <Grid IsVisible="{Binding IsError}"
               ColumnDefinitions="*,Auto" VerticalAlignment="Center">
             <StackPanel Spacing="2">
                 <TextBlock FontWeight="Bold"
-                           Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Update_Download_Failed_Title}}" />
+                           Text="{I18N {CompiledBinding ErrorTitleText}}" />
                 <TextBlock
-                    Text="{Binding DownloadError, FallbackValue='Download failed due to unknown error.'}"
-                    ToolTip.Tip="{Binding DownloadError}" />
+                    Text="{Binding UpdateError, FallbackValue='Download failed due to unknown error.'}"
+                    ToolTip.Tip="{Binding UpdateError}" />
             </StackPanel>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">

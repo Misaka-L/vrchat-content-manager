@@ -133,6 +133,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to install update.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Update_Install_Failed_Title {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Update_Install_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Retry.
         /// </summary>
         internal static string Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip {

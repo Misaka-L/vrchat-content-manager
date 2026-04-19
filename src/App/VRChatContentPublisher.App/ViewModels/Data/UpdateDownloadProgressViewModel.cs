@@ -38,11 +38,17 @@ public sealed partial class UpdateDownloadProgressViewModel(
     [NotifyPropertyChangedFor(nameof(InstallUpdateButtonText))]
     public partial bool IsSafeToShutdown { get; private set; }
 
-    public bool IsDownloadError =>
+    public bool IsError =>
         appUpdateService.UpdateState is AppUpdateServiceState.DownloadError
-            or AppUpdateServiceState.IntegrityCheckFailed;
+            or AppUpdateServiceState.IntegrityCheckFailed
+            or AppUpdateServiceState.InstallError;
 
-    public string? DownloadError => appUpdateService.LastException?.Message;
+    public string ErrorTitleText =>
+        appUpdateService.UpdateState is AppUpdateServiceState.InstallError
+            ? LangKeys.Common_Views_Update_Progress_View_Update_Install_Failed_Title
+            : LangKeys.Common_Views_Update_Progress_View_Update_Download_Failed_Title;
+
+    public string? UpdateError => appUpdateService.LastException?.Message;
 
     public string InstallUpdateButtonText => IsSafeToShutdown
         ? LangKeys.Common_Views_Update_Progress_View_Install_Update_Button
@@ -88,7 +94,14 @@ public sealed partial class UpdateDownloadProgressViewModel(
     [RelayCommand]
     private async Task InstallUpdate()
     {
-        await appUpdateService.InstallUpdateAsync();
+        try
+        {
+            await appUpdateService.InstallUpdateAsync();
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     [RelayCommand]
@@ -116,8 +129,9 @@ public sealed partial class UpdateDownloadProgressViewModel(
 
         OnPropertyChanged(nameof(IsDownloading));
         OnPropertyChanged(nameof(IsWaitingForInstall));
-        OnPropertyChanged(nameof(IsDownloadError));
-        OnPropertyChanged(nameof(DownloadError));
+        OnPropertyChanged(nameof(IsError));
+        OnPropertyChanged(nameof(ErrorTitleText));
+        OnPropertyChanged(nameof(UpdateError));
         UpdateTimerEnabled();
     }
 

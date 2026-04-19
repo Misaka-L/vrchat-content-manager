@@ -13,7 +13,9 @@ public sealed partial class UpdateProgressAppNotificationViewModel(
 
     public string StateColor => appUpdateService.UpdateState switch
     {
-        AppUpdateServiceState.DownloadError or AppUpdateServiceState.IntegrityCheckFailed => "#d50000",
+        AppUpdateServiceState.DownloadError
+            or AppUpdateServiceState.IntegrityCheckFailed
+            or AppUpdateServiceState.InstallError => "#d50000",
         _ => "#3f51b5"
     };
 

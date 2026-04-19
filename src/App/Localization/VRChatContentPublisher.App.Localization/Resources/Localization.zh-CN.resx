@@ -36,6 +36,9 @@
     <data name="Common_Views_Update_Progress_View_Update_Download_Failed_Title" xml:space="preserve">
         <value>下载更新失败</value>
     </data>
+    <data name="Common_Views_Update_Progress_View_Update_Install_Failed_Title" xml:space="preserve">
+        <value>安装更新失败</value>
+    </data>
     <data name="Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip" xml:space="preserve">
         <value>重试</value>
     </data>

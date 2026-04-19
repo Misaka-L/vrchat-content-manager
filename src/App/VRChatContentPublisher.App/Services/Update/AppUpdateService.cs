@@ -105,7 +105,7 @@ public sealed class AppUpdateService(
                 );
 
                 OnOnUpdateStateChanged(AppUpdateServiceState.IntegrityCheckFailed);
-                NotifDownloadException(ex);
+                NotifException(ex);
 
                 return;
             }
@@ -113,7 +113,7 @@ public sealed class AppUpdateService(
             {
                 logger.LogError(ex, "Failed to download update");
                 OnOnUpdateStateChanged(AppUpdateServiceState.DownloadError);
-                NotifDownloadException(ex);
+                NotifException(ex);
 
                 return;
             }
@@ -139,7 +139,7 @@ public sealed class AppUpdateService(
         return fileHash;
     }
 
-    private void NotifDownloadException(Exception ex)
+    private void NotifException(Exception ex)
     {
         LastException = ex;
     }
@@ -151,14 +151,23 @@ public sealed class AppUpdateService(
         if (UpdateState != AppUpdateServiceState.WaitingForInstall)
             throw new InvalidOperationException("Update Service not in WaitingForInstall state");
 
-        if (_pathToDownloadFile is null)
+        try
         {
-            Debug.Fail("_pathToDownloadFile should not be null when WaitingForInstall");
-            throw new InvalidOperationException("_pathToDownloadFile should not be null when WaitingForInstall");
-        }
+            if (_pathToDownloadFile is null)
+            {
+                Debug.Fail("_pathToDownloadFile should not be null when WaitingForInstall");
+                throw new InvalidOperationException("_pathToDownloadFile should not be null when WaitingForInstall");
+            }
 
-        await updateInstallationService.InstallUpdateAsync(_pathToDownloadFile);
-        Dispatcher.UIThread.Invoke(lifetimeService.Shutdown);
+            await updateInstallationService.InstallUpdateAsync(_pathToDownloadFile);
+            Dispatcher.UIThread.Invoke(lifetimeService.Shutdown);
+        }
+        catch (Exception ex)
+        {
+            NotifException(ex);
+            OnOnUpdateStateChanged(AppUpdateServiceState.InstallError);
+            throw;
+        }
     }
 
     public async ValueTask RetryUpdateAsync()
@@ -221,6 +230,7 @@ public enum AppUpdateServiceState
     DownloadError,
     IntegrityCheckFailed,
     WaitingForInstall,
+    InstallError
 }
 
 public sealed class UpdateFileIntegrityCheckFailedException(string localSha256, string remoteSha256)

@@ -67,7 +67,15 @@ public sealed partial class UpdateAvailableDialogViewModel(
     {
         if (IsWaitingForInstall)
         {
-            await appUpdateService.InstallUpdateAsync();
+            try
+            {
+                await appUpdateService.InstallUpdateAsync();
+            }
+            catch
+            {
+                // ignored
+            }
+
             return;
         }
 
