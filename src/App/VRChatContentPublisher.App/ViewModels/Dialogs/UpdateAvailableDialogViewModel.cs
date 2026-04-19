@@ -1,6 +1,8 @@
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Models.Update;
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.Core.Settings;
@@ -11,6 +13,7 @@ namespace VRChatContentPublisher.App.ViewModels.Dialogs;
 public sealed partial class UpdateAvailableDialogViewModel(
     AppUpdateInformation updateInformation,
     AppUpdateService appUpdateService,
+    AppLifetimeService lifetimeService,
     IWritableOptions<AppSettings> appSettings,
     UpdateDownloadProgressViewModel updateDownloadProgressViewModel
 ) : DialogViewModelBase
@@ -24,6 +27,8 @@ public sealed partial class UpdateAvailableDialogViewModel(
 
     public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
 
+    [ObservableProperty] public partial bool IsSafeToShutdown { get; private set; }
+
     public bool IsUpdateAvailableForDownloadOrInstall =>
         appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall or AppUpdateServiceState.Idle;
 
@@ -36,14 +41,18 @@ public sealed partial class UpdateAvailableDialogViewModel(
     [RelayCommand]
     private void Load()
     {
+        IsSafeToShutdown = lifetimeService.IsSafeToShutdown();
+
         updateDownloadProgressViewModel.ShowWhatNewsButton = false;
         appUpdateService.OnUpdateStateChanged += OnUpdateStateChanged;
+        lifetimeService.IsSafeToShutdownChanged += IsSafeToShutdownChanged;
     }
 
     [RelayCommand]
     private void Unload()
     {
         appUpdateService.OnUpdateStateChanged -= OnUpdateStateChanged;
+        lifetimeService.IsSafeToShutdownChanged -= IsSafeToShutdownChanged;
     }
 
     [RelayCommand]
@@ -65,6 +74,11 @@ public sealed partial class UpdateAvailableDialogViewModel(
         appUpdateService.StartDownloadUpdate(updateInformation);
     }
 
+    private void IsSafeToShutdownChanged(object? sender, bool e)
+    {
+        IsSafeToShutdown = e;
+    }
+
     private void OnUpdateStateChanged(object? sender, AppUpdateServiceState e)
     {
         OnPropertyChanged(nameof(IsUpdateAvailableForDownloadOrInstall));
@@ -77,7 +91,8 @@ public sealed partial class UpdateAvailableDialogViewModel(
 public sealed class UpdateAvailableDialogViewModelFactory(
     AppUpdateService appUpdateService,
     IWritableOptions<AppSettings> appSettings,
-    UpdateDownloadProgressViewModel updateDownloadProgressViewModel
+    UpdateDownloadProgressViewModel updateDownloadProgressViewModel,
+    AppLifetimeService lifetimeService
 )
 {
     public UpdateAvailableDialogViewModel Create(AppUpdateInformation updateInformation)
@@ -85,6 +100,7 @@ public sealed class UpdateAvailableDialogViewModelFactory(
         return new UpdateAvailableDialogViewModel(
             updateInformation,
             appUpdateService,
+            lifetimeService,
             appSettings,
             updateDownloadProgressViewModel
         );

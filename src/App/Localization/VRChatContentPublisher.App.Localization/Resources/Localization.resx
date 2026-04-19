@@ -54,6 +54,9 @@
     <data name="Common_Views_Update_Progress_View_Install_Update_Button" xml:space="preserve">
         <value>Install</value>
     </data>
+    <data name="Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks" xml:space="preserve">
+        <value>Uncompleted publish tasks exist</value>
+    </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
         <value>Back</value>
     </data>
@@ -649,6 +652,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Dialog_Update_Available_Download_Install_Update_Button_Text" xml:space="preserve">
         <value>Install Update</value>
+    </data>
+    <data name="Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning" xml:space="preserve">
+        <value>You must clear all uncompleted publish tasks before install update.</value>
     </data>
     <data name="Dialog_Update_Available_Skip_Version_Button_Text" xml:space="preserve">
         <value>Skip this version</value>

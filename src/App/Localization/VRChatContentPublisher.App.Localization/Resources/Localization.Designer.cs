@@ -105,6 +105,16 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uncompleted publish tasks exist.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks {
+            get {
+                return ResourceManager.GetString(("Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Task" +
+                        "s"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update are ready to install.
         /// </summary>
         internal static string Common_Views_Update_Progress_View_Ready_To_Install_Title {
@@ -418,6 +428,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Dialog_Update_Available_Subtitle_Release_Date_Template {
             get {
                 return ResourceManager.GetString("Dialog_Update_Available_Subtitle_Release_Date_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must clear all uncompleted publish tasks before install update..
+        /// </summary>
+        internal static string Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning", resourceCulture);
             }
         }
         

@@ -48,6 +48,9 @@
     <data name="Common_Views_Update_Progress_View_Install_Update_Button" xml:space="preserve">
         <value>安装更新</value>
     </data>
+    <data name="Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks" xml:space="preserve">
+        <value>存在未完成的发布任务</value>
+    </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
         <value>返回</value>
     </data>
@@ -641,6 +644,9 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Dialog_Update_Available_Download_Install_Update_Button_Text" xml:space="preserve">
         <value>安装更新</value>
+    </data>
+    <data name="Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning" xml:space="preserve">
+        <value>你必须先清空所有未完成的发布任务，才能安装更新</value>
     </data>
     <data name="Dialog_Update_Available_Skip_Version_Button_Text" xml:space="preserve">
         <value>跳过该版本</value>

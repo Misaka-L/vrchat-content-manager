@@ -93,7 +93,7 @@
                 <Button Theme="{StaticResource MaterialFlatButton}"
                         Command="{Binding ShowWhatNewsCommand}"
                         IsVisible="{Binding ShowWhatNewsButton}"
-                        Padding="0" HorizontalContentAlignment="Left">
+                        Padding="0" HorizontalAlignment="Left">
                     <TextBlock>
                         <TextBlock.Text>
                             <I18N
@@ -107,7 +107,8 @@
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Theme="{StaticResource MaterialFlatButton}"
-                        Content="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Install_Update_Button}}"
+                        IsEnabled="{Binding IsSafeToShutdown}"
+                        Content="{I18N {CompiledBinding InstallUpdateButtonText}}"
                         Command="{Binding InstallUpdateCommand}" />
             </StackPanel>
         </Grid>

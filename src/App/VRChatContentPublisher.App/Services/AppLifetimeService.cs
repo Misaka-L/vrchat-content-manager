@@ -1,4 +1,5 @@
 using Avalonia.Controls.ApplicationLifetimes;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
@@ -6,15 +7,38 @@ using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.Services;
 
-public sealed class AppLifetimeService(UserSessionManagerService userSessionManagerService)
+public sealed class AppLifetimeService : IDisposable
 {
-    public async ValueTask<bool> IsSafeToShutdownAsync()
-    {
-        foreach (var session in userSessionManagerService.Sessions)
-        {
-            if (!session.IsScopeInitialized) continue;
+    public event EventHandler<bool>? IsSafeToShutdownChanged;
 
-            var scope = await session.CreateOrGetSessionScopeAsync();
+    private readonly UserSessionManagerService _userSessionManagerService;
+    private readonly IDisposable _eventDisposer;
+
+    public AppLifetimeService(UserSessionManagerService userSessionManagerService,
+        ISubscriber<ContentPublishTaskCreatedEventArg> taskCreatedSubscriber,
+        ISubscriber<ContentPublishTaskRemovedEventArg> taskRemovedSubscriber,
+        ISubscriber<ContentPublishTaskUpdateEventArg> taskUpdateSubscriber
+    )
+    {
+        _userSessionManagerService = userSessionManagerService;
+        _eventDisposer = DisposableBag.Create(
+            taskCreatedSubscriber.Subscribe(_ => NotifyIsSafeToShutdownChanged()),
+            taskRemovedSubscriber.Subscribe(_ => NotifyIsSafeToShutdownChanged()),
+            taskUpdateSubscriber.Subscribe(_ => NotifyIsSafeToShutdownChanged())
+        );
+    }
+
+    private void NotifyIsSafeToShutdownChanged()
+    {
+        IsSafeToShutdownChanged?.Invoke(this, IsSafeToShutdown());
+    }
+
+    public bool IsSafeToShutdown()
+    {
+        foreach (var session in _userSessionManagerService.Sessions)
+        {
+            if (session.TryGetSessionScope() is not { } scope) continue;
+
             var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
 
             if (taskManager.Tasks.Any(t => t.Value.Status != ContentPublishTaskStatus.Completed))
@@ -30,5 +54,10 @@ public sealed class AppLifetimeService(UserSessionManagerService userSessionMana
             throw new NotSupportedException("Only IClassicDesktopStyleApplicationLifetime are supported.");
 
         desktopLifetime.Shutdown();
+    }
+
+    public void Dispose()
+    {
+        _eventDisposer.Dispose();
     }
 }

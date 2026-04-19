@@ -1,16 +1,21 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
+using VRChatContentPublisher.App.Localization;
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
+using VRChatContentPublisher.Core.Services.PublishTask;
 
 namespace VRChatContentPublisher.App.ViewModels.Data;
 
 public sealed partial class UpdateDownloadProgressViewModel(
     AppUpdateService appUpdateService,
     DialogService dialogService,
+    AppLifetimeService lifetimeService,
     IServiceProvider serviceProvider
 ) : ViewModelBase
 {
@@ -29,17 +34,19 @@ public sealed partial class UpdateDownloadProgressViewModel(
     public bool IsDownloading => appUpdateService.UpdateState == AppUpdateServiceState.Downloading;
     public bool IsWaitingForInstall => appUpdateService.UpdateState == AppUpdateServiceState.WaitingForInstall;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(InstallUpdateButtonText))]
+    public partial bool IsSafeToShutdown { get; private set; }
+
     public bool IsDownloadError =>
         appUpdateService.UpdateState is AppUpdateServiceState.DownloadError
             or AppUpdateServiceState.IntegrityCheckFailed;
 
     public string? DownloadError => appUpdateService.LastException?.Message;
 
-    public string StateColor => appUpdateService.UpdateState switch
-    {
-        AppUpdateServiceState.DownloadError or AppUpdateServiceState.IntegrityCheckFailed => "#d50000",
-        _ => "#3f51b5"
-    };
+    public string InstallUpdateButtonText => IsSafeToShutdown
+        ? LangKeys.Common_Views_Update_Progress_View_Install_Update_Button
+        : LangKeys.Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks;
 
     private readonly DispatcherTimer _updateProgressTimer = new()
     {
@@ -49,8 +56,11 @@ public sealed partial class UpdateDownloadProgressViewModel(
     [RelayCommand]
     private void Load()
     {
+        IsSafeToShutdown = lifetimeService.IsSafeToShutdown();
+
         appUpdateService.OnUpdateStateChanged += OnUpdateStateChanged;
         _updateProgressTimer.Tick += OnUpdateProgressTimerTick;
+        lifetimeService.IsSafeToShutdownChanged += IsSafeToShutdownChanged;
         UpdateTimerEnabled();
     }
 
@@ -59,6 +69,7 @@ public sealed partial class UpdateDownloadProgressViewModel(
     {
         appUpdateService.OnUpdateStateChanged -= OnUpdateStateChanged;
         _updateProgressTimer.Tick -= OnUpdateProgressTimerTick;
+        lifetimeService.IsSafeToShutdownChanged -= IsSafeToShutdownChanged;
         _updateProgressTimer.Stop();
     }
 
@@ -107,12 +118,16 @@ public sealed partial class UpdateDownloadProgressViewModel(
         OnPropertyChanged(nameof(IsWaitingForInstall));
         OnPropertyChanged(nameof(IsDownloadError));
         OnPropertyChanged(nameof(DownloadError));
-        OnPropertyChanged(nameof(StateColor));
         UpdateTimerEnabled();
     }
 
     private void UpdateTimerEnabled()
     {
         _updateProgressTimer.IsEnabled = appUpdateService.UpdateState == AppUpdateServiceState.Downloading;
+    }
+
+    private void IsSafeToShutdownChanged(object? sender, bool e)
+    {
+        IsSafeToShutdown = e;
     }
 }

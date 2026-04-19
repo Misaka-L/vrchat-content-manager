@@ -159,7 +159,7 @@ public partial class App : Application
         {
             var lifetimeService = _serviceProvider.GetRequiredService<AppLifetimeService>();
 
-            if (!await lifetimeService.IsSafeToShutdownAsync())
+            if (!lifetimeService.IsSafeToShutdown())
             {
                 var appWindowService = _serviceProvider.GetRequiredService<AppWindowService>();
                 var dialogService = _serviceProvider.GetRequiredService<DialogService>();

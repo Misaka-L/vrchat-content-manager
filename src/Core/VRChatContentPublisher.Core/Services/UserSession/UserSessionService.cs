@@ -130,6 +130,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         return CurrentUser;
     }
 
+    public AsyncServiceScope? TryGetSessionScope()
+    {
+        return _sessionScope;
+    }
+
     public async ValueTask<AsyncServiceScope> CreateOrGetSessionScopeAsync()
     {
         using (await SimpleSemaphoreSlimLockScope.WaitAsync(_createOrGetScopeLock))

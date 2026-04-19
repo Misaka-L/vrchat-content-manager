@@ -56,10 +56,21 @@
             <SelectableTextBlock Text="{Binding Notes}" />
         </ScrollViewer>
         <StackPanel Grid.Row="2" Spacing="4">
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning}}"
+                TextWrapping="Wrap" TextAlignment="Center"
+                IsVisible="{Binding !IsSafeToShutdown}" />
+
             <Button
-                IsVisible="{Binding IsUpdateAvailableForDownloadOrInstall}"
                 Content="{I18N {CompiledBinding UpdateButtonText}}"
-                Command="{Binding StartDownloadOrInstallUpdateCommand}" />
+                Command="{Binding StartDownloadOrInstallUpdateCommand}">
+                <Button.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding Path="IsUpdateAvailableForDownloadOrInstall" />
+                        <Binding Path="IsSafeToShutdown" />
+                    </MultiBinding>
+                </Button.IsVisible>
+            </Button>
 
             <ContentControl IsVisible="{Binding !IsUpdateAvailableForDownloadOrInstall}"
                             Content="{Binding UpdateDownloadProgressViewModel}" />

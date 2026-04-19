@@ -209,10 +209,11 @@ public sealed partial class PublishTaskManagerViewModel(
         navigationService.Navigate(page);
     }
 
-    private void OnTaskCreated(object? _, ContentPublishTaskService task)
+    private void OnTaskCreated(object? _, ContentPublishTaskCreatedEventArg args)
     {
         Dispatcher.UIThread.Invoke(() =>
         {
+            var task = args.Task;
             if (Tasks.Any(t => t.TaskId == task.TaskId))
                 return;
 
@@ -222,11 +223,11 @@ public sealed partial class PublishTaskManagerViewModel(
         });
     }
 
-    private void OnTaskRemoved(object? sender, ContentPublishTaskService e)
+    private void OnTaskRemoved(object? sender, ContentPublishTaskRemovedEventArg e)
     {
         Dispatcher.UIThread.Invoke(() =>
         {
-            var viewModel = Tasks.FirstOrDefault(t => t.TaskId == e.TaskId);
+            var viewModel = Tasks.FirstOrDefault(t => t.TaskId == e.Task.TaskId);
             if (viewModel != null)
                 Tasks.Remove(viewModel);
 
