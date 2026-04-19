@@ -54,10 +54,8 @@ public sealed partial class UpdateDownloadProgressViewModel(
         ? LangKeys.Common_Views_Update_Progress_View_Install_Update_Button
         : LangKeys.Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks;
 
-    private readonly DispatcherTimer _updateProgressTimer = new()
-    {
-        Interval = TimeSpan.FromMilliseconds(500)
-    };
+    private readonly DispatcherTimer _updateProgressTimer =
+        new(TimeSpan.FromMilliseconds(500), DispatcherPriority.Background, Dispatcher.UIThread);
 
     [RelayCommand]
     private void Load()

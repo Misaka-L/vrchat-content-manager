@@ -68,7 +68,8 @@ public sealed class AppUpdateService(
             {
                 ParallelCount = 8,
                 ParallelDownload = true,
-                EnableAutoResumeDownload = false
+                EnableAutoResumeDownload = false,
+                MaximumBytesPerSecond = 102400
             })
             .WithHttpClient(() => httpClientFactory.CreateClient(nameof(AppUpdateService)))
             .Build();
