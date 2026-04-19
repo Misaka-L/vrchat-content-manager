@@ -64,6 +64,8 @@ public partial class App : Application
     {
         _serviceProvider = serviceProvider;
         AsyncImageLoader = _serviceProvider.GetRequiredService<AppWebImageLoader>();
+
+        DataContext = _serviceProvider.GetRequiredService<AppViewModel>();
     }
 
     public override void Initialize()
@@ -145,43 +147,12 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void ShowWindowClicked(object? sender, EventArgs e)
+    private void OnOpenLogsFolderClicked(object? sender, EventArgs e)
     {
-        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (DataContext is not AppViewModel appViewModel)
+            return;
 
-        desktop.MainWindow?.Show();
-        desktop.MainWindow?.Activate();
-    }
-
-    private async void ExitAppClicked(object? sender, EventArgs e)
-    {
-        try
-        {
-            var lifetimeService = _serviceProvider.GetRequiredService<AppLifetimeService>();
-
-            if (!lifetimeService.IsSafeToShutdown())
-            {
-                var appWindowService = _serviceProvider.GetRequiredService<AppWindowService>();
-                var dialogService = _serviceProvider.GetRequiredService<DialogService>();
-                var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
-
-                await appWindowService.ActivateMainWindowAsync();
-
-                await dialogService.ShowDialogAsync(exitAppDialogViewModel);
-                return;
-            }
-
-            lifetimeService.Shutdown();
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
-    private void OpenLogsFolderClicked(object? sender, EventArgs e)
-    {
-        var directoryPath = AppStorageService.GetLogsPath();
+        var directoryPath = appViewModel.LogsFolderPath;
         if (!Directory.Exists(directoryPath))
             return;
 
@@ -194,5 +165,13 @@ public partial class App : Application
             // Fire and forget
             _ = launcher.LaunchDirectoryInfoAsync(directoryInfo);
         }
+    }
+
+    private void OnTrayIconClicked(object? sender, EventArgs e)
+    {
+        if (DataContext is not AppViewModel appViewModel)
+            return;
+
+        appViewModel.ActivateWindowCommand.Execute(null);
     }
 }

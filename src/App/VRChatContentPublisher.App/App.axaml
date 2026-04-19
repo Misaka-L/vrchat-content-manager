@@ -7,6 +7,9 @@
              xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
              xmlns:converters="clr-namespace:VRChatContentPublisher.App.Converters"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:viewModels="clr-namespace:VRChatContentPublisher.App.ViewModels"
+             xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
+             x:DataType="viewModels:AppViewModel"
              RequestedThemeVariant="Default">
 
     <Application.Resources>
@@ -56,9 +59,9 @@
         <Style Selector="MenuItem avalonia|MaterialIconText TextBlock">
             <Setter Property="FontSize" Value="16" />
         </Style>
-        
+
         <Style Selector="ToggleSwitch > TextBlock">
-            <Setter Property="Margin" Value="5,0,0,0"/>
+            <Setter Property="Margin" Value="5,0,0,0" />
         </Style>
     </Application.Styles>
 
@@ -66,16 +69,16 @@
         <TrayIcons>
             <TrayIcon Icon="/Assets/AppIcon.ico"
                       ToolTipText="VRChat Content Publisher"
-                      Clicked="ShowWindowClicked">
+                      Clicked="OnTrayIconClicked">
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Open_Logs_Folder}}"
-                                        Click="OpenLogsFolderClicked" />
+                                        Click="OnOpenLogsFolderClicked"/>
                         <NativeMenuItemSeparator />
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Main_Window}}"
-                                        Click="ShowWindowClicked" />
+                                        Command="{Binding ActivateWindowCommand}" />
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Shutdown_App}}"
-                                        Click="ExitAppClicked" />
+                                        Command="{Binding ExitAppCommand}" />
                     </NativeMenu>
                 </TrayIcon.Menu>
             </TrayIcon>

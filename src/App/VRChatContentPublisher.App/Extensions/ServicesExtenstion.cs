@@ -25,6 +25,7 @@ public static class ServicesExtenstion
 {
     public static IServiceCollection AddAppServices(this IServiceCollection services)
     {
+        services.AddSingleton<AppViewModel>();
         services.AddSingleton<AppWebImageLoader>();
 
         services.AddSingleton<AppLifetimeService>();
