@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:inAppNotifications="clr-namespace:VRChatContentPublisher.App.ViewModels.InAppNotifications"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="400"
+             x:DataType="inAppNotifications:UpdateProgressAppNotificationViewModel"
+             x:Class="VRChatContentPublisher.App.Views.InAppNotifications.UpdateProgressAppNotificationView">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <controls:ColorZone
+        Mode="PrimaryMid"
+        Background="{Binding StateColor, FallbackValue=#3f51b5}"
+        Padding="12">
+        <ContentControl Content="{Binding UpdateDownloadProgressViewModel}" />
+    </controls:ColorZone>
+</UserControl>

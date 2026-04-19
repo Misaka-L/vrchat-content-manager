@@ -1,0 +1,56 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:DataType="settings:UpdateSettingsViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Settings.UpdateSettingsView">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <StackPanel Spacing="8" Margin="8">
+        <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
+                  assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Title}}"
+                  ItemsSource="{Binding UpdateCheckModes}"
+                  SelectedItem="{Binding UpdateCheckMode}">
+            <ComboBox.DataTemplates>
+                <DataTemplate x:DataType="settings:UpdateSettingsUpdateCheckModeViewModel">
+                    <TextBlock Text="{I18N {Binding UpdateModeText}}" />
+                </DataTemplate>
+            </ComboBox.DataTemplates>
+        </ComboBox>
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label}}"
+            IsChecked="{Binding DownloadUpdateAtBackground}" />
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label}}"
+            IsChecked="{Binding ReceivePreReleaseUpdate}" />
+
+        <!-- Update Progress Zone -->
+        <ContentControl IsVisible="{Binding !IsIdle}"
+                        Content="{Binding UpdateDownloadProgressViewModel}" />
+
+        <StackPanel Spacing="8" IsVisible="{Binding IsIdle}">
+            <Button
+                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Button_Text}}"
+                Command="{Binding CheckForUpdateCommand}" />
+            <Button
+                Theme="{StaticResource MaterialOutlineButton}" Classes="light"
+                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text}}"
+                Command="{Binding ClearVersionSkipAndCheckForUpdateCommand}" />
+            <TextBlock IsVisible="{Binding StatusText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                       Text="{I18N {CompiledBinding StatusText}}" />
+        </StackPanel>
+    </StackPanel>
+
+</UserControl>

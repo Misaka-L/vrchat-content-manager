@@ -23,6 +23,11 @@ public sealed class AppSettings
     public AppTasksPageSortMode TasksPageSortMode { get; set; } = AppTasksPageSortMode.LatestFirst;
 
     public bool UseBorderlessWindow { get; set; } = true;
+
+    public AppUpdateCheckMode UpdateCheckMode { get; set; } = AppUpdateCheckMode.AtStartAndBackground;
+    public bool DownloadUpdateAtBackground { get; set; } = true;
+    public bool ReceivePreviewUpdate { get; set; }
+    public string? SkipVersion { get; set; }
 }
 
 public enum AppHttpProxySettings
@@ -36,4 +41,11 @@ public enum AppTasksPageSortMode
 {
     LatestFirst = 0,
     OldestFirst = 1,
+}
+
+public enum AppUpdateCheckMode
+{
+    Manual,
+    OnlyAtStart,
+    AtStartAndBackground
 }

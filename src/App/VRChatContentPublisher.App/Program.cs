@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using System.Runtime.Versioning;
+using HotAvalonia;
 // using HotAvalonia;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -87,7 +88,7 @@ internal sealed class Program
 #endif
 
             builder.Services.AddAvaloniaApplication<App>(appBuilder => appBuilder
-                // .UseHotReload()
+                .UseHotReload()
                 .UsePlatformDetect()
                 .WithInterFont()
                 .LogToTrace());

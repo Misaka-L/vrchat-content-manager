@@ -6,7 +6,7 @@
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:DataType="dialogs:StartupPortChangedDialogViewModel"
-             x:Class="VRChatContentPublisher.App.Dialogs.StartupPortChangedDialog">
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.StartupPortChangedDialog">
 
     <StackPanel Spacing="24" Margin="8" Width="380">
         <TextBlock Classes="Headline6"

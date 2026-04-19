@@ -1,15 +1,21 @@
-﻿using VRChatContentPublisher.Core.Models;
+﻿using MessagePipe;
+using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask;
 
-public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishTaskFactory)
+public sealed class TaskManagerService(
+    ContentPublishTaskFactory contentPublishTaskFactory,
+    IPublisher<ContentPublishTaskUpdateEventArg> taskUpdatedPublisher,
+    IPublisher<ContentPublishTaskCreatedEventArg> taskCreatedPublisher,
+    IPublisher<ContentPublishTaskRemovedEventArg> taskRemovedPublisher
+)
 {
     public IReadOnlyDictionary<string, ContentPublishTaskService> Tasks => _tasks.AsReadOnly();
     private readonly Dictionary<string, ContentPublishTaskService> _tasks = [];
 
-    public event EventHandler<ContentPublishTaskService>? TaskCreated;
-    public event EventHandler<ContentPublishTaskService>? TaskRemoved;
+    public event EventHandler<ContentPublishTaskCreatedEventArg>? TaskCreated;
+    public event EventHandler<ContentPublishTaskRemovedEventArg>? TaskRemoved;
 
     public event EventHandler<ContentPublishTaskUpdateEventArg>? TaskUpdated;
 
@@ -30,7 +36,10 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
             contentPublisher);
 
         _tasks.Add(taskId, task);
-        TaskCreated?.Invoke(this, task);
+
+        var args = new ContentPublishTaskCreatedEventArg(task);
+        TaskCreated?.Invoke(this, args);
+        taskCreatedPublisher.Publish(args);
 
         task.ProgressChanged += TaskOnProgressChanged;
         return task;
@@ -49,7 +58,10 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
         await task.CleanupAsync();
 
         _tasks.Remove(taskId);
-        TaskRemoved?.Invoke(this, task);
+
+        var args = new ContentPublishTaskRemovedEventArg(task);
+        TaskRemoved?.Invoke(this, args);
+        taskRemovedPublisher.Publish(args);
         return true;
     }
 
@@ -58,10 +70,15 @@ public sealed class TaskManagerService(ContentPublishTaskFactory contentPublishT
         if (sender is not ContentPublishTaskService task)
             return;
 
-        TaskUpdated?.Invoke(this, new ContentPublishTaskUpdateEventArg(task, e));
+        var args = new ContentPublishTaskUpdateEventArg(task, e);
+        TaskUpdated?.Invoke(this, args);
+        taskUpdatedPublisher.Publish(args);
     }
 }
 
 public record ContentPublishTaskUpdateEventArg(
     ContentPublishTaskService Task,
     PublishTaskProgressEventArg ProgressEventArg);
+
+public record ContentPublishTaskCreatedEventArg(ContentPublishTaskService Task);
+public record ContentPublishTaskRemovedEventArg(ContentPublishTaskService Task);

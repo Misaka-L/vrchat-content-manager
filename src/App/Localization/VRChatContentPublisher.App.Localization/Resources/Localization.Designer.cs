@@ -78,6 +78,88 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel Update.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading Update....
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Downloading_Update {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Downloading_Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Install_Update_Button {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Install_Update_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uncompleted publish tasks exist.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks {
+            get {
+                return ResourceManager.GetString(("Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Task" +
+                        "s"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update are ready to install.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Ready_To_Install_Title {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Ready_To_Install_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to download update.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Update_Download_Failed_Title {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Update_Download_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to install update.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Update_Install_Failed_Title {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Update_Install_Failed_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_Update_Retry_Download_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What&apos;s News in v{0}.
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_What_News_Text_Template {
+            get {
+                return ResourceManager.GetString("Common_Views_Update_Progress_View_What_News_Text_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Cookie.
         /// </summary>
         internal static string Dialog_Login_Using_Cookies_Add_Cookie_Button_Text {
@@ -305,11 +387,101 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Shutting down....
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        internal static string Dialog_Shutdown_Shutdown_In_Progress_Text {
+        internal static string Dialog_Update_Available_Cancel_Button_Text {
             get {
-                return ResourceManager.GetString("Dialog_Shutdown_Shutdown_In_Progress_Text", resourceCulture);
+                return ResourceManager.GetString("Dialog_Update_Available_Cancel_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        internal static string Dialog_Update_Available_Download_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Download_Update_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Update Available.
+        /// </summary>
+        internal static string Dialog_Update_Available_Headline {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Headline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install Update.
+        /// </summary>
+        internal static string Dialog_Update_Available_Install_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Install_Update_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip this version.
+        /// </summary>
+        internal static string Dialog_Update_Available_Skip_Version_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Skip_Version_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Released at {0}.
+        /// </summary>
+        internal static string Dialog_Update_Available_Subtitle_Release_Date_Template {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Subtitle_Release_Date_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You must clear all uncompleted publish tasks before install update..
+        /// </summary>
+        internal static string Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View on Browser.
+        /// </summary>
+        internal static string Dialog_Update_Available_View_On_Browser_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_View_On_Browser_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismiss.
+        /// </summary>
+        internal static string In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New version v{0} is available!.
+        /// </summary>
+        internal static string In_App_Notifications_New_Version_Available_Title {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_New_Version_Available_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        internal static string In_App_Notifications_New_Version_Available_View_Button_Text {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_New_Version_Available_View_Button_Text", resourceCulture);
             }
         }
         
@@ -1376,6 +1548,106 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_PairedClients_Title {
             get {
                 return ResourceManager.GetString("Pages_Settings_PairedClients_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to At start and background.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_At_Start_And_Background {
+            get {
+                return ResourceManager.GetString(("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_At_Start_And_Backg" +
+                        "round"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Manual {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Manual", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only at start.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Only_At_Start {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Only_At_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Check Update Mode.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Auto_Check_Update_Mode_Selector_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to check for update: {0}.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Status_Failed_To_Check_Update_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Already up-to-dated.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Status_Up_To_Dated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Check for update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Update_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Update_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear version skip and Check for update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Check_For_Update_Clear_Version_Skip_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download update at background.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Receive pre-release update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Software Update.
+        /// </summary>
+        internal static string Pages_Settings_Software_Update_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Software_Update_Title", resourceCulture);
             }
         }
         

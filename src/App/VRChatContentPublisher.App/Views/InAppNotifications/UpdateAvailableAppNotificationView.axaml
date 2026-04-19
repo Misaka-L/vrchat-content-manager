@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:inAppNotifications="clr-namespace:VRChatContentPublisher.App.ViewModels.InAppNotifications"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="50"
+             x:DataType="inAppNotifications:UpdateAvailableAppNotificationViewModel"
+             x:Class="VRChatContentPublisher.App.Views.InAppNotifications.UpdateAvailableAppNotificationView">
+
+    <Border Background="#3f51b5">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="8">
+            <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White"
+                                   Margin="0,0,8,0" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       TextWrapping="Wrap">
+                <TextBlock.Text>
+                    <I18N
+                        Key="{x:Static localization:LangKeys.In_App_Notifications_New_Version_Available_Title}">
+                        <Binding Path="Version" />
+                    </I18N>
+                </TextBlock.Text>
+            </TextBlock>
+            <Grid ColumnDefinitions="Auto,Auto" Grid.Column="2">
+                <Button
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Foreground="White"
+                    Command="{Binding ShowUpdateDialogCommand}"
+                    Content="{I18N {x:Static localization:LangKeys.In_App_Notifications_New_Version_Available_View_Button_Text}}"
+                    VerticalAlignment="Center" />
+                <Button Grid.Column="1"
+                        Content="{avalonia:MaterialIconExt Kind=Close}"
+                        Padding="4"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Foreground="White"
+                        Command="{Binding RequestCloseCommand}"
+                        ToolTip.Tip="{I18N {x:Static localization:LangKeys.In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip}}"
+                        VerticalAlignment="Center" />
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

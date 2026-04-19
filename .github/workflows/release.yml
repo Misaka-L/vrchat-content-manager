@@ -152,7 +152,7 @@ jobs:
 
           for f in vrchat-content-publisher-app-*; do
             [ -e "$f" ] || continue
-            zip -r "$OUTPUT_PATH/${f}.zip" "$f"
+            (cd "$f" && zip -r "$OUTPUT_PATH/${f}.zip" .)
           done
         shell: bash
 

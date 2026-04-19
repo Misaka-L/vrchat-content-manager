@@ -5,6 +5,7 @@ using Material.Icons;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 using VRChatContentPublisher.Core.Services;

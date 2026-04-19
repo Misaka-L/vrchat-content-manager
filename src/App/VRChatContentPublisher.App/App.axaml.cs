@@ -1,19 +1,17 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
-using Avalonia.Threading;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
-using VRChatContentPublisher.App.Dialogs;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Pages;
 using VRChatContentPublisher.App.Pages.GettingStarted;
 using VRChatContentPublisher.App.Pages.HomeTab;
 using VRChatContentPublisher.App.Pages.Settings;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
@@ -26,9 +24,11 @@ using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.App.ViewModels.Settings;
 using VRChatContentPublisher.App.Views;
+using VRChatContentPublisher.App.Views.Data;
 using VRChatContentPublisher.App.Views.Data.Connect;
 using VRChatContentPublisher.App.Views.Data.PublishTasks;
 using VRChatContentPublisher.App.Views.Data.Settings;
+using VRChatContentPublisher.App.Views.Dialogs;
 using VRChatContentPublisher.App.Views.InAppNotifications;
 using VRChatContentPublisher.App.Views.Settings;
 using VRChatContentPublisher.Core;
@@ -92,6 +92,7 @@ public partial class App : Application
         ViewLocator.Register<ExitAppDialogViewModel, ExitAppDialog>();
         ViewLocator.Register<StartupPortChangedDialogViewModel, StartupPortChangedDialog>();
         ViewLocator.Register<LoginWithCookiesDialogViewModel, LoginWithCookiesDialog>();
+        ViewLocator.Register<UpdateAvailableDialogViewModel, UpdateAvailableDialog>();
 
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();
@@ -101,6 +102,8 @@ public partial class App : Application
 
         ViewLocator.Register<RpcClientSessionViewModel, RpcClientSessionView>();
         ViewLocator.Register<UserSessionViewModel, UserSessionView>();
+        
+        ViewLocator.Register<UpdateDownloadProgressViewModel, UpdateDownloadProgressView>();
 
         // Settings Section
         ViewLocator.Register<ConnectSettingsViewModel, ConnectSettingsView>();
@@ -111,9 +114,12 @@ public partial class App : Application
         ViewLocator.Register<SessionsSettingsViewModel, SessionsSettingsView>();
         ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();
         ViewLocator.Register<DebugSettingsViewModel, DebugSettingsView>();
+        ViewLocator.Register<UpdateSettingsViewModel, UpdateSettingsView>();
 
         // In App Notification
         ViewLocator.Register<PublicIpChangedInAppNotificationViewModel, PublicIpChangedInAppNotificationView>();
+        ViewLocator.Register<UpdateAvailableAppNotificationViewModel, UpdateAvailableAppNotificationView>();
+        ViewLocator.Register<UpdateProgressAppNotificationViewModel, UpdateProgressAppNotificationView>();
 
         AvaloniaXamlLoader.Load(this);
 
@@ -149,18 +155,28 @@ public partial class App : Application
 
     private async void ExitAppClicked(object? sender, EventArgs e)
     {
-        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        try
+        {
+            var lifetimeService = _serviceProvider.GetRequiredService<AppLifetimeService>();
 
-        var dialogService = _serviceProvider.GetRequiredService<DialogService>();
-        var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
+            if (!lifetimeService.IsSafeToShutdown())
+            {
+                var appWindowService = _serviceProvider.GetRequiredService<AppWindowService>();
+                var dialogService = _serviceProvider.GetRequiredService<DialogService>();
+                var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
 
-        desktop.MainWindow?.Show();
-        desktop.MainWindow?.Activate();
+                await appWindowService.ActivateMainWindowAsync();
 
-        if (await dialogService.ShowDialogAsync(exitAppDialogViewModel) is not true)
-            return;
+                await dialogService.ShowDialogAsync(exitAppDialogViewModel);
+                return;
+            }
 
-        desktop.Shutdown();
+            lifetimeService.Shutdown();
+        }
+        catch
+        {
+            // ignored
+        }
     }
 
     private void OpenLogsFolderClicked(object? sender, EventArgs e)

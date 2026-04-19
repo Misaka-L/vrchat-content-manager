@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
 using Polly;
 using VRChatContentPublisher.BundleProcessCore.Models;
@@ -30,6 +31,42 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
+        services.ConfigureHttpClientDefaults(builder =>
+        {
+            var clientName = string.IsNullOrWhiteSpace(builder.Name) ? "general" : builder.Name + "-general";
+
+            builder
+                .ConfigureHttpClient(client =>
+                {
+                    client.Timeout = Timeout.InfiniteTimeSpan;
+                    client.AddUserAgent();
+                })
+                .ConfigurePrimaryHttpMessageHandler(servicesProvider => new SocketsHttpHandler
+                {
+                    UseCookies = false,
+                    PooledConnectionLifetime = TimeSpan.Zero,
+                    EnableMultipleHttp2Connections = true,
+                    EnableMultipleHttp3Connections = true,
+                    ConnectTimeout = TimeSpan.FromSeconds(5),
+                    Proxy = servicesProvider.GetRequiredService<AppWebProxy>()
+                })
+                .AddResilienceHandler(clientName, handlerBuilder =>
+                {
+                    handlerBuilder
+                        .AddRetry(new AppHttpRetryStrategyOptions
+                        {
+                            UseJitter = true,
+                            MaxRetryAttempts = 5,
+                            Delay = TimeSpan.FromSeconds(5),
+                            BackoffType = DelayBackoffType.Exponential
+                        })
+                        .AddTimeout(new HttpTimeoutStrategyOptions
+                        {
+                            Timeout = TimeSpan.FromSeconds(30)
+                        });
+                });
+        });
+
         services.AddConnectCore();
         services.AddHostedService<RpcServerStartupHostedService>();
         services.AddSingleton<RpcStartupPortWarningState>();
@@ -57,7 +94,6 @@ public static class ServicesExtension
         services.AddTransient<ConcurrentMultipartUploaderFactory>();
 
         services.AddSingleton<RemoteImageService>();
-        services.AddHttpClient<RemoteImageService>(client => { client.AddUserAgent(); });
 
         services.AddTransient<VRChatApiClientFactory>();
 
@@ -71,6 +107,7 @@ public static class ServicesExtension
 
         services.AddTransient<AppWebProxy>();
         services.AddTransient<UserSessionHttpClientFactory>();
+
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
         services.AddHttpClient<ContentPublishTaskFactory>(client =>
             {
@@ -99,48 +136,10 @@ public static class ServicesExtension
             });
 
         services.AddTransient<VRChatApiDiagnosticService>();
-        services.AddHttpClient<VRChatApiDiagnosticService>(client =>
-        {
-            client.AddUserAgent();
-            client.Timeout = TimeSpan.FromSeconds(30);
-        })
-        .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
-        {
-            UseCookies = false,
-            PooledConnectionLifetime = TimeSpan.Zero,
-            EnableMultipleHttp2Connections = true,
-            EnableMultipleHttp3Connections = true,
-            ConnectTimeout = TimeSpan.FromSeconds(5),
-            Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
-        })
-        .AddResilienceHandler("vrchatApiDiagnosticClient", builder =>
-        {
-            builder.AddRetry(new AppHttpRetryStrategyOptions
-            {
-                UseJitter = true,
-                MaxRetryAttempts = 5,
-                Delay = TimeSpan.FromSeconds(5),
-                BackoffType = DelayBackoffType.Exponential
-            });
-        });
 
         services.AddSingleton<IIpCryptService, IpCryptService>();
         services.AddSingleton<PublicIpCheckerService>();
-
-        services.AddHttpClient<CloudflareTracePublicIpProvider>(client =>
-        {
-            client.AddUserAgent();
-            client.Timeout = TimeSpan.FromSeconds(15);
-        })
-        .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
-        {
-            UseCookies = false,
-            PooledConnectionLifetime = TimeSpan.Zero,
-            EnableMultipleHttp2Connections = true,
-            EnableMultipleHttp3Connections = true,
-            ConnectTimeout = TimeSpan.FromSeconds(5),
-            Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
-        });
+        services.AddSingleton<CloudflareTracePublicIpProvider>();
 
         services.AddHostedService<PublicIpMonitorBackgroundService>();
 

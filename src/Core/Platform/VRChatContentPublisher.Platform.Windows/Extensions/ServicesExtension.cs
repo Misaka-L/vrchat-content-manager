@@ -14,6 +14,8 @@ public static class ServicesExtension
         services.AddSingleton<IDesktopNotificationService>(s =>
             s.GetRequiredService<WindowsDesktopNotificationService>());
 
+        services.AddSingleton<IUpdateInstallationService, WindowsUpdateInstallationService>();
+
         return services;
     }
 }

@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="420"
+             x:DataType="dialogs:UpdateAvailableDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.UpdateAvailableDialog">
+
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
+    <Grid Width="340" Height="360" RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="4">
+        <Border BorderBrush="{DynamicResource MaterialDesignBodyLight}"
+                BorderThickness="0,0,0,1" Padding="0,0,0,4">
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel>
+                    <TextBlock Text="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Headline}}"
+                               Classes="Subtitle2" />
+                    <TextBlock Text="{Binding Version, StringFormat='v{0}'}"
+                               Classes="Headline5" />
+                    <TextBlock Classes="Caption" Opacity="0.8">
+                        <TextBlock.Text>
+                            <I18N
+                                Key="{x:Static localization:LangKeys.Dialog_Update_Available_Subtitle_Release_Date_Template}">
+                                <Binding Path="ReleaseDate" StringFormat="f" />
+                            </I18N>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </StackPanel>
+
+                <Button Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right"
+                        Theme="{StaticResource MaterialOutlineButton}" Classes="light">
+                    <Interaction.Behaviors>
+                        <ClickEventTrigger>
+                            <LaunchUriAction Uri="{Binding BrowserUrl}" />
+                        </ClickEventTrigger>
+                    </Interaction.Behaviors>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="Earth" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_View_On_Browser_Button_Text}}" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+            <SelectableTextBlock Text="{Binding Notes}" />
+        </ScrollViewer>
+        <StackPanel Grid.Row="2" Spacing="4">
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Uncompleted_Tasks_Exist_Warning}}"
+                TextWrapping="Wrap" TextAlignment="Center"
+                IsVisible="{Binding !IsSafeToShutdown}" />
+
+            <Button
+                Content="{I18N {CompiledBinding UpdateButtonText}}"
+                Command="{Binding StartDownloadOrInstallUpdateCommand}">
+                <Button.IsVisible>
+                    <MultiBinding Converter="{x:Static BoolConverters.And}">
+                        <Binding Path="IsUpdateAvailableForDownloadOrInstall" />
+                        <Binding Path="IsSafeToShutdown" />
+                    </MultiBinding>
+                </Button.IsVisible>
+            </Button>
+
+            <ContentControl IsVisible="{Binding !IsUpdateAvailableForDownloadOrInstall}"
+                            Content="{Binding UpdateDownloadProgressViewModel}" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="4"
+                  IsVisible="{Binding ShowSkipVersionButton}">
+                <Button
+                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Skip_Version_Button_Text}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Command="{Binding MarkVersionAsSkippedCommand}" />
+                <Button Grid.Column="1"
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding RequestCloseCommand}" />
+            </Grid>
+
+            <Button IsVisible="{Binding !ShowSkipVersionButton}"
+                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Command="{Binding RequestCloseCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
