@@ -29,7 +29,7 @@ public sealed class WindowsUpdateInstallationService : IUpdateInstallationServic
             throw new FileNotFoundException("Installer not exist in extracted archive", installerPath);
 
         using var process = Process.Start("powershell",
-            $"-Command \"Write-Output 'Waiting for app shutdown'; Wait-Process -Id {Environment.ProcessId}; Start-Process '{installerPath}'\""
+            $"-Command \"Write-Output 'Waiting for app shutdown'; Wait-Process -Id {Environment.ProcessId}; Start-Process '{installerPath}' -ArgumentList \\\"-start-app-after-install /S\\\"\""
         );
     }
 }

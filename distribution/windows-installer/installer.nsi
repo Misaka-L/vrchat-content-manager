@@ -89,6 +89,8 @@ var StartMenuFolder
 !insertmacro "MUI_PAGE_STARTMENU" $START_MENU_PAGE_ID $StartMenuFolder
 
 !insertmacro MUI_PAGE_INSTFILES
+
+!define MUI_FINISHPAGE_RUN "$INSTDIR\${AppExecutable}"
 !insertmacro MUI_PAGE_FINISH
 
 ; Uninstall Pages
@@ -154,6 +156,15 @@ Section "-Create Shortcuts"
       CreateShortCut "$SMPROGRAMS\$StartMenuFolder\${ProductName}.lnk" "$INSTDIR\${AppExecutable}"
       CreateShortCut "$DESKTOP\${ProductName}.lnk" "$INSTDIR\${AppExecutable}"
     !insertmacro MUI_STARTMENU_WRITE_END
+SectionEnd
+
+Section "-Start App If Needed"
+    ${GetParameters} $0
+    ClearErrors
+    ${GetOptions} $0 "-start-app-after-install" $1
+    ${IfNot} ${Errors}
+        ExecShell "" "$InstDir\${AppExecutable}"
+    ${EndIf}
 SectionEnd
 
 ; Uninstall Sections
