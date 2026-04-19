@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Software upgrade. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
+  - Send in-app notification when app update available.
+  - Show changes in app.
+  - Skip specify version.
+  - Update check run on start or each 30mins in background. (optional)
+  - Download update in background. (optional)
+
 ### Changed
 
 - Rework Login with Cookies input fields. [`#275`](https://github.com/project-vrcz/content-publisher/pull/275)
