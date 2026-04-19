@@ -422,6 +422,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to View on Browser.
+        /// </summary>
+        internal static string Dialog_Update_Available_View_On_Browser_Button_Text {
+            get {
+                return ResourceManager.GetString("Dialog_Update_Available_View_On_Browser_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dismiss.
         /// </summary>
         internal static string In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip {

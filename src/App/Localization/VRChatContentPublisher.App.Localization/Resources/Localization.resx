@@ -656,6 +656,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Update_Available_Cancel_Button_Text" xml:space="preserve">
         <value>Cancel</value>
     </data>
+    <data name="Dialog_Update_Available_View_On_Browser_Button_Text" xml:space="preserve">
+        <value>View on Browser</value>
+    </data>
     <data name="In_App_Notifications_New_Version_Available_Title" xml:space="preserve">
         <value>New version v{0} is available!</value>
     </data>

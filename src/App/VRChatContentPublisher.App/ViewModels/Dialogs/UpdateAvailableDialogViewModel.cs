@@ -20,6 +20,7 @@ public sealed partial class UpdateAvailableDialogViewModel(
     public string Version => updateInformation.Version;
     public string Notes => updateInformation.Notes;
     public DateTimeOffset ReleaseDate => updateInformation.ReleaseDate;
+    public string BrowserUrl => updateInformation.BrowserUrl;
 
     public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
 
