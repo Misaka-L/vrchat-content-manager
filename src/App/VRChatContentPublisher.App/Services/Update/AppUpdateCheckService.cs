@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using Avalonia.Threading;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.Core.Models.VRChatApi;
