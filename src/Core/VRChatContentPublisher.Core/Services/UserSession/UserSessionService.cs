@@ -16,6 +16,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     // Cookies, UserId, UserName
     private readonly SaveCookiesDelegate _saveFunc;
+    private readonly SemaphoreSlim _saveSemaphore = new(1, 1);
 
     private readonly HttpClient _sessionHttpClient;
     private readonly VRChatApiClient _apiClient;
@@ -176,20 +177,28 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private async ValueTask SaveSessionAsync()
     {
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        using (await SimpleSemaphoreSlimLockScope.WaitAsync(_saveSemaphore))
+        {
+            await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        }
     }
 
     #region Dispose
 
     public ValueTask DisposeAsync()
     {
+        _saveSemaphore.Dispose();
         _sessionHttpClient.Dispose();
+        _createOrGetScopeLock.Dispose();
+
         return ValueTask.CompletedTask;
     }
 
     public void Dispose()
     {
+        _saveSemaphore.Dispose();
         _sessionHttpClient.Dispose();
+        _createOrGetScopeLock.Dispose();
     }
 
     #endregion
