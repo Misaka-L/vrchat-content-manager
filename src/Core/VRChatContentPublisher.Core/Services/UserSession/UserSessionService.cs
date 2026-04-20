@@ -123,7 +123,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             throw;
         }
 
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        await SaveSessionAsync();
         OnStateChanged(UserSessionState.LoggedIn);
 
         CurrentUserUpdated?.Invoke(this, CurrentUser);
@@ -161,7 +161,10 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private async Task AfterHttpResponseAsync(HttpResponseMessage response)
     {
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        if (response.Headers.Contains("Set-Cookie"))
+        {
+            await SaveSessionAsync();
+        }
 
         if (State == UserSessionState.LoggedIn &&
             response.RequestMessage?.RequestUri?.Host == "api.vrchat.cloud" &&
@@ -169,6 +172,11 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         {
             OnStateChanged(UserSessionState.InvalidSession);
         }
+    }
+
+    private async ValueTask SaveSessionAsync()
+    {
+        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
     }
 
     #region Dispose
