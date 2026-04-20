@@ -1,4 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
@@ -14,6 +15,24 @@ public sealed partial class AppViewModel(
 ) : ViewModelBase
 {
     public string LogsFolderPath => AppStorageService.GetLogsPath();
+
+    public bool IsBorderless => appWindowService.IsBorderless();
+    public bool IsPinned => appWindowService.IsPinned();
+
+    public string ToggleBorderlessItemText => IsBorderless
+        ? LangKeys.Tray_Menu_Borderless_Window_Toggle_Checked_Text
+        : LangKeys.Tray_Menu_Borderless_Window_Toggle_Unchecked_Text;
+
+    public string TogglePinnedItemText => IsPinned
+        ? LangKeys.Tray_Menu_Pinned_Window_Toggle_Checked_Text
+        : LangKeys.Tray_Menu_Pinned_Window_Toggle_Unchecked_Text;
+
+    [RelayCommand]
+    private void Load()
+    {
+        appWindowService.IsBorderlessChanged += IsBorderlessChanged;
+        appWindowService.IsPinnedChanged += IsPinnedChanged;
+    }
 
     [RelayCommand]
     private async Task ActivateWindow()
@@ -32,5 +51,29 @@ public sealed partial class AppViewModel(
         }
 
         lifetimeService.Shutdown();
+    }
+
+    [RelayCommand]
+    private async Task ToggleBorderlessWindow()
+    {
+        await appWindowService.SetBorderlessAsync(!IsBorderless);
+    }
+
+    [RelayCommand]
+    private void TogglePinnedWindow()
+    {
+        appWindowService.SetPin(!IsPinned);
+    }
+
+    private void IsPinnedChanged(object? sender, bool e)
+    {
+        OnPropertyChanged(nameof(IsPinned));
+        OnPropertyChanged(nameof(TogglePinnedItemText));
+    }
+
+    private void IsBorderlessChanged(object? sender, bool e)
+    {
+        OnPropertyChanged(nameof(IsBorderless));
+        OnPropertyChanged(nameof(ToggleBorderlessItemText));
     }
 }

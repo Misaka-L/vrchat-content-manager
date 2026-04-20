@@ -124,6 +124,11 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
 
         this.AttachDeveloperTools();
+        
+        if (DataContext is not AppViewModel appViewModel)
+            return;
+
+        appViewModel.LoadCommand.Execute(null);
     }
 
     public override void OnFrameworkInitializationCompleted()

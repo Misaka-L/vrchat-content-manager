@@ -10,6 +10,9 @@ public sealed class AppWindowService(IWritableOptions<AppSettings> appSettings) 
 {
     private IAppWindow? _mainWindow;
 
+    public event EventHandler<bool>? IsBorderlessChanged;
+    public event EventHandler<bool>? IsPinnedChanged;
+
     public void Register(IAppWindow window)
     {
         _mainWindow = window;
@@ -18,6 +21,8 @@ public sealed class AppWindowService(IWritableOptions<AppSettings> appSettings) 
     public void SetPin(bool isPinned)
     {
         _mainWindow?.SetPin(isPinned);
+
+        IsPinnedChanged?.Invoke(this, isPinned);
     }
 
     public bool IsPinned()
@@ -29,6 +34,8 @@ public sealed class AppWindowService(IWritableOptions<AppSettings> appSettings) 
     {
         _mainWindow?.SetBorderless(borderless);
         await appSettings.UpdateAsync(settings => settings.UseBorderlessWindow = borderless);
+
+        IsBorderlessChanged?.Invoke(this, borderless);
     }
 
     public bool IsBorderless()

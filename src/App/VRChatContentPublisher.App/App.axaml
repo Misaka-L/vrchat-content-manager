@@ -8,7 +8,6 @@
              xmlns:converters="clr-namespace:VRChatContentPublisher.App.Converters"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              xmlns:viewModels="clr-namespace:VRChatContentPublisher.App.ViewModels"
-             xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
              x:DataType="viewModels:AppViewModel"
              RequestedThemeVariant="Default">
 
@@ -73,10 +72,19 @@
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Open_Logs_Folder}}"
-                                        Click="OnOpenLogsFolderClicked"/>
+                                        Click="OnOpenLogsFolderClicked" />
                         <NativeMenuItemSeparator />
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Main_Window}}"
                                         Command="{Binding ActivateWindowCommand}" />
+                        <OnPlatform>
+                            <OnPlatform.Windows>
+                                <NativeMenuItem Header="{I18N {CompiledBinding ToggleBorderlessItemText}}"
+                                                Command="{Binding ToggleBorderlessWindowCommand}" />
+                            </OnPlatform.Windows>
+                        </OnPlatform>
+                        <NativeMenuItem Header="{I18N {CompiledBinding TogglePinnedItemText}}"
+                                        Command="{Binding TogglePinnedWindowCommand}" />
+                        <NativeMenuItemSeparator />
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Shutdown_App}}"
                                         Command="{Binding ExitAppCommand}" />
                     </NativeMenu>
