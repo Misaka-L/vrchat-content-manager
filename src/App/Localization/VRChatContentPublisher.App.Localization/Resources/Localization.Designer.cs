@@ -1974,11 +1974,47 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disable Borderless Window.
+        /// </summary>
+        internal static string Tray_Menu_Borderless_Window_Toggle_Checked_Text {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Borderless_Window_Toggle_Checked_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Borderless Window.
+        /// </summary>
+        internal static string Tray_Menu_Borderless_Window_Toggle_Unchecked_Text {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Borderless_Window_Toggle_Unchecked_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open Logs Folder.
         /// </summary>
         internal static string Tray_Menu_Open_Logs_Folder {
             get {
                 return ResourceManager.GetString("Tray_Menu_Open_Logs_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unpin Window.
+        /// </summary>
+        internal static string Tray_Menu_Pinned_Window_Toggle_Checked_Text {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Pinned_Window_Toggle_Checked_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pin Window.
+        /// </summary>
+        internal static string Tray_Menu_Pinned_Window_Toggle_Unchecked_Text {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Pinned_Window_Toggle_Unchecked_Text", resourceCulture);
             }
         }
         

@@ -608,6 +608,18 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Tray_Menu_Show_Main_Window" xml:space="preserve">
         <value>Show Window</value>
     </data>
+    <data name="Tray_Menu_Borderless_Window_Toggle_Checked_Text" xml:space="preserve">
+        <value>Disable Borderless Window</value>
+    </data>
+    <data name="Tray_Menu_Borderless_Window_Toggle_Unchecked_Text" xml:space="preserve">
+        <value>Enable Borderless Window</value>
+    </data>
+    <data name="Tray_Menu_Pinned_Window_Toggle_Checked_Text" xml:space="preserve">
+        <value>Unpin Window</value>
+    </data>
+    <data name="Tray_Menu_Pinned_Window_Toggle_Unchecked_Text" xml:space="preserve">
+        <value>Pin Window</value>
+    </data>
     <data name="Tray_Menu_Show_Shutdown_App" xml:space="preserve">
         <value>Exit</value>
     </data>

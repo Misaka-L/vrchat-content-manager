@@ -73,6 +73,9 @@ public partial class HomePageViewModel : PageViewModelBase
     [RelayCommand]
     private async Task Load()
     {
+        _appWindowService.IsBorderlessChanged += OnIsBorderlessChanged;
+        _appWindowService.IsPinnedChanged += OnIsPinnedChanged;
+
         await _appSettings.UpdateAsync(settings => { settings.SkipFirstSetup = true; });
 
         // Consume before showing so the warning is guaranteed to be launch-only.
@@ -81,6 +84,23 @@ public partial class HomePageViewModel : PageViewModelBase
 
         await _dialogService.ShowDialogAsync(
             _startupPortChangedDialogFactory.Create(warning.ConfiguredPort, warning.ActivePort));
+    }
+
+    [RelayCommand]
+    private void Unload()
+    {
+        _appWindowService.IsBorderlessChanged -= OnIsBorderlessChanged;
+        _appWindowService.IsPinnedChanged -= OnIsPinnedChanged;
+    }
+
+    private void OnIsPinnedChanged(object? sender, bool e)
+    {
+        OnPropertyChanged(nameof(IsPinned));
+    }
+
+    private void OnIsBorderlessChanged(object? sender, bool e)
+    {
+        OnPropertyChanged(nameof(IsBorderless));
     }
 
     [RelayCommand]

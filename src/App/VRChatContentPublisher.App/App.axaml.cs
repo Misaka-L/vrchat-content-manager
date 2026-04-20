@@ -10,8 +10,6 @@ using VRChatContentPublisher.App.Pages;
 using VRChatContentPublisher.App.Pages.GettingStarted;
 using VRChatContentPublisher.App.Pages.HomeTab;
 using VRChatContentPublisher.App.Pages.Settings;
-using VRChatContentPublisher.App.Services;
-using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.App.ViewModels.Data.Connect;
@@ -64,6 +62,8 @@ public partial class App : Application
     {
         _serviceProvider = serviceProvider;
         AsyncImageLoader = _serviceProvider.GetRequiredService<AppWebImageLoader>();
+
+        DataContext = _serviceProvider.GetRequiredService<AppViewModel>();
     }
 
     public override void Initialize()
@@ -124,6 +124,11 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
 
         this.AttachDeveloperTools();
+        
+        if (DataContext is not AppViewModel appViewModel)
+            return;
+
+        appViewModel.LoadCommand.Execute(null);
     }
 
     public override void OnFrameworkInitializationCompleted()
@@ -145,43 +150,12 @@ public partial class App : Application
         base.OnFrameworkInitializationCompleted();
     }
 
-    private void ShowWindowClicked(object? sender, EventArgs e)
+    private void OnOpenLogsFolderClicked(object? sender, EventArgs e)
     {
-        if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop) return;
+        if (DataContext is not AppViewModel appViewModel)
+            return;
 
-        desktop.MainWindow?.Show();
-        desktop.MainWindow?.Activate();
-    }
-
-    private async void ExitAppClicked(object? sender, EventArgs e)
-    {
-        try
-        {
-            var lifetimeService = _serviceProvider.GetRequiredService<AppLifetimeService>();
-
-            if (!lifetimeService.IsSafeToShutdown())
-            {
-                var appWindowService = _serviceProvider.GetRequiredService<AppWindowService>();
-                var dialogService = _serviceProvider.GetRequiredService<DialogService>();
-                var exitAppDialogViewModel = _serviceProvider.GetRequiredService<ExitAppDialogViewModel>();
-
-                await appWindowService.ActivateMainWindowAsync();
-
-                await dialogService.ShowDialogAsync(exitAppDialogViewModel);
-                return;
-            }
-
-            lifetimeService.Shutdown();
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
-    private void OpenLogsFolderClicked(object? sender, EventArgs e)
-    {
-        var directoryPath = AppStorageService.GetLogsPath();
+        var directoryPath = appViewModel.LogsFolderPath;
         if (!Directory.Exists(directoryPath))
             return;
 
