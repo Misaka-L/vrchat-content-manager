@@ -68,7 +68,7 @@
         <TrayIcons>
             <TrayIcon Icon="/Assets/AppIcon.ico"
                       ToolTipText="VRChat Content Publisher"
-                      Clicked="OnTrayIconClicked">
+                      Command="{Binding ActivateWindowCommand}">
                 <TrayIcon.Menu>
                     <NativeMenu>
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Open_Logs_Folder}}"

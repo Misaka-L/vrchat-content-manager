@@ -169,12 +169,4 @@ public partial class App : Application
             _ = launcher.LaunchDirectoryInfoAsync(directoryInfo);
         }
     }
-
-    private void OnTrayIconClicked(object? sender, EventArgs e)
-    {
-        if (DataContext is not AppViewModel appViewModel)
-            return;
-
-        appViewModel.ActivateWindowCommand.Execute(null);
-    }
 }
