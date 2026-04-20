@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Cannot exit app when dialog show. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
+- Abnormal shutdown during web request may corrupted session storage in some case. [`#292`](https://github.com/project-vrcz/content-publisher/pull/292)
 
 ## [2.9.0-beta.2] - 2026-04-19
 

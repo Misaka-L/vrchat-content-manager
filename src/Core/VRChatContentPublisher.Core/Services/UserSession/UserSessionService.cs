@@ -16,6 +16,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     // Cookies, UserId, UserName
     private readonly SaveCookiesDelegate _saveFunc;
+    private readonly SemaphoreSlim _saveSemaphore = new(1, 1);
 
     private readonly HttpClient _sessionHttpClient;
     private readonly VRChatApiClient _apiClient;
@@ -123,7 +124,7 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             throw;
         }
 
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        await SaveSessionAsync();
         OnStateChanged(UserSessionState.LoggedIn);
 
         CurrentUserUpdated?.Invoke(this, CurrentUser);
@@ -161,7 +162,10 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
 
     private async Task AfterHttpResponseAsync(HttpResponseMessage response)
     {
-        await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        if (response.Headers.Contains("Set-Cookie"))
+        {
+            await SaveSessionAsync();
+        }
 
         if (State == UserSessionState.LoggedIn &&
             response.RequestMessage?.RequestUri?.Host == "api.vrchat.cloud" &&
@@ -171,17 +175,30 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         }
     }
 
+    private async ValueTask SaveSessionAsync()
+    {
+        using (await SimpleSemaphoreSlimLockScope.WaitAsync(_saveSemaphore))
+        {
+            await _saveFunc(CookieContainer, UserId, UserNameOrEmail, CurrentUser);
+        }
+    }
+
     #region Dispose
 
     public ValueTask DisposeAsync()
     {
+        _saveSemaphore.Dispose();
         _sessionHttpClient.Dispose();
+        _createOrGetScopeLock.Dispose();
+
         return ValueTask.CompletedTask;
     }
 
     public void Dispose()
     {
+        _saveSemaphore.Dispose();
         _sessionHttpClient.Dispose();
+        _createOrGetScopeLock.Dispose();
     }
 
     #endregion
