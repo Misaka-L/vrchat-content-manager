@@ -2,12 +2,15 @@ using System.ComponentModel;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Reactive;
 using VRChatContentPublisher.App.ViewModels;
 
 namespace VRChatContentPublisher.App.Views;
 
 public partial class MainWindow : Window
 {
+    private WindowState _lastStateBeforeMinimized;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -34,6 +37,16 @@ public partial class MainWindow : Window
             Hide();
 #endif
         };
+
+        _lastStateBeforeMinimized = WindowState;
+        this.GetObservable(WindowStateProperty)
+            .Subscribe(new AnonymousObserver<WindowState>(state =>
+            {
+                if (state == WindowState.Minimized)
+                    return;
+
+                _lastStateBeforeMinimized = state;
+            }));
     }
 
     private bool IsBorderlessSupported() => OperatingSystem.IsWindows();
@@ -58,6 +71,7 @@ public partial class MainWindow : Window
 
         ExtendClientAreaToDecorationsHint = true;
         WindowDecorations = WindowDecorations.BorderOnly;
+        WindowState = WindowState.Normal;
 #if DEBUG
         ShowInTaskbar = true;
 #else
@@ -183,5 +197,7 @@ public partial class MainWindow : Window
     {
         Show();
         Activate();
+
+        WindowState = _lastStateBeforeMinimized;
     }
 }
