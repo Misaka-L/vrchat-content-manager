@@ -71,6 +71,7 @@ public partial class MainWindow : Window
 
         ExtendClientAreaToDecorationsHint = true;
         WindowDecorations = WindowDecorations.BorderOnly;
+        WindowState = WindowState.Normal;
 #if DEBUG
         ShowInTaskbar = true;
 #else
