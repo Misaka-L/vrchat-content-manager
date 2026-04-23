@@ -88,7 +88,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          dotnet run dev/scripts/generate-udpater-metadata.cs -- \
+          dotnet run dev/scripts/generate-updater-metadata.cs -- \
             --owner "$PUBLISHER_OWNER" \
             --repo "$PUBLISHER_REPO" \
             --source Specified \
