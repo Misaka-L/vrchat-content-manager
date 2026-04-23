@@ -12,9 +12,12 @@ on:
         required: true
         description: Whether this release is pre-release
     secrets:
-      website-repo-token:
+      website-app-client-id:
         required: true
-        description: Token with write access to project-vrcz/website
+        description: GitHub App client ID with write access to project-vrcz/website
+      website-app-private-key:
+        required: true
+        description: GitHub App private key with write access to project-vrcz/website
 
 permissions:
   contents: read
@@ -34,6 +37,15 @@ jobs:
       updater_file_beta: src/public/api/content-publisher/updater-beta.json
 
     steps:
+      - name: Create Website Repository GitHub App Token
+        id: website-app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.website-app-client-id }}
+          private-key: ${{ secrets.website-app-private-key }}
+          owner: ${{ env.website_owner }}
+          repositories: ${{ env.website_repo }}
+
       - name: Checkout Publisher Repository
         uses: actions/checkout@v6
         with:
@@ -44,7 +56,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: ${{ env.website_owner }}/${{ env.website_repo }}
-          token: ${{ secrets.website-repo-token }}
+          token: ${{ steps.website-app-token.outputs.token }}
           path: ${{ env.website_repo_dir }}
 
       - name: Setup .NET SDK
@@ -112,6 +124,7 @@ jobs:
         run: |
           set -euo pipefail
 
+          git remote set-url origin "https://x-access-token:${{ steps.website-app-token.outputs.token }}@github.com/${{ env.website_owner }}/${{ env.website_repo }}.git"
           git switch -c "$BRANCH_NAME"
 
           if git diff --quiet -- "$UPDATER_FILE_STABLE" "$UPDATER_FILE_BETA"; then
@@ -129,7 +142,7 @@ jobs:
         if: ${{ steps.commit-and-push.outputs.changed == 'true' }}
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.website-repo-token }}
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
           BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
           WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
         run: |
@@ -143,7 +156,7 @@ jobs:
         if: ${{ steps.commit-and-push.outputs.changed == 'true' && steps.detect-pr.outputs.url == '' }}
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.website-repo-token }}
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
           WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
         run: |
           set -euo pipefail
@@ -155,7 +168,7 @@ jobs:
         if: ${{ steps.commit-and-push.outputs.changed == 'true' && steps.detect-pr.outputs.url == '' }}
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.website-repo-token }}
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
           BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
           WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
           BASE_BRANCH: ${{ steps.default-branch.outputs.name }}
@@ -187,9 +200,11 @@ jobs:
         if: ${{ steps.commit-and-push.outputs.changed == 'true' }}
         shell: bash
         env:
-          GH_TOKEN: ${{ secrets.website-repo-token }}
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
           BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
           WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
+          RELEASE_TAG: ${{ inputs.tag-name }}
+          IS_PRE_RELEASE: ${{ inputs.pre-release }}
         run: |
           set -euo pipefail
 

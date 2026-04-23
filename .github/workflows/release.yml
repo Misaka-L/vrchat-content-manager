@@ -200,7 +200,8 @@ jobs:
       tag-name: v${{ inputs.new-version }}
       pre-release: ${{ inputs.pre-release }}
     secrets:
-      website-repo-token: ${{ secrets.WEBSITE_REPO_TOKEN }}
+      website-app-client-id: ${{ secrets.WEBSITE_APP_CLIENT_ID }}
+      website-app-private-key: ${{ secrets.WEBSITE_APP_PRIVATE_KEY }}
 
   cleanup:
     needs: [update-changelog, build, create-release, publish-updater-metadata-to-website]
