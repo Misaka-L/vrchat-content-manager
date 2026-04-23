@@ -1,0 +1,245 @@
+name: Publish Updater Metadata To Website
+
+on:
+  workflow_call:
+    inputs:
+      tag-name:
+        type: string
+        required: true
+        description: Release tag name, e.g. v2.9.0
+      pre-release:
+        type: boolean
+        required: true
+        description: Whether this release is pre-release
+    secrets:
+      website-app-client-id:
+        required: true
+        description: GitHub App client ID with write access to project-vrcz/website
+      website-app-private-key:
+        required: true
+        description: GitHub App private key with write access to project-vrcz/website
+
+permissions:
+  contents: read
+
+jobs:
+  publish-updater-metadata:
+    runs-on: blacksmith-2vcpu-ubuntu-2404
+
+    env:
+      publisher_repo_dir: ${{ github.workspace }}/publisher
+      website_repo_dir: ${{ github.workspace }}/website
+      website_owner: project-vrcz
+      website_repo: website
+      publisher_owner: project-vrcz
+      publisher_repo: content-publisher
+      updater_file_stable: src/public/api/content-publisher/updater.json
+      updater_file_beta: src/public/api/content-publisher/updater-beta.json
+
+    steps:
+      - name: Create Website Repository GitHub App Token
+        id: website-app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.website-app-client-id }}
+          private-key: ${{ secrets.website-app-private-key }}
+          owner: ${{ env.website_owner }}
+          repositories: ${{ env.website_repo }}
+
+      - name: Checkout Publisher Repository
+        uses: actions/checkout@v6
+        with:
+          path: ${{ env.publisher_repo_dir }}
+          submodules: recursive
+
+      - name: Checkout Website Repository
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.website_owner }}/${{ env.website_repo }}
+          token: ${{ steps.website-app-token.outputs.token }}
+          path: ${{ env.website_repo_dir }}
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Select Output File
+        id: output-path
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ "${{ inputs.pre-release }}" = "true" ]; then
+            echo "output_file=${{ env.website_repo_dir }}/${{ env.updater_file_beta }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "output_file=${{ env.website_repo_dir }}/${{ env.updater_file_stable }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate Updater Metadata
+        shell: bash
+        working-directory: ${{ env.publisher_repo_dir }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag-name }}
+          OUTPUT_FILE: ${{ steps.output-path.outputs.output_file }}
+          PUBLISHER_OWNER: ${{ env.publisher_owner }}
+          PUBLISHER_REPO: ${{ env.publisher_repo }}
+        run: |
+          set -euo pipefail
+
+          dotnet run dev/scripts/generate-updater-metadata.cs -- \
+            --owner "$PUBLISHER_OWNER" \
+            --repo "$PUBLISHER_REPO" \
+            --source Specified \
+            --tag-or-name "$RELEASE_TAG" \
+            --output "$OUTPUT_FILE"
+
+      - name: Build PR Branch Name
+        id: pr-branch
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ inputs.tag-name }}
+        run: |
+          set -euo pipefail
+
+          safe_tag="$(echo "$RELEASE_TAG" | sed -E 's|[[:space:]/]+|-|g; s|[^[:alnum:]._-]||g')"
+          echo "branch_name=chore/update-content-publisher-updater-${safe_tag}" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Git User
+        working-directory: ${{ env.website_repo_dir }}
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+
+      - name: Commit and Push Changes
+        id: commit-and-push
+        working-directory: ${{ env.website_repo_dir }}
+        shell: bash
+        env:
+          BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
+          UPDATER_FILE_STABLE: ${{ env.updater_file_stable }}
+          UPDATER_FILE_BETA: ${{ env.updater_file_beta }}
+          RELEASE_TAG: ${{ inputs.tag-name }}
+        run: |
+          set -euo pipefail
+
+          git remote set-url origin "https://x-access-token:${{ steps.website-app-token.outputs.token }}@github.com/${{ env.website_owner }}/${{ env.website_repo }}.git"
+          git switch -c "$BRANCH_NAME"
+
+          if git diff --quiet -- "$UPDATER_FILE_STABLE" "$UPDATER_FILE_BETA"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git add "$UPDATER_FILE_STABLE" "$UPDATER_FILE_BETA"
+          git commit -m "chore: update content publisher updater metadata for $RELEASE_TAG"
+          git push -u origin "$BRANCH_NAME"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Detect Existing Pull Request
+        id: detect-pr
+        if: ${{ steps.commit-and-push.outputs.changed == 'true' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
+          BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
+          WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
+        run: |
+          set -euo pipefail
+
+          existing_pr_url="$(gh pr list --repo "$WEBSITE_REPO" --head "$BRANCH_NAME" --state open --json url --jq '.[0].url')"
+          echo "url=${existing_pr_url}" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve Default Branch
+        id: default-branch
+        if: ${{ steps.commit-and-push.outputs.changed == 'true' && steps.detect-pr.outputs.url == '' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
+          WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
+        run: |
+          set -euo pipefail
+
+          base_branch="$(gh repo view "$WEBSITE_REPO" --json defaultBranchRef --jq '.defaultBranchRef.name')"
+          echo "name=${base_branch}" >> "$GITHUB_OUTPUT"
+
+      - name: Create Pull Request To Website
+        if: ${{ steps.commit-and-push.outputs.changed == 'true' && steps.detect-pr.outputs.url == '' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
+          BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
+          WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
+          BASE_BRANCH: ${{ steps.default-branch.outputs.name }}
+          RELEASE_TAG: ${{ inputs.tag-name }}
+          IS_PRE_RELEASE: ${{ inputs.pre-release }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+          WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          body_file="$(mktemp)"
+          cat > "$body_file" <<EOF
+          This PR updates content publisher updater metadata from release \`$RELEASE_TAG\`.
+
+          - Pre-release: \`$IS_PRE_RELEASE\`
+          - Source repository: \`$SOURCE_REPOSITORY\`
+          - Source workflow run: \`$WORKFLOW_RUN_URL\`
+          EOF
+
+          gh pr create \
+            --repo "$WEBSITE_REPO" \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH_NAME" \
+            --title "chore: update content publisher updater metadata ($RELEASE_TAG)" \
+            --body-file "$body_file" \
+            --label automated
+
+      - name: Report Pull Request URL
+        if: ${{ steps.commit-and-push.outputs.changed == 'true' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ steps.website-app-token.outputs.token }}
+          BRANCH_NAME: ${{ steps.pr-branch.outputs.branch_name }}
+          WEBSITE_REPO: ${{ env.website_owner }}/${{ env.website_repo }}
+          RELEASE_TAG: ${{ inputs.tag-name }}
+          IS_PRE_RELEASE: ${{ inputs.pre-release }}
+        run: |
+          set -euo pipefail
+
+          pr_url="${{ steps.detect-pr.outputs.url }}"
+          if [ -z "$pr_url" ]; then
+            pr_url="$(gh pr list --repo "$WEBSITE_REPO" --head "$BRANCH_NAME" --state open --json url --jq '.[0].url')"
+          fi
+
+          if [ -n "$pr_url" ]; then
+            echo "Created/Updated PR: $pr_url"
+            {
+              echo "### Content Publisher Updater PR"
+              echo
+              echo "- Tag: \\`$RELEASE_TAG\\`"
+              echo "- Pre-release: \\`$IS_PRE_RELEASE\\`"
+              echo "- PR: [$pr_url]($pr_url)"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No PR URL found."
+            {
+              echo "### Content Publisher Updater PR"
+              echo
+              echo "- Tag: \\`$RELEASE_TAG\\`"
+              echo "- Pre-release: \\`$IS_PRE_RELEASE\\`"
+              echo "- PR: No PR URL found."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Report No Changes
+        if: ${{ steps.commit-and-push.outputs.changed != 'true' }}
+        shell: bash
+        run: |
+          echo "No updater metadata changes detected. Skip PR creation."
+          {
+            echo "### Content Publisher Updater PR"
+            echo
+            echo "- No updater metadata changes detected. Skip PR creation."
+          } >> "$GITHUB_STEP_SUMMARY"

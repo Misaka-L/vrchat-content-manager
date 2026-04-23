@@ -193,8 +193,18 @@ jobs:
           v$RELEASE_VERSION \
           $PATH_TO_RELEASE_ASSETS/*
 
+  publish-updater-metadata-to-website:
+    needs: create-release
+    uses: ./.github/workflows/publish-updater-to-website.yml
+    with:
+      tag-name: v${{ inputs.new-version }}
+      pre-release: ${{ inputs.pre-release }}
+    secrets:
+      website-app-client-id: ${{ secrets.WEBSITE_APP_CLIENT_ID }}
+      website-app-private-key: ${{ secrets.WEBSITE_APP_PRIVATE_KEY }}
+
   cleanup:
-    needs: [update-changelog, build, create-release]
+    needs: [update-changelog, build, create-release, publish-updater-metadata-to-website]
     if: ${{ !failure() && !cancelled() }}
 
     permissions:
