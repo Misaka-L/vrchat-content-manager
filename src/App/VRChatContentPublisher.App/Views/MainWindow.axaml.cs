@@ -100,7 +100,7 @@ public partial class MainWindow : Window
             case TaskBarLocation.Bottom:
                 Position = screenBoundsWithDpi - windowBoundsWithDpi -
                            PixelPoint.FromPoint(new Point(0, taskBarHeight), primaryScreen.Scaling) -
-                           PixelPoint.FromPoint(new Point(4, 4), primaryScreen.Scaling);
+                           PixelPoint.FromPoint(new Point(16, 12), primaryScreen.Scaling);
                 break;
             case TaskBarLocation.Left:
                 break;
