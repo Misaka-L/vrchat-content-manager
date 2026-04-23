@@ -31,6 +31,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Click tray icon only make window focused instead of bring window to front when window minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
 - Enable borderless window won't reset window state to normal from maximized or minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
 
+## [2.9.0-beta.3] - 2026-04-23
+
+### Added
+
+- Software upgrade. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
+  - Send in-app notification when app update available.
+  - Show changes in app.
+  - Skip specify version.
+  - Update check run on start or each 30mins in background. (optional)
+  - Download update in background. (optional)
+- Toggle pinned or borderless window in tray menu. [`#291`](https://github.com/project-vrcz/content-publisher/pull/291)
+- Add loading text to bootstrap screen.
+- Send desktop notification on new pairing request [`#296`](https://github.com/project-vrcz/content-publisher/issues/298)
+
+### Changed
+
+- Rework Login with Cookies input fields. [`#275`](https://github.com/project-vrcz/content-publisher/pull/275)
+- Update Use RGB Cycling background App Bar settings text for chinese. [`#276`](https://github.com/project-vrcz/content-publisher/pull/276)
+- Adjust margin between main window and screen bounds. [`#301`](https://github.com/project-vrcz/content-publisher/pull/301)
+
+### Fixed
+
+- Cannot exit app when dialog show. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
+- Abnormal shutdown during web request may corrupted session storage in some case. [`#292`](https://github.com/project-vrcz/content-publisher/pull/292)
+- Click tray icon only make window focused instead of bring window to front when window minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
+- Enable borderless window won't reset window state to normal from maximized or minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
+
 ## [2.9.0-beta.2] - 2026-04-19
 
 ### Added
@@ -453,7 +480,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.2...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.3...HEAD
+[2.9.0-beta.3]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.2...v2.9.0-beta.3
 [2.9.0-beta.2]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.1...v2.9.0-beta.2
 [2.9.0-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.8.2...v2.9.0-beta.1
 [2.8.2]: https://github.com/project-vrcz/content-publisher/compare/v2.8.1...v2.8.2
