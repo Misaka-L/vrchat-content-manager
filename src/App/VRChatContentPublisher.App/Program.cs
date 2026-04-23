@@ -1,5 +1,7 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using Avalonia;
 using System.Runtime.Versioning;
+using System.Text;
 using HotAvalonia;
 // using HotAvalonia;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +19,7 @@ using VRChatContentPublisher.IpcCore.Models;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
+
 #else
 using VRChatContentPublisher.Platform.Noop.Extensions;
 #endif
@@ -116,6 +119,17 @@ internal sealed class Program
         {
             Log.Fatal(ex, "Oops, the application has crashed!");
             Environment.ExitCode = -1;
+
+#if !DEBUG
+            try
+            {
+                LaunchCrashHandler(ex);
+            }
+            catch (Exception launchEx)
+            {
+                Log.Error(launchEx, "Failed to launch the crash handler.");
+            }
+#endif
         }
         finally
         {
@@ -129,4 +143,31 @@ internal sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+
+    private static void LaunchCrashHandler(Exception ex)
+    {
+        var crashHandlerExecutable =
+            OperatingSystem.IsWindows()
+                ? "VRChatContentPublisher.CrashHandler.App.exe"
+                : "VRChatContentPublisher.CrashHandler.App";
+        var crashHandlerPath = Path.Combine(AppContext.BaseDirectory, "VRChatContentPublisher.CrashHandler.App",
+            crashHandlerExecutable);
+        var fallbackAppPath = Path.Combine(AppContext.BaseDirectory,
+            "VRChatContentPublisher.App" + (OperatingSystem.IsWindows() ? ".exe" : "")
+        );
+
+        if (!File.Exists(crashHandlerPath))
+        {
+            throw new FileNotFoundException($"Crash handler executable not found at path: {crashHandlerPath}");
+        }
+
+        using var process = Process.Start(crashHandlerPath, [
+            "--exception",
+            Convert.ToBase64String(Encoding.UTF8.GetBytes(ex.ToString())),
+            "--logsFolderPath",
+            AppStorageService.GetLogsPath(),
+            "--applicationPath",
+            Environment.ProcessPath ?? fallbackAppPath
+        ]);
+    }
 }

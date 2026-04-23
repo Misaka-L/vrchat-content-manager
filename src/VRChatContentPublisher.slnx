@@ -12,6 +12,9 @@
     <File Path="App/Directory.Packages.props" />
     <Project Path="App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj" />
   </Folder>
+  <Folder Name="/App/CrashHandler/">
+    <Project Path="App/CrashHandler/VRChatContentPublisher.CrashHandler.App/VRChatContentPublisher.CrashHandler.App.csproj" />
+  </Folder>
   <Folder Name="/App/Localization/">
     <Project Path="App/Localization/VRChatContentPublisher.App.Localization/VRChatContentPublisher.App.Localization.csproj" />
   </Folder>
