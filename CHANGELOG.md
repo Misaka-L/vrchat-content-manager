@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Use LzmaCon Binaries from [project-vrcz/lzma](https://github.com/project-vrcz/lzma/releases/tag/v26.00-vrcz.2). [`#309`](https://github.com/project-vrcz/content-publisher/pull/309)
   - Added LZMA support for glibc 2.31 (Previous glibc 2.41).
   - You **STILL** need glibc 2.39 to run this app.
+  - Slightly improve compression performance for linux build (by 104%~).
 - Support glibc 2.39 (untested). [`#309`](https://github.com/project-vrcz/content-publisher/pull/309)
 
 ### Fixed
