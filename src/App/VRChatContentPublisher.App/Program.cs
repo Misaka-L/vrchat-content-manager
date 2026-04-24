@@ -150,7 +150,7 @@ internal sealed class Program
             OperatingSystem.IsWindows()
                 ? "VRChatContentPublisher.CrashHandler.App.exe"
                 : "VRChatContentPublisher.CrashHandler.App";
-        var crashHandlerPath = Path.Combine(AppContext.BaseDirectory, "VRChatContentPublisher.CrashHandler.App",
+        var crashHandlerPath = Path.Combine(AppContext.BaseDirectory, "CrashHandler",
             crashHandlerExecutable);
         var fallbackAppPath = Path.Combine(AppContext.BaseDirectory,
             "VRChatContentPublisher.App" + (OperatingSystem.IsWindows() ? ".exe" : "")
