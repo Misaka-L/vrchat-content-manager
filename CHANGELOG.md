@@ -38,6 +38,40 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Enable borderless window won't reset window state to normal from maximized or minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
 - Exception that cause app crash won't print to log in some case. [`#305`](https://github.com/project-vrcz/content-publisher/pull/305)
 
+## [2.9.0-rc.1] - 2026-04-24
+
+### Added
+
+- Software upgrade. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
+  - Send in-app notification when app update available.
+  - Show changes in app.
+  - Skip specify version.
+  - Update check run on start or each 30mins in background. (optional)
+  - Download update in background. (optional)
+- Toggle pinned or borderless window in tray menu. [`#291`](https://github.com/project-vrcz/content-publisher/pull/291)
+- Add loading text to bootstrap screen.
+- Send desktop notification on new pairing request [`#296`](https://github.com/project-vrcz/content-publisher/issues/298)
+- Show crash report when app crashed. [`#305`](https://github.com/project-vrcz/content-publisher/pull/305)
+
+### Changed
+
+- Rework Login with Cookies input fields. [`#275`](https://github.com/project-vrcz/content-publisher/pull/275)
+- Update Use RGB Cycling background App Bar settings text for chinese. [`#276`](https://github.com/project-vrcz/content-publisher/pull/276)
+- Adjust margin between main window and screen bounds. [`#301`](https://github.com/project-vrcz/content-publisher/pull/301)
+- Use LzmaCon Binaries from [project-vrcz/lzma](https://github.com/project-vrcz/lzma/releases/tag/v26.00-vrcz.2). [`#309`](https://github.com/project-vrcz/content-publisher/pull/309)
+  - Added LZMA support for glibc 2.31 (Previous glibc 2.41).
+  - You **STILL** need glibc 2.39 to run this app.
+  - Slightly improve compression performance for linux build (by 104%~).
+- Support glibc 2.39 (untested). [`#309`](https://github.com/project-vrcz/content-publisher/pull/309)
+
+### Fixed
+
+- Cannot exit app when dialog show. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
+- Abnormal shutdown during web request may corrupted session storage in some case. [`#292`](https://github.com/project-vrcz/content-publisher/pull/292)
+- Click tray icon only make window focused instead of bring window to front when window minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
+- Enable borderless window won't reset window state to normal from maximized or minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
+- Exception that cause app crash won't print to log in some case. [`#305`](https://github.com/project-vrcz/content-publisher/pull/305)
+
 ## [2.9.0-beta.3] - 2026-04-23
 
 ### Added
@@ -487,7 +521,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.3...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-rc.1...HEAD
+[2.9.0-rc.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.3...v2.9.0-rc.1
 [2.9.0-beta.3]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.2...v2.9.0-beta.3
 [2.9.0-beta.2]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.1...v2.9.0-beta.2
 [2.9.0-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.8.2...v2.9.0-beta.1
