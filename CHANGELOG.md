@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Toggle pinned or borderless window in tray menu. [`#291`](https://github.com/project-vrcz/content-publisher/pull/291)
 - Add loading text to bootstrap screen.
 - Send desktop notification on new pairing request [`#296`](https://github.com/project-vrcz/content-publisher/issues/298)
+- Show crash report when app crashed. [`#305`](https://github.com/project-vrcz/content-publisher/pull/305)
 
 ### Changed
 
@@ -30,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Abnormal shutdown during web request may corrupted session storage in some case. [`#292`](https://github.com/project-vrcz/content-publisher/pull/292)
 - Click tray icon only make window focused instead of bring window to front when window minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
 - Enable borderless window won't reset window state to normal from maximized or minimized. [`#295`](https://github.com/project-vrcz/content-publisher/pull/295)
+- Exception that cause app crash won't print to log in some case. [`#305`](https://github.com/project-vrcz/content-publisher/pull/305)
 
 ## [2.9.0-beta.3] - 2026-04-23
 

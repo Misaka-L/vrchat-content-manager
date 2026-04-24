@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:VRChatContentPublisher.CrashHandler.App.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:interaction="clr-namespace:VRChatContentPublisher.CrashHandler.App.Interaction"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="viewModels:CrashReportViewModel"
+             x:Class="VRChatContentPublisher.CrashHandler.App.Views.CrashReportView">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="8" RowSpacing="8">
+        <StackPanel>
+            <TextBlock Text="VRChat Content Publisher has crashed"
+                       FontSize="24" FontWeight="Bold" />
+            <TextBlock Text="An unexpected error occurred. Details are provided below." />
+        </StackPanel>
+        <Border Grid.Row="1"
+                BorderBrush="Gray" BorderThickness="1"
+                CornerRadius="8" Padding="8 0 0 0">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+                <SelectableTextBlock Text="{Binding Exception}"
+                                     Margin="0 8" />
+            </ScrollViewer>
+        </Border>
+        <StackPanel Grid.Row="2" Spacing="8">
+            <StackPanel>
+                <TextBlock
+                    Text="Please report this issue to help us improve the app."
+                    TextWrapping="Wrap"
+                    FontSize="24" />
+                <TextBlock
+                    Text="Please attach log file when report, log file MAY contains sensitive information (e.g User name, Blueprint ID)." />
+            </StackPanel>
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <StackPanel Spacing="4" Orientation="Horizontal">
+                    <Button Content="Open Logs Folder">
+                        <Interaction.Behaviors>
+                            <ClickEventTrigger>
+                                <interaction:LaunchDirectoryAction DirectoryPath="{Binding LogsFolderPath}" />
+                            </ClickEventTrigger>
+                        </Interaction.Behaviors>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal"
+                            Spacing="4">
+                    <Button Content="Join QQ Group">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel Spacing="4">
+                                    <StackPanel.Styles>
+                                        <Style Selector=":is(Layoutable)">
+                                            <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                        </Style>
+                                        <Style Selector=":is(ContentControl)">
+                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        </Style>
+                                    </StackPanel.Styles>
+                                    <Button Theme="{StaticResource MaterialOutlineButton}"
+                                            Content="{avalonia:MaterialIconTextExt Kind=ContentCopy, Text='1045956775'}">
+                                        <Interaction.Behaviors>
+                                            <ClickEventTrigger>
+                                                <SetClipboardTextAction Text="1045956775" />
+                                            </ClickEventTrigger>
+                                        </Interaction.Behaviors>
+                                    </Button>
+                                    <Button Content="Join via link">
+                                        <Interaction.Behaviors>
+                                            <ClickEventTrigger>
+                                                <LaunchUriAction Uri="https://qm.qq.com/q/a7JmJpC3ni" />
+                                            </ClickEventTrigger>
+                                        </Interaction.Behaviors>
+                                    </Button>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <Border Width="1" Background="Gray" />
+                    <Button Content="Report on Github">
+                        <Interaction.Behaviors>
+                            <ClickEventTrigger>
+                                <LaunchUriAction Uri="https://github.com/project-vrcz/content-publisher/issues" />
+                            </ClickEventTrigger>
+                        </Interaction.Behaviors>
+                    </Button>
+                    <Button Content="Close and Restart App"
+                            Command="{Binding CloseAndRestartCommand}" />
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

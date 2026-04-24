@@ -62,7 +62,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-app-${{ matrix.rid }}
+          name: vrchat-content-publisher-only-app-${{ matrix.rid }}
           path: |
             ${{ env.output_dir }}
             !${{ env.output_dir }}/**/*.pdb
@@ -71,13 +71,100 @@ jobs:
       - name: Upload PDB
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-app-${{ matrix.rid }}-pdb
+          name: vrchat-content-publisher-only-app-${{ matrix.rid }}-pdb
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
 
+  build-crash-handler:
+    strategy:
+      matrix:
+        include:
+          - os: blacksmith-4vcpu-windows-2025
+            rid: win-x64
+          - os: blacksmith-4vcpu-ubuntu-2404
+            rid: linux-x64
+
+    runs-on: ${{ matrix.os }}
+
+    env:
+      repo_dir: ${{ github.workspace }}/repo
+      src_dir: ${{ github.workspace }}/repo/src
+      output_dir: ${{ github.workspace }}/output
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.ref }}
+          path: ${{ env.repo_dir }}
+          submodules: recursive
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Build
+        env:
+          RID: ${{ matrix.rid }}
+          BUILD_OUTPUT_DIR: ${{ env.output_dir }}
+        run: dotnet publish -c Release App/CrashHandler/VRChatContentPublisher.CrashHandler.App -r $RID -o $BUILD_OUTPUT_DIR
+        shell: bash
+        working-directory: ${{ env.src_dir }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: vrchat-content-publisher-crash-handler-${{ matrix.rid }}
+          path: |
+            ${{ env.output_dir }}
+            !${{ env.output_dir }}/**/*.pdb
+            !${{ env.output_dir }}/**/*.dbg
+
+      - name: Upload PDB
+        uses: actions/upload-artifact@v7
+        with:
+          name: vrchat-content-publisher-crash-handler-${{ matrix.rid }}-pdb
+          path: |
+            ${{ env.output_dir }}/**/*.pdb
+            ${{ env.output_dir }}/**/*.dbg
+
+  merge-artifacts:
+    strategy:
+      matrix:
+        include:
+          - rid: win-x64
+          - rid: linux-x64
+
+    needs: [build, build-crash-handler]
+    runs-on: ubuntu-latest
+
+    env:
+      artifact_dir: ${{ github.workspace }}/artifacts
+      output_dir: ${{ github.workspace }}/output
+
+    steps:
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: vrchat-content-publisher-only-app-${{ matrix.rid }}
+          path: ${{ env.artifact_dir }}
+
+      - name: Download Crash Handler Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: vrchat-content-publisher-crash-handler-${{ matrix.rid }}
+          path: ${{ env.artifact_dir }}/CrashHandler
+
+      - name: Upload Merged Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: vrchat-content-publisher-app-${{ matrix.rid }}
+          path: ${{ env.artifact_dir }}
+
   make-nsis-windows-installer:
-    needs: build
+    needs: merge-artifacts
     runs-on: blacksmith-2vcpu-windows-2025
 
     env:

@@ -1,7 +1,8 @@
-﻿using Avalonia;
+﻿using System.Diagnostics;
+using Avalonia;
 using System.Runtime.Versioning;
+using System.Text;
 using HotAvalonia;
-// using HotAvalonia;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -57,6 +58,36 @@ internal sealed class Program
             AppVersionUtils.GetAppBuildDate(),
             AppVersionUtils.GetAppCommitHash()
         );
+
+
+        AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
+        {
+            if (eventArgs.ExceptionObject is not Exception ex)
+            {
+                Log.Write(
+                    eventArgs.IsTerminating ? Serilog.Events.LogEventLevel.Fatal : Serilog.Events.LogEventLevel.Error,
+                    "An unhandled exception of type {ExceptionType} was thrown: {ExceptionObject}, IsTerminating: {IsTerminating}",
+                    eventArgs.ExceptionObject.GetType(),
+                    eventArgs.ExceptionObject,
+                    eventArgs.IsTerminating
+                );
+
+#if RELEASE
+                TryLaunchCrashHandler(eventArgs.ExceptionObject);
+#endif
+                return;
+            }
+
+            Log.Write(
+                eventArgs.IsTerminating ? Serilog.Events.LogEventLevel.Fatal : Serilog.Events.LogEventLevel.Error,
+                ex, "An unhandled exception was thrown, IsTerminating: {IsTerminating}",
+                eventArgs.IsTerminating
+            );
+
+#if RELEASE
+            TryLaunchCrashHandler(ex);
+#endif
+        };
 
         try
         {
@@ -116,6 +147,10 @@ internal sealed class Program
         {
             Log.Fatal(ex, "Oops, the application has crashed!");
             Environment.ExitCode = -1;
+
+#if RELEASE
+            TryLaunchCrashHandler(ex);
+#endif
         }
         finally
         {
@@ -129,4 +164,45 @@ internal sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+
+    private static void TryLaunchCrashHandler(object ex)
+    {
+        try
+        {
+            LaunchCrashHandler(ex);
+        }
+        catch (Exception launchEx)
+        {
+            Log.Error(launchEx, "Failed to launch the crash handler.");
+        }
+    }
+
+    private static void LaunchCrashHandler(object ex)
+    {
+        var crashHandlerExecutable =
+            OperatingSystem.IsWindows()
+                ? "VRChatContentPublisher.CrashHandler.App.exe"
+                : "VRChatContentPublisher.CrashHandler.App";
+        var crashHandlerPath = Path.Combine(AppContext.BaseDirectory, "CrashHandler",
+            crashHandlerExecutable);
+        var fallbackAppPath = Path.Combine(AppContext.BaseDirectory,
+            "VRChatContentPublisher.App" + (OperatingSystem.IsWindows() ? ".exe" : "")
+        );
+
+        if (!File.Exists(crashHandlerPath))
+        {
+            throw new FileNotFoundException($"Crash handler executable not found at path: {crashHandlerPath}");
+        }
+
+        var errorText = ex.ToString() ?? $"Unhandled Exception with non-exception type: {ex.GetType()}\nToString: {ex}";
+
+        using var process = Process.Start(crashHandlerPath, [
+            "--exception",
+            Convert.ToBase64String(Encoding.UTF8.GetBytes(errorText)),
+            "--logsFolderPath",
+            AppStorageService.GetLogsPath(),
+            "--applicationPath",
+            Environment.ProcessPath ?? fallbackAppPath
+        ]);
+    }
 }

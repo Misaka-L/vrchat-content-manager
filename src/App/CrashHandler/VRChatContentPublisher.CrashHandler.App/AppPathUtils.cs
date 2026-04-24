@@ -1,0 +1,53 @@
+namespace VRChatContentPublisher.CrashHandler.App;
+
+public static class AppPathUtils
+{
+    public const string AppDataFolderName = "vrchat-content-manager-81b7bca3";
+
+    public static string GetMainAppPath()
+    {
+        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VRChatContentPublisher.App.exe");
+    }
+
+    public static string GetStoragePath()
+    {
+        var osAppDataPath = GetOsAppDataPath();
+        var appDataPath = Path.Combine(osAppDataPath, AppDataFolderName);
+        if (!Directory.Exists(appDataPath))
+            Directory.CreateDirectory(appDataPath);
+
+        return appDataPath;
+    }
+
+    public static string GetLogsPath()
+    {
+        var logsPath = Path.Combine(GetStoragePath(), "logs");
+        if (!Directory.Exists(logsPath))
+            Directory.CreateDirectory(logsPath);
+
+        return logsPath;
+    }
+
+    public static string GetTempPath()
+    {
+        var tempPath = Path.Combine(Path.GetTempPath(), AppDataFolderName);
+        if (!Directory.Exists(tempPath))
+            Directory.CreateDirectory(tempPath);
+
+        return tempPath;
+    }
+
+    private static string GetOsAppDataPath()
+    {
+        if (OperatingSystem.IsWindows())
+            // usually LOCALAPPDATA (C:\Users\{User}\AppData\Local)
+            return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+        if (OperatingSystem.IsLinux())
+            // usually XDG_CONFIG_HOME (HOME/.config)
+            // ReSharper disable once DuplicatedStatements
+            return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+        return Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    }
+}
