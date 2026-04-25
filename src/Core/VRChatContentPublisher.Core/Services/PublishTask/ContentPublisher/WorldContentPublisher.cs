@@ -14,29 +14,21 @@ using VRChatContentPublisher.Core.Utils;
 namespace VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
 public sealed class WorldContentPublisher(
-    string worldId,
-    string worldName,
-    string platform,
-    string unityVersion,
-    string? worldSignature,
-    int? capacity,
-    int? recommendedCapacity,
-    string? previewYoutubeId,
-    string[]? udonProducts,
+    WorldContentPublisherCreateOptions createOptions,
     UserSessionService userSessionService,
     ILogger<WorldContentPublisher> logger,
     IFileService tempFileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 ) : IContentPublisher
 {
-    private readonly string[] _udonProducts = udonProducts ?? [];
+    private readonly string[] _udonProducts = createOptions.UdonProducts ?? [];
 
     private readonly VRChatApiClient _apiClient = userSessionService.GetApiClient();
 
     public string GetContentType() => "world";
 
-    public string GetContentName() => worldName;
-    public string GetContentPlatform() => platform;
+    public string GetContentName() => createOptions.WorldName;
+    public string GetContentPlatform() => createOptions.Platform;
 
     public bool CanPublish()
     {
@@ -52,6 +44,8 @@ public sealed class WorldContentPublisher(
         CancellationToken cancellationToken = default
     )
     {
+        var worldId = createOptions.WorldId;
+
         // try fetch world detail, if not found means we need to create a new world.
         try
         {
@@ -78,7 +72,7 @@ public sealed class WorldContentPublisher(
         logger.LogInformation("Send create world request for {WorldId}", worldId);
         await _apiClient.CreateWorldAsync(new CreateWorldRequest(
             worldId,
-            worldName,
+            createOptions.WorldName,
             null,
             null,
             null,
@@ -88,9 +82,9 @@ public sealed class WorldContentPublisher(
             description,
             tags,
             releaseStatus,
-            capacity,
-            recommendedCapacity,
-            previewYoutubeId,
+            createOptions.Capacity,
+            createOptions.RecommendedCapacity,
+            createOptions.PreviewYoutubeId,
             null
         ), cancellationToken);
     }
@@ -107,6 +101,9 @@ public sealed class WorldContentPublisher(
         PublishStageProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default)
     {
+        var platform = createOptions.Platform;
+        var worldId = createOptions.WorldId;
+
         using var sessionValidScope = new EnsureSessionValidScope(
             userSessionService.UserNameOrEmail,
             sessionStateChangedSubscriber,
@@ -179,19 +176,19 @@ public sealed class WorldContentPublisher(
         progressReporter?.Report("Updating world to latest asset version...");
 
         await _apiClient.CreateWorldVersionAsync(worldId, new CreateWorldVersionRequest(
-            worldName,
+            createOptions.WorldName,
             fileVersion.File.Url,
             fileVersion.Version,
             platform,
-            unityVersion,
-            worldSignature,
+            createOptions.UnityVersion,
+            createOptions.WorldSignature,
             imageUri,
             description,
             tags,
             releaseStatus,
-            capacity,
-            recommendedCapacity,
-            previewYoutubeId,
+            createOptions.Capacity,
+            createOptions.RecommendedCapacity,
+            createOptions.PreviewYoutubeId,
             _udonProducts
         ), cancellationToken);
 
@@ -201,7 +198,7 @@ public sealed class WorldContentPublisher(
     private VRChatApiUnityPackage? TryGetUnityPackageForPlatform(VRChatApiWorld world)
     {
         return world.UnityPackages
-            .Where(package => package.Platform == platform)
+            .Where(package => package.Platform == createOptions.Platform)
             .GroupBy(package => package.UnityVersion)
             .MaxBy(group => UnityVersion.TryParse(group.Key))?
             .MaxBy(package => package.AssetVersion);
@@ -222,7 +219,8 @@ public sealed class WorldContentPublisher(
             }
         }
 
-        var fileName = $"World - {worldName} - Asset bundle - {unityVersion}-{platform}";
+        var fileName =
+            $"World - {createOptions.WorldName} - Asset bundle - {createOptions.UnityVersion}-{createOptions.Platform}";
         var file = await _apiClient.CreateFileAsync(fileName, "application/x-world", ".vrcw");
         return file.Id;
     }
@@ -267,7 +265,8 @@ public sealed class WorldContentPublisher(
         var extension = Path.GetExtension(imageFileName);
         var mimeType = VRChatApiFlieUtils.GetMimeTypeFromExtension(extension);
 
-        var fileName = $"World - {worldName} - Image - {unityVersion}-{platform}";
+        var fileName =
+            $"World - {createOptions.WorldName} - Image - {createOptions.UnityVersion}-{createOptions.Platform}";
         var file = await _apiClient.CreateFileAsync(fileName, mimeType, extension);
         return file.Id;
     }
@@ -281,26 +280,10 @@ public sealed class WorldContentPublisherFactory(
 {
     public WorldContentPublisher Create(
         UserSessionService userSessionService,
-        string worldId,
-        string worldName,
-        string platform,
-        string unityVersion,
-        string? worldSignature,
-        int? capacity,
-        int? recommendedCapacity,
-        string? previewYoutubeId,
-        string[]? udonProducts)
+        WorldContentPublisherCreateOptions createOptions)
     {
         return new WorldContentPublisher(
-            worldId,
-            worldName,
-            platform,
-            unityVersion,
-            worldSignature,
-            capacity,
-            recommendedCapacity,
-            previewYoutubeId,
-            udonProducts,
+            createOptions,
             userSessionService,
             logger,
             tempFileService,
@@ -308,3 +291,15 @@ public sealed class WorldContentPublisherFactory(
         );
     }
 }
+
+public sealed record WorldContentPublisherCreateOptions(
+    string WorldId,
+    string WorldName,
+    string Platform,
+    string UnityVersion,
+    string? WorldSignature,
+    int? Capacity,
+    int? RecommendedCapacity,
+    string? PreviewYoutubeId,
+    string[]? UdonProducts
+);

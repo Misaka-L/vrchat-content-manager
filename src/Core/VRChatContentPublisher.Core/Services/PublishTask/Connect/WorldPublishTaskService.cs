@@ -39,19 +39,19 @@ public class WorldPublishTaskService(
             var scope = await userSession.CreateOrGetSessionScopeAsync();
 
             var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+            var createOptions = new WorldContentPublisherCreateOptions(
+                worldId,
+                worldName,
+                platform,
+                unityVersion,
+                worldSignature,
+                capacity,
+                recommendedCapacity,
+                previewYoutubeId,
+                udonProducts
+            );
             var contentPublisher =
-                contentPublisherFactory.Create(
-                    userSession,
-                    worldId,
-                    worldName,
-                    platform,
-                    unityVersion,
-                    worldSignature,
-                    capacity,
-                    recommendedCapacity,
-                    previewYoutubeId,
-                    udonProducts
-                );
+                contentPublisherFactory.Create(userSession, createOptions);
 
             var task = await taskManager.CreateTask(
                 worldId,

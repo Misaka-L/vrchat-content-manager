@@ -29,8 +29,14 @@ public sealed class AvatarPublishTaskService(
             var scope = await userSession.CreateOrGetSessionScopeAsync();
 
             var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+            var createOptions = new AvatarContentPublisherCreateOptions(
+                avatarId,
+                name,
+                platform,
+                unityVersion
+            );
             var contentPublisher =
-                contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
+                contentPublisherFactory.Create(userSession, createOptions);
 
             var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, thumbnailFileId, description, tags,
                 releaseStatus, contentPublisher);
