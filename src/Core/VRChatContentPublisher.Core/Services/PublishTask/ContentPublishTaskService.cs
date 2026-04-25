@@ -341,13 +341,16 @@ public sealed class ContentPublishTaskFactory(
         if (!await tempFileService.IsFileExistAsync(bundleFileId))
             throw new ProvideFileIdNotFoundException(bundleFileId);
 
-        await contentPublisher.BeforePublishTaskAsync(
-            createOptions.ThumbnailFileId,
-            createOptions.Description,
-            createOptions.Tags,
-            createOptions.ReleaseStatus,
-            awsHttpClient
-        );
+        if (stageInformation is null)
+        {
+            await contentPublisher.BeforePublishTaskAsync(
+                createOptions.ThumbnailFileId,
+                createOptions.Description,
+                createOptions.Tags,
+                createOptions.ReleaseStatus,
+                awsHttpClient
+            );
+        }
 
         var publishTask = new ContentPublishTaskService(
             createOptions,
