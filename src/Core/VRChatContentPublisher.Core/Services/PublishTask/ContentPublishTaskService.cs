@@ -11,9 +11,36 @@ using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask;
 
+public sealed class ContentPublishTaskCreateOptions(
+    string contentId,
+    string rawBundleFileId,
+    string? thumbnailFileId,
+    string? description,
+    string[]? tags,
+    string? releaseStatus)
+{
+    public string ContentId => contentId;
+    public string RawBundleFileId => rawBundleFileId;
+    public string? ThumbnailFileId => thumbnailFileId;
+    public string? Description => description;
+    public string[]? Tags => tags;
+    public string? ReleaseStatus => releaseStatus;
+}
+
+public sealed class ContentPublishTaskStageInformation(
+    PublishTaskStage currentStage,
+    string bundleFileId,
+    string taskId)
+{
+    public PublishTaskStage CurrentStage { get; set; } = currentStage;
+    public string BundleFileId { get; set; } = bundleFileId;
+    public string TaskId { get; set; } = taskId;
+}
+
 public sealed class ContentPublishTaskService
 {
     public string TaskId { get; }
+    public PublishTaskStage CurrentStage => _stageInformation.CurrentStage;
 
     private readonly HttpClient _awsHttpClient;
     private readonly IFileService _tempFileService;
@@ -51,40 +78,36 @@ public sealed class ContentPublishTaskService
 
     #region Task Inner State
 
-    public PublishTaskStage CurrentStage { get; private set; } = PublishTaskStage.BundleProcessing;
-    private readonly string _rawBundleFileId;
-    private readonly string? _thumbnailFileId;
-    private readonly string? _description;
-    private readonly string[]? _tags;
-    private readonly string? _releaseStatus;
-
-    private string _bundleFileId;
+    private readonly ContentPublishTaskCreateOptions _createOptions;
+    private readonly ContentPublishTaskStageInformation _stageInformation;
 
     private CancellationTokenSource _cancellationTokenSource = new();
 
     #endregion
 
     internal ContentPublishTaskService(
-        string taskId,
-        string contentId, string rawBundleFileId,
-        string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
+        // Factory Create Options
+        ContentPublishTaskCreateOptions createOptions,
+        IContentPublisher contentPublisher,
+        ContentPublishTaskStageInformation? stageInformation,
+        // DI
         HttpClient awsHttpClient, IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
-        IContentPublisher contentPublisher, BundleProcessService bundleProcessService,
-        IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
+        BundleProcessService bundleProcessService, IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
     {
-        TaskId = taskId;
+        _createOptions = createOptions;
 
-        ContentId = contentId;
+        _stageInformation = stageInformation ?? new ContentPublishTaskStageInformation(
+            PublishTaskStage.BundleProcessing,
+            createOptions.RawBundleFileId,
+            Guid.CreateVersion7().ToString()
+        );
+
+        TaskId = _stageInformation.TaskId;
+
+        ContentId = createOptions.ContentId;
         ContentName = contentPublisher.GetContentName();
         ContentType = contentPublisher.GetContentType();
         ContentPlatform = contentPublisher.GetContentPlatform();
-
-        _rawBundleFileId = rawBundleFileId;
-        _thumbnailFileId = thumbnailFileId;
-        _description = description;
-        _tags = tags;
-        _releaseStatus = releaseStatus;
-        _bundleFileId = rawBundleFileId;
 
         _awsHttpClient = awsHttpClient;
         _tempFileService = tempFileService;
@@ -112,11 +135,12 @@ public sealed class ContentPublishTaskService
     {
         using (_logger.BeginScope(
                    "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform}, Raw BundleFileId: {RawBundleFileId}",
-                   TaskId, ContentType, ContentName, ContentId, ContentPlatform, _rawBundleFileId)
+                   TaskId, ContentType, ContentName, ContentId, ContentPlatform,
+                   _createOptions.RawBundleFileId)
               )
         {
             LastError = null;
-            if (CurrentStage == PublishTaskStage.Done)
+            if (_stageInformation.CurrentStage == PublishTaskStage.Done)
             {
                 UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
                 return;
@@ -127,32 +151,31 @@ public sealed class ContentPublishTaskService
 
             try
             {
-                if (CurrentStage == PublishTaskStage.BundleProcessing)
+                if (_stageInformation.CurrentStage == PublishTaskStage.BundleProcessing)
                 {
-                    using (_logger.BeginScope("Stage {TaskStage}", CurrentStage))
+                    using (_logger.BeginScope("Stage {TaskStage}", _stageInformation.CurrentStage))
                     {
                         UpdateProgress("Preparing to process bundle file...", null);
 
                         await ProcessBundleAsync(cancellationToken);
-                        CurrentStage = PublishTaskStage.ContentPublishing;
+                        _stageInformation.CurrentStage = PublishTaskStage.ContentPublishing;
                     }
                 }
 
-                if (CurrentStage == PublishTaskStage.ContentPublishing)
+                if (_stageInformation.CurrentStage == PublishTaskStage.ContentPublishing)
                 {
                     if (!_contentPublisher.CanPublish())
                         throw new InvalidOperationException("Account session expired or invalid.");
 
                     using (_logger.BeginScope(
                                "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
-                               CurrentStage,
-                               _bundleFileId)
+                               _stageInformation.CurrentStage, _stageInformation.BundleFileId)
                           )
                     {
                         UpdateProgress("Preparing for publish...", null);
 
                         await PublishAsync(cancellationToken);
-                        CurrentStage = PublishTaskStage.Done;
+                        _stageInformation.CurrentStage = PublishTaskStage.Done;
                     }
                 }
 
@@ -177,11 +200,12 @@ public sealed class ContentPublishTaskService
     {
         _logger.LogInformation(
             "Processing bundle file {BundleFileId} for content ({ContentId}) {ContentPlatform} {ContentName}",
-            _rawBundleFileId, ContentId, ContentPlatform, ContentName);
+            _createOptions.RawBundleFileId, ContentId, ContentPlatform, ContentName);
 
         using (StopwatchScope.Enter(watch => _logger.LogInformation(
                    "Bundle file {BundleFileId} processing for content ({ContentId}) {ContentPlatform} {ContentName} took {ElapsedMilliseconds} ms",
-                   _rawBundleFileId, ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
+                   _createOptions.RawBundleFileId, ContentId, ContentPlatform, ContentName,
+                   watch.ElapsedMilliseconds)))
         {
             var progressReporter = new PublishStageProgressReporter((message, progress) =>
             {
@@ -189,9 +213,11 @@ public sealed class ContentPublishTaskService
                 _progressReporter.Report(message, progress);
             });
 
-            await using var rawBundleStream = await _tempFileService.GetFileAsync(_rawBundleFileId);
+            await using var rawBundleStream =
+                await _tempFileService.GetFileAsync(_createOptions.RawBundleFileId);
             if (rawBundleStream is null)
-                throw new FileNotFoundException("Raw bundle file not found.", _rawBundleFileId);
+                throw new FileNotFoundException("Raw bundle file not found.",
+                    _createOptions.RawBundleFileId);
 
             var outputBundleFile = await _tempFileService.GetUploadFileStreamAsync("processed_bundle.bundle");
             try
@@ -212,7 +238,7 @@ public sealed class ContentPublishTaskService
                     progressReporter,
                     cancellationToken);
 
-                _bundleFileId = outputBundleFile.FileId;
+                _stageInformation.BundleFileId = outputBundleFile.FileId;
             }
             catch
             {
@@ -224,11 +250,12 @@ public sealed class ContentPublishTaskService
 
         try
         {
-            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+            await _tempFileService.DeleteFileAsync(_createOptions.RawBundleFileId);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to delete raw bundle file {BundleFileId}", _rawBundleFileId);
+            _logger.LogWarning(ex, "Failed to delete raw bundle file {BundleFileId}",
+                _createOptions.RawBundleFileId);
         }
     }
 
@@ -243,11 +270,16 @@ public sealed class ContentPublishTaskService
                    ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
         {
             await _contentPublisher.PublishAsync(
-                _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus
-                , _awsHttpClient, _progressReporter, cancellationToken);
+                _stageInformation.BundleFileId,
+                _createOptions.ThumbnailFileId,
+                _createOptions.Description,
+                _createOptions.Tags,
+                _createOptions.ReleaseStatus
+                , _awsHttpClient, _progressReporter, cancellationToken
+            );
         }
 
-        await _tempFileService.DeleteFileAsync(_bundleFileId);
+        await _tempFileService.DeleteFileAsync(_stageInformation.BundleFileId);
     }
 
     public async ValueTask CancelAsync()
@@ -268,11 +300,11 @@ public sealed class ContentPublishTaskService
 
         Status = ContentPublishTaskStatus.Disposed;
 
-        if (await _tempFileService.IsFileExistAsync(_rawBundleFileId))
-            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+        if (await _tempFileService.IsFileExistAsync(_createOptions.RawBundleFileId))
+            await _tempFileService.DeleteFileAsync(_createOptions.RawBundleFileId);
 
-        if (await _tempFileService.IsFileExistAsync(_bundleFileId))
-            await _tempFileService.DeleteFileAsync(_bundleFileId);
+        if (await _tempFileService.IsFileExistAsync(_stageInformation.BundleFileId))
+            await _tempFileService.DeleteFileAsync(_stageInformation.BundleFileId);
     }
 
     private void UpdateProgress(string text, double? value,
@@ -301,32 +333,29 @@ public sealed class ContentPublishTaskFactory(
     IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
 {
     public async ValueTask<ContentPublishTaskService> CreateAsync(
-        string taskId,
-        string contentId,
-        string bundleFileId,
-        string? thumbnailFileId,
-        string? description,
-        string[]? tags,
-        string? releaseStatus,
-        IContentPublisher contentPublisher)
+        ContentPublishTaskCreateOptions createOptions,
+        IContentPublisher contentPublisher,
+        ContentPublishTaskStageInformation? stageInformation = null)
     {
+        var bundleFileId = createOptions.RawBundleFileId;
         if (!await tempFileService.IsFileExistAsync(bundleFileId))
             throw new ProvideFileIdNotFoundException(bundleFileId);
 
-        await contentPublisher.BeforePublishTaskAsync(thumbnailFileId, description, tags, releaseStatus, awsHttpClient);
+        await contentPublisher.BeforePublishTaskAsync(
+            createOptions.ThumbnailFileId,
+            createOptions.Description,
+            createOptions.Tags,
+            createOptions.ReleaseStatus,
+            awsHttpClient
+        );
 
         var publishTask = new ContentPublishTaskService(
-            taskId,
-            contentId,
-            bundleFileId,
-            thumbnailFileId,
-            description,
-            tags,
-            releaseStatus,
+            createOptions,
+            contentPublisher,
+            stageInformation,
             awsHttpClient,
             tempFileService,
             logger,
-            contentPublisher,
             bundleProcessService,
             progressPublisher
         );

@@ -29,13 +29,18 @@ public sealed class TaskManagerService(
         IContentPublisher contentPublisher
     )
     {
-        var taskId = Guid.NewGuid().ToString("D");
-
-        var task = await contentPublishTaskFactory.CreateAsync(taskId,
-            contentId, bundleFileId, thumbnailFileId, description, tags, releaseStatus,
+        var task = await contentPublishTaskFactory.CreateAsync(
+            new ContentPublishTaskCreateOptions(
+                contentId,
+                bundleFileId,
+                thumbnailFileId,
+                description,
+                tags,
+                releaseStatus
+            ),
             contentPublisher);
 
-        _tasks.Add(taskId, task);
+        _tasks.Add(task.TaskId, task);
 
         var args = new ContentPublishTaskCreatedEventArg(task);
         TaskCreated?.Invoke(this, args);
@@ -81,4 +86,5 @@ public record ContentPublishTaskUpdateEventArg(
     PublishTaskProgressEventArg ProgressEventArg);
 
 public record ContentPublishTaskCreatedEventArg(ContentPublishTaskService Task);
+
 public record ContentPublishTaskRemovedEventArg(ContentPublishTaskService Task);
