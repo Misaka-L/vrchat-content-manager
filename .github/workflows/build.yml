@@ -71,7 +71,7 @@ jobs:
       - name: Upload PDB
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-only-app-${{ matrix.rid }}-pdb
+          name: vrchat-content-publisher-app-${{ matrix.rid }}-pdb
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
@@ -125,7 +125,7 @@ jobs:
       - name: Upload PDB
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-crash-handler-${{ matrix.rid }}-pdb
+          name: vrchat-content-publisher-app-crash-handler-${{ matrix.rid }}-pdb
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
