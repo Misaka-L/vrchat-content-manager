@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.9.0] - 2026-04-29
+
 ### Added
 
 - Software upgrade. [`#287`](https://github.com/project-vrcz/content-publisher/pull/287)
@@ -521,7 +523,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-rc.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0...HEAD
+[2.9.0]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-rc.1...v2.9.0
 [2.9.0-rc.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.3...v2.9.0-rc.1
 [2.9.0-beta.3]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.2...v2.9.0-beta.3
 [2.9.0-beta.2]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0-beta.1...v2.9.0-beta.2
