@@ -95,6 +95,16 @@ jobs:
             --tag-or-name "$RELEASE_TAG" \
             --output "$OUTPUT_FILE"
 
+      - name: Copy stable metadata to beta channel
+        if: ${{ inputs.pre-release != true }}
+        shell: bash
+        env:
+          STABLE_FILE: ${{ env.website_repo_dir }}/${{ env.updater_file_stable }}
+          BETA_FILE: ${{ env.website_repo_dir }}/${{ env.updater_file_beta }}
+        run: |
+          set -euo pipefail
+          cp "$STABLE_FILE" "$BETA_FILE"
+
       - name: Build PR Branch Name
         id: pr-branch
         shell: bash
