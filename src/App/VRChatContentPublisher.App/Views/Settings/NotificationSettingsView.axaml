@@ -4,11 +4,35 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:NotificationSettingsViewModel"
              x:Class="VRChatContentPublisher.App.Views.Settings.NotificationSettingsView">
 
     <StackPanel Margin="8" Spacing="8">
+        <Border IsVisible="{Binding IsNotificationInitializeFailed}"
+                Background="#FF6D00" Margin="0,0,0,8"
+                CornerRadius="8">
+            <StackPanel Margin="8" Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                           Foreground="White" />
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.In_App_Notifications_Desktop_Notification_Unavailable_Title}}"
+                        FontWeight="Bold" FontSize="18"
+                        Foreground="White" />
+                </StackPanel>
+                <TextBlock Foreground="White" TextWrapping="Wrap">
+                    <TextBlock.Text>
+                        <I18N
+                            Key="{x:Static localization:LangKeys.In_App_Notifications_Desktop_Notification_Unavailable_Body_Template}">
+                            <Binding Path="LastNotificationInitializationErrorMessage" />
+                        </I18N>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+
         <ToggleSwitch
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Enable_Notifications_Toggle_Label}}"
             IsChecked="{Binding EnabledNotifications}" />
@@ -26,11 +50,13 @@
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed}}"
             IsEnabled="{Binding EnabledNotifications}"
             IsChecked="{Binding SendNotificationOnTaskFailed}" />
-        <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed}}"
-                      IsEnabled="{Binding EnabledNotifications}"
-                      IsChecked="{Binding SendNotificationOnPublicIpChanged}" />
-        <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request}}"
-                      IsEnabled="{Binding EnabledNotifications}"
-                      IsChecked="{Binding SendNotificationOnNewPairingRequest}" />
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed}}"
+            IsEnabled="{Binding EnabledNotifications}"
+            IsChecked="{Binding SendNotificationOnPublicIpChanged}" />
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request}}"
+            IsEnabled="{Binding EnabledNotifications}"
+            IsChecked="{Binding SendNotificationOnNewPairingRequest}" />
     </StackPanel>
 </UserControl>

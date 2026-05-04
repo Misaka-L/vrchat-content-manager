@@ -689,6 +689,16 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Update_Available_View_On_Browser_Button_Text" xml:space="preserve">
         <value>View on Browser</value>
     </data>
+    <data name="In_App_Notifications_Common_Dismiss_Button_Text" xml:space="preserve">
+        <value>Dismiss</value>
+    </data>
+    <data name="In_App_Notifications_Desktop_Notification_Unavailable_Title" xml:space="preserve">
+        <value>Desktop notification unavailable</value>
+    </data>
+    <data name="In_App_Notifications_Desktop_Notification_Unavailable_Body_Template" xml:space="preserve">
+        <value>Error: {0}
+NOTE: Some users report that KB5083807 broke Windows notification service. You may need to uninstall this update in order to fix this.</value>
+    </data>
     <data name="In_App_Notifications_New_Version_Available_Title" xml:space="preserve">
         <value>New version v{0} is available!</value>
     </data>

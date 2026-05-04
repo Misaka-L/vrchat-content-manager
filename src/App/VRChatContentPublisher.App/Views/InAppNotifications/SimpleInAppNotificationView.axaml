@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:inAppNotifications="clr-namespace:VRChatContentPublisher.App.ViewModels.InAppNotifications"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400"
+             x:DataType="inAppNotifications:SimpleInAppNotificationViewModel"
+             x:Class="VRChatContentPublisher.App.Views.InAppNotifications.SimpleInAppNotificationView">
+
+    <Border Background="{Binding BackgroundColor, FallbackValue='#FF6D00'}">
+        <StackPanel Margin="8">
+            <Grid RowDefinitions="Auto,*" RowSpacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White" VerticalAlignment="Top" />
+                    <TextBlock
+                        Text="{I18N {CompiledBinding Title}}"
+                        Foreground="White" FontWeight="Bold"
+                        VerticalAlignment="Top"
+                        TextWrapping="Wrap" />
+                </StackPanel>
+                <TextBlock
+                    Grid.Row="1"
+                    IsVisible="{Binding Message, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                    Text="{I18N {CompiledBinding Message}}"
+                    Foreground="White"
+                    TextWrapping="Wrap" />
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Foreground="White"
+                    Command="{Binding RequestCloseCommand}"
+                    Content="{I18N {x:Static localization:LangKeys.In_App_Notifications_Common_Dismiss_Button_Text}}" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</UserControl>

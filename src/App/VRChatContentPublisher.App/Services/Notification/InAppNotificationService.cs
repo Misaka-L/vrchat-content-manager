@@ -22,6 +22,11 @@ public sealed class InAppNotificationService(IServiceProvider serviceProvider)
         SendNotification(notification);
     }
 
+    public void SendSimpleNotification(SimpleInAppNotificationType type, string title, string message)
+    {
+        SendNotification(new SimpleInAppNotificationViewModel(type, title, message));
+    }
+
     public void RemoveNotificationOfType<T>() where T : InAppNotificationViewModelBase
     {
         var notificationToRemove = _notifications

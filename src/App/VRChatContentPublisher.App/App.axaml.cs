@@ -117,6 +117,7 @@ public partial class App : Application
         ViewLocator.Register<UpdateSettingsViewModel, UpdateSettingsView>();
 
         // In App Notification
+        ViewLocator.Register<SimpleInAppNotificationViewModel, SimpleInAppNotificationView>();
         ViewLocator.Register<PublicIpChangedInAppNotificationViewModel, PublicIpChangedInAppNotificationView>();
         ViewLocator.Register<UpdateAvailableAppNotificationViewModel, UpdateAvailableAppNotificationView>();
         ViewLocator.Register<UpdateProgressAppNotificationViewModel, UpdateProgressAppNotificationView>();

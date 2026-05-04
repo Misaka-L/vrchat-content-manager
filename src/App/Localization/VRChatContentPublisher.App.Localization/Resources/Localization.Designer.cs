@@ -461,6 +461,34 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Dismiss.
         /// </summary>
+        internal static string In_App_Notifications_Common_Dismiss_Button_Text {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_Common_Dismiss_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error: {0}
+        ///NOTE: Some users report that KB5083807 broke Windows notification service. You may need to uninstall this update in order to fix this..
+        /// </summary>
+        internal static string In_App_Notifications_Desktop_Notification_Unavailable_Body_Template {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_Desktop_Notification_Unavailable_Body_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Desktop notification unavailable.
+        /// </summary>
+        internal static string In_App_Notifications_Desktop_Notification_Unavailable_Title {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_Desktop_Notification_Unavailable_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dismiss.
+        /// </summary>
         internal static string In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip {
             get {
                 return ResourceManager.GetString("In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip", resourceCulture);
@@ -492,6 +520,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
             get {
                 return ResourceManager.GetString(("Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizati" +
                         "onService_To_Add_Lanauge_Option"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is requesting to pair.
+        /// </summary>
+        internal static string Notifications_New_Pairing_Request_Body_Template {
+            get {
+                return ResourceManager.GetString("Notifications_New_Pairing_Request_Body_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Pairing Request.
+        /// </summary>
+        internal static string Notifications_New_Pairing_Request_Title {
+            get {
+                return ResourceManager.GetString("Notifications_New_Pairing_Request_Title", resourceCulture);
             }
         }
         
@@ -537,33 +583,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Notifications_Task_Failed_Title_Template {
             get {
                 return ResourceManager.GetString("Notifications_Task_Failed_Title_Template", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to New Pairing Request.
-        /// </summary>
-        internal static string Notifications_New_Pairing_Request_Title {
-            get {
-                return ResourceManager.GetString("Notifications_New_Pairing_Request_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} is requesting to pair.
-        /// </summary>
-        internal static string Notifications_New_Pairing_Request_Body_Template {
-            get {
-                return ResourceManager.GetString("Notifications_New_Pairing_Request_Body_Template", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Loading....
-        /// </summary>
-        internal static string Pages_Bootstrap_Loading_Text {
-            get {
-                return ResourceManager.GetString("Pages_Bootstrap_Loading_Text", resourceCulture);
             }
         }
         
@@ -690,6 +709,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Add_Account_Using_No_VRChat_Account_Tip_Title {
             get {
                 return ResourceManager.GetString("Pages_Add_Account_Using_No_VRChat_Account_Tip_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading....
+        /// </summary>
+        internal static string Pages_Bootstrap_Loading_Text {
+            get {
+                return ResourceManager.GetString("Pages_Bootstrap_Loading_Text", resourceCulture);
             }
         }
         
@@ -1507,20 +1535,20 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Public IP Changed.
-        /// </summary>
-        internal static string Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed {
-            get {
-                return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to New Pairing Request.
         /// </summary>
         internal static string Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request {
             get {
                 return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Public IP Changed.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed", resourceCulture);
             }
         }
         
