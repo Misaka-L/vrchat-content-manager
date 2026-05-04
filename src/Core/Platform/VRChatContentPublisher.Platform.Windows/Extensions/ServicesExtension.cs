@@ -8,8 +8,6 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddWindowsPlatformServices(this IServiceCollection services)
     {
-        services.AddHostedService<WindowsHostedService>();
-
         services.AddSingleton<WindowsDesktopNotificationService>();
         services.AddSingleton<IDesktopNotificationService>(s =>
             s.GetRequiredService<WindowsDesktopNotificationService>());

@@ -32,10 +32,13 @@ public static class ServicesExtenstion
 
         services.AddSingleton<AppLifetimeService>();
         services.AddSingleton<AppWindowService>();
-        services.AddSingleton<DesktopNotificationService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
 
         services.AddSingleton<InAppNotificationService>();
+
+        // Notification
+        services.AddHostedService<AppNotificationHostedService>();
+        services.AddSingleton<DesktopNotificationService>();
 
         // In App Notification
         services.AddTransient<PublicIpChangedInAppNotificationViewModelFactory>();
