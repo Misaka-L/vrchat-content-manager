@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Failure to initialize notification service will cause the app to crash. [`#325`](https://github.com/project-vrcz/content-publisher/pull/325)
+- Multi-thread download accidentally use single connection when download update. [`#326`](https://github.com/project-vrcz/content-publisher/pull/326)
 
 ## [2.9.0] - 2026-04-29
 
