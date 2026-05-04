@@ -11,6 +11,7 @@ public sealed partial class NotificationSettingsViewModel(
     DesktopNotificationService desktopNotificationService
 ) : ViewModelBase
 {
+    public bool IsDesktopNotificationSupported => desktopNotificationService.IsSupported;
     public bool IsNotificationInitializeFailed => desktopNotificationService.LastInitializationException != null;
 
     public string LastNotificationInitializationErrorMessage =>

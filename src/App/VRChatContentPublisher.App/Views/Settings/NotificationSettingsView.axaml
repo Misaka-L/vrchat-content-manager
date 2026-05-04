@@ -11,7 +11,7 @@
 
     <StackPanel Margin="8" Spacing="8">
         <Border IsVisible="{Binding IsNotificationInitializeFailed}"
-                Background="#FF6D00" Margin="0,0,0,8"
+                Background="#FF6D00"
                 CornerRadius="8">
             <StackPanel Margin="8" Spacing="4">
                 <StackPanel Orientation="Horizontal" Spacing="4">
@@ -30,6 +30,20 @@
                         </I18N>
                     </TextBlock.Text>
                 </TextBlock>
+            </StackPanel>
+        </Border>
+        <Border IsVisible="{Binding !IsDesktopNotificationSupported}"
+                Background="#FF6D00"
+                CornerRadius="8">
+            <StackPanel Margin="8" Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <avalonia:MaterialIcon Kind="AlertCircle" Height="18" Width="18"
+                                           Foreground="White" />
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Alert_Platform_Not_Supported_Title}}"
+                        FontWeight="Bold" FontSize="18"
+                        Foreground="White" />
+                </StackPanel>
             </StackPanel>
         </Border>
 

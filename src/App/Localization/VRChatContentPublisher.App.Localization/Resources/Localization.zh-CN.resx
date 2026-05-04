@@ -186,6 +186,9 @@
     <data name="Pages_Settings_Notification_Title" xml:space="preserve">
         <value>通知</value>
     </data>
+    <data name="Pages_Settings_Notification_Alert_Platform_Not_Supported_Title" xml:space="preserve">
+        <value>该平台暂不支持桌面通知</value>
+    </data>
     <data name="Pages_Settings_Notification_Enable_Notifications_Toggle_Label" xml:space="preserve">
         <value>启用通知</value>
     </data>

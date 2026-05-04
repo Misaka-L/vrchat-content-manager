@@ -1516,6 +1516,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Desktop notifications are not supported for your platform..
+        /// </summary>
+        internal static string Pages_Settings_Notification_Alert_Platform_Not_Supported_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Alert_Platform_Not_Supported_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enable Notifications.
         /// </summary>
         internal static string Pages_Settings_Notification_Enable_Notifications_Toggle_Label {
