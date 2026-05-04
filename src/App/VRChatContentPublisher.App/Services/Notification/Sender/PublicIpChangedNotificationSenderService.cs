@@ -1,5 +1,4 @@
 using Antelcat.I18N.Avalonia;
-using MessagePipe;
 using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
@@ -8,11 +7,11 @@ using VRChatContentPublisher.Core.Services.PublicIp;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
-namespace VRChatContentPublisher.App.Services.NotificationSender;
+namespace VRChatContentPublisher.App.Services.Notification.Sender;
 
 public sealed class PublicIpChangedNotificationSenderService(
     IWritableOptions<AppSettings> appSettings,
-    AppNotificationService appNotificationService,
+    DesktopNotificationService desktopNotificationService,
     InAppNotificationService inAppNotificationService,
     PublicIpChangedInAppNotificationViewModelFactory notificationFactory,
     PublicIpCheckerService publicIpCheckerService)
@@ -41,7 +40,7 @@ public sealed class PublicIpChangedNotificationSenderService(
                 "Old: {0} New: {1}", args.OldIpPlaintext, args.NewIpPlaintext
             );
 
-        _ = appNotificationService.SendNotificationAsync(title, message).AsTask();
+        _ = desktopNotificationService.SendNotificationAsync(title, message).AsTask();
     }
 
     private void TrySendInAppNotification()

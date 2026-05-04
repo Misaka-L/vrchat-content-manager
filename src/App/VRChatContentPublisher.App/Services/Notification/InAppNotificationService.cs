@@ -2,7 +2,7 @@ using Avalonia.Collections;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 
-namespace VRChatContentPublisher.App.Services;
+namespace VRChatContentPublisher.App.Services.Notification;
 
 public sealed class InAppNotificationService(IServiceProvider serviceProvider)
 {

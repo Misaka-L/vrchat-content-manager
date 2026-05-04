@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Messages.Connect;
 using VRChatContentPublisher.App.Services.Dialog;
-using VRChatContentPublisher.App.Services.NotificationSender;
+using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Challenge;
 using VRChatContentPublisher.Core.Settings;
@@ -15,7 +15,7 @@ namespace VRChatContentPublisher.App.Services;
 public class RequestChallengeService(
     DialogService dialogService,
     RequestChallengeDialogViewModelFactory dialogViewModelFactory,
-    AppNotificationService appNotificationService,
+    DesktopNotificationService desktopNotificationService,
     IWritableOptions<AppSettings> appSettings) : IRequestChallengeService
 {
     public Task RequestChallengeAsync(string code, string clientId, string identityPrompt, string clientName)
@@ -28,7 +28,7 @@ public class RequestChallengeService(
                 "{0} is requesting to pair",
                 clientName
             );
-            _ = appNotificationService.SendNotificationAsync(title, message).AsTask();
+            _ = desktopNotificationService.SendNotificationAsync(title, message).AsTask();
         }
 
         Dispatcher.UIThread.Invoke(async () =>

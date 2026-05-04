@@ -3,9 +3,9 @@ using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Platform.Abstraction.Services;
 
-namespace VRChatContentPublisher.App.Services.NotificationSender;
+namespace VRChatContentPublisher.App.Services.Notification;
 
-public sealed class AppNotificationService(
+public sealed class DesktopNotificationService(
     IDesktopNotificationService desktopNotificationService,
     IWritableOptions<AppSettings> appSettings)
 {
