@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.NotificationSender;
 using VRChatContentPublisher.App.Services.Update;

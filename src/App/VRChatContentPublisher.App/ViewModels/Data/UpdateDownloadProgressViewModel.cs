@@ -5,6 +5,7 @@ using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Dialogs;

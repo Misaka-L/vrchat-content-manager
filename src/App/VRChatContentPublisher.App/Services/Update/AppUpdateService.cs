@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using Downloader;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
+using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Platform.Abstraction.Services;
 

@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.Core.Settings;
