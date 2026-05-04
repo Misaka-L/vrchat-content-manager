@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Show alert for platform with no desktop notification support. [`#325`](https://github.com/project-vrcz/content-publisher/pull/325)
+
+### Fixed
+
+- Failure to initialize notification service will cause the app to crash. [`#325`](https://github.com/project-vrcz/content-publisher/pull/325)
+
 ## [2.9.0] - 2026-04-29
 
 ### Added

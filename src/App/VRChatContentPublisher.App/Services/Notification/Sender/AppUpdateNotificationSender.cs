@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 
-namespace VRChatContentPublisher.App.Services.NotificationSender;
+namespace VRChatContentPublisher.App.Services.Notification.Sender;
 
 public sealed class AppUpdateNotificationSender(
     AppUpdateService appUpdateService,

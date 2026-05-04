@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
-using VRChatContentPublisher.App.Services.NotificationSender;
+using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.Core.Services.UserSession;
 using VRChatContentPublisher.Core.Settings;
@@ -13,7 +13,7 @@ public sealed partial class BootstrapPageViewModel(
     UserSessionManagerService sessionManagerService,
     NavigationService navigationService,
     IWritableOptions<AppSettings> appSettings,
-    AppNotificationService appNotificationService) : PageViewModelBase
+    DesktopNotificationService desktopNotificationService) : PageViewModelBase
 {
     [RelayCommand]
     private async Task Load()
@@ -23,7 +23,7 @@ public sealed partial class BootstrapPageViewModel(
             if (!appSettings.Value.SendNotificationOnStartupSessionRestoreFailed)
                 return;
 
-            _ = appNotificationService.SendNotificationAsync(
+            _ = desktopNotificationService.SendNotificationAsync(
                 $"Failed to restore session for user {session.CurrentUser?.DisplayName ?? session.UserId ?? session.UserNameOrEmail}",
                 ex.Message
             ).AsTask();

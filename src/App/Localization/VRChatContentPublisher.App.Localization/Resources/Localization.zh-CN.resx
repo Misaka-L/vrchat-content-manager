@@ -186,6 +186,9 @@
     <data name="Pages_Settings_Notification_Title" xml:space="preserve">
         <value>通知</value>
     </data>
+    <data name="Pages_Settings_Notification_Alert_Platform_Not_Supported_Title" xml:space="preserve">
+        <value>该平台暂不支持桌面通知</value>
+    </data>
     <data name="Pages_Settings_Notification_Enable_Notifications_Toggle_Label" xml:space="preserve">
         <value>启用通知</value>
     </data>
@@ -680,6 +683,16 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Dialog_Update_Available_View_On_Browser_Button_Text" xml:space="preserve">
         <value>在浏览器查看</value>
+    </data>
+    <data name="In_App_Notifications_Common_Dismiss_Button_Text" xml:space="preserve">
+        <value>我知道了</value>
+    </data>
+    <data name="In_App_Notifications_Desktop_Notification_Unavailable_Title" xml:space="preserve">
+        <value>桌面通知不可用</value>
+    </data>
+    <data name="In_App_Notifications_Desktop_Notification_Unavailable_Body_Template" xml:space="preserve">
+        <value>错误信息：{0}
+注：有部分用户报告 KB5083807 破坏了 Windows 的通知服务。你可能需要卸载该更新。</value>
     </data>
     <data name="In_App_Notifications_New_Version_Available_Title" xml:space="preserve">
         <value>新版本 v{0} 可用！</value>

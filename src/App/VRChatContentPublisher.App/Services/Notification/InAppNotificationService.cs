@@ -1,8 +1,9 @@
 using Avalonia.Collections;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 
-namespace VRChatContentPublisher.App.Services;
+namespace VRChatContentPublisher.App.Services.Notification;
 
 public sealed class InAppNotificationService(IServiceProvider serviceProvider)
 {
@@ -12,14 +13,22 @@ public sealed class InAppNotificationService(IServiceProvider serviceProvider)
 
     public void SendNotification(InAppNotificationViewModelBase notification)
     {
-        notification.CloseRequested += NotificationOnCloseRequested;
-        _notifications.Add(notification);
+        Dispatcher.UIThread.Invoke(() =>
+        {
+            notification.CloseRequested += NotificationOnCloseRequested;
+            _notifications.Add(notification);
+        });
     }
 
     public void SendNotification<TNotification>() where TNotification : InAppNotificationViewModelBase
     {
         var notification = serviceProvider.GetRequiredService<TNotification>();
         SendNotification(notification);
+    }
+
+    public void SendSimpleNotification(SimpleInAppNotificationType type, string title, string message)
+    {
+        SendNotification(new SimpleInAppNotificationViewModel(type, title, message));
     }
 
     public void RemoveNotificationOfType<T>() where T : InAppNotificationViewModelBase

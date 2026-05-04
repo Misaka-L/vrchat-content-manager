@@ -5,7 +5,7 @@ using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
 
-namespace VRChatContentPublisher.App.Services;
+namespace VRChatContentPublisher.App.Services.AppLifetime;
 
 public sealed class AppLifetimeService : IDisposable
 {

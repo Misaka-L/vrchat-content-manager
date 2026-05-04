@@ -7,11 +7,11 @@ using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
-namespace VRChatContentPublisher.App.Services.NotificationSender;
+namespace VRChatContentPublisher.App.Services.Notification.Sender;
 
 public sealed class TaskFailedNotificationSenderService(
     IWritableOptions<AppSettings> appSettings,
-    AppNotificationService appNotificationService,
+    DesktopNotificationService desktopNotificationService,
     ISubscriber<PublishTaskProgressChangedEvent> progressSubscriber)
     : IHostedService
 {
@@ -32,7 +32,7 @@ public sealed class TaskFailedNotificationSenderService(
                 contentType, args.TaskService.ContentName
             );
 
-            _ = appNotificationService.SendNotificationAsync(title, args.ProgressText).AsTask();
+            _ = desktopNotificationService.SendNotificationAsync(title, args.ProgressText).AsTask();
         });
 
         return Task.CompletedTask;

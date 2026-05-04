@@ -8,11 +8,14 @@ namespace VRChatContentPublisher.Platform.Windows.Services;
 
 public class WindowsDesktopNotificationService : IDesktopNotificationService
 {
-    private readonly ToastNotifier _toastNotifier =
-        ToastNotificationManager.CreateToastNotifier(WindowsConst.AppUserModelId);
+    private ToastNotifier? _toastNotifier;
+
+    public bool IsSupported => true;
 
     public ValueTask SendDesktopNotificationAsync(string title, string? message = null)
     {
+        if (_toastNotifier is null) return ValueTask.CompletedTask;
+
         var builder = new ToastContentBuilder();
 
         builder.AddText(title);
@@ -25,7 +28,7 @@ public class WindowsDesktopNotificationService : IDesktopNotificationService
         return ValueTask.CompletedTask;
     }
 
-    internal void Initialize()
+    public ValueTask InitializeAsync()
     {
         using var appIdSubKey =
             Registry.CurrentUser.CreateSubKey(@"Software\Classes\AppUserModelId\" + WindowsConst.AppUserModelId);
@@ -34,5 +37,8 @@ public class WindowsDesktopNotificationService : IDesktopNotificationService
         appIdSubKey.SetValue("IconUri", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NotificationIcon.png"));
 
         Shell32Interop.SetCurrentProcessExplicitAppUserModelID(WindowsConst.AppUserModelId);
+
+        _toastNotifier = ToastNotificationManager.CreateToastNotifier(WindowsConst.AppUserModelId);
+        return ValueTask.CompletedTask;
     }
 }

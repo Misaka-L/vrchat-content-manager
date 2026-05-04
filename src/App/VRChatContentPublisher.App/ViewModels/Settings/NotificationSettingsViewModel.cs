@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
-using VRChatContentPublisher.App.Services.NotificationSender;
+using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -8,9 +8,15 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed partial class NotificationSettingsViewModel(
     IWritableOptions<AppSettings> appSettings,
-    AppNotificationService appNotificationService
+    DesktopNotificationService desktopNotificationService
 ) : ViewModelBase
 {
+    public bool IsDesktopNotificationSupported => desktopNotificationService.IsSupported;
+    public bool IsNotificationInitializeFailed => desktopNotificationService.LastInitializationException != null;
+
+    public string LastNotificationInitializationErrorMessage =>
+        desktopNotificationService.LastInitializationException?.Message ?? string.Empty;
+
     public bool EnabledNotifications
     {
         get => appSettings.Value.NotificationsEnabled;
@@ -84,7 +90,7 @@ public sealed partial class NotificationSettingsViewModel(
     [RelayCommand]
     private async Task SendTestNotification()
     {
-        await appNotificationService.SendNotificationAsync(
+        await desktopNotificationService.SendNotificationAsync(
             LangKeys.Notifications_Settings_Test_Notification_Title,
             LangKeys.Notifications_Settings_Test_Notification_Body
         );
