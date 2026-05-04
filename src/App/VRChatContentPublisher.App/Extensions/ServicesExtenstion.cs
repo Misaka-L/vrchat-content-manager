@@ -122,7 +122,9 @@ public static class ServicesExtenstion
             {
                 UseCookies = false,
                 ConnectTimeout = TimeSpan.FromSeconds(10),
-                Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
+                Proxy = serviceProvider.GetRequiredService<AppWebProxy>(),
+                PooledConnectionLifetime = TimeSpan.Zero,
+                PooledConnectionIdleTimeout = TimeSpan.Zero
             });
 
         return services;
