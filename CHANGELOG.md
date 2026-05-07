@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- All file uploading task took over 30s will be forced abort. [`#332`](https://github.com/project-vrcz/content-publisher/pull/332)
+
 ## [2.9.1] - 2026-05-04
 
 ### Added
