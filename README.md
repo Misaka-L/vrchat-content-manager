@@ -10,9 +10,9 @@ A tool allows you to publish your VRChat content in a more efficient way by:
 ## Usage
 
 1. Download latest release from [GitHub Releases](https://github.com/project-vrcz/content-publisher/releases).
-   - For Windows: `vrchat-content-publisher-app-win-x64-installer.zip`
-   - For Linux: `vrchat-content-publisher-app-linux-x64.zip`
-   - **DO NOT DOWNLOAD** file end with `-pdb`, it's for debug only.
+   - For Windows: `installer-win-x64.zip.zip`
+   - For Linux: `unpacked-portable-linux-x64.zip`
+   - **DO NOT DOWNLOAD** file start with `pdb`, it's for debug only.
 2. Install and run the app.
 3. Login to your VRChat Account.
 4. Install [VRChat Content Publisher Connect](https://github.com/project-vrcz/content-publisher-connect) to your Unity Project from [vpm listing](https://project-vrcz.github.io/vpm-listing/).
