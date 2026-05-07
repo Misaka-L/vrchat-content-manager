@@ -199,7 +199,7 @@ jobs:
           path: ${{ env.repo_dir }}
 
       - name: Install NSIS
-        uses: repolevedavaj/install-nsis@a55ed92772254d1e51d880f85ce9b5719f907801
+        uses: project-vrcz/install-nsis@29b4ea39facac4d1776df91470fa377b802e4cb2
         with:
           nsis-version: 3.11
 
