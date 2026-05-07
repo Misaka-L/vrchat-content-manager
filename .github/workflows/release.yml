@@ -135,11 +135,23 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - name: Download Artifact
+      - name: Download Unpacked Artifacts
         uses: actions/download-artifact@v8
         with:
           path: ${{ env.artifact_download_path }}
-          pattern: ${{ env.assets_to_release_artifact_pattern }}
+          pattern: unpacked-portable-*
+
+      - name: Download Installer Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ env.artifact_download_path }}
+          pattern: installer-*
+
+      - name: Download PDB Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ env.artifact_download_path }}
+          pattern: pdb-*
 
       - name: Create release ZIPs
         env:
@@ -147,11 +159,11 @@ jobs:
           OUTPUT_PATH: ${{ env.assets_path }}
         run: |
           set -eux
-          mkdir $OUTPUT_PATH
+          mkdir -p $OUTPUT_PATH
           cd $ARTIFACT_PATH
 
-          for f in vrchat-content-publisher-app-*; do
-            [ -e "$f" ] || continue
+          for f in unpacked-portable-* installer-* pdb-*; do
+            [ -d "$f" ] || continue
             (cd "$f" && zip -r "$OUTPUT_PATH/${f}.zip" .)
           done
         shell: bash

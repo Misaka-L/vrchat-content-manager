@@ -71,7 +71,7 @@ jobs:
       - name: Upload PDB
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-app-${{ matrix.rid }}-pdb
+          name: pdb-app-${{ matrix.rid }}
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
@@ -125,7 +125,7 @@ jobs:
       - name: Upload PDB
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-app-crash-handler-${{ matrix.rid }}-pdb
+          name: pdb-crash-handler-${{ matrix.rid }}
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
@@ -160,7 +160,7 @@ jobs:
       - name: Upload Merged Artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-app-${{ matrix.rid }}
+          name: unpacked-portable-${{ matrix.rid }}
           path: ${{ env.artifact_dir }}
 
   make-nsis-windows-installer:
@@ -181,7 +181,7 @@ jobs:
       - name: Download Build Artifacts
         uses: actions/download-artifact@v8
         with:
-          name: vrchat-content-publisher-app-win-x64
+          name: unpacked-portable-win-x64
           path: ${{ env.artifact_dir }}
 
       - name: Get Version Info
@@ -215,5 +215,5 @@ jobs:
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: vrchat-content-publisher-app-win-x64-installer
+          name: installer-win-x64
           path: ${{ env.installer_working_dir }}/${{ env.installer_output_name }}
