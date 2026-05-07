@@ -124,10 +124,10 @@ static HttpClient CreateGitHubApiClient(string? token)
 static async Task<AppUpdateInformation> BuildUpdaterMetadataAsync(HttpClient httpClient, GitHubRelease release, bool dryRun)
 {
     var winX64Asset = release.Assets.FirstOrDefault(asset =>
-        asset.Name.EndsWith("app-win-x64-installer.zip", StringComparison.OrdinalIgnoreCase));
+        asset.Name.EndsWith("installer-win-x64.zip", StringComparison.OrdinalIgnoreCase));
 
     if (winX64Asset is null)
-        throw new InvalidOperationException("No win-x64 release asset found.");
+        throw new InvalidOperationException("No win-x64 installer (installer-win-x64.zip) found.");
 
     var sha256 = dryRun
         ? "dry-run-skip-sha256"
