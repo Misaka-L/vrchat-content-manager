@@ -109,11 +109,8 @@ public static class ServicesExtension
         services.AddTransient<UserSessionHttpClientFactory>();
 
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
-        services.AddHttpClient<ContentPublishTaskFactory>(client =>
-            {
-                client.AddUserAgent();
-                client.Timeout = Timeout.InfiniteTimeSpan;
-            })
+#pragma warning disable EXTEXP0001
+        services.AddHttpClient<ContentPublishTaskFactory>()
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
@@ -124,6 +121,7 @@ public static class ServicesExtension
                 ConnectTimeout = TimeSpan.FromSeconds(5),
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
+            .RemoveAllResilienceHandlers()
             .AddResilienceHandler("awsClient", builder =>
             {
                 builder.AddRetry(new AppHttpRetryStrategyOptions
@@ -134,6 +132,7 @@ public static class ServicesExtension
                     BackoffType = DelayBackoffType.Exponential
                 });
             });
+#pragma warning restore EXTEXP0001
 
         services.AddTransient<VRChatApiDiagnosticService>();
 

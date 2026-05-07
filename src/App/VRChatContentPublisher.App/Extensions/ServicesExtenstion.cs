@@ -117,7 +117,10 @@ public static class ServicesExtenstion
         services.AddHostedService<AppUpdateCheckBackgroundService>();
         services.AddSingleton<AppUpdateService>();
 
+#pragma warning disable EXTEXP0001
         services.AddHttpClient(nameof(AppUpdateService), client => client.Timeout = Timeout.InfiniteTimeSpan)
+            .RemoveAllResilienceHandlers()
+#pragma warning restore EXTEXP0001
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
