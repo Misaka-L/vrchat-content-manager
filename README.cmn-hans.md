@@ -10,9 +10,9 @@
 ## 使用方法
 
 1. 从 [GitHub Releases](https://github.com/project-vrcz/content-publisher/releases) 下载最新版本。
-   - Windows 用户请下载: `vrchat-content-publisher-app-win-x64-installer.zip`
-   - Linux 用户请下载: `vrchat-content-publisher-app-linux-x64.zip`
-   - **不要下载** `-pdb` 结尾的文件，那是调试用的。
+   - Windows 用户请下载: `installer-win-x64.zip.zip`
+   - Linux 用户请下载: `unpacked-portable-linux-x64.zip`
+   - **不要下载** `pdb` 开头的文件，那是调试用的。
 2. 安装并运行 App。
 3. 登录你的 VRChat 账户。
 4. 从 [vpm 仓库](https://project-vrcz.github.io/vpm-listing/) 安装 [VRChat Content Publisher Connect](https://github.com/project-vrcz/content-publisher-connect) 到你的 Unity 项目。
