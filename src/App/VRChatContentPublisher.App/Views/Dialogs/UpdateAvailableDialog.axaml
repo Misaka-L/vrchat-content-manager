@@ -63,7 +63,8 @@
 
             <Button
                 Content="{I18N {CompiledBinding UpdateButtonText}}"
-                Command="{Binding StartDownloadOrInstallUpdateCommand}">
+                Command="{Binding StartDownloadOrInstallUpdateCommand}"
+                IsEnabled="{Binding IsUpdateInstallationSupported}">
                 <Button.IsVisible>
                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                         <Binding Path="IsUpdateAvailableForDownloadOrInstall" />
@@ -71,6 +72,12 @@
                     </MultiBinding>
                 </Button.IsVisible>
             </Button>
+
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Supported}}"
+                TextWrapping="Wrap"
+                TextAlignment="Center"
+                IsVisible="{Binding !IsUpdateInstallationSupported}" />
 
             <ContentControl IsVisible="{Binding !IsUpdateAvailableForDownloadOrInstall}"
                             Content="{Binding UpdateDownloadProgressViewModel}" />

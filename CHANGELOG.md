@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Disable download and install update feature for Linux and portable version. [`#334`](https://github.com/project-vrcz/content-publisher/pull/334)
+
 ### Fixed
 
 - All file uploading task took over 30s will be forced abort. [`#332`](https://github.com/project-vrcz/content-publisher/pull/332)
+- App crash on startup when download update background enabled or click Download Update on Linux. [`#334`](https://github.com/project-vrcz/content-publisher/pull/334)
 
 ## [2.9.1] - 2026-05-04
 

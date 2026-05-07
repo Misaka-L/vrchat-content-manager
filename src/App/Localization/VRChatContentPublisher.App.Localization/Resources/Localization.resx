@@ -60,6 +60,9 @@
     <data name="Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks" xml:space="preserve">
         <value>Uncompleted publish tasks exist</value>
     </data>
+    <data name="Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Supported" xml:space="preserve">
+        <value>Installing updates is not supported on this platform. You can still check for updates.</value>
+    </data>
     <data name="Pages_Navigation_Go_Back_Button_Text" xml:space="preserve">
         <value>Back</value>
     </data>

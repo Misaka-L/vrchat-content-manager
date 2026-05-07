@@ -107,7 +107,7 @@
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <Button Theme="{StaticResource MaterialFlatButton}"
-                        IsEnabled="{Binding IsSafeToShutdown}"
+                        IsEnabled="{Binding CanInstallUpdate}"
                         Content="{I18N {CompiledBinding InstallUpdateButtonText}}"
                         Command="{Binding InstallUpdateCommand}" />
             </StackPanel>

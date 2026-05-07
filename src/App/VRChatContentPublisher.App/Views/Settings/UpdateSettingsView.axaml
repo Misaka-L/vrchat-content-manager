@@ -29,9 +29,17 @@
                 </DataTemplate>
             </ComboBox.DataTemplates>
         </ComboBox>
-        <ToggleSwitch
-            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label}}"
-            IsChecked="{Binding DownloadUpdateAtBackground}" />
+        <StackPanel Spacing="4">
+            <ToggleSwitch
+                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Download_Update_At_Background_Toggle_Label}}"
+                IsChecked="{Binding DownloadUpdateAtBackground}"
+                IsEnabled="{Binding IsUpdateInstallationSupported}" />
+            <TextBlock
+                IsVisible="{Binding !IsUpdateInstallationSupported}"
+                Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Supported}}"
+                TextWrapping="Wrap"
+                Foreground="OrangeRed" />
+        </StackPanel>
         <ToggleSwitch
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Receive_Pre_Release_Update_Toggle_Label}}"
             IsChecked="{Binding ReceivePreReleaseUpdate}" />

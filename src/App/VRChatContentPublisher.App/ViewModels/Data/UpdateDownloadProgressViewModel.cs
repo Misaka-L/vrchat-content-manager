@@ -1,15 +1,12 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Localization;
-using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
-using VRChatContentPublisher.Core.Services.PublishTask;
 
 namespace VRChatContentPublisher.App.ViewModels.Data;
 
@@ -34,10 +31,14 @@ public sealed partial class UpdateDownloadProgressViewModel(
 
     public bool IsDownloading => appUpdateService.UpdateState == AppUpdateServiceState.Downloading;
     public bool IsWaitingForInstall => appUpdateService.UpdateState == AppUpdateServiceState.WaitingForInstall;
+    public bool IsUpdateInstallationSupported => appUpdateService.IsAppUpdateSupported();
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanInstallUpdate))]
     [NotifyPropertyChangedFor(nameof(InstallUpdateButtonText))]
     public partial bool IsSafeToShutdown { get; private set; }
+
+    public bool CanInstallUpdate => IsSafeToShutdown && IsUpdateInstallationSupported;
 
     public bool IsError =>
         appUpdateService.UpdateState is AppUpdateServiceState.DownloadError
