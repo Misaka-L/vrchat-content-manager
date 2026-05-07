@@ -135,23 +135,11 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
-      - name: Download Unpacked Artifacts
+      - name: Download Release Artifacts
         uses: actions/download-artifact@v8
         with:
           path: ${{ env.artifact_download_path }}
-          pattern: unpacked-portable-*
-
-      - name: Download Installer Artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: ${{ env.artifact_download_path }}
-          pattern: installer-*
-
-      - name: Download PDB Artifacts
-        uses: actions/download-artifact@v8
-        with:
-          path: ${{ env.artifact_download_path }}
-          pattern: pdb-*
+          pattern: '{unpacked-portable-*,installer-*,pdb-*}'
 
       - name: Create release ZIPs
         env:
