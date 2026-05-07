@@ -44,7 +44,7 @@ public sealed class AppUpdateCheckService(
 
         logger.LogInformation("New version {Version} is available", update.Version);
 
-        if (appSettings.Value.DownloadUpdateAtBackground)
+        if (appSettings.Value.DownloadUpdateAtBackground && appUpdateService.IsAppUpdateSupported())
         {
             logger.LogInformation("Starting download update at background");
             appUpdateService.StartDownloadUpdate(update);

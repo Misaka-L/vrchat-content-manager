@@ -2,7 +2,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Models.Update;
-using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Data;
@@ -27,6 +26,7 @@ public sealed partial class UpdateAvailableDialogViewModel(
     public string BrowserUrl => updateInformation.BrowserUrl;
 
     public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
+    public bool IsUpdateInstallationSupported => appUpdateService.IsAppUpdateSupported();
 
     [ObservableProperty] public partial bool IsSafeToShutdown { get; private set; }
 
@@ -66,6 +66,9 @@ public sealed partial class UpdateAvailableDialogViewModel(
     [RelayCommand]
     private async Task StartDownloadOrInstallUpdate()
     {
+        if (!IsUpdateInstallationSupported)
+            return;
+
         if (IsWaitingForInstall)
         {
             try

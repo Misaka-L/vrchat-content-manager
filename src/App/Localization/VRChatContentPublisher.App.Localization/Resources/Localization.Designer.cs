@@ -105,6 +105,16 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installing updates is not supported on this platform. You can still check for updates..
+        /// </summary>
+        internal static string Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Supported {
+            get {
+                return ResourceManager.GetString(("Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Sup" +
+                        "ported"), resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uncompleted publish tasks exist.
         /// </summary>
         internal static string Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Uncompleted_Tasks {
