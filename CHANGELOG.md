@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- App will try downgrade itself if remote app version lower than local app version. [`#339`](https://github.com/project-vrcz/content-publisher/pull/339)
+
 ## [2.9.2] - 2026-05-07
 
 ### Changed
