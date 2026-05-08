@@ -61,43 +61,54 @@
                 TextWrapping="Wrap" TextAlignment="Center"
                 IsVisible="{Binding !IsSafeToShutdown}" />
 
-            <Button
-                Content="{I18N {CompiledBinding UpdateButtonText}}"
-                Command="{Binding StartDownloadOrInstallUpdateCommand}"
-                IsEnabled="{Binding IsUpdateInstallationSupported}">
-                <Button.IsVisible>
-                    <MultiBinding Converter="{x:Static BoolConverters.And}">
-                        <Binding Path="IsUpdateAvailableForDownloadOrInstall" />
-                        <Binding Path="IsSafeToShutdown" />
-                    </MultiBinding>
-                </Button.IsVisible>
-            </Button>
-
-            <TextBlock
-                Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Supported}}"
-                TextWrapping="Wrap"
-                TextAlignment="Center"
-                IsVisible="{Binding !IsUpdateInstallationSupported}" />
-
-            <ContentControl IsVisible="{Binding !IsUpdateAvailableForDownloadOrInstall}"
-                            Content="{Binding UpdateDownloadProgressViewModel}" />
-
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="4"
-                  IsVisible="{Binding ShowSkipVersionButton}">
+            <!-- State: Idle — update available, not yet started -->
+            <StackPanel IsVisible="{Binding IsIdle}" Spacing="4">
                 <Button
-                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Skip_Version_Button_Text}}"
-                    Theme="{StaticResource MaterialFlatButton}"
-                    Command="{Binding MarkVersionAsSkippedCommand}" />
-                <Button Grid.Column="1"
-                        Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Download_Update_Button_Text}}"
+                    Command="{Binding StartDownloadOrInstallUpdateCommand}"
+                    IsEnabled="{Binding IsUpdateInstallationSupported}" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Install_Update_Disabled_Due_To_Platform_Not_Supported}}"
+                    TextWrapping="Wrap" TextAlignment="Center"
+                    IsVisible="{Binding !IsUpdateInstallationSupported}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                    <Button
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Skip_Version_Button_Text}}"
                         Theme="{StaticResource MaterialFlatButton}"
-                        Command="{Binding RequestCloseCommand}" />
-            </Grid>
+                        Command="{Binding MarkVersionAsSkippedCommand}" />
+                    <Button Grid.Column="1"
+                            Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                            Theme="{StaticResource MaterialFlatButton}"
+                            Command="{Binding RequestCloseCommand}" />
+                </Grid>
+            </StackPanel>
 
-            <Button IsVisible="{Binding !ShowSkipVersionButton}"
+            <!-- State: Downloading -->
+            <StackPanel IsVisible="{Binding IsDownloading}" Spacing="4">
+                <ContentControl Content="{Binding UpdateDownloadProgressViewModel}" />
+                <Button
                     Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
                     Theme="{StaticResource MaterialFlatButton}"
                     Command="{Binding RequestCloseCommand}" />
+            </StackPanel>
+
+            <!-- State: WaitingForInstall — downloaded, ready to install -->
+            <StackPanel IsVisible="{Binding IsWaitingForInstall}" Spacing="4">
+                <Button
+                    Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Install_Update_Button_Text}}"
+                    Command="{Binding StartDownloadOrInstallUpdateCommand}"
+                    IsEnabled="{Binding IsUpdateInstallationSupported}" />
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="4">
+                    <Button
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Cancel_Update_Confirmation_Confirm_Cancel}}"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding CancelUpdateCommand}" />
+                    <Button Grid.Column="1"
+                            Content="{I18N {x:Static localization:LangKeys.Dialog_Update_Available_Cancel_Button_Text}}"
+                            Theme="{StaticResource MaterialFlatButton}"
+                            Command="{Binding RequestCloseCommand}" />
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

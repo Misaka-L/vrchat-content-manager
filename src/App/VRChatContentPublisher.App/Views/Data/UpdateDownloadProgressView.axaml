@@ -110,6 +110,15 @@
                         IsEnabled="{Binding CanInstallUpdate}"
                         Content="{I18N {CompiledBinding InstallUpdateButtonText}}"
                         Command="{Binding InstallUpdateCommand}" />
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding CancelUpdateCommand}"
+                        ToolTip.Tip="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip}}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="Close" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Cancel_Update_Button_Tooltip}}" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
         </Grid>
     </Panel>

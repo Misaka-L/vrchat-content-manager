@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="420"
+             x:DataType="dialogs:CancelUpdateConfirmationDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.CancelUpdateConfirmationDialog">
+
+    <Panel>
+        <StackPanel Spacing="24" Margin="8">
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel}}"
+                Classes="Headline6" TextAlignment="Center" TextWrapping="Wrap" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Classes="accent"
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Cancel_Update_Confirmation_Cancel_Cancel}}"
+                        Command="{Binding RequestCloseCommand}" />
+                <Button Grid.Column="1"
+                        Theme="{StaticResource MaterialOutlineButton}"
+                        Command="{Binding ConfirmCancelCommand}">
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Dialog_Cancel_Update_Confirmation_Confirm_Cancel}}"
+                        TextWrapping="Wrap" />
+                </Button>
+            </Grid>
+        </StackPanel>
+    </Panel>
+</UserControl>
