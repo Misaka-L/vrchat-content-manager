@@ -1,6 +1,6 @@
 # VRChat Content Publisher
 
-[English](README.md)
+[English](README.md) | [用户反馈 QQ 群](https://qm.qq.com/q/sfc4eaKoa4) (`1045956775`)
 
 一个工具，通过以下方式让你更高效地发布 VRChat 内容：
 

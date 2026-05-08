@@ -1,6 +1,6 @@
 # VRChat Content Publisher
 
-[简体中文](README.cmn-hans.md)
+[简体中文](README.cmn-hans.md) | [Join our QQ Group](https://qm.qq.com/q/sfc4eaKoa4) (`1045956775`)
 
 A tool allows you to publish your VRChat content in a more efficient way by:
 
