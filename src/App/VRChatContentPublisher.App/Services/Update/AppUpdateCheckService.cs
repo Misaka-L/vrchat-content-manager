@@ -29,10 +29,26 @@ public sealed class AppUpdateCheckService(
             return null;
 
         var update = await GetUpdateInformationAsync();
+        var currentVersion = AppVersionUtils.GetAppVersion();
+        var versionCompareResult = AppSemVerComparer.CompareVersion(update.Version, currentVersion);
 
-        if (update.Version == AppVersionUtils.GetAppVersion())
+        if (versionCompareResult is null)
         {
-            logger.LogInformation("Current version {Version} is up to date, no update available", update.Version);
+            logger.LogWarning(
+                "Cannot compare update version {UpdateVersion} with current version {CurrentVersion}, skip update check",
+                update.Version,
+                currentVersion
+            );
+            return null;
+        }
+
+        if (versionCompareResult <= 0)
+        {
+            logger.LogInformation(
+                "Current version {CurrentVersion} is newer than or equal to update version {UpdateVersion}, no update available",
+                currentVersion,
+                update.Version
+            );
             return null;
         }
 
