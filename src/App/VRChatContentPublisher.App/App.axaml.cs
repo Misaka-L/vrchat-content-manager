@@ -93,6 +93,7 @@ public partial class App : Application
         ViewLocator.Register<StartupPortChangedDialogViewModel, StartupPortChangedDialog>();
         ViewLocator.Register<LoginWithCookiesDialogViewModel, LoginWithCookiesDialog>();
         ViewLocator.Register<UpdateAvailableDialogViewModel, UpdateAvailableDialog>();
+        ViewLocator.Register<CancelUpdateConfirmationDialogViewModel, CancelUpdateConfirmationDialog>();
 
         // Data
         ViewLocator.Register<PublishTaskManagerViewModel, PublishTaskManagerView>();

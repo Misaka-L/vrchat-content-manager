@@ -82,6 +82,14 @@ public sealed partial class UpdateDownloadProgressViewModel(
     [RelayCommand]
     private async Task CancelUpdate()
     {
+        if (appUpdateService.UpdateState == AppUpdateServiceState.WaitingForInstall)
+        {
+            var result = await dialogService.ShowDialogAsync(
+                serviceProvider.GetRequiredService<CancelUpdateConfirmationDialogViewModel>());
+            if (result is not true)
+                return;
+        }
+
         await appUpdateService.CancelUpdateAsync();
     }
 

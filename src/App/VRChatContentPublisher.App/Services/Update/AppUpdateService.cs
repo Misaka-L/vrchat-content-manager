@@ -193,6 +193,7 @@ public sealed class AppUpdateService(
 
         if (_downloadCts is not null)
             await _downloadCts.CancelAsync();
+        _downloadCts = null;
         _downloadTask = null;
 
         if (_pathToDownloadFile is not null && File.Exists(_pathToDownloadFile))

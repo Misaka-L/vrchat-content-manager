@@ -583,6 +583,15 @@ Are you really sure you want to shutdown the app?</value>
     <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
         <value>No</value>
     </data>
+    <data name="Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel" xml:space="preserve">
+        <value>You already downloaded the update package. Are you sure you want to cancel and delete it?</value>
+    </data>
+    <data name="Dialog_Cancel_Update_Confirmation_Cancel_Cancel" xml:space="preserve">
+        <value>No</value>
+    </data>
+    <data name="Dialog_Cancel_Update_Confirmation_Confirm_Cancel" xml:space="preserve">
+        <value>Cancel Update</value>
+    </data>
     <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Title" xml:space="preserve">
         <value>RPC Server port change due to bind error</value>
     </data>
@@ -693,7 +702,7 @@ Please notice that you need to re-pair with the app, or you can change port back
         <value>Skip this version</value>
     </data>
     <data name="Dialog_Update_Available_Cancel_Button_Text" xml:space="preserve">
-        <value>Cancel</value>
+        <value>Close</value>
     </data>
     <data name="Dialog_Update_Available_View_On_Browser_Button_Text" xml:space="preserve">
         <value>View on Browser</value>

@@ -1,8 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
+using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels.Data;
 using VRChatContentPublisher.Core.Settings;
@@ -15,7 +17,9 @@ public sealed partial class UpdateAvailableDialogViewModel(
     AppUpdateService appUpdateService,
     AppLifetimeService lifetimeService,
     IWritableOptions<AppSettings> appSettings,
-    UpdateDownloadProgressViewModel updateDownloadProgressViewModel
+    UpdateDownloadProgressViewModel updateDownloadProgressViewModel,
+    DialogService dialogService,
+    IServiceProvider serviceProvider
 ) : DialogViewModelBase
 {
     public UpdateDownloadProgressViewModel UpdateDownloadProgressViewModel => updateDownloadProgressViewModel;
@@ -26,18 +30,11 @@ public sealed partial class UpdateAvailableDialogViewModel(
     public string BrowserUrl => updateInformation.BrowserUrl;
 
     public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
+    public bool IsIdle => appUpdateService.UpdateState is AppUpdateServiceState.Idle;
+    public bool IsDownloading => !IsIdle && !IsWaitingForInstall;
     public bool IsUpdateInstallationSupported => appUpdateService.IsAppUpdateSupported();
 
     [ObservableProperty] public partial bool IsSafeToShutdown { get; private set; }
-
-    public bool IsUpdateAvailableForDownloadOrInstall =>
-        appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall or AppUpdateServiceState.Idle;
-
-    public bool ShowSkipVersionButton => appUpdateService.UpdateState is AppUpdateServiceState.Idle;
-
-    public string UpdateButtonText => IsWaitingForInstall
-        ? LangKeys.Dialog_Update_Available_Install_Update_Button_Text
-        : LangKeys.Dialog_Update_Available_Download_Update_Button_Text;
 
     [RelayCommand]
     private void Load()
@@ -86,6 +83,18 @@ public sealed partial class UpdateAvailableDialogViewModel(
         appUpdateService.StartDownloadUpdate(updateInformation);
     }
 
+    [RelayCommand]
+    private async Task CancelUpdate()
+    {
+        RequestClose();
+        var result = await dialogService.ShowDialogAsync(
+            serviceProvider.GetRequiredService<CancelUpdateConfirmationDialogViewModel>());
+        if (result is not true)
+            return;
+
+        await appUpdateService.CancelUpdateAsync();
+    }
+
     private void IsSafeToShutdownChanged(object? sender, bool e)
     {
         IsSafeToShutdown = e;
@@ -93,10 +102,9 @@ public sealed partial class UpdateAvailableDialogViewModel(
 
     private void OnUpdateStateChanged(object? sender, AppUpdateServiceState e)
     {
-        OnPropertyChanged(nameof(IsUpdateAvailableForDownloadOrInstall));
-        OnPropertyChanged(nameof(ShowSkipVersionButton));
         OnPropertyChanged(nameof(IsWaitingForInstall));
-        OnPropertyChanged(nameof(UpdateButtonText));
+        OnPropertyChanged(nameof(IsIdle));
+        OnPropertyChanged(nameof(IsDownloading));
     }
 }
 
@@ -104,7 +112,9 @@ public sealed class UpdateAvailableDialogViewModelFactory(
     AppUpdateService appUpdateService,
     IWritableOptions<AppSettings> appSettings,
     UpdateDownloadProgressViewModel updateDownloadProgressViewModel,
-    AppLifetimeService lifetimeService
+    AppLifetimeService lifetimeService,
+    DialogService dialogService,
+    IServiceProvider serviceProvider
 )
 {
     public UpdateAvailableDialogViewModel Create(AppUpdateInformation updateInformation)
@@ -114,7 +124,9 @@ public sealed class UpdateAvailableDialogViewModelFactory(
             appUpdateService,
             lifetimeService,
             appSettings,
-            updateDownloadProgressViewModel
+            updateDownloadProgressViewModel,
+            dialogService,
+            serviceProvider
         );
     }
 }
