@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Toggle for public ip checker. [`#342`](https://github.com/project-vrcz/content-publisher/pull/342).
+- Allow cancel update and delete downloaded file after update downloaded. [`#343`](https://github.com/project-vrcz/content-publisher/pull/343)
 
 ### Fixed
 
