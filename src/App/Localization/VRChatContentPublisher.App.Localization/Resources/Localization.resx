@@ -215,6 +215,9 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
         <value>Publish Task Failed</value>
     </data>
+    <data name="Pages_Settings_Notification_Enable_Public_IP_Monitor" xml:space="preserve">
+        <value>Enable Public IP Change Detection</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
         <value>Public IP Changed</value>
     </data>

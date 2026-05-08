@@ -10,6 +10,7 @@ public sealed class AppSettings
     public bool NotificationsEnabled { get; set; } = true;
     public bool SendNotificationOnStartupSessionRestoreFailed { get; set; } = true;
     public bool SendNotificationOnTaskFailed { get; set; } = true;
+    public bool EnablePublicIpMonitor { get; set; } = true;
     public bool SendNotificationOnPublicIpChanged { get; set; } = true;
     public bool SendNotificationOnNewPairingRequest { get; set; } = true;
 
