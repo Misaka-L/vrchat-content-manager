@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- No notification will sent if first 64 bits prefix remain same after IPv6 address changed. [`#344`](https://github.com/project-vrcz/content-publisher/pull/344)
+  - The change will still print to log.
+
 ### Added
 
 - Toggle for public ip checker. [`#342`](https://github.com/project-vrcz/content-publisher/pull/342).
