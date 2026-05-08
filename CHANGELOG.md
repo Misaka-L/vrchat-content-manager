@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Toggle for public ip checker. [`#342`](https://github.com/project-vrcz/content-publisher/pull/342).
+
 ### Fixed
 
 - App will try downgrade itself if remote app version lower than local app version. [`#339`](https://github.com/project-vrcz/content-publisher/pull/339)

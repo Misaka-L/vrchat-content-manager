@@ -207,6 +207,9 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
         <value>内容发布任务发生错误</value>
     </data>
+    <data name="Pages_Settings_Notification_Enable_Public_IP_Monitor" xml:space="preserve">
+        <value>启用公网 IP 变动检测</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
         <value>公网 IP 变动</value>
     </data>

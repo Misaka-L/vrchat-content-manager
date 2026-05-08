@@ -1563,6 +1563,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Public IP Change Detection.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Enable_Public_IP_Monitor {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Enable_Public_IP_Monitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Public IP Changed.
         /// </summary>
         internal static string Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed {

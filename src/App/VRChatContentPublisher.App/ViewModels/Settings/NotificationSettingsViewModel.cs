@@ -8,6 +8,7 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed partial class NotificationSettingsViewModel(
     IWritableOptions<AppSettings> appSettings,
+    IWritableOptions<PublicIpStateStorage> publicIpStateStorage,
     DesktopNotificationService desktopNotificationService
 ) : ViewModelBase
 {
@@ -55,6 +56,33 @@ public sealed partial class NotificationSettingsViewModel(
 
             OnPropertyChanging();
             appSettings.Update(settings => settings.SendNotificationOnTaskFailed = value);
+            OnPropertyChanged();
+        }
+    }
+
+    public bool EnablePublicIpMonitor
+    {
+        get => appSettings.Value.EnablePublicIpMonitor;
+        set
+        {
+            if (appSettings.Value.EnablePublicIpMonitor == value)
+                return;
+
+            OnPropertyChanging();
+            appSettings.Update(settings => settings.EnablePublicIpMonitor = value);
+
+            if (!value)
+            {
+                publicIpStateStorage.Update(storage =>
+                {
+                    storage.LastPublicIp = null;
+                    storage.LastPreviousIp = null;
+                    storage.LastCheckedAtUtc = null;
+                    storage.LastChangedAtUtc = null;
+                    storage.IsWarningDismissed = true;
+                });
+            }
+
             OnPropertyChanged();
         }
     }

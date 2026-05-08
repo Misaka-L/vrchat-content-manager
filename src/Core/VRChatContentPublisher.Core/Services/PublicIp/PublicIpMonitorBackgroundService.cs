@@ -3,12 +3,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.Core.Services.PublicIp;
 
 public sealed class PublicIpMonitorBackgroundService(
     PublicIpCheckerService checkerService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    IWritableOptions<AppSettings> appSettings,
     ILogger<PublicIpMonitorBackgroundService> logger)
     : BackgroundService
 {
@@ -17,6 +20,13 @@ public sealed class PublicIpMonitorBackgroundService(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        if (!appSettings.Value.EnablePublicIpMonitor)
+        {
+            logger.LogInformation("Public IP monitor is disabled by user settings.");
+            await WaitForCancellationAsync(stoppingToken);
+            return;
+        }
+
         _sessionInvalidatedSubscription = sessionStateChangedSubscriber.Subscribe(args =>
         {
             if (args.SessionState == UserSessionState.InvalidSession ||
@@ -35,6 +45,12 @@ public sealed class PublicIpMonitorBackgroundService(
 
             var completed = await Task.WhenAny(timerTask, signalTask);
             await completed;
+
+            if (!appSettings.Value.EnablePublicIpMonitor)
+            {
+                logger.LogInformation("Public IP monitor has been disabled, skipping check.");
+                continue;
+            }
 
             await RunCheckSafelyAsync(stoppingToken);
         }
@@ -60,6 +76,18 @@ public sealed class PublicIpMonitorBackgroundService(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to check internet public IP.");
+        }
+    }
+
+    private static async Task WaitForCancellationAsync(CancellationToken cancellationToken)
+    {
+        try
+        {
+            await Task.Delay(Timeout.Infinite, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when cancellation is requested
         }
     }
 }
