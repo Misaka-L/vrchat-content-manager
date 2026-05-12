@@ -17,6 +17,7 @@ namespace VRChatContentPublisher.Core.Services.VRChatApi;
 
 public sealed partial class VRChatApiClient(
     HttpClient httpClient,
+    IHttpClientFactory httpClientFactory,
     ILogger<VRChatApiClient> logger,
     ConcurrentMultipartUploaderFactory concurrentMultipartUploaderFactory)
 {

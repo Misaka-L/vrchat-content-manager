@@ -38,7 +38,6 @@ public sealed class AvatarContentPublisher(
         string? description,
         string[]? tags,
         string? releaseStatus,
-        HttpClient awsClient,
         CancellationToken cancellationToken = default)
     {
         // Do nothing
@@ -48,14 +47,12 @@ public sealed class AvatarContentPublisher(
     private const long MaxBundleFileSizeForDesktopBytes = 209715200; // 200 MB
     private const long MaxBundleFileSizeForMobileBytes = 10485760; // 10 MB
 
-    public async ValueTask PublishAsync(
-        string bundleFileId,
+    public async ValueTask PublishAsync(string bundleFileId,
         string? thumbnailFileId,
         string? description,
         string[]? tags,
         string? releaseStatus,
-        HttpClient awsClient,
-        PublishStageProgressReporter? progressReporter = null,
+        PublishStageProgressReporter progressReporter,
         CancellationToken cancellationToken = default)
     {
         using var sessionValidScope = new EnsureSessionValidScope(
@@ -99,20 +96,19 @@ public sealed class AvatarContentPublisher(
         // This step also cleanups any incomplete file versions.
 
         logger.LogInformation("Publish Avatar {AvatarId}", avatarId);
-        progressReporter?.Report("Fetching avatar detail...");
+        progressReporter.Report("Fetching avatar detail...");
 
         var avatar = await _apiClient.GetAvatarAsync(avatarId, cancellationToken);
         var fileId = await GetOrCreateBundleFileIdAsync(avatar);
 
         // Step 2. Create and upload a new file version
         logger.LogInformation("Using file id {FileId} for avatar {AvatarId}", fileId, avatarId);
-        progressReporter?.Report("Preparing for upload bundle file...");
+        progressReporter.Report("Preparing for upload bundle file...");
 
         var fileVersion = await _apiClient.CreateAndUploadFileVersionAsync(
             bundleFileStream,
             fileId,
             VRChatApiFlieUtils.GetMimeTypeFromExtension(".vrca"),
-            awsClient,
             "Avatar Bundle",
             arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue), cancellationToken
         );
@@ -133,7 +129,6 @@ public sealed class AvatarContentPublisher(
                 thumbnailFileStream,
                 imageFileId,
                 VRChatApiFlieUtils.GetMimeTypeFromExtension(Path.GetExtension(thumbnailFile.FileName)),
-                awsClient,
                 "Avatar Thumbnail",
                 arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue), cancellationToken
             );

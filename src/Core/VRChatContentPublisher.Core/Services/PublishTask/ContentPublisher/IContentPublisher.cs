@@ -13,7 +13,6 @@ public interface IContentPublisher
         string? description,
         string[]? tags,
         string? releaseStatus,
-        HttpClient awsClient,
         CancellationToken cancellationToken = default
     );
 
@@ -23,7 +22,6 @@ public interface IContentPublisher
         string? description,
         string[]? tags,
         string? releaseStatus,
-        HttpClient awsClient,
         PublishStageProgressReporter progressReporter,
         CancellationToken cancellationToken = default
     );

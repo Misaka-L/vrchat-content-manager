@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Files;
@@ -11,7 +12,7 @@ public partial class VRChatApiClient
 {
     public async ValueTask<VRChatApiFileVersion> CreateAndUploadFileVersionAsync(
         Stream fileStream, string fileId, string contentType,
-        HttpClient awsClient, string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
+        string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -89,7 +90,7 @@ public partial class VRChatApiClient
             ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
-            fileVersion.File.Category == "simple", VRChatApiFileType.File, contentType, awsClient,
+            fileVersion.File.Category == "simple", VRChatApiFileType.File, contentType,
             (progress, bytesPerSecond) => progressCallback?.Invoke(
                 new PublishTaskProgressEventArg(
                     GetUploadProgressText($"Uploading {userFileType} file...", progress, bytesPerSecond),
@@ -101,7 +102,7 @@ public partial class VRChatApiClient
             ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
-            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, contentType, awsClient,
+            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, contentType,
             (progress, bytesPerSecond) => progressCallback?.Invoke(
                 new PublishTaskProgressEventArg(
                     GetUploadProgressText("Uploading signature file...", progress, bytesPerSecond),
@@ -129,7 +130,7 @@ public partial class VRChatApiClient
 
     private async ValueTask UploadFileVersionAsync(Stream fileStream, string fileId, int version, string md5,
         bool isSimpleUpload, VRChatApiFileType fileType, string? contentType,
-        HttpClient awsClient, Action<double?, long?>? progressCallback = null,
+        Action<double?, long?>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -138,8 +139,8 @@ public partial class VRChatApiClient
         if (isSimpleUpload)
         {
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType, cancellationToken);
-            await PutFileAsync(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload, contentType,
-                cancellationToken);
+            await PutFileAsync(
+                simpleUploadUrl, fileStream, md5, isSimpleUpload, contentType, cancellationToken);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType, cancellationToken);
 
             progressCallback?.Invoke(1, null);
@@ -147,11 +148,16 @@ public partial class VRChatApiClient
             return;
         }
 
-        var uploader =
-            concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient,
+        using var uploader =
+            concurrentMultipartUploaderFactory.Create(
+                fileStream,
+                fileId,
+                version,
+                fileType,
+                this,
                 cancellationToken);
         uploader.ProgressChanged += (_, progress) =>
-            progressCallback?.Invoke(progress, uploader.CurrentSpeedBytesPerSecond);
+            progressCallback?.Invoke(progress.ProgressPrcentage, progress.CurrentSpeedBytesPerSecond);
 
         var eTags = await uploader.UploadAsync();
 
@@ -159,8 +165,12 @@ public partial class VRChatApiClient
         progressCallback?.Invoke(1, null);
     }
 
-    private async ValueTask<string> PutFileAsync(string uploadUrl, Stream stream, HttpClient awsClient,
-        string? md5 = null, bool isSimpleUpload = false, string? contentType = null,
+    private async ValueTask<string> PutFileAsync(
+        string uploadUrl,
+        Stream stream,
+        string? md5 = null,
+        bool isSimpleUpload = false,
+        string? contentType = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -184,6 +194,7 @@ public partial class VRChatApiClient
             Content = content
         };
 
+        using var awsClient = httpClientFactory.CreateClient(ServicesExtension.S3UploadWithRetryHttpClientName);
         var response = await awsClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 

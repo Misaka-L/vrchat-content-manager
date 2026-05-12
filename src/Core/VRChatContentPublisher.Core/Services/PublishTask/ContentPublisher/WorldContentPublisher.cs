@@ -48,7 +48,6 @@ public sealed class WorldContentPublisher(
         string? description,
         string[]? tags,
         string? releaseStatus,
-        HttpClient awsClient,
         CancellationToken cancellationToken = default
     )
     {
@@ -73,7 +72,7 @@ public sealed class WorldContentPublisher(
         if (thumbnailFile is null || thumbnailFileStream is null)
             throw new ArgumentException("Could not find the provided thumbnail file.", nameof(thumbnailFileId));
 
-        var imageUrl = await UploadThumbnailFileAsync(null, thumbnailFile, awsClient, null, cancellationToken);
+        var imageUrl = await UploadThumbnailFileAsync(null, thumbnailFile, null, cancellationToken);
 
         logger.LogInformation("Send create world request for {WorldId}", worldId);
         await _apiClient.CreateWorldAsync(new CreateWorldRequest(
@@ -103,7 +102,6 @@ public sealed class WorldContentPublisher(
         string? description,
         string[]? tags,
         string? releaseStatus,
-        HttpClient awsClient,
         PublishStageProgressReporter? progressReporter = null,
         CancellationToken cancellationToken = default)
     {
@@ -153,7 +151,6 @@ public sealed class WorldContentPublisher(
             bundleFileStream,
             fileId,
             VRChatApiFlieUtils.GetMimeTypeFromExtension(".vrcw"),
-            awsClient,
             "World Bundle",
             arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue)
             , cancellationToken
@@ -166,8 +163,7 @@ public sealed class WorldContentPublisher(
             logger.LogInformation("Uploading thumbnail for world {AvatarId}", worldId);
             progressReporter?.Report("Uploading thumbnail...");
 
-            imageUri = await UploadThumbnailFileAsync(world, thumbnailFile, awsClient, progressReporter,
-                cancellationToken);
+            imageUri = await UploadThumbnailFileAsync(world, thumbnailFile, progressReporter, cancellationToken);
         }
 
         if (fileVersion.File is null)
@@ -230,7 +226,6 @@ public sealed class WorldContentPublisher(
     private async ValueTask<string> UploadThumbnailFileAsync(
         VRChatApiWorld? world,
         UploadedFile thumbnailFile,
-        HttpClient awsClient,
         PublishStageProgressReporter? progressReporter,
         CancellationToken cancellationToken = default
     )
@@ -241,7 +236,6 @@ public sealed class WorldContentPublisher(
             thumbnailFile.FileStream,
             imageFileId,
             VRChatApiFlieUtils.GetMimeTypeFromExtension(Path.GetExtension(thumbnailFile.FileName)),
-            awsClient,
             "World Thumbnail",
             arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue), cancellationToken
         );

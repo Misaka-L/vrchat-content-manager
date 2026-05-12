@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Polly;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Files;
 using VRChatContentPublisher.Core.Resilience;
 
@@ -15,9 +16,9 @@ public sealed class ConcurrentMultipartUploader(
     string fileId,
     int fileVersion,
     VRChatApiFileType fileType,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken) : IDisposable
 {
-    public event EventHandler<double>? ProgressChanged;
+    public event EventHandler<(double ProgressPrcentage, long CurrentSpeedBytesPerSecond)>? ProgressChanged;
 
     private const long ChunkSize = 50 * 1024 * 1024;
     private const int MaxConcurrentUploads = 3;
@@ -205,7 +206,7 @@ public sealed class ConcurrentMultipartUploader(
         var inFlight = _chunkProgress.Values.Sum();
         var total = _completedChunkBytes + inFlight;
         var progress = Math.Min((double)total / fileStream.Length, 1.0);
-        ProgressChanged?.Invoke(this, progress);
+        ProgressChanged?.Invoke(this, (progress, CurrentSpeedBytesPerSecond));
     }
 
     private void RecordSpeedSample(long bytes)
@@ -237,15 +238,33 @@ public sealed class ConcurrentMultipartUploader(
     private readonly record struct SpeedSample(long Bytes, long Timestamp);
 
     #endregion
+
+    public void Dispose()
+    {
+        awsClient.Dispose();
+    }
 }
 
-public sealed class ConcurrentMultipartUploaderFactory(ILogger<ConcurrentMultipartUploader> logger)
+public sealed class ConcurrentMultipartUploaderFactory(
+    ILogger<ConcurrentMultipartUploader> logger,
+    IHttpClientFactory httpClientFactory
+)
 {
-    public ConcurrentMultipartUploader Create(Stream fileStream, string fileId, int fileVersion,
-        VRChatApiFileType fileType, VRChatApiClient apiClient, HttpClient awsClient,
+    public ConcurrentMultipartUploader Create(Stream fileStream,
+        string fileId,
+        int fileVersion,
+        VRChatApiFileType fileType,
+        VRChatApiClient apiClient,
         CancellationToken cancellationToken = default)
     {
-        return new ConcurrentMultipartUploader(apiClient, awsClient, logger, fileStream, fileId, fileVersion, fileType,
-            cancellationToken);
+        return new ConcurrentMultipartUploader(apiClient,
+            httpClientFactory.CreateClient(ServicesExtension.S3UploadHttpClientName),
+            logger,
+            fileStream,
+            fileId,
+            fileVersion,
+            fileType,
+            cancellationToken
+            );
     }
 }

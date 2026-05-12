@@ -5,10 +5,11 @@ namespace VRChatContentPublisher.Core.Services.VRChatApi;
 
 public sealed class VRChatApiClientFactory(
     ILogger<VRChatApiClient> logger,
-    ConcurrentMultipartUploaderFactory uploaderFactory)
+    ConcurrentMultipartUploaderFactory uploaderFactory,
+    IHttpClientFactory httpClientFactory)
 {
     public VRChatApiClient Create(HttpClient sessionClient)
     {
-        return new VRChatApiClient(sessionClient, logger, uploaderFactory);
+        return new VRChatApiClient(sessionClient, httpClientFactory, logger, uploaderFactory);
     }
 }
