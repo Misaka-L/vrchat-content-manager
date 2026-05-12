@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.9.4-beta.1] - 2026-05-12
+
 ### Added
 
 - Show upload speed and percentage for file uploading. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
@@ -570,7 +572,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.3...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4-beta.1...HEAD
+[2.9.4-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.3...v2.9.4-beta.1
 [2.9.3]: https://github.com/project-vrcz/content-publisher/compare/v2.9.2...v2.9.3
 [2.9.2]: https://github.com/project-vrcz/content-publisher/compare/v2.9.1...v2.9.2
 [2.9.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.0...v2.9.1
