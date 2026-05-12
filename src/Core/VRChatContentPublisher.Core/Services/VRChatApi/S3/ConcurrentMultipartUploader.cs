@@ -24,6 +24,7 @@ public sealed class ConcurrentMultipartUploader(
     private readonly ConcurrentDictionary<int, string> _eTags = new();
 
     // Progress tracking
+    private static readonly TimeSpan ProgressReportInterval = TimeSpan.FromMilliseconds(100);
     private long _completedChunkBytes;
     private readonly ConcurrentDictionary<int, long> _chunkProgress = new();
 
@@ -66,6 +67,14 @@ public sealed class ConcurrentMultipartUploader(
         logger.LogInformation(
             "Starting concurrent upload for file {FileId} version {FileVersion} with chunk size {ChunkSize}MB and concurrency {MaxConcurrency}",
             fileId, fileVersion, ChunkSize / 1024 / 1024, MaxConcurrentUploads);
+
+        var progressTimer = new PeriodicTimer(ProgressReportInterval);
+        var progressReportTask = Task.Run(async () =>
+        {
+            // ReSharper disable once AccessToDisposedClosure
+            while (await progressTimer.WaitForNextTickAsync(CancellationToken.None))
+                FireProgressChanged();
+        }, CancellationToken.None);
 
         using var concurrencySemaphore = new SemaphoreSlim(MaxConcurrentUploads);
         var uploadTasks = new List<Task>();
@@ -121,12 +130,19 @@ public sealed class ConcurrentMultipartUploader(
             // Rethrow to allow the caller to handle the failure.
             throw;
         }
+        finally
+        {
+            progressTimer.Dispose();
+        }
 
         logger.LogInformation("Successfully uploaded all parts for file {FileId} version {FileVersion}", fileId,
             fileVersion);
 
         // Return the ETag for each part, ordered by part number.
-        return _eTags.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value).ToArray();
+        var result = _eTags.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value).ToArray();
+
+        await progressReportTask;
+        return result;
     }
 
     private async Task UploadChunkAsync(int partNumber, byte[] buffer, int bytesRead, CancellationToken ct)
@@ -145,7 +161,6 @@ public sealed class ConcurrentMultipartUploader(
         {
             // Reset in-flight progress for the current retry attempt.
             _chunkProgress[partNumber] = 0;
-            FireProgressChanged();
 
             using var stream = new MemoryStream(buffer, 0, bytesRead);
             using var progressStream = new ProgressStreamContent(stream,
@@ -169,7 +184,6 @@ public sealed class ConcurrentMultipartUploader(
         // Mark chunk as fully completed — move bytes from in-flight to completed.
         Interlocked.Add(ref _completedChunkBytes, bytesRead);
         _chunkProgress.TryRemove(partNumber, out _);
-        FireProgressChanged();
 
         logger.LogInformation("Completed upload for chunk {PartNumber} for file {FileId}", partNumber, fileId);
     }
@@ -182,7 +196,6 @@ public sealed class ConcurrentMultipartUploader(
     {
         _chunkProgress.AddOrUpdate(partNumber, bytes, (_, prev) => prev + bytes);
         RecordSpeedSample(bytes);
-        FireProgressChanged();
     }
 
     private void FireProgressChanged()
