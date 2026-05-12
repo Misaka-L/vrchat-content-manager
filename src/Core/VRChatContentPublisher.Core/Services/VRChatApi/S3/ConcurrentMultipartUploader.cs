@@ -1,6 +1,9 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
+using Polly;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Files;
+using VRChatContentPublisher.Core.Resilience;
 
 namespace VRChatContentPublisher.Core.Services.VRChatApi.S3;
 
@@ -16,14 +19,45 @@ public sealed class ConcurrentMultipartUploader(
 {
     public event EventHandler<double>? ProgressChanged;
 
-    // The size of each part uploaded to S3. 50MB is a reasonable default.
     private const long ChunkSize = 50 * 1024 * 1024;
-
-    // Controls how many chunks are uploaded in parallel.
     private const int MaxConcurrentUploads = 3;
-
     private readonly ConcurrentDictionary<int, string> _eTags = new();
-    private long _totalBytesUploaded;
+
+    // Progress tracking
+    private long _completedChunkBytes;
+    private readonly ConcurrentDictionary<int, long> _chunkProgress = new();
+
+    // Speed tracking
+    private const int SpeedWindowSeconds = 3;
+    private readonly ConcurrentQueue<SpeedSample> _speedSamples = new();
+    private long _speedSampleTotalBytes;
+
+    private long _currentSpeedBytesPerSecond;
+    public long CurrentSpeedBytesPerSecond => Interlocked.Read(ref _currentSpeedBytesPerSecond);
+
+    private ResiliencePipeline<HttpResponseMessage> CreateRetryPipeline(int partNumber)
+    {
+        const int maxRetryAttempts = 3;
+        return new ResiliencePipelineBuilder<HttpResponseMessage>()
+            .AddRetry(new AppHttpRetryStrategyOptions
+            {
+                UseJitter = true,
+                MaxRetryAttempts = maxRetryAttempts,
+                Delay = TimeSpan.FromSeconds(3),
+                BackoffType = DelayBackoffType.Exponential,
+                OnRetry = args =>
+                {
+                    logger.LogWarning(
+                        args.Outcome.Exception,
+                        "S3 upload retry {Attempt}/{MaxAttempts} for chunk {PartNumber}",
+                        args.AttemptNumber, maxRetryAttempts, partNumber);
+                    return default;
+                }
+            })
+            .Build();
+    }
+
+    #region Upload Logic
 
     public async Task<string[]> UploadAsync()
     {
@@ -101,36 +135,95 @@ public sealed class ConcurrentMultipartUploader(
             "Creating upload chunk {PartNumber} (Size: {Size:F2} MiB) for file {FileId}",
             partNumber, (double)bytesRead / 1024 / 1024, fileId);
 
-        // 1. Get the pre-signed URL for this part from the VRChat API.
+        // 1. Get the pre-signed URL for this part from the VRChat API (only once — URLs are reusable).
         var uploadUrl = await apiClient.GetFilePartUploadUrlAsync(fileId, fileVersion, partNumber, fileType, ct);
 
-        // 2. Upload the data to the provided URL.
-        using var stream = new MemoryStream(buffer, 0, bytesRead);
-        using var progressStream = new ProgressStreamContent(stream, OnUploadProgress);
-
-        var response = await awsClient.PutAsync(uploadUrl, progressStream, ct);
-        response.EnsureSuccessStatusCode();
-
-        // 3. Extract the ETag from the response headers. This is required by S3 to complete the multipart upload.
-        var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
-        if (string.IsNullOrEmpty(eTag))
+        // 2. Upload the data to S3 with retry. On each retry attempt we reset in-flight progress
+        //    for this chunk so the progress bar never double-counts bytes from a failed attempt.
+        var retryPipeline = CreateRetryPipeline(partNumber);
+        await retryPipeline.ExecuteAsync(async innerCt =>
         {
-            throw new InvalidOperationException($"S3 did not return an ETag for part {partNumber} of file {fileId}.");
-        }
+            // Reset in-flight progress for the current retry attempt.
+            _chunkProgress[partNumber] = 0;
+            FireProgressChanged();
 
-        _eTags[partNumber] = eTag;
+            using var stream = new MemoryStream(buffer, 0, bytesRead);
+            using var progressStream = new ProgressStreamContent(stream,
+                bytes => OnChunkProgress(partNumber, bytes));
+
+            var response = await awsClient.PutAsync(uploadUrl, progressStream, innerCt);
+            response.EnsureSuccessStatusCode();
+
+            // 3. Extract the ETag from the response headers. Required by S3 to complete the multipart upload.
+            var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
+            if (string.IsNullOrEmpty(eTag))
+            {
+                throw new InvalidOperationException(
+                    $"S3 did not return an ETag for part {partNumber} of file {fileId}.");
+            }
+
+            _eTags[partNumber] = eTag;
+            return response;
+        }, ct);
+
+        // Mark chunk as fully completed — move bytes from in-flight to completed.
+        Interlocked.Add(ref _completedChunkBytes, bytesRead);
+        _chunkProgress.TryRemove(partNumber, out _);
+        FireProgressChanged();
+
         logger.LogInformation("Completed upload for chunk {PartNumber} for file {FileId}", partNumber, fileId);
     }
 
-    private void OnUploadProgress(long uploadedBytes)
-    {
-        Interlocked.Add(ref _totalBytesUploaded, uploadedBytes);
+    #endregion
 
+    #region Progress Tracking
+
+    private void OnChunkProgress(int partNumber, long bytes)
+    {
+        _chunkProgress.AddOrUpdate(partNumber, bytes, (_, prev) => prev + bytes);
+        RecordSpeedSample(bytes);
+        FireProgressChanged();
+    }
+
+    private void FireProgressChanged()
+    {
         if (fileStream.Length == 0) return;
 
-        var progress = (double)_totalBytesUploaded / fileStream.Length;
+        var inFlight = _chunkProgress.Values.Sum();
+        var total = _completedChunkBytes + inFlight;
+        var progress = Math.Min((double)total / fileStream.Length, 1.0);
         ProgressChanged?.Invoke(this, progress);
     }
+
+    private void RecordSpeedSample(long bytes)
+    {
+        var now = Stopwatch.GetTimestamp();
+        _speedSamples.Enqueue(new SpeedSample(bytes, now));
+        Interlocked.Add(ref _speedSampleTotalBytes, bytes);
+
+        // Prune samples older than the sliding window.
+        var cutoff = now - SpeedWindowSeconds * Stopwatch.Frequency;
+        while (_speedSamples.TryPeek(out var sample) && sample.Timestamp < cutoff)
+        {
+            if (_speedSamples.TryDequeue(out var removed))
+                Interlocked.Add(ref _speedSampleTotalBytes, -removed.Bytes);
+        }
+
+        // Calculate current speed from the sliding window.
+        if (_speedSamples.TryPeek(out var oldest) && oldest.Timestamp < now)
+        {
+            var elapsedSeconds = (double)(now - oldest.Timestamp) / Stopwatch.Frequency;
+            if (elapsedSeconds > 0.1)
+            {
+                Interlocked.Exchange(ref _currentSpeedBytesPerSecond,
+                    (long)(Interlocked.Read(ref _speedSampleTotalBytes) / elapsedSeconds));
+            }
+        }
+    }
+
+    private readonly record struct SpeedSample(long Bytes, long Timestamp);
+
+    #endregion
 }
 
 public sealed class ConcurrentMultipartUploaderFactory(ILogger<ConcurrentMultipartUploader> logger)

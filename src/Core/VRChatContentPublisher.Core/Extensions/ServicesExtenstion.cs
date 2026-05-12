@@ -121,17 +121,7 @@ public static class ServicesExtension
                 ConnectTimeout = TimeSpan.FromSeconds(5),
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
-            .RemoveAllResilienceHandlers()
-            .AddResilienceHandler("awsClient", builder =>
-            {
-                builder.AddRetry(new AppHttpRetryStrategyOptions
-                {
-                    UseJitter = true,
-                    MaxRetryAttempts = 5,
-                    Delay = TimeSpan.FromSeconds(3),
-                    BackoffType = DelayBackoffType.Exponential
-                });
-            });
+            .RemoveAllResilienceHandlers();
 #pragma warning restore EXTEXP0001
 
         services.AddTransient<VRChatApiDiagnosticService>();
