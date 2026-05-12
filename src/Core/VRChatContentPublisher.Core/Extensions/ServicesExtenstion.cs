@@ -29,6 +29,9 @@ namespace VRChatContentPublisher.Core.Extensions;
 
 public static class ServicesExtension
 {
+    public const string S3UploadHttpClientName = "s3-upload";
+    public const string S3UploadWithRetryHttpClientName = "s3-upload-with-retry";
+
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
         services.ConfigureHttpClientDefaults(builder =>
@@ -110,7 +113,20 @@ public static class ServicesExtension
 
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
 #pragma warning disable EXTEXP0001
-        services.AddHttpClient<ContentPublishTaskFactory>()
+        services.AddHttpClient(S3UploadHttpClientName)
+            .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
+            {
+                UseCookies = false,
+                MaxConnectionsPerServer = 256,
+                PooledConnectionLifetime = TimeSpan.Zero,
+                EnableMultipleHttp2Connections = true,
+                EnableMultipleHttp3Connections = true,
+                ConnectTimeout = TimeSpan.FromSeconds(5),
+                Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
+            })
+            .RemoveAllResilienceHandlers();
+
+        services.AddHttpClient(S3UploadWithRetryHttpClientName)
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
@@ -122,7 +138,7 @@ public static class ServicesExtension
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
             .RemoveAllResilienceHandlers()
-            .AddResilienceHandler("awsClient", builder =>
+            .AddResilienceHandler(S3UploadWithRetryHttpClientName, builder =>
             {
                 builder.AddRetry(new AppHttpRetryStrategyOptions
                 {

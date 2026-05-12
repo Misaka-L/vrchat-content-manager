@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Show upload speed and percentage for file uploading. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
+
+### Fixed
+
+- Upload progress will become unreliable if request retry occurred. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
+
 ## [2.9.3] - 2026-05-08
 
 ### Changed

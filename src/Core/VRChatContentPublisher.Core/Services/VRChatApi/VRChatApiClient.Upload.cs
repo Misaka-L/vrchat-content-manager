@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Files;
@@ -11,7 +12,7 @@ public partial class VRChatApiClient
 {
     public async ValueTask<VRChatApiFileVersion> CreateAndUploadFileVersionAsync(
         Stream fileStream, string fileId, string contentType,
-        HttpClient awsClient, string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
+        string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -89,18 +90,24 @@ public partial class VRChatApiClient
             ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
-            fileVersion.File.Category == "simple", VRChatApiFileType.File, contentType, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg($"Uploading {userFileType} file...",
-                progress, ContentPublishTaskStatus.InProgress)), cancellationToken);
+            fileVersion.File.Category == "simple", VRChatApiFileType.File, contentType,
+            (progress, bytesPerSecond) => progressCallback?.Invoke(
+                new PublishTaskProgressEventArg(
+                    GetUploadProgressText($"Uploading {userFileType} file...", progress, bytesPerSecond),
+                    progress, ContentPublishTaskStatus.InProgress
+                )), cancellationToken);
 
         logger.LogInformation("Uploading signature for {FileId}", fileId);
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null,
             ContentPublishTaskStatus.InProgress));
 
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
-            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, contentType, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading signature...", progress,
-                ContentPublishTaskStatus.InProgress)), cancellationToken);
+            fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, contentType,
+            (progress, bytesPerSecond) => progressCallback?.Invoke(
+                new PublishTaskProgressEventArg(
+                    GetUploadProgressText("Uploading signature file...", progress, bytesPerSecond),
+                    progress, ContentPublishTaskStatus.InProgress
+                )), cancellationToken);
 
         // Step 6. Wait for server to process the uploaded file version
         logger.LogInformation("Waiting for server processing of file version {Version} for file {FileId}",
@@ -123,37 +130,47 @@ public partial class VRChatApiClient
 
     private async ValueTask UploadFileVersionAsync(Stream fileStream, string fileId, int version, string md5,
         bool isSimpleUpload, VRChatApiFileType fileType, string? contentType,
-        HttpClient awsClient, Action<double?>? progressCallback = null,
+        Action<double?, long?>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        progressCallback?.Invoke(null);
+        progressCallback?.Invoke(null, null);
         if (isSimpleUpload)
         {
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType, cancellationToken);
-            await PutFileAsync(simpleUploadUrl, fileStream, awsClient, md5, isSimpleUpload, contentType,
-                cancellationToken);
+            await PutFileAsync(
+                simpleUploadUrl, fileStream, md5, isSimpleUpload, contentType, cancellationToken);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType, cancellationToken);
 
-            progressCallback?.Invoke(1);
+            progressCallback?.Invoke(1, null);
 
             return;
         }
 
-        var uploader =
-            concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient,
+        using var uploader =
+            concurrentMultipartUploaderFactory.Create(
+                fileStream,
+                fileId,
+                version,
+                fileType,
+                this,
                 cancellationToken);
-        uploader.ProgressChanged += (_, progress) => progressCallback?.Invoke(progress);
+        uploader.ProgressChanged += (_, progress) =>
+            progressCallback?.Invoke(progress.ProgressPrcentage, progress.CurrentSpeedBytesPerSecond);
 
         var eTags = await uploader.UploadAsync();
 
         await CompleteFilePartUploadAsync(fileId, version, eTags, fileType, cancellationToken);
-        progressCallback?.Invoke(1);
+        progressCallback?.Invoke(1, null);
     }
 
-    private async ValueTask<string> PutFileAsync(string uploadUrl, Stream stream, HttpClient awsClient,
-        string? md5 = null, bool isSimpleUpload = false, string? contentType = null,
+    private async ValueTask<string> PutFileAsync(
+        string uploadUrl,
+        Stream stream,
+        string? md5 = null,
+        bool isSimpleUpload = false,
+        string? contentType = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
@@ -177,6 +194,7 @@ public partial class VRChatApiClient
             Content = content
         };
 
+        using var awsClient = httpClientFactory.CreateClient(ServicesExtension.S3UploadWithRetryHttpClientName);
         var response = await awsClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
@@ -184,5 +202,16 @@ public partial class VRChatApiClient
             throw new UnexpectedApiBehaviourException("Api did not return an ETag header.");
 
         return response.Headers.ETag.Tag;
+    }
+
+    private static string GetUploadProgressText(string prefix, double? progress, long? bytesPerSecond)
+    {
+        var progressText = prefix;
+        if (progress is not null)
+            progressText += $" ({progress:P})";
+        if (bytesPerSecond is not null)
+            progressText += $" - {bytesPerSecond / 1.048576e+6d:F}MiB/s";
+
+        return progressText;
     }
 }

@@ -15,7 +15,6 @@ public sealed class ContentPublishTaskService
 {
     public string TaskId { get; }
 
-    private readonly HttpClient _awsHttpClient;
     private readonly IFileService _tempFileService;
     private readonly BundleProcessService _bundleProcessService;
 
@@ -68,7 +67,7 @@ public sealed class ContentPublishTaskService
         string taskId,
         string contentId, string rawBundleFileId,
         string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
-        HttpClient awsHttpClient, IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
+        IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
         IContentPublisher contentPublisher, BundleProcessService bundleProcessService,
         IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
     {
@@ -86,7 +85,6 @@ public sealed class ContentPublishTaskService
         _releaseStatus = releaseStatus;
         _bundleFileId = rawBundleFileId;
 
-        _awsHttpClient = awsHttpClient;
         _tempFileService = tempFileService;
         _contentPublisher = contentPublisher;
         _bundleProcessService = bundleProcessService;
@@ -243,8 +241,7 @@ public sealed class ContentPublishTaskService
                    ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
         {
             await _contentPublisher.PublishAsync(
-                _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus
-                , _awsHttpClient, _progressReporter, cancellationToken);
+                _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus, _progressReporter, cancellationToken);
         }
 
         await _tempFileService.DeleteFileAsync(_bundleFileId);
@@ -294,7 +291,6 @@ public enum PublishTaskStage
 }
 
 public sealed class ContentPublishTaskFactory(
-    HttpClient awsHttpClient,
     IFileService tempFileService,
     ILogger<ContentPublishTaskService> logger,
     BundleProcessService bundleProcessService,
@@ -313,7 +309,7 @@ public sealed class ContentPublishTaskFactory(
         if (!await tempFileService.IsFileExistAsync(bundleFileId))
             throw new ProvideFileIdNotFoundException(bundleFileId);
 
-        await contentPublisher.BeforePublishTaskAsync(thumbnailFileId, description, tags, releaseStatus, awsHttpClient);
+        await contentPublisher.BeforePublishTaskAsync(thumbnailFileId, description, tags, releaseStatus);
 
         var publishTask = new ContentPublishTaskService(
             taskId,
@@ -323,7 +319,6 @@ public sealed class ContentPublishTaskFactory(
             description,
             tags,
             releaseStatus,
-            awsHttpClient,
             tempFileService,
             logger,
             contentPublisher,
