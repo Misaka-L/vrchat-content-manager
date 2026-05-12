@@ -90,8 +90,11 @@ public partial class VRChatApiClient
 
         await UploadFileVersionAsync(fileStream, fileId, fileVersion.Version, fileMd5,
             fileVersion.File.Category == "simple", VRChatApiFileType.File, contentType, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg($"Uploading {userFileType} file...",
-                progress, ContentPublishTaskStatus.InProgress)), cancellationToken);
+            (progress, bytesPerSecond) => progressCallback?.Invoke(
+                new PublishTaskProgressEventArg(
+                    GetUploadProgressText($"Uploading {userFileType} file...", progress, bytesPerSecond),
+                    progress, ContentPublishTaskStatus.InProgress
+                )), cancellationToken);
 
         logger.LogInformation("Uploading signature for {FileId}", fileId);
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for Upload signature...", null,
@@ -99,8 +102,11 @@ public partial class VRChatApiClient
 
         await UploadFileVersionAsync(signatureStream, fileId, fileVersion.Version, signatureMd5,
             fileVersion.Signature.Category == "simple", VRChatApiFileType.Signature, contentType, awsClient,
-            progress => progressCallback?.Invoke(new PublishTaskProgressEventArg("Uploading signature...", progress,
-                ContentPublishTaskStatus.InProgress)), cancellationToken);
+            (progress, bytesPerSecond) => progressCallback?.Invoke(
+                new PublishTaskProgressEventArg(
+                    GetUploadProgressText("Uploading signature file...", progress, bytesPerSecond),
+                    progress, ContentPublishTaskStatus.InProgress
+                )), cancellationToken);
 
         // Step 6. Wait for server to process the uploaded file version
         logger.LogInformation("Waiting for server processing of file version {Version} for file {FileId}",
@@ -123,12 +129,12 @@ public partial class VRChatApiClient
 
     private async ValueTask UploadFileVersionAsync(Stream fileStream, string fileId, int version, string md5,
         bool isSimpleUpload, VRChatApiFileType fileType, string? contentType,
-        HttpClient awsClient, Action<double?>? progressCallback = null,
+        HttpClient awsClient, Action<double?, long?>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        progressCallback?.Invoke(null);
+        progressCallback?.Invoke(null, null);
         if (isSimpleUpload)
         {
             var simpleUploadUrl = await GetSimpleUploadUrlAsync(fileId, version, fileType, cancellationToken);
@@ -136,7 +142,7 @@ public partial class VRChatApiClient
                 cancellationToken);
             await CompleteSimpleFileUploadAsync(fileId, version, fileType, cancellationToken);
 
-            progressCallback?.Invoke(1);
+            progressCallback?.Invoke(1, null);
 
             return;
         }
@@ -144,12 +150,13 @@ public partial class VRChatApiClient
         var uploader =
             concurrentMultipartUploaderFactory.Create(fileStream, fileId, version, fileType, this, awsClient,
                 cancellationToken);
-        uploader.ProgressChanged += (_, progress) => progressCallback?.Invoke(progress);
+        uploader.ProgressChanged += (_, progress) =>
+            progressCallback?.Invoke(progress, uploader.CurrentSpeedBytesPerSecond);
 
         var eTags = await uploader.UploadAsync();
 
         await CompleteFilePartUploadAsync(fileId, version, eTags, fileType, cancellationToken);
-        progressCallback?.Invoke(1);
+        progressCallback?.Invoke(1, null);
     }
 
     private async ValueTask<string> PutFileAsync(string uploadUrl, Stream stream, HttpClient awsClient,
@@ -184,5 +191,16 @@ public partial class VRChatApiClient
             throw new UnexpectedApiBehaviourException("Api did not return an ETag header.");
 
         return response.Headers.ETag.Tag;
+    }
+
+    private static string GetUploadProgressText(string prefix, double? progress, long? bytesPerSecond)
+    {
+        var progressText = prefix;
+        if (progress is not null)
+            progressText += $" ({progress:P})";
+        if (bytesPerSecond is not null)
+            progressText += $" - {bytesPerSecond / 1.048576e+6d:F}MiB/s";
+
+        return progressText;
     }
 }
