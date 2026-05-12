@@ -22,13 +22,6 @@ public sealed class AppWebImageLoader
         {
             SlidingExpiration = TimeSpan.FromSeconds(30)
         };
-
-        _memoryCacheEntryOptions.RegisterPostEvictionCallback((_, cacheEntry, _, _) =>
-        {
-            (cacheEntry as Bitmap)?.Dispose();
-
-            GC.Collect();
-        });
     }
 
     public async Task<Bitmap?> ProvideImageAsync(string url)
