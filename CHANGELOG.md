@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Show upload speed and percentage for file uploading. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
+
+### Fixed
+
+- Upload progress will become unreliable if request retry occurred. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
+- App crash randomly in some case. (Due to dispose Bitmap in wrong time). [`#349`](https://github.com/project-vrcz/content-publisher/pull/349)
+
 ## [2.9.4-beta.1] - 2026-05-12
 
 ### Added
