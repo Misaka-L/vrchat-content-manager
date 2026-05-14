@@ -43,7 +43,7 @@
     <Grid RowDefinitions="Auto,*">
         <controls:ColorZone Mode="PrimaryMid" Height="60" Classes.rgb-enabled="{Binding UseRgbCyclingBackgroundMenu}">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,8,0" ColumnSpacing="12">
-                <Image Height="32" Width="32" Source="{StaticResource AppIcon}" />
+                <PathIcon Height="32" Width="32" Data="{StaticResource AppIconGeometry}" Foreground="White" />
                 <ListBox Grid.Column="1" ItemsSource="{Binding Items}" SelectedItem="{Binding CurrentNavigationItem }">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
