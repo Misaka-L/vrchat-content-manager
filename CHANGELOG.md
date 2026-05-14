@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.9.4] - 2026-05-14
+
 ### Changed
 
 - Onboarding will skip account login if any account exist. [`#352`](https://github.com/project-vrcz/content-publisher/pull/352)
@@ -589,7 +591,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4-beta.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4...HEAD
+[2.9.4]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4-beta.1...v2.9.4
 [2.9.4-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.3...v2.9.4-beta.1
 [2.9.3]: https://github.com/project-vrcz/content-publisher/compare/v2.9.2...v2.9.3
 [2.9.2]: https://github.com/project-vrcz/content-publisher/compare/v2.9.1...v2.9.2
