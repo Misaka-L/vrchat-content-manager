@@ -25,7 +25,8 @@
         <Grid Grid.Row="1" RowDefinitions="*,Auto">
             <StackPanel Spacing="24" HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal" Spacing="4">
-                    <Image Source="{StaticResource AppIcon}" Height="64" Width="64" />
+                    <PathIcon Data="{StaticResource AppIconGeometry}" Height="64" Width="64"
+                              Foreground="{DynamicResource MaterialBodyBrush}"/>
                     <StackPanel VerticalAlignment="Center">
                         <TextBlock Text="VRChat Content Publisher" FontWeight="SemiBold" FontSize="18" />
                         <TextBlock Text="{Binding AppVersion, StringFormat='Release v{0}'}" />

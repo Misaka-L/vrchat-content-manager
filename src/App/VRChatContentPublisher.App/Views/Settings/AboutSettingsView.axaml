@@ -37,7 +37,7 @@
             <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                 <Border Background="Black" CornerRadius="14" Padding="10"
                         VerticalAlignment="Top">
-                    <Image Height="40" Width="40" Source="{StaticResource AppIcon}" />
+                    <PathIcon Height="40" Width="40" Data="{StaticResource AppIconGeometry}" Foreground="White" />
                 </Border>
 
                 <StackPanel Spacing="4" VerticalAlignment="Center">
