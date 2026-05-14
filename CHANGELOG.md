@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Onboarding will skip account login if any account exist. [`#352`](https://github.com/project-vrcz/content-publisher/pull/352)
+
 ### Added
 
 - Show upload speed and percentage for file uploading. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
