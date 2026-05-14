@@ -296,6 +296,9 @@
     <data name="Pages_Settings_Debug_Open_Network_Diagnostics_Window" xml:space="preserve">
         <value>Open Network Diagnostics Window</value>
     </data>
+    <data name="Pages_Settings_Debug_Restart_Onboarding_Button_Text" xml:space="preserve">
+        <value>Restart Onboarding</value>
+    </data>
     <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
         <value>Enter encrypted IP in the logs here</value>
     </data>

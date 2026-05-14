@@ -1,5 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.App.Views;
 using VRChatContentPublisher.Core.Services.App;
 using VRChatContentPublisher.Core.Services.PublicIp;
@@ -8,10 +10,17 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed partial class DebugSettingsViewModel(
     NetworkDiagnostic.NetworkDiagnosticWindowViewModel networkDiagnosticWindowViewModel,
-    IIpCryptService ipCryptService
+    IIpCryptService ipCryptService,
+    NavigationService navigationService
 ) : ViewModelBase
 {
     public string LogsPath => AppStorageService.GetLogsPath();
+
+    [RelayCommand]
+    private void RestartOnBoarding()
+    {
+        navigationService.Navigate<GuideWelcomePageViewModel>();
+    }
 
     [RelayCommand]
     private void OpenNetworkDiagnosticWindow()

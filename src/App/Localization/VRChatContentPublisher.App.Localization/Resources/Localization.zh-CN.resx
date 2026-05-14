@@ -279,6 +279,9 @@
     <data name="Pages_Settings_Debug_Open_Network_Diagnostics_Window" xml:space="preserve">
         <value>打开网络诊断窗口</value>
     </data>
+    <data name="Pages_Settings_Debug_Restart_Onboarding_Button_Text" xml:space="preserve">
+        <value>重新开始新手教程</value>
+    </data>
     <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
         <value>在此输入日志中加密后的 IP</value>
     </data>

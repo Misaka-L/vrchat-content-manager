@@ -20,6 +20,8 @@
         </Button>
         <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Open_Network_Diagnostics_Window}}"
                 Command="{Binding OpenNetworkDiagnosticWindowCommand}" />
+        <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Restart_Onboarding_Button_Text}}"
+                Command="{Binding RestartOnBoardingCommand}" />
         <Border Height="1" Margin="0,4,0,0" Background="{DynamicResource MaterialDesignBodyLight}" />
 
         <TextBox
