@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - Onboarding will skip account login if any account exist. [`#352`](https://github.com/project-vrcz/content-publisher/pull/352)
+- Rework About page. [`#355`](https://github.com/project-vrcz/content-publisher/pull/355)
 
 ### Added
 
