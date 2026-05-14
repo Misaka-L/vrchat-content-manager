@@ -25,4 +25,12 @@ public sealed partial class GuideWelcomePageViewModel(
 
         navigationService.Navigate(addAccountPageViewModel);
     }
+
+    [RelayCommand]
+    private void OpenSettingsPage()
+    {
+        navigationService.Navigate<SettingsPageViewModel>(settings =>
+            settings.OnRequestBackOverride = navigationService.Navigate<GuideWelcomePageViewModel>
+        );
+    }
 }

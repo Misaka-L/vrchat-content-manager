@@ -23,4 +23,19 @@ public class NavigationService(IServiceProvider serviceProvider)
         var pageViewModel = serviceProvider.GetRequiredService<T>();
         Navigate(pageViewModel);
     }
+
+    public void Navigate<T>(Action<T> configure) where T : PageViewModelBase
+    {
+        var pageViewModel = serviceProvider.GetRequiredService<T>();
+        configure(pageViewModel);
+        Navigate(pageViewModel);
+    }
+
+    public void Navigate<TFactory, TPageViewModel>(
+        Func<TFactory, TPageViewModel> factory
+    ) where TPageViewModel : PageViewModelBase where TFactory : notnull
+    {
+        var pageViewModelFactory = serviceProvider.GetRequiredService<TFactory>();
+        Navigate(factory(pageViewModelFactory));
+    }
 }

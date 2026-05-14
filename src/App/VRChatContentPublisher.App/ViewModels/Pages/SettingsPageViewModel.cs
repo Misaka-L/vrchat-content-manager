@@ -16,6 +16,8 @@ public sealed partial class SettingsPageViewModel(
     DebugSettingsViewModel debugSettingsViewModel,
     UpdateSettingsViewModel updateSettingsViewModel) : PageViewModelBase
 {
+    public Action? OnRequestBackOverride { get; set; }
+
     public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
     public AppearanceSettingsViewModel AppearanceSettingsViewModel { get; } = appearanceSettingsViewModel;
     public ConnectSettingsViewModel ConnectSettingsViewModel { get; } = connectSettingsViewModel;
@@ -25,10 +27,16 @@ public sealed partial class SettingsPageViewModel(
     public AboutSettingsViewModel AboutSettingsViewModel { get; } = aboutSettingsViewModel;
     public DebugSettingsViewModel DebugSettingsViewModel { get; } = debugSettingsViewModel;
     public UpdateSettingsViewModel UpdateSettingsViewModel { get; } = updateSettingsViewModel;
-    
+
     [RelayCommand]
     private void NavigateToHome()
     {
+        if (OnRequestBackOverride is not null)
+        {
+            OnRequestBackOverride();
+            return;
+        }
+
         navigationService.Navigate<HomePageViewModel>();
     }
 }

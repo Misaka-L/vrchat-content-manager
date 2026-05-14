@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
              x:DataType="gettingStarted:GuideWelcomePageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.GettingStarted.GuideWelcomePage">
@@ -21,22 +22,34 @@
                            Foreground="White" FontSize="16" />
             </StackPanel>
         </Border>
-        <StackPanel Grid.Row="1" Spacing="24" HorizontalAlignment="Center">
-            <StackPanel Orientation="Horizontal" Spacing="4">
-                <Image Source="{StaticResource AppIcon}" Height="64" Width="64" />
-                <StackPanel VerticalAlignment="Center">
-                    <TextBlock Text="VRChat Content Publisher" FontWeight="SemiBold" FontSize="18" />
-                    <TextBlock Text="{Binding AppVersion, StringFormat='Release v{0}'}" />
+        <Grid Grid.Row="1" RowDefinitions="*,Auto">
+            <StackPanel Spacing="24" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Image Source="{StaticResource AppIcon}" Height="64" Width="64" />
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="VRChat Content Publisher" FontWeight="SemiBold" FontSize="18" />
+                        <TextBlock Text="{Binding AppVersion, StringFormat='Release v{0}'}" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Spacing="8">
+                    <Button Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Welcome_Next_Page_Button_Text}}"
+                            Command="{Binding NextPageCommand}" />
+                    <Button
+                        Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text}}"
+                        Command="{Binding NavigateToHomePageCommand}"
+                        Theme="{StaticResource MaterialFlatButton}" />
                 </StackPanel>
             </StackPanel>
-            <StackPanel Spacing="8">
-                <Button Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Welcome_Next_Page_Button_Text}}"
-                        Command="{Binding NextPageCommand}" />
-                <Button
-                    Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Welcome_Skip_To_Home_Page_Button_Text}}"
-                    Command="{Binding NavigateToHomePageCommand}"
-                    Theme="{StaticResource MaterialFlatButton}" />
+            <StackPanel Grid.Row="1" Margin="24"
+                        HorizontalAlignment="Center">
+                <Button Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding OpenSettingsPageCommand}">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="Cog" />
+                        <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Title}}" />
+                    </StackPanel>
+                </Button>
             </StackPanel>
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
