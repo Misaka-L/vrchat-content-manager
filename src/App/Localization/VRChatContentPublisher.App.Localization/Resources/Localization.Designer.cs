@@ -170,6 +170,33 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You already downloaded the update package. Are you sure you want to cancel and delete it?.
+        /// </summary>
+        internal static string Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel {
+            get {
+                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No.
+        /// </summary>
+        internal static string Dialog_Cancel_Update_Confirmation_Cancel_Cancel {
+            get {
+                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Cancel_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel Update.
+        /// </summary>
+        internal static string Dialog_Cancel_Update_Confirmation_Confirm_Cancel {
+            get {
+                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Confirm_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Cookie.
         /// </summary>
         internal static string Dialog_Login_Using_Cookies_Add_Cookie_Button_Text {
@@ -388,33 +415,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You already downloaded the update package. Are you sure you want to cancel and delete it?.
-        /// </summary>
-        internal static string Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel {
-            get {
-                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No.
-        /// </summary>
-        internal static string Dialog_Cancel_Update_Confirmation_Cancel_Cancel {
-            get {
-                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Cancel_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cancel Update.
-        /// </summary>
-        internal static string Dialog_Cancel_Update_Confirmation_Confirm_Cancel {
-            get {
-                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Confirm_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Yes! I want to shutdown with uncompleted tasks!.
         /// </summary>
         internal static string Dialog_Shutdown_Confirm_Confirm_Shutdown_With_Uncompleted_Tasks {
@@ -424,7 +424,7 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cancel.
+        ///   Looks up a localized string similar to Close.
         /// </summary>
         internal static string Dialog_Update_Available_Cancel_Button_Text {
             get {
@@ -1481,6 +1481,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart Onboarding.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Restart_Onboarding_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Restart_Onboarding_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         internal static string Pages_Settings_Debug_Title {
@@ -1571,6 +1580,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable Public IP Change Detection.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Enable_Public_IP_Monitor {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Enable_Public_IP_Monitor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Session Expired on Startup.
         /// </summary>
         internal static string Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup {
@@ -1586,15 +1604,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request {
             get {
                 return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enable Public IP Change Detection.
-        /// </summary>
-        internal static string Pages_Settings_Notification_Enable_Public_IP_Monitor {
-            get {
-                return ResourceManager.GetString("Pages_Settings_Notification_Enable_Public_IP_Monitor", resourceCulture);
             }
         }
         
