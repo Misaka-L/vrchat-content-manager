@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Show upload speed and percentage for file uploading. [`#347`](https://github.com/project-vrcz/content-publisher/pull/347)
+- Restart onboarding from settings page. [`#352`](https://github.com/project-vrcz/content-publisher/pull/352)
+- Open settings page from onboarding welcome page. [`#352`](https://github.com/project-vrcz/content-publisher/pull/352)
 
 ### Fixed
 
