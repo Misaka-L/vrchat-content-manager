@@ -1156,15 +1156,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A More Efficient Way to publish your VRChat Contents.
-        /// </summary>
-        internal static string Pages_Settings_About_Slogan {
-            get {
-                return ResourceManager.GetString("Pages_Settings_About_Slogan", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Special thanks to our early adopters.
         /// </summary>
         internal static string Pages_Settings_About_Special_Thanks_To_Our_Early_Adopters {

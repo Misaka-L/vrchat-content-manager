@@ -308,9 +308,6 @@
     <data name="Pages_Settings_About_Title" xml:space="preserve">
         <value>About</value>
     </data>
-    <data name="Pages_Settings_About_Slogan" xml:space="preserve">
-        <value>A More Efficient Way to publish your VRChat Contents</value>
-    </data>
     <data name="Pages_Settings_Copyright" xml:space="preserve">
         <value>Licensed under GPL-3.0 license</value>
     </data>

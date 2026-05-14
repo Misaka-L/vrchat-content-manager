@@ -300,9 +300,6 @@
     <data name="Pages_Settings_PairedClients_Client_Item_Revoke_Client_Button_Tooltip" xml:space="preserve">
         <value>撤销授权该客户端</value>
     </data>
-    <data name="Pages_Settings_About_Slogan" xml:space="preserve">
-        <value>更高效的发布 VRChat 内容</value>
-    </data>
     <data name="Pages_Settings_Copyright" xml:space="preserve">
         <value>以 GPL-3.0 许可证许可</value>
     </data>
