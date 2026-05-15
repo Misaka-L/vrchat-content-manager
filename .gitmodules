@@ -1,6 +1,3 @@
 [submodule "assets-tools-net"]
 	path = src/Submodules/AssetsTools.NET
 	url = https://github.com/project-vrcz/AssetsTools.NET.git
-[submodule "src/Submodules/Antelcat.18N"]
-	path = src/Submodules/Antelcat.18N
-	url = https://github.com/Misaka-L/Antelcat.18N.git
