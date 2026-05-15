@@ -25,7 +25,7 @@ public sealed class WorldContentPublisher(
     string[]? udonProducts,
     UserSessionService userSessionService,
     ILogger<WorldContentPublisher> logger,
-    IFileService tempFileService,
+    IFileService fileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 ) : IContentPublisher
 {
@@ -66,7 +66,7 @@ public sealed class WorldContentPublisher(
         if (thumbnailFileId is null)
             throw new InvalidOperationException("Thumbnail must be provided when creating a new world.");
 
-        var thumbnailFile = await tempFileService.GetFileWithNameAsync(thumbnailFileId);
+        var thumbnailFile = await fileService.GetFileWithNameAsync(thumbnailFileId);
         await using var thumbnailFileStream = thumbnailFile?.FileStream;
 
         if (thumbnailFile is null || thumbnailFileStream is null)
@@ -113,9 +113,9 @@ public sealed class WorldContentPublisher(
 
         cancellationToken = sessionValidScope.CancellationToken;
 
-        await using var bundleFileStream = await tempFileService.GetFileAsync(bundleFileId);
+        await using var bundleFileStream = await fileService.GetFileAsync(bundleFileId);
         var thumbnailFile = thumbnailFileId is not null
-            ? await tempFileService.GetFileWithNameAsync(thumbnailFileId)
+            ? await fileService.GetFileWithNameAsync(thumbnailFileId)
             : null;
         await using var thumbnailFileStream = thumbnailFile?.FileStream;
 
@@ -269,7 +269,7 @@ public sealed class WorldContentPublisher(
 
 public sealed class WorldContentPublisherFactory(
     ILogger<WorldContentPublisher> logger,
-    IFileService tempFileService,
+    IFileService fileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 )
 {
@@ -297,7 +297,7 @@ public sealed class WorldContentPublisherFactory(
             udonProducts,
             userSessionService,
             logger,
-            tempFileService,
+            fileService,
             sessionStateChangedSubscriber
         );
     }

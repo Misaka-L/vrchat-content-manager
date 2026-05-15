@@ -19,7 +19,7 @@ public sealed class AvatarContentPublisher(
     string unityVersion,
     UserSessionService userSessionService,
     ILogger<AvatarContentPublisher> logger,
-    IFileService tempFileService,
+    IFileService fileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 ) : IContentPublisher
 {
@@ -63,9 +63,9 @@ public sealed class AvatarContentPublisher(
 
         cancellationToken = sessionValidScope.CancellationToken;
 
-        await using var bundleFileStream = await tempFileService.GetFileAsync(bundleFileId);
+        await using var bundleFileStream = await fileService.GetFileAsync(bundleFileId);
         var thumbnailFile = thumbnailFileId is not null
-            ? await tempFileService.GetFileWithNameAsync(thumbnailFileId)
+            ? await fileService.GetFileWithNameAsync(thumbnailFileId)
             : null;
         await using var thumbnailFileStream = thumbnailFile?.FileStream;
 
@@ -210,7 +210,7 @@ public sealed class AvatarContentPublisher(
 
 public sealed class AvatarContentPublisherFactory(
     ILogger<AvatarContentPublisher> logger,
-    IFileService tempFileService,
+    IFileService fileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 )
 {
@@ -228,7 +228,7 @@ public sealed class AvatarContentPublisherFactory(
             unityVersion,
             userSession,
             logger,
-            tempFileService,
+            fileService,
             sessionStateChangedSubscriber
         );
     }

@@ -1,50 +1,52 @@
-﻿using VRChatContentPublisher.ConnectCore.Models;
+using System.Collections.Concurrent;
+using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.Services.App;
 
 namespace VRChatContentPublisher.Core.Services;
 
-public sealed class TempFileService : IFileService
+public sealed class RpcFileStorageService : IFileService
 {
-    private readonly Dictionary<string, FileMapEntry> _fileMap = [];
-    
+    private readonly ConcurrentDictionary<string, FileEntry> _fileMap = [];
+
     public ValueTask<UploadFileTask> GetUploadFileStreamAsync(string fileName)
     {
-        var rootPath = GetTempFileRootPath();
+        var rootPath = GetFileRootPath();
 
         var fileId = Guid.NewGuid().ToString("N");
         var filePath = Path.Combine(rootPath, fileId);
 
-        var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 4096, FileOptions.Asynchronous);
+        var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 4096,
+            FileOptions.Asynchronous);
         var uploadFileTask = new UploadFileTask(fileStream, fileId);
-        
-        _fileMap[fileId] = new FileMapEntry(fileName, filePath);
+
+        _fileMap[fileId] = new FileEntry(fileName, filePath);
 
         return ValueTask.FromResult(uploadFileTask);
     }
 
     public ValueTask<Stream?> GetFileAsync(string fileId)
     {
-        if (!_fileMap.TryGetValue(fileId, out var fileMapEntry))
+        if (!_fileMap.TryGetValue(fileId, out var fileEntry))
             return ValueTask.FromResult<Stream?>(null);
-        
-        return ValueTask.FromResult<Stream?>(File.OpenRead(fileMapEntry.FilePath));
+
+        return ValueTask.FromResult<Stream?>(File.OpenRead(fileEntry.FilePath));
     }
 
     public ValueTask<UploadedFile?> GetFileWithNameAsync(string fileId)
     {
-        if (!_fileMap.TryGetValue(fileId, out var fileMapEntry))
+        if (!_fileMap.TryGetValue(fileId, out var fileEntry))
             return ValueTask.FromResult<UploadedFile?>(null);
-        
-        var fileName = Path.GetFileName(fileMapEntry.FileNmae);
-        var fileStream = File.OpenRead(fileMapEntry.FilePath);
-        
+
+        var fileName = Path.GetFileName(fileEntry.FileName);
+        var fileStream = File.OpenRead(fileEntry.FilePath);
+
         var uploadedFile = new UploadedFile
         {
             FileName = fileName,
             FileStream = fileStream
         };
-        
+
         return ValueTask.FromResult<UploadedFile?>(uploadedFile);
     }
 
@@ -55,29 +57,27 @@ public sealed class TempFileService : IFileService
 
     public ValueTask DeleteFileAsync(string fileId)
     {
-        if (_fileMap.TryGetValue(fileId, out var fileMapEntry))
+        if (_fileMap.TryRemove(fileId, out var fileEntry))
         {
-            if (File.Exists(fileMapEntry.FilePath))
+            if (File.Exists(fileEntry.FilePath))
             {
-                File.Delete(fileMapEntry.FilePath);
+                File.Delete(fileEntry.FilePath);
             }
-            
-            _fileMap.Remove(fileId);
         }
 
         return ValueTask.CompletedTask;
     }
 
-    private string GetTempFileRootPath()
+    private static string GetFileRootPath()
     {
-        var tempPath = AppStorageService.GetTempPath();
-        var rootPath = Path.Combine(tempPath, "rpc-temp-files");
+        var storagePath = AppStorageService.GetStoragePath();
+        var rootPath = Path.Combine(storagePath, "rpc-files");
 
         if (!Directory.Exists(rootPath))
             Directory.CreateDirectory(rootPath);
 
         return rootPath;
     }
-    
-    private record FileMapEntry(string FileNmae, string FilePath);
+
+    private record FileEntry(string FileName, string FilePath);
 }
