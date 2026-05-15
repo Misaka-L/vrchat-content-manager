@@ -32,7 +32,6 @@
     
     <PackageVersion Include="Downloader" Version="5.1.1" />
     <!--I18N-->
-    <!--TODO: Replace with nuget package after upstream updated-->
-    <!--PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-1" />-->
+    <PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-2" />
   </ItemGroup>
 </Project>

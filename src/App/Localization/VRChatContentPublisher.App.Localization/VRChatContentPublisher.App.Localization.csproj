@@ -5,14 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!--TODO: Replace with nuget package after upstream updated-->
-        <!--<PackageReference Include="Antelcat.I18N.Avalonia"/>-->
-        <ProjectReference Include="..\..\..\Submodules\Antelcat.18N\src\Avalonia\Avalonia\Antelcat.I18N.Avalonia.csproj"/>
-        <ProjectReference
-                OutputItemType="Analyzer"
-                ReferenceOutputAssembly="false"
-                Include="..\..\..\Submodules\Antelcat.18N\src\SourceGenerators\Antelcat.I18N.SourceGenerators.csproj"
-        />
+        <PackageReference Include="Antelcat.I18N.Avalonia"/>
     </ItemGroup>
 
     <ItemGroup>
