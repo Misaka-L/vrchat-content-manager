@@ -14,7 +14,6 @@ namespace VRChatContentPublisher.Core.Models.VRChatApi.Rest;
 [JsonSerializable(typeof(VRChatApiFile))]
 [JsonSerializable(typeof(VRChatApiFileVersion))]
 [JsonSerializable(typeof(CreateFileVersionRequest))]
-[JsonSerializable(typeof(FileVersionUploadStatus))]
 [JsonSerializable(typeof(FileUploadUrlResponse))]
 [JsonSerializable(typeof(CompleteFileUploadRequest))]
 [JsonSerializable(typeof(VRChatApiWorld))]

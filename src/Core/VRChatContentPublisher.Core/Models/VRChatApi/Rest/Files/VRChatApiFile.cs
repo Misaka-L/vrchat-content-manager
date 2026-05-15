@@ -15,7 +15,10 @@ public record VRChatApiFileVersion(
     [property: JsonPropertyName("file")]
     VRChatApiFileVersionEntity? File = null,
     [property: JsonPropertyName("signature")]
-    VRChatApiFileVersionEntity? Signature = null
+    VRChatApiFileVersionEntity? Signature = null,
+    // Should be unique to each multipart, empty string for simple upload.
+    [property: JsonPropertyName("uploadId")]
+    string? UploadId = null
 );
 
 public record VRChatApiFileVersionEntity(
