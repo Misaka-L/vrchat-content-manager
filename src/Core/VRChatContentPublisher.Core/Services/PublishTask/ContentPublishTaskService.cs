@@ -45,7 +45,7 @@ public sealed class ContentPublishTaskService
     /// </summary>
     public Exception? LastError { get; private set; }
 
-    private readonly IFileService _tempFileService;
+    private readonly IFileService _fileService;
     private readonly BundleProcessService _bundleProcessService;
 
     private readonly ILogger<ContentPublishTaskService> _logger;
@@ -69,7 +69,7 @@ public sealed class ContentPublishTaskService
     /// </summary>
     internal ContentPublishTaskService(
         ContentPublishTaskState state,
-        IFileService tempFileService,
+        IFileService fileService,
         ILogger<ContentPublishTaskService> logger,
         IContentPublisher contentPublisher,
         BundleProcessService bundleProcessService,
@@ -77,7 +77,7 @@ public sealed class ContentPublishTaskService
     {
         State = state;
 
-        _tempFileService = tempFileService;
+        _fileService = fileService;
         _contentPublisher = contentPublisher;
         _bundleProcessService = bundleProcessService;
         _progressPublisher = progressPublisher;
@@ -182,11 +182,11 @@ public sealed class ContentPublishTaskService
                 _progressReporter.Report(message, progress);
             });
 
-            await using var rawBundleStream = await _tempFileService.GetFileAsync(State.RawBundleFileId);
+            await using var rawBundleStream = await _fileService.GetFileAsync(State.RawBundleFileId);
             if (rawBundleStream is null)
                 throw new FileNotFoundException("Raw bundle file not found.", State.RawBundleFileId);
 
-            var outputBundleFile = await _tempFileService.GetUploadFileStreamAsync("processed_bundle.bundle");
+            var outputBundleFile = await _fileService.GetUploadFileStreamAsync("processed_bundle.bundle");
             try
             {
                 await using var outputBundleFileStream = outputBundleFile.FileStream;
@@ -209,15 +209,15 @@ public sealed class ContentPublishTaskService
             }
             catch
             {
-                if (await _tempFileService.IsFileExistAsync(outputBundleFile.FileId))
-                    await _tempFileService.DeleteFileAsync(outputBundleFile.FileId);
+                if (await _fileService.IsFileExistAsync(outputBundleFile.FileId))
+                    await _fileService.DeleteFileAsync(outputBundleFile.FileId);
                 throw;
             }
         }
 
         try
         {
-            await _tempFileService.DeleteFileAsync(State.RawBundleFileId);
+            await _fileService.DeleteFileAsync(State.RawBundleFileId);
         }
         catch (Exception ex)
         {
@@ -240,7 +240,7 @@ public sealed class ContentPublishTaskService
                 _progressReporter, cancellationToken);
         }
 
-        await _tempFileService.DeleteFileAsync(State.BundleFileId);
+        await _fileService.DeleteFileAsync(State.BundleFileId);
     }
 
     public async ValueTask CancelAsync()
@@ -261,11 +261,11 @@ public sealed class ContentPublishTaskService
 
         State.Status = ContentPublishTaskStatus.Disposed;
 
-        if (await _tempFileService.IsFileExistAsync(State.RawBundleFileId))
-            await _tempFileService.DeleteFileAsync(State.RawBundleFileId);
+        if (await _fileService.IsFileExistAsync(State.RawBundleFileId))
+            await _fileService.DeleteFileAsync(State.RawBundleFileId);
 
-        if (await _tempFileService.IsFileExistAsync(State.BundleFileId))
-            await _tempFileService.DeleteFileAsync(State.BundleFileId);
+        if (await _fileService.IsFileExistAsync(State.BundleFileId))
+            await _fileService.DeleteFileAsync(State.BundleFileId);
     }
 
     private void UpdateProgress(string text, double? value,
@@ -287,7 +287,7 @@ public enum PublishTaskStage
 }
 
 public sealed class ContentPublishTaskFactory(
-    IFileService tempFileService,
+    IFileService fileService,
     ILogger<ContentPublishTaskService> logger,
     BundleProcessService bundleProcessService,
     IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
@@ -303,7 +303,7 @@ public sealed class ContentPublishTaskFactory(
         ContentPublishTaskState state,
         IContentPublisher contentPublisher)
     {
-        if (!await tempFileService.IsFileExistAsync(state.RawBundleFileId))
+        if (!await fileService.IsFileExistAsync(state.RawBundleFileId))
             throw new ProvideFileIdNotFoundException(state.RawBundleFileId);
 
         await contentPublisher.BeforePublishTaskAsync(
@@ -318,7 +318,7 @@ public sealed class ContentPublishTaskFactory(
 
         return new ContentPublishTaskService(
             state,
-            tempFileService,
+            fileService,
             logger,
             contentPublisher,
             bundleProcessService,
@@ -337,7 +337,7 @@ public sealed class ContentPublishTaskFactory(
     {
         return new ContentPublishTaskService(
             restoredState,
-            tempFileService,
+            fileService,
             logger,
             contentPublisher,
             bundleProcessService,

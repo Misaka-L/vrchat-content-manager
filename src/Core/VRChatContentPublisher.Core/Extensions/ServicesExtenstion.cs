@@ -75,7 +75,7 @@ public static class ServicesExtension
         services.AddSingleton<RpcStartupPortWarningState>();
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
-        services.AddSingleton<IFileService, TempFileService>();
+        services.AddSingleton<IFileService, RpcFileStorageService>();
         services.AddTransient<IConnectMetadataProvider, ConnectMetadataProvider>();
 
         // Connect Publish Service
