@@ -300,20 +300,6 @@ public sealed partial class VRChatApiClient(
         await HandleErrorResponseAsync(response);
     }
 
-    public async ValueTask<FileVersionUploadStatus> GetFileVersionUploadStatusAsync(string fileId, int version,
-        VRChatApiFileType fileType = VRChatApiFileType.File)
-    {
-        var response = await httpClient.GetAsync($"file/{fileId}/version/{version}/{fileType.ToApiString()}/status");
-
-        await HandleErrorResponseAsync(response);
-
-        var status = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.FileVersionUploadStatus);
-        if (status is null)
-            throw new UnexpectedApiBehaviourException("The API returned a null file version upload status.");
-
-        return status;
-    }
-
     public async ValueTask<string> GetSimpleUploadUrlAsync(string fileId, int version,
         VRChatApiFileType fileType = VRChatApiFileType.File, CancellationToken cancellationToken = default)
     {
