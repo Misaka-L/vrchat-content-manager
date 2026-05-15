@@ -13,7 +13,37 @@ namespace VRChatContentPublisher.Core.Services.PublishTask;
 
 public sealed class ContentPublishTaskService
 {
-    public string TaskId { get; }
+    /// <summary>
+    /// The serializable state snapshot of the task.
+    /// All task data lives here so it can be persisted and restored without
+    /// touching runtime service references.
+    /// </summary>
+    public ContentPublishTaskState State { get; }
+
+    #region Convenience Properties (delegating to State)
+
+    public string TaskId => State.TaskId;
+
+    public string ContentId => State.ContentId;
+    public string ContentName => State.ContentName;
+    public string ContentType => State.ContentType;
+    public string ContentPlatform => State.ContentPlatform;
+
+    public DateTimeOffset CreatedTime => State.CreatedTime;
+
+    public string ProgressText => State.ProgressText;
+    public ContentPublishTaskStatus Status => State.Status;
+    public double? ProgressValue => State.ProgressValue;
+
+    public PublishTaskStage CurrentStage => State.CurrentStage;
+
+    #endregion
+
+    /// <summary>
+    /// The last error exception object (runtime-only, not serializable).
+    /// For a serializable error description use <see cref="State"/>.<see cref="ContentPublishTaskState.ErrorMessage"/>.
+    /// </summary>
+    public Exception? LastError { get; private set; }
 
     private readonly IFileService _tempFileService;
     private readonly BundleProcessService _bundleProcessService;
@@ -24,66 +54,28 @@ public sealed class ContentPublishTaskService
 
     private readonly PublishStageProgressReporter _progressReporter;
 
-    #region Content Information
-
-    public string ContentId { get; }
-    public string ContentName { get; }
-    public string ContentType { get; }
-    public string ContentPlatform { get; }
-
     public bool CanPublish => _contentPublisher.CanPublish();
-
-    #endregion
-
-    #region Progress
 
     private readonly IPublisher<PublishTaskProgressChangedEvent> _progressPublisher;
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
 
-    public DateTimeOffset CreatedTime { get; } = DateTimeOffset.Now;
-    public string ProgressText { get; private set; } = "Waiting for task started...";
-    public ContentPublishTaskStatus Status { get; private set; } = ContentPublishTaskStatus.Pending;
-    public double? ProgressValue { get; private set; }
-    public Exception? LastError { get; private set; }
-
-    #endregion
-
-    #region Task Inner State
-
-    public PublishTaskStage CurrentStage { get; private set; } = PublishTaskStage.BundleProcessing;
-    private readonly string _rawBundleFileId;
-    private readonly string? _thumbnailFileId;
-    private readonly string? _description;
-    private readonly string[]? _tags;
-    private readonly string? _releaseStatus;
-
-    private string _bundleFileId;
-
     private CancellationTokenSource _cancellationTokenSource = new();
 
-    #endregion
-
+    /// <summary>
+    /// Internal constructor — called by <see cref="ContentPublishTaskFactory"/>.
+    /// Accepts a fully-populated <see cref="ContentPublishTaskState"/> plus DI-injected services.
+    /// Keeping all data in a single model parameter makes it easy to add/remove fields
+    /// without changing this constructor signature.
+    /// </summary>
     internal ContentPublishTaskService(
-        string taskId,
-        string contentId, string rawBundleFileId,
-        string? thumbnailFileId, string? description, string[]? tags, string? releaseStatus,
-        IFileService tempFileService, ILogger<ContentPublishTaskService> logger,
-        IContentPublisher contentPublisher, BundleProcessService bundleProcessService,
+        ContentPublishTaskState state,
+        IFileService tempFileService,
+        ILogger<ContentPublishTaskService> logger,
+        IContentPublisher contentPublisher,
+        BundleProcessService bundleProcessService,
         IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
     {
-        TaskId = taskId;
-
-        ContentId = contentId;
-        ContentName = contentPublisher.GetContentName();
-        ContentType = contentPublisher.GetContentType();
-        ContentPlatform = contentPublisher.GetContentPlatform();
-
-        _rawBundleFileId = rawBundleFileId;
-        _thumbnailFileId = thumbnailFileId;
-        _description = description;
-        _tags = tags;
-        _releaseStatus = releaseStatus;
-        _bundleFileId = rawBundleFileId;
+        State = state;
 
         _tempFileService = tempFileService;
         _contentPublisher = contentPublisher;
@@ -96,7 +88,7 @@ public sealed class ContentPublishTaskService
 
     public void Start()
     {
-        if (Status is
+        if (State.Status is
             ContentPublishTaskStatus.Completed or
             ContentPublishTaskStatus.Cancelling or
             ContentPublishTaskStatus.InProgress)
@@ -110,11 +102,12 @@ public sealed class ContentPublishTaskService
     {
         using (_logger.BeginScope(
                    "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform}, Raw BundleFileId: {RawBundleFileId}",
-                   TaskId, ContentType, ContentName, ContentId, ContentPlatform, _rawBundleFileId)
+                   State.TaskId, State.ContentType, State.ContentName, State.ContentId, State.ContentPlatform,
+                   State.RawBundleFileId)
               )
         {
             LastError = null;
-            if (CurrentStage == PublishTaskStage.Done)
+            if (State.CurrentStage == PublishTaskStage.Done)
             {
                 UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
                 return;
@@ -125,32 +118,32 @@ public sealed class ContentPublishTaskService
 
             try
             {
-                if (CurrentStage == PublishTaskStage.BundleProcessing)
+                if (State.CurrentStage == PublishTaskStage.BundleProcessing)
                 {
-                    using (_logger.BeginScope("Stage {TaskStage}", CurrentStage))
+                    using (_logger.BeginScope("Stage {TaskStage}", State.CurrentStage))
                     {
                         UpdateProgress("Preparing to process bundle file...", null);
 
                         await ProcessBundleAsync(cancellationToken);
-                        CurrentStage = PublishTaskStage.ContentPublishing;
+                        State.CurrentStage = PublishTaskStage.ContentPublishing;
                     }
                 }
 
-                if (CurrentStage == PublishTaskStage.ContentPublishing)
+                if (State.CurrentStage == PublishTaskStage.ContentPublishing)
                 {
                     if (!_contentPublisher.CanPublish())
                         throw new InvalidOperationException("Account session expired or invalid.");
 
                     using (_logger.BeginScope(
                                "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
-                               CurrentStage,
-                               _bundleFileId)
+                               State.CurrentStage,
+                               State.BundleFileId)
                           )
                     {
                         UpdateProgress("Preparing for publish...", null);
 
                         await PublishAsync(cancellationToken);
-                        CurrentStage = PublishTaskStage.Done;
+                        State.CurrentStage = PublishTaskStage.Done;
                     }
                 }
 
@@ -159,13 +152,14 @@ public sealed class ContentPublishTaskService
             }
             catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
             {
-                _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", ContentId);
+                _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", State.ContentId);
                 UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error publishing content {ContentId}", ContentId);
+                _logger.LogError(ex, "Error publishing content {ContentId}", State.ContentId);
                 LastError = ex;
+                State.ErrorMessage = ex.Message;
                 UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
             }
         }
@@ -175,11 +169,12 @@ public sealed class ContentPublishTaskService
     {
         _logger.LogInformation(
             "Processing bundle file {BundleFileId} for content ({ContentId}) {ContentPlatform} {ContentName}",
-            _rawBundleFileId, ContentId, ContentPlatform, ContentName);
+            State.RawBundleFileId, State.ContentId, State.ContentPlatform, State.ContentName);
 
         using (StopwatchScope.Enter(watch => _logger.LogInformation(
                    "Bundle file {BundleFileId} processing for content ({ContentId}) {ContentPlatform} {ContentName} took {ElapsedMilliseconds} ms",
-                   _rawBundleFileId, ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
+                   State.RawBundleFileId, State.ContentId, State.ContentPlatform, State.ContentName,
+                   watch.ElapsedMilliseconds)))
         {
             var progressReporter = new PublishStageProgressReporter((message, progress) =>
             {
@@ -187,20 +182,20 @@ public sealed class ContentPublishTaskService
                 _progressReporter.Report(message, progress);
             });
 
-            await using var rawBundleStream = await _tempFileService.GetFileAsync(_rawBundleFileId);
+            await using var rawBundleStream = await _tempFileService.GetFileAsync(State.RawBundleFileId);
             if (rawBundleStream is null)
-                throw new FileNotFoundException("Raw bundle file not found.", _rawBundleFileId);
+                throw new FileNotFoundException("Raw bundle file not found.", State.RawBundleFileId);
 
             var outputBundleFile = await _tempFileService.GetUploadFileStreamAsync("processed_bundle.bundle");
             try
             {
                 await using var outputBundleFileStream = outputBundleFile.FileStream;
 
-                var processOptions = ContentType switch
+                var processOptions = State.ContentType switch
                 {
-                    "world" => new WorldBundleProcessOptions(ContentId, []),
-                    "avatar" => new AvatarBundleProcessOptions(ContentId, []),
-                    _ => new BundleProcessOptions(ContentId, [])
+                    "world" => new WorldBundleProcessOptions(State.ContentId, []),
+                    "avatar" => new AvatarBundleProcessOptions(State.ContentId, []),
+                    _ => new BundleProcessOptions(State.ContentId, [])
                 };
 
                 await _bundleProcessService.ProcessBundleAsync(
@@ -210,7 +205,7 @@ public sealed class ContentPublishTaskService
                     progressReporter,
                     cancellationToken);
 
-                _bundleFileId = outputBundleFile.FileId;
+                State.BundleFileId = outputBundleFile.FileId;
             }
             catch
             {
@@ -222,11 +217,11 @@ public sealed class ContentPublishTaskService
 
         try
         {
-            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+            await _tempFileService.DeleteFileAsync(State.RawBundleFileId);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Failed to delete raw bundle file {BundleFileId}", _rawBundleFileId);
+            _logger.LogWarning(ex, "Failed to delete raw bundle file {BundleFileId}", State.RawBundleFileId);
         }
     }
 
@@ -234,22 +229,23 @@ public sealed class ContentPublishTaskService
     {
         _logger.LogInformation(
             "Bundle processing for content ({ContentId}) {ContentPlatform} {ContentName} completed, preparing to publish.",
-            ContentId, ContentPlatform, ContentName);
+            State.ContentId, State.ContentPlatform, State.ContentName);
 
         using (StopwatchScope.Enter(watch => _logger.LogInformation(
                    "Publish content ({ContentId}) {ContentPlatform} {ContentName} took {ElapsedMilliseconds} ms",
-                   ContentId, ContentPlatform, ContentName, watch.ElapsedMilliseconds)))
+                   State.ContentId, State.ContentPlatform, State.ContentName, watch.ElapsedMilliseconds)))
         {
             await _contentPublisher.PublishAsync(
-                _bundleFileId, _thumbnailFileId, _description, _tags, _releaseStatus, _progressReporter, cancellationToken);
+                State.BundleFileId, State.ThumbnailFileId, State.Description, State.Tags, State.ReleaseStatus,
+                _progressReporter, cancellationToken);
         }
 
-        await _tempFileService.DeleteFileAsync(_bundleFileId);
+        await _tempFileService.DeleteFileAsync(State.BundleFileId);
     }
 
     public async ValueTask CancelAsync()
     {
-        if (Status != ContentPublishTaskStatus.InProgress)
+        if (State.Status != ContentPublishTaskStatus.InProgress)
             throw new InvalidOperationException("Cannot cancel a task that is not in progress.");
 
         UpdateProgress("Cancelling task...", null, ContentPublishTaskStatus.Cancelling);
@@ -258,26 +254,26 @@ public sealed class ContentPublishTaskService
 
     public async ValueTask CleanupAsync()
     {
-        if (Status is not (ContentPublishTaskStatus.Completed
+        if (State.Status is not (ContentPublishTaskStatus.Completed
             or ContentPublishTaskStatus.Canceled
             or ContentPublishTaskStatus.Failed))
             throw new InvalidOperationException("Can only cleanup a task that is completed, canceled or failed.");
 
-        Status = ContentPublishTaskStatus.Disposed;
+        State.Status = ContentPublishTaskStatus.Disposed;
 
-        if (await _tempFileService.IsFileExistAsync(_rawBundleFileId))
-            await _tempFileService.DeleteFileAsync(_rawBundleFileId);
+        if (await _tempFileService.IsFileExistAsync(State.RawBundleFileId))
+            await _tempFileService.DeleteFileAsync(State.RawBundleFileId);
 
-        if (await _tempFileService.IsFileExistAsync(_bundleFileId))
-            await _tempFileService.DeleteFileAsync(_bundleFileId);
+        if (await _tempFileService.IsFileExistAsync(State.BundleFileId))
+            await _tempFileService.DeleteFileAsync(State.BundleFileId);
     }
 
     private void UpdateProgress(string text, double? value,
         ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
-        ProgressText = text;
-        ProgressValue = value;
-        Status = status;
+        State.ProgressText = text;
+        State.ProgressValue = value;
+        State.Status = status;
         _progressPublisher.Publish(new PublishTaskProgressChangedEvent(this, text, value, status));
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
     }
@@ -296,36 +292,55 @@ public sealed class ContentPublishTaskFactory(
     BundleProcessService bundleProcessService,
     IPublisher<PublishTaskProgressChangedEvent> progressPublisher)
 {
+    /// <summary>
+    /// Creates a new publish task from the given state model.
+    /// Validates the bundle file exists, calls <see cref="IContentPublisher.BeforePublishTaskAsync"/>,
+    /// and populates <see cref="ContentPublishTaskState.ContentName"/> /
+    /// <see cref="ContentPublishTaskState.ContentType"/> /
+    /// <see cref="ContentPublishTaskState.ContentPlatform"/> from the publisher.
+    /// </summary>
     public async ValueTask<ContentPublishTaskService> CreateAsync(
-        string taskId,
-        string contentId,
-        string bundleFileId,
-        string? thumbnailFileId,
-        string? description,
-        string[]? tags,
-        string? releaseStatus,
+        ContentPublishTaskState state,
         IContentPublisher contentPublisher)
     {
-        if (!await tempFileService.IsFileExistAsync(bundleFileId))
-            throw new ProvideFileIdNotFoundException(bundleFileId);
+        if (!await tempFileService.IsFileExistAsync(state.RawBundleFileId))
+            throw new ProvideFileIdNotFoundException(state.RawBundleFileId);
 
-        await contentPublisher.BeforePublishTaskAsync(thumbnailFileId, description, tags, releaseStatus);
+        await contentPublisher.BeforePublishTaskAsync(
+            state.ThumbnailFileId, state.Description, state.Tags, state.ReleaseStatus);
 
-        var publishTask = new ContentPublishTaskService(
-            taskId,
-            contentId,
-            bundleFileId,
-            thumbnailFileId,
-            description,
-            tags,
-            releaseStatus,
+        // Populate content metadata from publisher
+        state.ContentName = contentPublisher.GetContentName();
+        state.ContentType = contentPublisher.GetContentType();
+        state.ContentPlatform = contentPublisher.GetContentPlatform();
+        state.BundleFileId = state.RawBundleFileId;
+        state.CreatedTime = DateTimeOffset.Now;
+
+        return new ContentPublishTaskService(
+            state,
             tempFileService,
             logger,
             contentPublisher,
             bundleProcessService,
-            progressPublisher
-        );
+            progressPublisher);
+    }
 
-        return publishTask;
+    /// <summary>
+    /// Restores a publish task from an existing state snapshot.
+    /// Does NOT re-validate file existence or call
+    /// <see cref="IContentPublisher.BeforePublishTaskAsync"/>,
+    /// since the task may already be at a later stage.
+    /// </summary>
+    public async ValueTask<ContentPublishTaskService> CreateFromStateAsync(
+        ContentPublishTaskState restoredState,
+        IContentPublisher contentPublisher)
+    {
+        return new ContentPublishTaskService(
+            restoredState,
+            tempFileService,
+            logger,
+            contentPublisher,
+            bundleProcessService,
+            progressPublisher);
     }
 }
