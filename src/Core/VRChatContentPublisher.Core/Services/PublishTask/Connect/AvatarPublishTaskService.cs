@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Services.UserSession;
 
@@ -32,8 +33,17 @@ public sealed class AvatarPublishTaskService(
             var contentPublisher =
                 contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
 
-            var task = await taskManager.CreateTask(avatarId, avatarBundleFileId, thumbnailFileId, description, tags,
-                releaseStatus, contentPublisher);
+            var state = new ContentPublishTaskState
+            {
+                ContentId = avatarId,
+                RawBundleFileId = avatarBundleFileId,
+                ThumbnailFileId = thumbnailFileId,
+                Description = description,
+                Tags = tags,
+                ReleaseStatus = releaseStatus
+            };
+
+            var task = await taskManager.CreateTask(state, contentPublisher);
             task.Start();
         }
         catch (Exception e)

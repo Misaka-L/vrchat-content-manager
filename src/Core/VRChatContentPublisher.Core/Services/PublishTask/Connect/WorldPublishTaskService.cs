@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Worlds;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
@@ -53,15 +54,17 @@ public class WorldPublishTaskService(
                     udonProducts
                 );
 
-            var task = await taskManager.CreateTask(
-                worldId,
-                worldBundleFileId,
-                thumbnailFileId,
-                description,
-                tags,
-                releaseStatus,
-                contentPublisher
-            );
+            var state = new ContentPublishTaskState
+            {
+                ContentId = worldId,
+                RawBundleFileId = worldBundleFileId,
+                ThumbnailFileId = thumbnailFileId,
+                Description = description,
+                Tags = tags,
+                ReleaseStatus = releaseStatus
+            };
+
+            var task = await taskManager.CreateTask(state, contentPublisher);
             task.Start();
 
             return task.TaskId;

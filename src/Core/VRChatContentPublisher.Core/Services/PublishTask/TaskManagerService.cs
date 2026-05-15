@@ -19,30 +19,48 @@ public sealed class TaskManagerService(
 
     public event EventHandler<ContentPublishTaskUpdateEventArg>? TaskUpdated;
 
+    /// <summary>
+    /// Creates a new publish task from the given state model.
+    /// A unique <see cref="ContentPublishTaskState.TaskId"/> will be generated automatically.
+    /// </summary>
     public async ValueTask<ContentPublishTaskService> CreateTask(
-        string contentId,
-        string bundleFileId,
-        string? thumbnailFileId,
-        string? description,
-        string[]? tags,
-        string? releaseStatus,
+        ContentPublishTaskState state,
         IContentPublisher contentPublisher
     )
     {
-        var taskId = Guid.NewGuid().ToString("D");
+        state.TaskId = Guid.NewGuid().ToString("D");
 
-        var task = await contentPublishTaskFactory.CreateAsync(taskId,
-            contentId, bundleFileId, thumbnailFileId, description, tags, releaseStatus,
-            contentPublisher);
+        var task = await contentPublishTaskFactory.CreateAsync(state, contentPublisher);
 
-        _tasks.Add(taskId, task);
+        RegisterTask(task);
+        return task;
+    }
+
+    /// <summary>
+    /// Restores a publish task from a previously persisted state snapshot.
+    /// Does not re-validate files or call <see cref="IContentPublisher.BeforePublishTaskAsync"/>,
+    /// which is appropriate when resuming tasks after an application restart.
+    /// </summary>
+    public async ValueTask<ContentPublishTaskService> RestoreTaskFromStateAsync(
+        ContentPublishTaskState restoredState,
+        IContentPublisher contentPublisher
+    )
+    {
+        var task = await contentPublishTaskFactory.CreateFromStateAsync(restoredState, contentPublisher);
+
+        RegisterTask(task);
+        return task;
+    }
+
+    private void RegisterTask(ContentPublishTaskService task)
+    {
+        _tasks.Add(task.TaskId, task);
 
         var args = new ContentPublishTaskCreatedEventArg(task);
         TaskCreated?.Invoke(this, args);
         taskCreatedPublisher.Publish(args);
 
         task.ProgressChanged += TaskOnProgressChanged;
-        return task;
     }
 
     public async ValueTask<bool> RemoveTaskAsync(string taskId)
