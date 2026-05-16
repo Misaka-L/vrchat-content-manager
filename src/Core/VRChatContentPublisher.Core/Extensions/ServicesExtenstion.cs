@@ -12,6 +12,7 @@ using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
 using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentPublisher.ConnectCore.Services.Health;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Services.App;
@@ -71,6 +72,8 @@ public static class ServicesExtension
                 });
         });
 
+        #region Database (Sqlite)
+
         services.AddSqliteCore(options =>
         {
             var databaseFolderPath = Path.Combine(AppStorageService.GetStoragePath(), "database");
@@ -80,6 +83,11 @@ public static class ServicesExtension
             var databasePath = Path.Combine(databaseFolderPath, "app.db");
             options.DatabasePath = databasePath;
         });
+
+        services.AddSingleton<ContentPublishTaskDatabaseService>();
+        services.AddHostedService<TableInitializationHostedService>();
+
+        #endregion
 
         services.AddConnectCore();
         services.AddHostedService<RpcServerStartupHostedService>();
