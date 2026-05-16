@@ -25,6 +25,7 @@
     <Project Path="Core/VRChatContentPublisher.Core.Shared/VRChatContentPublisher.Core.Shared.csproj" />
     <Project Path="Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj" />
     <Project Path="Core/VRChatContentPublisher.IpcCore/VRChatContentPublisher.IpcCore.csproj" />
+    <Project Path="Core/VRChatContentPublisher.SqliteCore/VRChatContentPublisher.SqliteCore.csproj" />
   </Folder>
   <Folder Name="/SubModules/">
     <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />

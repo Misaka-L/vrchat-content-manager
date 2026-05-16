@@ -24,6 +24,7 @@ using VRChatContentPublisher.Core.Services.VRChatApi;
 using VRChatContentPublisher.Core.Services.VRChatApi.S3;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.PersistentCore.Extensions;
 
 namespace VRChatContentPublisher.Core.Extensions;
 
@@ -68,6 +69,16 @@ public static class ServicesExtension
                             Timeout = TimeSpan.FromSeconds(30)
                         });
                 });
+        });
+
+        services.AddSqliteCore(options =>
+        {
+            var databaseFolderPath = Path.Combine(AppStorageService.GetStoragePath(), "database");
+            if (!Directory.Exists(databaseFolderPath))
+                Directory.CreateDirectory(databaseFolderPath);
+
+            var databasePath = Path.Combine(databaseFolderPath, "app.db");
+            options.DatabasePath = databasePath;
         });
 
         services.AddConnectCore();
