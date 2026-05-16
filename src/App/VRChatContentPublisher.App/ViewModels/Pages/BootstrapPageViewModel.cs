@@ -2,10 +2,10 @@
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
+using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
-using VRChatContentPublisher.Platform.Abstraction.Services;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages;
 
@@ -13,7 +13,8 @@ public sealed partial class BootstrapPageViewModel(
     UserSessionManagerService sessionManagerService,
     NavigationService navigationService,
     IWritableOptions<AppSettings> appSettings,
-    DesktopNotificationService desktopNotificationService) : PageViewModelBase
+    DesktopNotificationService desktopNotificationService,
+    TaskRestoreService taskRestoreService) : PageViewModelBase
 {
     [RelayCommand]
     private async Task Load()
@@ -28,6 +29,9 @@ public sealed partial class BootstrapPageViewModel(
                 ex.Message
             ).AsTask();
         });
+
+        // Restore persisted publish tasks now that user sessions are available.
+        await taskRestoreService.RestoreTasksAsync(sessionManagerService);
 
         if (!appSettings.Value.SkipFirstSetup)
         {

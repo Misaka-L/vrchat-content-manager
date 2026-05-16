@@ -9,8 +9,8 @@ public class TableInitializationHostedService(
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await contentPublishTaskDatabaseService.InitializeAsync();
         await fileDatabaseService.InitializeAsync();
+        await contentPublishTaskDatabaseService.InitializeAsync();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

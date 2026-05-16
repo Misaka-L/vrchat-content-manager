@@ -43,15 +43,18 @@ public class WorldPublishTaskService(
             var contentPublisher =
                 contentPublisherFactory.Create(
                     userSession,
-                    worldId,
-                    worldName,
-                    platform,
-                    unityVersion,
-                    worldSignature,
-                    capacity,
-                    recommendedCapacity,
-                    previewYoutubeId,
-                    udonProducts
+                    new WorldContentPublisherOptions
+                    {
+                        WorldId = worldId,
+                        WorldName = worldName,
+                        Platform = platform,
+                        UnityVersion = unityVersion,
+                        WorldSignature = worldSignature,
+                        Capacity = capacity,
+                        RecommendedCapacity = recommendedCapacity,
+                        PreviewYoutubeId = previewYoutubeId,
+                        UdonProducts = udonProducts
+                    }
                 );
 
             var state = new ContentPublishTaskState
@@ -61,7 +64,8 @@ public class WorldPublishTaskService(
                 ThumbnailFileId = thumbnailFileId,
                 Description = description,
                 Tags = tags,
-                ReleaseStatus = releaseStatus
+                ReleaseStatus = releaseStatus,
+                UserId = userSession.UserId
             };
 
             var task = await taskManager.CreateTask(state, contentPublisher);

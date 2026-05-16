@@ -494,6 +494,9 @@
     <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks" xml:space="preserve">
         <value>移除所有取消的任务</value>
     </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Pending_Tasks" xml:space="preserve">
+        <value>移除所有等待启动的任务</value>
+    </data>
     <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks" xml:space="preserve">
         <value>移除所有可移除的任务</value>
     </data>

@@ -31,7 +31,13 @@ public sealed class AvatarPublishTaskService(
 
             var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
             var contentPublisher =
-                contentPublisherFactory.Create(userSession, avatarId, name, platform, unityVersion);
+                contentPublisherFactory.Create(userSession, new AvatarContentPublisherOptions
+                {
+                    AvatarId = avatarId,
+                    Name = name,
+                    Platform = platform,
+                    UnityVersion = unityVersion
+                });
 
             var state = new ContentPublishTaskState
             {
@@ -40,7 +46,8 @@ public sealed class AvatarPublishTaskService(
                 ThumbnailFileId = thumbnailFileId,
                 Description = description,
                 Tags = tags,
-                ReleaseStatus = releaseStatus
+                ReleaseStatus = releaseStatus,
+                UserId = userSession.UserId
             };
 
             var task = await taskManager.CreateTask(state, contentPublisher);

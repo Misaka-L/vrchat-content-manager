@@ -1,5 +1,6 @@
 ﻿using MessagePipe;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using VRChatContentPublisher.BundleProcessCore.Models;
 using VRChatContentPublisher.BundleProcessCore.Services;
 using VRChatContentPublisher.ConnectCore.Exceptions;
@@ -31,13 +32,15 @@ public sealed class ContentPublishTaskService
 
     public DateTimeOffset CreatedTime => State.CreatedTime;
 
-    public string ProgressText => State.ProgressText;
-    public ContentPublishTaskStatus Status => State.Status;
-    public double? ProgressValue => State.ProgressValue;
-
     public PublishTaskStage CurrentStage => State.CurrentStage;
 
     #endregion
+
+    public string ProgressText { get; private set; }
+    public ContentPublishTaskStatus Status;
+    public double? ProgressValue;
+
+    private readonly PublishStageProgressReporter _progressReporter;
 
     /// <summary>
     /// The last error exception object (runtime-only, not serializable).
@@ -52,9 +55,15 @@ public sealed class ContentPublishTaskService
 
     private readonly IContentPublisher _contentPublisher;
 
-    private readonly PublishStageProgressReporter _progressReporter;
 
     public bool CanPublish => _contentPublisher.CanPublish();
+
+    /// <summary>
+    /// Optional callback invoked by the task when its state should be persisted
+    /// (e.g. on terminal status transitions). Set by <see cref="TaskManagerService"/>
+    /// during registration so persistence is awaited rather than fire-and-forgotten.
+    /// </summary>
+    public Func<ValueTask>? PersistStateAsync { get; set; }
 
     private readonly IPublisher<PublishTaskProgressChangedEvent> _progressPublisher;
     public event EventHandler<PublishTaskProgressEventArg>? ProgressChanged;
@@ -77,6 +86,18 @@ public sealed class ContentPublishTaskService
     {
         State = state;
 
+        ProgressText = State.CurrentStage == PublishTaskStage.Done
+            ? "Content Published"
+            : State.CurrentStage == PublishTaskStage.ContentPublishing
+                ? "Resumable publish (Waiting for start)"
+                : State.CurrentStage == PublishTaskStage.BundleProcessing
+                    ? "Resumable bundle processing (Waiting for start)"
+                    : "Unknown status (it shouldn't happen)";
+        Status = State.CurrentStage == PublishTaskStage.Done
+            ? ContentPublishTaskStatus.Completed
+            : ContentPublishTaskStatus.Pending;
+        ProgressValue = 1;
+
         _fileService = fileService;
         _contentPublisher = contentPublisher;
         _bundleProcessService = bundleProcessService;
@@ -88,7 +109,7 @@ public sealed class ContentPublishTaskService
 
     public void Start()
     {
-        if (State.Status is
+        if (Status is
             ContentPublishTaskStatus.Completed or
             ContentPublishTaskStatus.Cancelling or
             ContentPublishTaskStatus.InProgress)
@@ -126,6 +147,7 @@ public sealed class ContentPublishTaskService
 
                         await ProcessBundleAsync(cancellationToken);
                         State.CurrentStage = PublishTaskStage.ContentPublishing;
+                        await RequestPersistAsync();
                     }
                 }
 
@@ -144,6 +166,7 @@ public sealed class ContentPublishTaskService
 
                         await PublishAsync(cancellationToken);
                         State.CurrentStage = PublishTaskStage.Done;
+                        await RequestPersistAsync();
                     }
                 }
 
@@ -161,6 +184,10 @@ public sealed class ContentPublishTaskService
                 LastError = ex;
                 State.ErrorMessage = ex.Message;
                 UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);
+            }
+            finally
+            {
+                await RequestPersistAsync();
             }
         }
     }
@@ -245,7 +272,7 @@ public sealed class ContentPublishTaskService
 
     public async ValueTask CancelAsync()
     {
-        if (State.Status != ContentPublishTaskStatus.InProgress)
+        if (Status != ContentPublishTaskStatus.InProgress)
             throw new InvalidOperationException("Cannot cancel a task that is not in progress.");
 
         UpdateProgress("Cancelling task...", null, ContentPublishTaskStatus.Cancelling);
@@ -254,12 +281,13 @@ public sealed class ContentPublishTaskService
 
     public async ValueTask CleanupAsync()
     {
-        if (State.Status is not (ContentPublishTaskStatus.Completed
+        if (Status is not (ContentPublishTaskStatus.Completed
             or ContentPublishTaskStatus.Canceled
-            or ContentPublishTaskStatus.Failed))
-            throw new InvalidOperationException("Can only cleanup a task that is completed, canceled or failed.");
+            or ContentPublishTaskStatus.Failed
+            or ContentPublishTaskStatus.Pending))
+            throw new InvalidOperationException("Can only cleanup a task that is pending, completed, canceled or failed.");
 
-        State.Status = ContentPublishTaskStatus.Disposed;
+        Status = ContentPublishTaskStatus.Disposed;
 
         if (await _fileService.IsFileExistAsync(State.RawBundleFileId))
             await _fileService.DeleteFileAsync(State.RawBundleFileId);
@@ -271,11 +299,18 @@ public sealed class ContentPublishTaskService
     private void UpdateProgress(string text, double? value,
         ContentPublishTaskStatus status = ContentPublishTaskStatus.InProgress)
     {
-        State.ProgressText = text;
-        State.ProgressValue = value;
-        State.Status = status;
+        ProgressText = text;
+        ProgressValue = value;
+        Status = status;
+
         _progressPublisher.Publish(new PublishTaskProgressChangedEvent(this, text, value, status));
         ProgressChanged?.Invoke(this, new PublishTaskProgressEventArg(text, value, status));
+    }
+
+    private async ValueTask RequestPersistAsync()
+    {
+        if (PersistStateAsync is { } persist)
+            await persist();
     }
 }
 
@@ -316,6 +351,9 @@ public sealed class ContentPublishTaskFactory(
         state.BundleFileId = state.RawBundleFileId;
         state.CreatedTime = DateTimeOffset.Now;
 
+        // Serialize publisher creation options for later restoration
+        state.PublisherOptionsJson = SerializePublisherOptions(contentPublisher);
+
         return new ContentPublishTaskService(
             state,
             fileService,
@@ -342,5 +380,19 @@ public sealed class ContentPublishTaskFactory(
             contentPublisher,
             bundleProcessService,
             progressPublisher);
+    }
+
+    private static string? SerializePublisherOptions(IContentPublisher publisher)
+    {
+        return publisher switch
+        {
+            WorldContentPublisher world =>
+                JsonSerializer.Serialize(world.Options,
+                    ContentPublishTaskStateJsonContext.Default.WorldContentPublisherOptions),
+            AvatarContentPublisher avatar =>
+                JsonSerializer.Serialize(avatar.Options,
+                    ContentPublishTaskStateJsonContext.Default.AvatarContentPublisherOptions),
+            _ => null
+        };
     }
 }
