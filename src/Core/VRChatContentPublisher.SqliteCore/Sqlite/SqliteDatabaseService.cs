@@ -49,7 +49,7 @@ public sealed class SqliteDatabaseService(ILogger<SqliteDatabaseService> logger)
                 {
                     ThrowOnInvalidState();
 
-                    await using var command = _connection.CreateCommand();
+                    var command = _connection.CreateCommand();
                     command.CommandText = commandText;
                     command.Parameters.AddRange(parameters);
                     return await command.ExecuteReaderAsync();

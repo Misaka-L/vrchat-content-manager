@@ -85,6 +85,7 @@ public static class ServicesExtension
         });
 
         services.AddSingleton<ContentPublishTaskDatabaseService>();
+        services.AddSingleton<FileDatabaseService>();
         services.AddHostedService<TableInitializationHostedService>();
 
         #endregion
