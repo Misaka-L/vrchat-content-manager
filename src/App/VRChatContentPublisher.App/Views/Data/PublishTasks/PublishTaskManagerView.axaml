@@ -80,6 +80,9 @@
                                 Header="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks}}"
                                 Command="{Binding RemoveCancelledTasksCommand}" />
                             <MenuItem
+                                Header="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_Pending_Tasks}}"
+                                Command="{Binding RemovePendingTasksCommand}" />
+                            <MenuItem
                                 Header="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks}}"
                                 Command="{Binding RemoveAllRemovableTasksCommand}" />
                             <MenuItem Header="-" />

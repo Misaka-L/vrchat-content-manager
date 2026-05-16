@@ -52,21 +52,6 @@ public sealed class ContentPublishTaskState
     public DateTimeOffset CreatedTime { get; set; }
 
     /// <summary>
-    /// The current progress description text.
-    /// </summary>
-    public string ProgressText { get; set; } = "Waiting for task started...";
-
-    /// <summary>
-    /// The current task status.
-    /// </summary>
-    public ContentPublishTaskStatus Status { get; set; } = ContentPublishTaskStatus.Pending;
-
-    /// <summary>
-    /// The current progress value (0.0 ~ 1.0), or null for indeterminate progress.
-    /// </summary>
-    public double? ProgressValue { get; set; }
-
-    /// <summary>
     /// The last error message (serializable).
     /// </summary>
     public string? ErrorMessage { get; set; }
@@ -109,6 +94,18 @@ public sealed class ContentPublishTaskState
     /// The release status (e.g. "public", "private"), or null if none.
     /// </summary>
     public string? ReleaseStatus { get; set; }
+
+    /// <summary>
+    /// JSON-serialized publisher creation options used to reconstruct the
+    /// <see cref="IContentPublisher"/> when restoring a task from persistence.
+    /// </summary>
+    public string? PublisherOptionsJson { get; set; }
+
+    /// <summary>
+    /// The VRChat user ID that owns this publish task.
+    /// Used to locate the correct <see cref="UserSessionService"/> when restoring.
+    /// </summary>
+    public string? UserId { get; set; }
 
     #endregion
 

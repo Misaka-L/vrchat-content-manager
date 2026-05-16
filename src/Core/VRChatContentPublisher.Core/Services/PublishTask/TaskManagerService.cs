@@ -1,4 +1,5 @@
 ﻿using MessagePipe;
+using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
@@ -6,6 +7,7 @@ namespace VRChatContentPublisher.Core.Services.PublishTask;
 
 public sealed class TaskManagerService(
     ContentPublishTaskFactory contentPublishTaskFactory,
+    ContentPublishTaskDatabaseService contentPublishTaskDatabaseService,
     IPublisher<ContentPublishTaskUpdateEventArg> taskUpdatedPublisher,
     IPublisher<ContentPublishTaskCreatedEventArg> taskCreatedPublisher,
     IPublisher<ContentPublishTaskRemovedEventArg> taskRemovedPublisher
@@ -22,6 +24,7 @@ public sealed class TaskManagerService(
     /// <summary>
     /// Creates a new publish task from the given state model.
     /// A unique <see cref="ContentPublishTaskState.TaskId"/> will be generated automatically.
+    /// The task state is persisted to the database immediately after creation.
     /// </summary>
     public async ValueTask<ContentPublishTaskService> CreateTask(
         ContentPublishTaskState state,
@@ -33,6 +36,7 @@ public sealed class TaskManagerService(
         var task = await contentPublishTaskFactory.CreateAsync(state, contentPublisher);
 
         RegisterTask(task);
+        await contentPublishTaskDatabaseService.SaveStateAsync(task.State);
         return task;
     }
 
@@ -40,6 +44,7 @@ public sealed class TaskManagerService(
     /// Restores a publish task from a previously persisted state snapshot.
     /// Does not re-validate files or call <see cref="IContentPublisher.BeforePublishTaskAsync"/>,
     /// which is appropriate when resuming tasks after an application restart.
+    /// The restored state is persisted to the database to update the task record.
     /// </summary>
     public async ValueTask<ContentPublishTaskService> RestoreTaskFromStateAsync(
         ContentPublishTaskState restoredState,
@@ -49,12 +54,18 @@ public sealed class TaskManagerService(
         var task = await contentPublishTaskFactory.CreateFromStateAsync(restoredState, contentPublisher);
 
         RegisterTask(task);
+        await contentPublishTaskDatabaseService.SaveStateAsync(task.State);
         return task;
     }
 
     private void RegisterTask(ContentPublishTaskService task)
     {
         _tasks.Add(task.TaskId, task);
+
+        // Wire up explicit persistence: the task service actively requests
+        // persistence on terminal state transitions, and we await it.
+        task.PersistStateAsync = () =>
+            new ValueTask(contentPublishTaskDatabaseService.SaveStateAsync(task.State));
 
         var args = new ContentPublishTaskCreatedEventArg(task);
         TaskCreated?.Invoke(this, args);
@@ -70,7 +81,8 @@ public sealed class TaskManagerService(
 
         if (task.Status != ContentPublishTaskStatus.Failed &&
             task.Status != ContentPublishTaskStatus.Completed &&
-            task.Status != ContentPublishTaskStatus.Canceled)
+            task.Status != ContentPublishTaskStatus.Canceled &&
+            task.Status != ContentPublishTaskStatus.Pending)
             return false;
 
         await task.CleanupAsync();
@@ -80,6 +92,8 @@ public sealed class TaskManagerService(
         var args = new ContentPublishTaskRemovedEventArg(task);
         TaskRemoved?.Invoke(this, args);
         taskRemovedPublisher.Publish(args);
+
+        await contentPublishTaskDatabaseService.DeleteStateAsync(taskId);
         return true;
     }
 

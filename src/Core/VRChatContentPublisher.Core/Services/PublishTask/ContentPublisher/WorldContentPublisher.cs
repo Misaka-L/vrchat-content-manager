@@ -13,30 +13,25 @@ using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
+#pragma warning disable CS9124 // options captured into closure — expected for Options pattern
 public sealed class WorldContentPublisher(
-    string worldId,
-    string worldName,
-    string platform,
-    string unityVersion,
-    string? worldSignature,
-    int? capacity,
-    int? recommendedCapacity,
-    string? previewYoutubeId,
-    string[]? udonProducts,
+    WorldContentPublisherOptions options,
     UserSessionService userSessionService,
     ILogger<WorldContentPublisher> logger,
     IFileService fileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 ) : IContentPublisher
 {
-    private readonly string[] _udonProducts = udonProducts ?? [];
+    internal WorldContentPublisherOptions Options { get; } = options;
+
+    private readonly string[] _udonProducts = options.UdonProducts ?? [];
 
     private readonly VRChatApiClient _apiClient = userSessionService.GetApiClient();
 
     public string GetContentType() => "world";
 
-    public string GetContentName() => worldName;
-    public string GetContentPlatform() => platform;
+    public string GetContentName() => options.WorldName;
+    public string GetContentPlatform() => options.Platform;
 
     public bool CanPublish()
     {
@@ -54,15 +49,15 @@ public sealed class WorldContentPublisher(
         // try fetch world detail, if not found means we need to create a new world.
         try
         {
-            await _apiClient.GetWorldAsync(worldId);
+            await _apiClient.GetWorldAsync(options.WorldId);
             return;
         }
         catch (ApiErrorException ex) when (ex.StatusCode == 404)
         {
-            logger.LogInformation("The world {WorldId} was not found. Creating new world.", worldId);
+            logger.LogInformation("The world {WorldId} was not found. Creating new world.", options.WorldId);
         }
 
-        logger.LogInformation("Uploading thumbnail file for creating new world {WorldId}", worldId);
+        logger.LogInformation("Uploading thumbnail file for creating new world {WorldId}", options.WorldId);
         if (thumbnailFileId is null)
             throw new InvalidOperationException("Thumbnail must be provided when creating a new world.");
 
@@ -74,10 +69,10 @@ public sealed class WorldContentPublisher(
 
         var imageUrl = await UploadThumbnailFileAsync(null, thumbnailFile, null, cancellationToken);
 
-        logger.LogInformation("Send create world request for {WorldId}", worldId);
+        logger.LogInformation("Send create world request for {WorldId}", options.WorldId);
         await _apiClient.CreateWorldAsync(new CreateWorldRequest(
-            worldId,
-            worldName,
+            options.WorldId,
+            options.WorldName,
             null,
             null,
             null,
@@ -87,9 +82,9 @@ public sealed class WorldContentPublisher(
             description,
             tags,
             releaseStatus,
-            capacity,
-            recommendedCapacity,
-            previewYoutubeId,
+            options.Capacity,
+            options.RecommendedCapacity,
+            options.PreviewYoutubeId,
             null
         ), cancellationToken);
     }
@@ -125,7 +120,7 @@ public sealed class WorldContentPublisher(
         if (thumbnailFile is null && thumbnailFileId is not null)
             throw new ArgumentException("Could not find the provided thumbnail file.", nameof(thumbnailFileId));
 
-        if (!UnityBuildTargetUtils.IsStandalonePlatform(platform) &&
+        if (!UnityBuildTargetUtils.IsStandalonePlatform(options.Platform) &&
             bundleFileStream.Length > MaxBundleFileSizeForMobileBytes)
             throw new ArgumentException(
                 "The provided bundle file exceeds the maximum allowed size of 100 MB for this platform.",
@@ -133,17 +128,17 @@ public sealed class WorldContentPublisher(
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        logger.LogInformation("Publish World {WorldId}", worldId);
+        logger.LogInformation("Publish World {WorldId}", options.WorldId);
         progressReporter?.Report("Fetching world detail...");
 
         // Step 1. Fetch world detail, it should be always exist since pre publish will ensure this.
-        var world = await _apiClient.GetWorldAsync(worldId);
+        var world = await _apiClient.GetWorldAsync(options.WorldId);
 
         // Step 2. Try to get the asset file for this platform, if not create a new one.
         // This step also cleanups any incomplete file versions.
         var fileId = await GetOrCreateBundleFileIdAsync(world);
 
-        logger.LogInformation("Using file id {FileId} for world {WorldId}", fileId, worldId);
+        logger.LogInformation("Using file id {FileId} for world {WorldId}", fileId, options.WorldId);
         progressReporter?.Report("Preparing for upload bundle file...");
 
         // Step 3. Create and upload a new file version
@@ -160,7 +155,7 @@ public sealed class WorldContentPublisher(
         string? imageUri = null;
         if (thumbnailFile is not null && thumbnailFileStream is not null)
         {
-            logger.LogInformation("Uploading thumbnail for world {AvatarId}", worldId);
+            logger.LogInformation("Uploading thumbnail for world {AvatarId}", options.WorldId);
             progressReporter?.Report("Uploading thumbnail...");
 
             imageUri = await UploadThumbnailFileAsync(world, thumbnailFile, progressReporter, cancellationToken);
@@ -170,34 +165,34 @@ public sealed class WorldContentPublisher(
             throw new UnexpectedApiBehaviourException("Api did not return file info for created file version.");
 
         // Step 4. Update World
-        logger.LogInformation("Updating world {WorldId} to use new file version {Version}", worldId,
+        logger.LogInformation("Updating world {WorldId} to use new file version {Version}", options.WorldId,
             fileVersion.Version);
         progressReporter?.Report("Updating world to latest asset version...");
 
-        await _apiClient.CreateWorldVersionAsync(worldId, new CreateWorldVersionRequest(
-            worldName,
+        await _apiClient.CreateWorldVersionAsync(options.WorldId, new CreateWorldVersionRequest(
+            options.WorldName,
             fileVersion.File.Url,
             fileVersion.Version,
-            platform,
-            unityVersion,
-            worldSignature,
+            options.Platform,
+            options.UnityVersion,
+            options.WorldSignature,
             imageUri,
             description,
             tags,
             releaseStatus,
-            capacity,
-            recommendedCapacity,
-            previewYoutubeId,
+            options.Capacity,
+            options.RecommendedCapacity,
+            options.PreviewYoutubeId,
             _udonProducts
         ), cancellationToken);
 
-        logger.LogInformation("Successfully published world {WorldId}", worldId);
+        logger.LogInformation("Successfully published world {WorldId}", options.WorldId);
     }
 
     private VRChatApiUnityPackage? TryGetUnityPackageForPlatform(VRChatApiWorld world)
     {
         return world.UnityPackages
-            .Where(package => package.Platform == platform)
+            .Where(package => package.Platform == options.Platform)
             .GroupBy(package => package.UnityVersion)
             .MaxBy(group => UnityVersion.TryParse(group.Key))?
             .MaxBy(package => package.AssetVersion);
@@ -218,7 +213,7 @@ public sealed class WorldContentPublisher(
             }
         }
 
-        var fileName = $"World - {worldName} - Asset bundle - {unityVersion}-{platform}";
+        var fileName = $"World - {options.WorldName} - Asset bundle - {options.UnityVersion}-{options.Platform}";
         var file = await _apiClient.CreateFileAsync(fileName, "application/x-world", ".vrcw");
         return file.Id;
     }
@@ -261,7 +256,7 @@ public sealed class WorldContentPublisher(
         var extension = Path.GetExtension(imageFileName);
         var mimeType = VRChatApiFlieUtils.GetMimeTypeFromExtension(extension);
 
-        var fileName = $"World - {worldName} - Image - {unityVersion}-{platform}";
+        var fileName = $"World - {options.WorldName} - Image - {options.UnityVersion}-{options.Platform}";
         var file = await _apiClient.CreateFileAsync(fileName, mimeType, extension);
         return file.Id;
     }
@@ -275,26 +270,10 @@ public sealed class WorldContentPublisherFactory(
 {
     public WorldContentPublisher Create(
         UserSessionService userSessionService,
-        string worldId,
-        string worldName,
-        string platform,
-        string unityVersion,
-        string? worldSignature,
-        int? capacity,
-        int? recommendedCapacity,
-        string? previewYoutubeId,
-        string[]? udonProducts)
+        WorldContentPublisherOptions options)
     {
         return new WorldContentPublisher(
-            worldId,
-            worldName,
-            platform,
-            unityVersion,
-            worldSignature,
-            capacity,
-            recommendedCapacity,
-            previewYoutubeId,
-            udonProducts,
+            options,
             userSessionService,
             logger,
             fileService,

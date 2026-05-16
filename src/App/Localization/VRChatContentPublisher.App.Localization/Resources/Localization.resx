@@ -502,6 +502,9 @@ Click Repair Account to re-try or login again.</value>
     <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Cancelled_Tasks" xml:space="preserve">
         <value>Remove Cancelled Tasks</value>
     </data>
+    <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_Pending_Tasks" xml:space="preserve">
+        <value>Remove Pending Tasks</value>
+    </data>
     <data name="Pages_Tasks_Account_Tab_Action_Menu_Remove_All_Removable_Tasks" xml:space="preserve">
         <value>Remove All Removable Tasks</value>
     </data>

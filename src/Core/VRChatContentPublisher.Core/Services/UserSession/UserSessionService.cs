@@ -6,6 +6,7 @@ using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Auth;
 using VRChatContentPublisher.Core.Services.VRChatApi;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.Core.Services.UserSession;
 

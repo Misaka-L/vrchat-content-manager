@@ -10,6 +10,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
 
+### Added
+
+- Tasks can be restore after crash or restarted. [`#367`](https://github.com/project-vrcz/content-publisher/pull/367)
+  - Progress of all restored tasks will end with "Waiting for start".
+  - You need to manually start restored tasks.
+  - You can chose to retry or remove all restored (Pending) tasks.
+
 ## [2.9.4] - 2026-05-14
 
 ### Changed

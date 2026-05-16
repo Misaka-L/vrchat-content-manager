@@ -22,8 +22,10 @@
     <File Path="Core/Directory.Packages.props" />
     <Project Path="Core/VRChatContentPublisher.BundleProcessCore/VRChatContentPublisher.BundleProcessCore.csproj" />
     <Project Path="Core/VRChatContentPublisher.ConnectCore/VRChatContentPublisher.ConnectCore.csproj" />
+    <Project Path="Core/VRChatContentPublisher.Core.Shared/VRChatContentPublisher.Core.Shared.csproj" />
     <Project Path="Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj" />
     <Project Path="Core/VRChatContentPublisher.IpcCore/VRChatContentPublisher.IpcCore.csproj" />
+    <Project Path="Core/VRChatContentPublisher.SqliteCore/VRChatContentPublisher.SqliteCore.csproj" />
   </Folder>
   <Folder Name="/SubModules/">
     <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />

@@ -12,22 +12,22 @@ using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
+#pragma warning disable CS9124 // options captured into closure — expected for Options pattern
 public sealed class AvatarContentPublisher(
-    string avatarId,
-    string name,
-    string platform,
-    string unityVersion,
+    AvatarContentPublisherOptions options,
     UserSessionService userSessionService,
     ILogger<AvatarContentPublisher> logger,
     IFileService fileService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
 ) : IContentPublisher
 {
+    internal AvatarContentPublisherOptions Options { get; } = options;
+
     private readonly VRChatApiClient _apiClient = userSessionService.GetApiClient();
 
     public string GetContentType() => "avatar";
-    public string GetContentName() => name;
-    public string GetContentPlatform() => platform;
+    public string GetContentName() => options.Name;
+    public string GetContentPlatform() => options.Platform;
 
     public bool CanPublish()
     {
@@ -75,7 +75,7 @@ public sealed class AvatarContentPublisher(
         if (thumbnailFile is null && thumbnailFileId is not null)
             throw new ArgumentException("Could not find the provided thumbnail file.", nameof(thumbnailFileId));
 
-        if (UnityBuildTargetUtils.IsStandalonePlatform(platform))
+        if (UnityBuildTargetUtils.IsStandalonePlatform(options.Platform))
         {
             if (bundleFileStream.Length > MaxBundleFileSizeForDesktopBytes)
                 throw new ArgumentException(
@@ -95,14 +95,14 @@ public sealed class AvatarContentPublisher(
         // Step 1. Try to get the asset file for this platform, if not create a new one.
         // This step also cleanups any incomplete file versions.
 
-        logger.LogInformation("Publish Avatar {AvatarId}", avatarId);
+        logger.LogInformation("Publish Avatar {AvatarId}", options.AvatarId);
         progressReporter.Report("Fetching avatar detail...");
 
-        var avatar = await _apiClient.GetAvatarAsync(avatarId, cancellationToken);
+        var avatar = await _apiClient.GetAvatarAsync(options.AvatarId, cancellationToken);
         var fileId = await GetOrCreateBundleFileIdAsync(avatar);
 
         // Step 2. Create and upload a new file version
-        logger.LogInformation("Using file id {FileId} for avatar {AvatarId}", fileId, avatarId);
+        logger.LogInformation("Using file id {FileId} for avatar {AvatarId}", fileId, options.AvatarId);
         progressReporter.Report("Preparing for upload bundle file...");
 
         var fileVersion = await _apiClient.CreateAndUploadFileVersionAsync(
@@ -120,7 +120,7 @@ public sealed class AvatarContentPublisher(
         string? imageUri = null;
         if (thumbnailFile is not null && thumbnailFileStream is not null)
         {
-            logger.LogInformation("Uploading thumbnail for avatar {AvatarId}", avatarId);
+            logger.LogInformation("Uploading thumbnail for avatar {AvatarId}", options.AvatarId);
             progressReporter?.Report("Uploading thumbnail...");
 
             var imageFileId = await GetOrCreateBundleImageIdAsync(avatar, thumbnailFile.FileName);
@@ -141,29 +141,29 @@ public sealed class AvatarContentPublisher(
         }
 
         // Step 3. Update Avatar
-        logger.LogInformation("Updating avatar {AvatarId} to use new file version {Version}", avatarId,
+        logger.LogInformation("Updating avatar {AvatarId} to use new file version {Version}", options.AvatarId,
             fileVersion.Version);
         progressReporter?.Report("Updating avatar to latest asset version...");
 
-        await _apiClient.CreateAvatarVersionAsync(avatarId, new CreateAvatarVersionRequest(
-            name,
+        await _apiClient.CreateAvatarVersionAsync(options.AvatarId, new CreateAvatarVersionRequest(
+            options.Name,
             fileVersion.File.Url,
             1,
-            platform,
-            unityVersion,
+            options.Platform,
+            options.UnityVersion,
             imageUri,
             description,
             tags,
             releaseStatus
         ), cancellationToken);
 
-        logger.LogInformation("Successfully published avatar {AvatarId}", avatarId);
+        logger.LogInformation("Successfully published avatar {AvatarId}", options.AvatarId);
     }
 
     private VRChatApiUnityPackage? TryGetUnityPackageForPlatform(VRChatApiAvatar apiAvatar)
     {
         var platformApiUnityPackage = apiAvatar.UnityPackages
-            .Where(package => package.Platform == platform)
+            .Where(package => package.Platform == options.Platform)
             .GroupBy(package => package.UnityVersion)
             .MaxBy(group => UnityVersion.TryParse(group.Key))?
             .MaxBy(package => package.AssetVersion);
@@ -183,7 +183,7 @@ public sealed class AvatarContentPublisher(
             return fileId;
         }
 
-        var fileName = $"Avatar - {name} - Asset bundle - {unityVersion}-{platform}";
+        var fileName = $"Avatar - {options.Name} - Asset bundle - {options.UnityVersion}-{options.Platform}";
         var file = await _apiClient.CreateFileAsync(fileName, "application/x-avatar", ".vrca");
         return file.Id;
     }
@@ -202,7 +202,7 @@ public sealed class AvatarContentPublisher(
         var extension = Path.GetExtension(imageFileName);
         var mimeType = VRChatApiFlieUtils.GetMimeTypeFromExtension(extension);
 
-        var fileName = $"Avatar - {name} - Image - {unityVersion}-{platform}";
+        var fileName = $"Avatar - {options.Name} - Image - {options.UnityVersion}-{options.Platform}";
         var file = await _apiClient.CreateFileAsync(fileName, mimeType, extension);
         return file.Id;
     }
@@ -216,16 +216,10 @@ public sealed class AvatarContentPublisherFactory(
 {
     public AvatarContentPublisher Create(
         UserSessionService userSession,
-        string avatarId,
-        string name,
-        string platform,
-        string unityVersion)
+        AvatarContentPublisherOptions options)
     {
         return new AvatarContentPublisher(
-            avatarId,
-            name,
-            platform,
-            unityVersion,
+            options,
             userSession,
             logger,
             fileService,

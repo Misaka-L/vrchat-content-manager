@@ -1,15 +1,20 @@
-using System.Collections.Concurrent;
 using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Services;
+using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Services.App;
 
 namespace VRChatContentPublisher.Core.Services;
 
 public sealed class RpcFileStorageService : IFileService
 {
-    private readonly ConcurrentDictionary<string, FileEntry> _fileMap = [];
+    private readonly FileDatabaseService _fileDatabaseService;
 
-    public ValueTask<UploadFileTask> GetUploadFileStreamAsync(string fileName)
+    public RpcFileStorageService(FileDatabaseService fileDatabaseService)
+    {
+        _fileDatabaseService = fileDatabaseService;
+    }
+
+    public async ValueTask<UploadFileTask> GetUploadFileStreamAsync(string fileName)
     {
         var rootPath = GetFileRootPath();
 
@@ -18,46 +23,57 @@ public sealed class RpcFileStorageService : IFileService
 
         var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 4096,
             FileOptions.Asynchronous);
-        var uploadFileTask = new UploadFileTask(fileStream, fileId);
 
-        _fileMap[fileId] = new FileEntry(fileName, filePath);
+        await _fileDatabaseService.CreateFileRecordAsync(fileId, fileName, filePath, status: "Writing");
 
-        return ValueTask.FromResult(uploadFileTask);
+        return new UploadFileTask(fileStream, fileId);
     }
 
-    public ValueTask<Stream?> GetFileAsync(string fileId)
+    public async ValueTask<Stream?> GetFileAsync(string fileId)
     {
-        if (!_fileMap.TryGetValue(fileId, out var fileEntry))
-            return ValueTask.FromResult<Stream?>(null);
+        var fileEntry = await _fileDatabaseService.GetFileRecordAsync(fileId);
+        if (fileEntry is null)
+            return null;
 
-        return ValueTask.FromResult<Stream?>(File.OpenRead(fileEntry.FilePath));
+        if (!File.Exists(fileEntry.FilePath))
+            return null;
+
+        return File.OpenRead(fileEntry.FilePath);
     }
 
-    public ValueTask<UploadedFile?> GetFileWithNameAsync(string fileId)
+    public async ValueTask<UploadedFile?> GetFileWithNameAsync(string fileId)
     {
-        if (!_fileMap.TryGetValue(fileId, out var fileEntry))
-            return ValueTask.FromResult<UploadedFile?>(null);
+        var fileEntry = await _fileDatabaseService.GetFileRecordAsync(fileId);
+        if (fileEntry is null)
+            return null;
+
+        if (!File.Exists(fileEntry.FilePath))
+            return null;
 
         var fileName = Path.GetFileName(fileEntry.FileName);
         var fileStream = File.OpenRead(fileEntry.FilePath);
 
-        var uploadedFile = new UploadedFile
+        return new UploadedFile
         {
             FileName = fileName,
             FileStream = fileStream
         };
-
-        return ValueTask.FromResult<UploadedFile?>(uploadedFile);
     }
 
     public ValueTask<bool> IsFileExistAsync(string fileId)
     {
-        return ValueTask.FromResult(_fileMap.ContainsKey(fileId));
+        return _fileDatabaseService.IsFileExistAsync(fileId);
     }
 
-    public ValueTask DeleteFileAsync(string fileId)
+    public async ValueTask MarkFileReadyAsync(string fileId)
     {
-        if (_fileMap.TryRemove(fileId, out var fileEntry))
+        await _fileDatabaseService.MarkFileReadyAsync(fileId);
+    }
+
+    public async ValueTask DeleteFileAsync(string fileId)
+    {
+        var fileEntry = await _fileDatabaseService.GetFileRecordAsync(fileId);
+        if (fileEntry is not null)
         {
             if (File.Exists(fileEntry.FilePath))
             {
@@ -65,7 +81,7 @@ public sealed class RpcFileStorageService : IFileService
             }
         }
 
-        return ValueTask.CompletedTask;
+        await _fileDatabaseService.DeleteFileRecordAsync(fileId);
     }
 
     private static string GetFileRootPath()
@@ -78,6 +94,4 @@ public sealed class RpcFileStorageService : IFileService
 
         return rootPath;
     }
-
-    private record FileEntry(string FileName, string FilePath);
 }

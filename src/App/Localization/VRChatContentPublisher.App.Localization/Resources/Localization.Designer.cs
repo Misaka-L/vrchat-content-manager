@@ -1825,6 +1825,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Pending Tasks.
+        /// </summary>
+        internal static string Pages_Tasks_Account_Tab_Action_Menu_Remove_Pending_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Account_Tab_Action_Menu_Remove_Pending_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove All Tasks.
         /// </summary>
         internal static string Pages_Tasks_Account_Tab_Action_Menu_Retry_All_Tasks {

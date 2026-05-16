@@ -54,8 +54,12 @@ public static class FileEndpoint
 
                 fileRead = true;
                 uploadFileTask = await fileService.GetUploadFileStreamAsync(contentDisposition.FileName.ToString());
-                await using var stream = uploadFileTask.FileStream;
-                await section.Body.CopyToAsync(stream);
+                await using (var stream = uploadFileTask.FileStream)
+                {
+                    await section.Body.CopyToAsync(stream);
+                }
+
+                await fileService.MarkFileReadyAsync(uploadFileTask.FileId);
             }
         }
 

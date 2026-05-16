@@ -2,11 +2,9 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.Options;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
-using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.Core.Models;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
@@ -166,13 +164,27 @@ public sealed partial class PublishTaskManagerViewModel(
     }
 
     [RelayCommand]
+    private async Task RemovePendingTasks()
+    {
+        var completedTasks = Tasks
+            .Where(t => t.Status is ContentPublishTaskStatus.Pending)
+            .ToArray();
+
+        foreach (var task in completedTasks)
+        {
+            await taskManagerService.RemoveTaskAsync(task.TaskId);
+        }
+    }
+
+    [RelayCommand]
     private async Task RemoveAllRemovableTasks()
     {
         var completedTasks = Tasks
             .Where(t =>
                 t.Status is ContentPublishTaskStatus.Completed or
                     ContentPublishTaskStatus.Failed or
-                    ContentPublishTaskStatus.Canceled)
+                    ContentPublishTaskStatus.Canceled or
+                    ContentPublishTaskStatus.Pending)
             .ToArray();
 
         foreach (var task in completedTasks)
@@ -185,7 +197,10 @@ public sealed partial class PublishTaskManagerViewModel(
     private void RetryAllTasks()
     {
         var tasks = Tasks
-            .Where(task => task.Status is ContentPublishTaskStatus.Failed or ContentPublishTaskStatus.Canceled)
+            .Where(task => task.Status is
+                ContentPublishTaskStatus.Failed or
+                ContentPublishTaskStatus.Canceled or
+                ContentPublishTaskStatus.Pending)
             .ToArray();
 
         foreach (var task in tasks)

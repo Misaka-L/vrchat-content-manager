@@ -12,6 +12,7 @@ using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
 using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentPublisher.ConnectCore.Services.Health;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Services;
 using VRChatContentPublisher.Core.Services.App;
@@ -24,6 +25,7 @@ using VRChatContentPublisher.Core.Services.VRChatApi;
 using VRChatContentPublisher.Core.Services.VRChatApi.S3;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.PersistentCore.Extensions;
 
 namespace VRChatContentPublisher.Core.Extensions;
 
@@ -69,6 +71,26 @@ public static class ServicesExtension
                         });
                 });
         });
+
+        #region Database (Sqlite)
+
+        services.AddSqliteCore(options =>
+        {
+            var databaseFolderPath = Path.Combine(AppStorageService.GetStoragePath(), "database");
+            if (!Directory.Exists(databaseFolderPath))
+                Directory.CreateDirectory(databaseFolderPath);
+
+            var databasePath = Path.Combine(databaseFolderPath, "app.db");
+            options.DatabasePath = databasePath;
+        });
+
+        services.AddSingleton<ContentPublishTaskDatabaseService>();
+        services.AddSingleton<FileDatabaseService>();
+        services.AddSingleton<TaskRestoreService>();
+        services.AddHostedService<TableInitializationHostedService>();
+        services.AddHostedService<FileCleanupHostedService>();
+
+        #endregion
 
         services.AddConnectCore();
         services.AddHostedService<RpcServerStartupHostedService>();

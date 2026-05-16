@@ -7,19 +7,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration.Json"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
-        <PackageReference Include="Microsoft.Extensions.Http"/>
-        <PackageReference Include="Microsoft.Extensions.Http.Resilience"/>
-        <PackageReference Include="SauceControl.Blake2Fast"/>
-        <PackageReference Include="MessagePipe"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+        <PackageReference Include="Microsoft.Extensions.Http" />
+        <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
+        <PackageReference Include="SauceControl.Blake2Fast" />
+        <PackageReference Include="MessagePipe" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\VRChatContentPublisher.BundleProcessCore\VRChatContentPublisher.BundleProcessCore.csproj"/>
-        <ProjectReference Include="..\VRChatContentPublisher.ConnectCore\VRChatContentPublisher.ConnectCore.csproj"/>
+        <ProjectReference Include="..\VRChatContentPublisher.BundleProcessCore\VRChatContentPublisher.BundleProcessCore.csproj" />
+        <ProjectReference Include="..\VRChatContentPublisher.ConnectCore\VRChatContentPublisher.ConnectCore.csproj" />
+        <ProjectReference Include="..\VRChatContentPublisher.Core.Shared\VRChatContentPublisher.Core.Shared.csproj" />
+        <ProjectReference Include="..\VRChatContentPublisher.SqliteCore\VRChatContentPublisher.SqliteCore.csproj" />
     </ItemGroup>
 
-    <Import Project="../../BuildInfo.targets"/>
+    <Import Project="../../BuildInfo.targets" />
 </Project>

@@ -14,7 +14,8 @@ public sealed class CanContentPublishTaskRemoveConverter : IValueConverter
         return status is
             ContentPublishTaskStatus.Failed or
             ContentPublishTaskStatus.Canceled or
-            ContentPublishTaskStatus.Completed;
+            ContentPublishTaskStatus.Completed or
+            ContentPublishTaskStatus.Pending;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
