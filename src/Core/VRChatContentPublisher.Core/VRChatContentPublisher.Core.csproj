@@ -19,6 +19,7 @@
     <ItemGroup>
         <ProjectReference Include="..\VRChatContentPublisher.BundleProcessCore\VRChatContentPublisher.BundleProcessCore.csproj"/>
         <ProjectReference Include="..\VRChatContentPublisher.ConnectCore\VRChatContentPublisher.ConnectCore.csproj"/>
+        <ProjectReference Include="..\VRChatContentPublisher.Core.Shared\VRChatContentPublisher.Core.Shared.csproj" />
     </ItemGroup>
 
     <Import Project="../../BuildInfo.targets"/>

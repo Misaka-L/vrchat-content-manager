@@ -1,4 +1,4 @@
-namespace VRChatContentPublisher.Core;
+namespace VRChatContentPublisher.Core.Shared;
 
 public sealed class SimpleSemaphoreSlimLockScope : IDisposable
 {
