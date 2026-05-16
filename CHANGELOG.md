@@ -17,6 +17,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - You need to manually start restored tasks.
   - You can chose to retry or remove all restored (Pending) tasks.
 
+## [2.10.0-beta.1] - 2026-05-16
+
+### Changed
+
+- All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
+
+### Added
+
+- Tasks can be restore after crash or restarted. [`#367`](https://github.com/project-vrcz/content-publisher/pull/367)
+  - Progress of all restored tasks will end with "Waiting for start".
+  - You need to manually start restored tasks.
+  - You can chose to retry or remove all restored (Pending) tasks.
+
 ## [2.9.4] - 2026-05-14
 
 ### Changed
@@ -602,7 +615,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.1...HEAD
+[2.10.0-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4...v2.10.0-beta.1
 [2.9.4]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4-beta.1...v2.9.4
 [2.9.4-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.3...v2.9.4-beta.1
 [2.9.3]: https://github.com/project-vrcz/content-publisher/compare/v2.9.2...v2.9.3
