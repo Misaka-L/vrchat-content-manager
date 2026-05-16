@@ -232,6 +232,7 @@ public sealed class ContentPublishTaskService
                     progressReporter,
                     cancellationToken);
 
+                await _fileService.MarkFileReadyAsync(outputBundleFile.FileId);
                 State.BundleFileId = outputBundleFile.FileId;
             }
             catch
@@ -294,6 +295,10 @@ public sealed class ContentPublishTaskService
 
         if (await _fileService.IsFileExistAsync(State.BundleFileId))
             await _fileService.DeleteFileAsync(State.BundleFileId);
+
+        if (!string.IsNullOrEmpty(State.ThumbnailFileId) &&
+            await _fileService.IsFileExistAsync(State.ThumbnailFileId))
+            await _fileService.DeleteFileAsync(State.ThumbnailFileId);
     }
 
     private void UpdateProgress(string text, double? value,

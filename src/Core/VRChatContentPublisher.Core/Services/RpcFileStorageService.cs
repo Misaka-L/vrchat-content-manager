@@ -24,7 +24,7 @@ public sealed class RpcFileStorageService : IFileService
         var fileStream = new FileStream(filePath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None, 4096,
             FileOptions.Asynchronous);
 
-        await _fileDatabaseService.CreateFileRecordAsync(fileId, fileName, filePath);
+        await _fileDatabaseService.CreateFileRecordAsync(fileId, fileName, filePath, status: "Writing");
 
         return new UploadFileTask(fileStream, fileId);
     }
@@ -63,6 +63,11 @@ public sealed class RpcFileStorageService : IFileService
     public ValueTask<bool> IsFileExistAsync(string fileId)
     {
         return _fileDatabaseService.IsFileExistAsync(fileId);
+    }
+
+    public async ValueTask MarkFileReadyAsync(string fileId)
+    {
+        await _fileDatabaseService.MarkFileReadyAsync(fileId);
     }
 
     public async ValueTask DeleteFileAsync(string fileId)

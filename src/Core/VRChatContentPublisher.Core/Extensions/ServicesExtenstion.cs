@@ -88,6 +88,7 @@ public static class ServicesExtension
         services.AddSingleton<FileDatabaseService>();
         services.AddSingleton<TaskRestoreService>();
         services.AddHostedService<TableInitializationHostedService>();
+        services.AddHostedService<FileCleanupHostedService>();
 
         #endregion
 

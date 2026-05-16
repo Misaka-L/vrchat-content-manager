@@ -12,5 +12,7 @@ public interface IFileService
 
     ValueTask<bool> IsFileExistAsync(string fileId);
 
+    ValueTask MarkFileReadyAsync(string fileId);
+
     ValueTask DeleteFileAsync(string fileId);
 }
