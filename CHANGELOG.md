@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
+- Extend period of background update check to a hour. [`#371`](https://github.com/project-vrcz/content-publisher/pull/371)
 
 ### Added
 
