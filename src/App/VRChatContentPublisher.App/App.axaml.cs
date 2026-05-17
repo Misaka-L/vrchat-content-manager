@@ -30,7 +30,7 @@ using VRChatContentPublisher.App.Views.Dialogs;
 using VRChatContentPublisher.App.Views.InAppNotifications;
 using VRChatContentPublisher.App.Views.Settings;
 using VRChatContentPublisher.Core;
-using VRChatContentPublisher.Core.Services.App;
+using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 

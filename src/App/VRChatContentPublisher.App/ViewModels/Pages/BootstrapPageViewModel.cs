@@ -2,10 +2,10 @@
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
-using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages;
 

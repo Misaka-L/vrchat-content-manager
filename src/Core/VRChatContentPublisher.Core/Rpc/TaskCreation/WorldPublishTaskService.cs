@@ -1,0 +1,135 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.ConnectCore.Exceptions;
+using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
+using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.UserSession;
+using VRChatContentPublisher.Core.VRChatApi.Exceptions;
+using VRChatContentPublisher.Core.VRChatApi.Models.Rest.Worlds;
+
+namespace VRChatContentPublisher.Core.Rpc.TaskCreation;
+
+public class WorldPublishTaskService(
+    UserSessionManagerService userSessionManagerService,
+    WorldContentPublisherFactory contentPublisherFactory,
+    ILogger<WorldPublishTaskService> logger
+) : IWorldPublishTaskService
+{
+    public async ValueTask<string> CreatePublishTaskAsync(
+        string worldId,
+        string worldBundleFileId,
+        string worldName,
+        string platform,
+        string unityVersion,
+        string? authorId,
+        string? worldSignature,
+        string? thumbnailFileId,
+        string? description,
+        string[]? tags,
+        string? releaseStatus,
+        int? capacity,
+        int? recommendedCapacity,
+        string? previewYoutubeId,
+        string[]? udonProducts)
+    {
+        try
+        {
+            var userSession = await GetUserSessionByWorldIdAsync(worldId, authorId);
+
+            var scope = await userSession.CreateOrGetSessionScopeAsync();
+
+            var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+            var contentPublisher =
+                contentPublisherFactory.Create(
+                    userSession,
+                    new WorldContentPublisherOptions
+                    {
+                        WorldId = worldId,
+                        WorldName = worldName,
+                        Platform = platform,
+                        UnityVersion = unityVersion,
+                        WorldSignature = worldSignature,
+                        Capacity = capacity,
+                        RecommendedCapacity = recommendedCapacity,
+                        PreviewYoutubeId = previewYoutubeId,
+                        UdonProducts = udonProducts
+                    }
+                );
+
+            var state = new ContentPublishTaskState
+            {
+                ContentId = worldId,
+                RawBundleFileId = worldBundleFileId,
+                ThumbnailFileId = thumbnailFileId,
+                Description = description,
+                Tags = tags,
+                ReleaseStatus = releaseStatus,
+                UserId = userSession.UserId
+            };
+
+            var task = await taskManager.CreateTask(state, contentPublisher);
+            task.Start();
+
+            return task.TaskId;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Failed to create world publish task for world {WorldId}", worldId);
+            throw;
+        }
+    }
+
+    private async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(string worldId,
+        string? requestUserId = null)
+    {
+        if (!userSessionManagerService.IsAnySessionAvailable)
+            throw new NoUserSessionAvailableException();
+
+        if (requestUserId is not null)
+        {
+            if (userSessionManagerService.Sessions
+                    .FirstOrDefault(session => session.UserId == requestUserId) is not { } requestSession)
+                throw new ArgumentException("The specified user session was not found.", nameof(requestUserId));
+
+            VRChatApiWorld requestUserWorld;
+            try
+            {
+                requestUserWorld = await requestSession.GetApiClient().GetWorldAsync(worldId);
+            }
+            catch (ApiErrorException ex) when (ex.StatusCode == 404)
+            {
+                logger.LogInformation(ex, "The world {WorldId} was not found for user {UserId}. Will create new world.",
+                    worldId, requestUserId);
+                return requestSession;
+            }
+
+            if (requestUserWorld.AuthorId != requestUserId)
+                throw new ArgumentException("The specified user does not own the world.", nameof(requestUserId));
+
+            return requestSession;
+        }
+
+        var initialSession = userSessionManagerService.Sessions[0];
+
+        VRChatApiWorld world;
+        try
+        {
+            world = await initialSession.GetApiClient().GetWorldAsync(worldId);
+        }
+        catch (ApiErrorException ex) when (ex.StatusCode == 404)
+        {
+            throw new ArgumentException("The specified world was not found.", nameof(worldId), ex);
+        }
+
+        var ownerSession = userSessionManagerService.Sessions
+            .FirstOrDefault(session => session.UserId == world.AuthorId);
+
+        if (ownerSession is null)
+            throw new ContentOwnerUserSessionNotFoundException();
+
+        return ownerSession;
+    }
+}

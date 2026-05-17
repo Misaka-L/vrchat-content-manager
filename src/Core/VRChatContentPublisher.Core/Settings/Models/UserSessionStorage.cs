@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Auth;
+using VRChatContentPublisher.Core.VRChatApi.Models.Rest.Auth;
 
 namespace VRChatContentPublisher.Core.Settings.Models;
 

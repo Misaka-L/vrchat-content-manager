@@ -5,12 +5,11 @@ using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
-using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Models.PublishTask;
-using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 

@@ -3,8 +3,8 @@ using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.App.Views;
-using VRChatContentPublisher.Core.Services.App;
-using VRChatContentPublisher.Core.Services.PublicIp;
+using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.PublicIpChecker.IPCrypt;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 

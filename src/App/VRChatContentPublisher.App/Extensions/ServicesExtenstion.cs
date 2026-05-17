@@ -18,7 +18,7 @@ using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
 using VRChatContentPublisher.App.ViewModels.Settings;
 using VRChatContentPublisher.ConnectCore.Services.Connect.Challenge;
-using VRChatContentPublisher.Core.Services;
+using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.IpcCore.Services;
 
 namespace VRChatContentPublisher.App.Extensions;

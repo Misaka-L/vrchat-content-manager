@@ -1,4 +1,4 @@
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.UserSession;
 
 namespace VRChatContentPublisher.Core.Events.UserSession;
 

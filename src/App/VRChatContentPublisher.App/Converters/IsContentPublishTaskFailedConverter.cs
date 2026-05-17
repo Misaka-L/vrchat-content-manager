@@ -1,7 +1,6 @@
 using System.Globalization;
 using Avalonia.Data.Converters;
-using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Models.PublishTask;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 
 namespace VRChatContentPublisher.App.Converters;
 

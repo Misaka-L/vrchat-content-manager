@@ -3,9 +3,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Auth;
-using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.UserSession;
+using VRChatContentPublisher.Core.VRChatApi.Models.Rest.Auth;
 
 namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 

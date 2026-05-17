@@ -2,9 +2,8 @@ using Antelcat.I18N.Avalonia;
 using MessagePipe;
 using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.App.Localization;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.Events.PublishTask;
-using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 

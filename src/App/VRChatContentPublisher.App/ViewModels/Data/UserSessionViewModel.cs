@@ -4,9 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
-using VRChatContentPublisher.App.ViewModels.Pages.Settings;
-using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Data;
 

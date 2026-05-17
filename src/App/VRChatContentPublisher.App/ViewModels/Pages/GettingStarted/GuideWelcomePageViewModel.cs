@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;

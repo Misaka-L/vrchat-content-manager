@@ -3,7 +3,7 @@ using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Events.PublicIp;
-using VRChatContentPublisher.Core.Services.PublicIp;
+using VRChatContentPublisher.Core.PublicIpChecker.Services;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 

@@ -8,8 +8,7 @@ using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
-using VRChatContentPublisher.Core.Services;
-using VRChatContentPublisher.Core.Services.Rpc;
+using VRChatContentPublisher.Core.Rpc;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 

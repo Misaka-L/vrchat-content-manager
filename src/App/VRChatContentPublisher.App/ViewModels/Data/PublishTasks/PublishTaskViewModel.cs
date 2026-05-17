@@ -2,10 +2,10 @@
 using CommunityToolkit.Mvvm.Input;
 using MessagePipe;
 using VRChatContentPublisher.App.Views;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Events.UserSession;
-using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Models.PublishTask;
-using VRChatContentPublisher.Core.Services.PublishTask;
 
 namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 

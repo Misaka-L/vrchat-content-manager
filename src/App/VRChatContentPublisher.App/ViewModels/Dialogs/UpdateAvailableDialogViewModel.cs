@@ -1,7 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;

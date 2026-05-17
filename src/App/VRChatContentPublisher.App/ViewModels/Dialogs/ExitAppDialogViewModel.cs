@@ -1,10 +1,5 @@
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.AppLifetime;
-using VRChatContentPublisher.Core.Models;
-using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Dialogs;
 
