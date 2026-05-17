@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using VRChatContentPublisher.Core.Attributes;
+using VRChatContentPublisher.Core.Shared.Attributes;
 
 namespace VRChatContentPublisher.Core.Utils;
 

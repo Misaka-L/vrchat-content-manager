@@ -1,4 +1,4 @@
-﻿namespace VRChatContentPublisher.Core.Attributes;
+﻿namespace VRChatContentPublisher.Core.Shared.Attributes;
 
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class GitCommitHashAttribute(string commitHash) : Attribute
