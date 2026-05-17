@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.Core.Events.PublishTask;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 

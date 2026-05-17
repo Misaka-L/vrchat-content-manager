@@ -6,6 +6,7 @@ using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
 using VRChatContentPublisher.Core.Settings;

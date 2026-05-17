@@ -3,7 +3,7 @@ using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Services.App;
 
-namespace VRChatContentPublisher.Core.Services;
+namespace VRChatContentPublisher.Core.Services.Rpc.RpcFIle;
 
 public sealed class RpcFileStorageService : IFileService
 {

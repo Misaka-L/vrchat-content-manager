@@ -5,7 +5,7 @@ using VRChatContentPublisher.ConnectCore.Services.Connect;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
-namespace VRChatContentPublisher.Core.Services;
+namespace VRChatContentPublisher.Core.Services.Rpc;
 
 public sealed class RpcServerStartupHostedService(
     HttpServerService httpServerService,

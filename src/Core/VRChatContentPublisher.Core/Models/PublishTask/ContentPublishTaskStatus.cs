@@ -1,4 +1,4 @@
-﻿namespace VRChatContentPublisher.Core.Models;
+﻿namespace VRChatContentPublisher.Core.Models.PublishTask;
 
 public enum ContentPublishTaskStatus
 {

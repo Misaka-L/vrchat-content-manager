@@ -4,6 +4,7 @@ using MessagePipe;
 using VRChatContentPublisher.App.Views;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask;
 
 namespace VRChatContentPublisher.App.ViewModels.Data.PublishTasks;

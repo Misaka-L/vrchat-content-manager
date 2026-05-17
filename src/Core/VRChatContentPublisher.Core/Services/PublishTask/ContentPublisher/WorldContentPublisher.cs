@@ -4,6 +4,7 @@ using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.UnityPackages;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Worlds;

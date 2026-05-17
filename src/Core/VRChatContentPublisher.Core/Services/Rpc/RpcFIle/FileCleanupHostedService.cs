@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Services.App;
 
-namespace VRChatContentPublisher.Core.Services;
+namespace VRChatContentPublisher.Core.Services.Rpc.RpcFIle;
 
 /// <summary>
 /// On startup, reconciles the <c>RpcFiles</c> database table with the filesystem

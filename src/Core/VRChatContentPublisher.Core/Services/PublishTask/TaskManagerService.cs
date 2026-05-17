@@ -1,6 +1,7 @@
 ﻿using MessagePipe;
 using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask;

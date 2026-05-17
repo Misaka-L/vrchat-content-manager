@@ -20,6 +20,8 @@ using VRChatContentPublisher.Core.Services.PublicIp;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask.Connect;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
+using VRChatContentPublisher.Core.Services.Rpc;
+using VRChatContentPublisher.Core.Services.Rpc.RpcFIle;
 using VRChatContentPublisher.Core.Services.UserSession;
 using VRChatContentPublisher.Core.Services.VRChatApi;
 using VRChatContentPublisher.Core.Services.VRChatApi.S3;

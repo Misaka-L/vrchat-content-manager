@@ -1,4 +1,4 @@
-﻿namespace VRChatContentPublisher.Core.Models;
+﻿namespace VRChatContentPublisher.Core.Models.PublishTask;
 
 public sealed class PublishTaskProgressEventArg(string progressText, double? progressValue, ContentPublishTaskStatus status) : EventArgs
 {

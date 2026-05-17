@@ -1,6 +1,6 @@
 using VRChatContentPublisher.Core.Services.PublishTask;
 
-namespace VRChatContentPublisher.Core.Models;
+namespace VRChatContentPublisher.Core.Models.PublishTask;
 
 /// <summary>
 /// A complete snapshot of a publish task's state, containing only serializable data.

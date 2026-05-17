@@ -2,6 +2,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask;
 using VRChatContentPublisher.Core.Services.UserSession;
 

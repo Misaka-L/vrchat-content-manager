@@ -3,7 +3,7 @@ using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
-namespace VRChatContentPublisher.Core.Services;
+namespace VRChatContentPublisher.Core.Services.Rpc;
 
 public sealed class RpcTokenSecretKeyProvider(IWritableOptions<RpcSessionStorage> storage) : ITokenSecretKeyProvider
 {

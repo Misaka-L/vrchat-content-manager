@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Models.VRChatApi;
 using VRChatContentPublisher.Core.Models.VRChatApi.Rest.Files;
 using VRChatContentPublisher.Core.Utils;

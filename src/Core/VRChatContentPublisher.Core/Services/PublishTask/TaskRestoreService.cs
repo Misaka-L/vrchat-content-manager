@@ -3,8 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Services.UserSession;
+using ContentPublishTaskStateJsonContext = VRChatContentPublisher.Core.Models.PublishTask.ContentPublishTaskStateJsonContext;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask;
 

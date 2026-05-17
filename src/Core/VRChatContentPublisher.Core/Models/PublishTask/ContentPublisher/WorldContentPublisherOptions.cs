@@ -1,7 +1,7 @@
-namespace VRChatContentPublisher.Core.Models;
+namespace VRChatContentPublisher.Core.Models.PublishTask.ContentPublisher;
 
 /// <summary>
-/// Serializable creation parameters for <see cref="ContentPublisher.WorldContentPublisher"/>.
+/// Serializable creation parameters for <see cref="VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher.WorldContentPublisher"/>.
 /// All fields are pure data — no runtime service references.
 /// </summary>
 public sealed class WorldContentPublisherOptions

@@ -1,7 +1,7 @@
 using VRChatContentPublisher.ConnectCore.Services.Health;
 using VRChatContentPublisher.Core.Services.UserSession;
 
-namespace VRChatContentPublisher.Core.Services;
+namespace VRChatContentPublisher.Core.Services.Rpc;
 
 public sealed class RpcHealthService(UserSessionManagerService userSessionManagerService) : IHealthService
 {

@@ -1,4 +1,4 @@
-namespace VRChatContentPublisher.Core.Services;
+namespace VRChatContentPublisher.Core.Services.Rpc;
 
 public readonly record struct RpcStartupPortWarning(int ConfiguredPort, int ActivePort);
 

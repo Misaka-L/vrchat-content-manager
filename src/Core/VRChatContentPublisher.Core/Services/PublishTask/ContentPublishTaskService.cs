@@ -7,8 +7,10 @@ using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.Events.PublishTask;
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
 using VRChatContentPublisher.Core.Utils;
+using ContentPublishTaskStateJsonContext = VRChatContentPublisher.Core.Models.PublishTask.ContentPublishTaskStateJsonContext;
 
 namespace VRChatContentPublisher.Core.Services.PublishTask;
 

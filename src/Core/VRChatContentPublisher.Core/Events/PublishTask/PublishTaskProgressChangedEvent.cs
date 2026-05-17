@@ -1,4 +1,5 @@
 using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.Models.PublishTask;
 using VRChatContentPublisher.Core.Services.PublishTask;
 
 namespace VRChatContentPublisher.Core.Events.PublishTask;
