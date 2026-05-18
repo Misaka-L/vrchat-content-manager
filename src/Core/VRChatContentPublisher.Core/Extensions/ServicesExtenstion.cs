@@ -36,6 +36,20 @@ public static class ServicesExtension
 {
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
+        services.AddMemoryCache();
+        services.AddMessagePipe();
+
+        #region Services Only Used by App UI
+
+        services.AddSingleton<RemoteImageService>();
+
+        #endregion
+
+        #region Default HttpClient, AppWebProxy
+
+        // Due to limitation of IHttpClientFactory (CookiesContainer)
+        // UserSessionService use UserSessionHttpClientFactory instead of IHttpClientFactory
+        services.AddTransient<AppWebProxy>();
         services.ConfigureHttpClientDefaults(builder =>
         {
             var clientName = string.IsNullOrWhiteSpace(builder.Name) ? "general" : builder.Name + "-general";
@@ -72,6 +86,8 @@ public static class ServicesExtension
                 });
         });
 
+        #endregion
+
         #region Database (Sqlite)
 
         services.AddSqliteCore(options =>
@@ -88,46 +104,64 @@ public static class ServicesExtension
         services.AddSingleton<FileDatabaseService>();
         services.AddSingleton<TaskRestoreService>();
         services.AddHostedService<TableInitializationHostedService>();
+
+        #endregion
+
+        #region Virtual File System
+
+        // For SQLite database, see FileDatabaseService
+        services.AddSingleton<RpcFileStorageService>();
         services.AddHostedService<FileCleanupHostedService>();
 
         #endregion
+
+        #region Rpc Server
 
         services.AddConnectCore();
         services.AddHostedService<RpcServerStartupHostedService>();
         services.AddSingleton<RpcStartupPortWarningState>();
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
-        services.AddSingleton<IFileService, RpcFileStorageService>();
+        services.AddSingleton<IFileService>(sp => sp.GetRequiredService<RpcFileStorageService>());
         services.AddTransient<IConnectMetadataProvider, ConnectMetadataProvider>();
+        services.AddTransient<IHealthService, RpcHealthService>();
 
-        // Connect Publish Service
+        #endregion
+
+        #region Content Publishing Services (Task Service and Publisher Factory)
+
+        #region Content Publisher
+
         services.AddTransient<IWorldPublishTaskService, WorldPublishTaskService>();
         services.AddTransient<WorldContentPublisherFactory>();
 
         services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
         services.AddTransient<AvatarContentPublisherFactory>();
 
+        services.AddScoped<TaskManagerService>();
+        services.AddTransient<ContentPublishTaskFactory>();
+
+        #endregion
+
+        #region Bundle Processing
+
         services.AddTransient<BundleProcessService>(_ => new BundleProcessService(new BundleProcessPipelineOptions
         {
             TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp"),
         }));
 
-        services.AddTransient<IHealthService, RpcHealthService>();
+        #endregion
 
-        services.AddMemoryCache();
+        #endregion
 
-        services.AddSingleton<RemoteImageService>();
+        #region User Sessions
 
         services.AddSingleton<UserSessionManagerService>();
-
         services.AddScoped<UserSessionScopeService>();
-        services.AddScoped<TaskManagerService>();
-
         services.AddTransient<UserSessionFactory>();
-        services.AddTransient<ContentPublishTaskFactory>();
-
-        services.AddTransient<AppWebProxy>();
         services.AddTransient<UserSessionHttpClientFactory>();
+
+        #endregion
 
         #region VRChat Api Client (and S3 uplaoder) Configuration
 
@@ -181,13 +215,15 @@ public static class ServicesExtension
 
         #endregion
 
+        #region Public IP Checker
+
         services.AddSingleton<IIpCryptService, IpCryptService>();
         services.AddSingleton<PublicIpCheckerService>();
         services.AddSingleton<CloudflareTracePublicIpProvider>();
 
         services.AddHostedService<PublicIpMonitorBackgroundService>();
 
-        services.AddMessagePipe();
+        #endregion
 
         return services;
     }
