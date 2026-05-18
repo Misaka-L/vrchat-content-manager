@@ -1264,6 +1264,23 @@ namespace VRChatContentPublisher.App.Localization.Resources {
             }
         }
         
+        ///   Looks up a localized string similar to Don't save completed tasks.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_Auto_Remove_Completed_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_Auto_Remove_Completed_Tasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only applies to newly completed tasks.
+        /// </summary>
+        internal static string Pages_Settings_Appearance_Auto_Remove_Completed_Tasks_Hint {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Appearance_Auto_Remove_Completed_Tasks_Hint", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Latest first.
         /// </summary>

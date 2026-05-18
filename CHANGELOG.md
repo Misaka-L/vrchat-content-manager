@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Progress of all restored tasks will end with "Waiting for start".
   - You need to manually start restored tasks.
   - You can chose to retry or remove all restored (Pending) tasks.
+  - Options to remove task from database after it completed. [`#373`](https://github.com/project-vrcz/content-publisher/pull/373)
 
 ## [2.10.0-beta.1] - 2026-05-16
 

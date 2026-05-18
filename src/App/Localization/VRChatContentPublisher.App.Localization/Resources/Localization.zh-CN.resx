@@ -153,6 +153,12 @@
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
         <value>创建时间升序</value>
     </data>
+    <data name="Pages_Settings_Appearance_Auto_Remove_Completed_Tasks" xml:space="preserve">
+        <value>不保存已完成的任务</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Auto_Remove_Completed_Tasks_Hint" xml:space="preserve">
+        <value>仅适用于新完成的任务</value>
+    </data>
     <data name="Pages_Settings_Connect_Title" xml:space="preserve">
         <value>RPC 服务器</value>
     </data>

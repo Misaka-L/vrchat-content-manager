@@ -109,6 +109,20 @@ public sealed class AppearanceSettingsViewModel : PageViewModelBase
         }
     }
 
+    public bool AutoRemoveCompletedTasks
+    {
+        get => _appSettings.Value.AutoRemoveCompletedTasks;
+        set
+        {
+            if (_appSettings.Value.AutoRemoveCompletedTasks == value)
+                return;
+
+            OnPropertyChanging();
+            _appSettings.Update(settings => settings.AutoRemoveCompletedTasks = value);
+            OnPropertyChanged();
+        }
+    }
+
     public AppTasksPageSortModeItemViewModel[] TasksSortMode { get; } =
     [
         new(LangKeys.Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Latest_First,
