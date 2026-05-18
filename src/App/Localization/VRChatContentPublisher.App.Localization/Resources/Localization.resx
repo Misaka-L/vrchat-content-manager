@@ -160,6 +160,12 @@
     <data name="Pages_Settings_Appearance_How_Tasks_Order_In_Tasks_Page_Selector_Oldest_First" xml:space="preserve">
         <value>Oldest first</value>
     </data>
+    <data name="Pages_Settings_Appearance_Auto_Remove_Completed_Tasks" xml:space="preserve">
+        <value>Don't save completed tasks</value>
+    </data>
+    <data name="Pages_Settings_Appearance_Auto_Remove_Completed_Tasks_Hint" xml:space="preserve">
+        <value>Only applies to newly completed tasks</value>
+    </data>
     <data name="Pages_Settings_Connect_Title" xml:space="preserve">
         <value>RPC Server</value>
     </data>

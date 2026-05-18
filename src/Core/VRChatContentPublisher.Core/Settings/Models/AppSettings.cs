@@ -24,6 +24,8 @@ public sealed class AppSettings
 
     public AppTasksPageSortMode TasksPageSortMode { get; set; } = AppTasksPageSortMode.LatestFirst;
 
+    public bool AutoRemoveCompletedTasks { get; set; }
+
     public bool UseBorderlessWindow { get; set; } = true;
 
     public AppUpdateCheckMode UpdateCheckMode { get; set; } = AppUpdateCheckMode.AtStartAndBackground;

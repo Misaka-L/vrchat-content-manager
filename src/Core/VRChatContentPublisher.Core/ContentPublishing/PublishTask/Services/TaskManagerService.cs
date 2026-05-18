@@ -2,6 +2,8 @@
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.Database;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 
 namespace VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 
@@ -10,7 +12,8 @@ public sealed class TaskManagerService(
     ContentPublishTaskDatabaseService contentPublishTaskDatabaseService,
     IPublisher<ContentPublishTaskUpdateEventArg> taskUpdatedPublisher,
     IPublisher<ContentPublishTaskCreatedEventArg> taskCreatedPublisher,
-    IPublisher<ContentPublishTaskRemovedEventArg> taskRemovedPublisher
+    IPublisher<ContentPublishTaskRemovedEventArg> taskRemovedPublisher,
+    IWritableOptions<AppSettings> appSettings
 )
 {
     public IReadOnlyDictionary<string, ContentPublishTaskService> Tasks => _tasks.AsReadOnly();
@@ -64,8 +67,17 @@ public sealed class TaskManagerService(
 
         // Wire up explicit persistence: the task service actively requests
         // persistence on terminal state transitions, and we await it.
+        // When AutoRemoveCompletedTasks is enabled and the task reaches Completed status,
+        // the state is deleted from DB instead of saved. Intermediate states (InProgress)
+        // are always saved to preserve crash recovery.
         task.PersistStateAsync = () =>
-            new ValueTask(contentPublishTaskDatabaseService.SaveStateAsync(task.State));
+        {
+            if (appSettings.Value.AutoRemoveCompletedTasks &&
+                task.Status == ContentPublishTaskStatus.Completed)
+                return new ValueTask(contentPublishTaskDatabaseService.DeleteStateAsync(task.State.TaskId));
+
+            return new ValueTask(contentPublishTaskDatabaseService.SaveStateAsync(task.State));
+        };
 
         var args = new ContentPublishTaskCreatedEventArg(task);
         TaskCreated?.Invoke(this, args);

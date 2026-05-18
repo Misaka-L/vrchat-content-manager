@@ -36,5 +36,7 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+        <ToggleSwitch Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Auto_Remove_Completed_Tasks}}" IsChecked="{Binding AutoRemoveCompletedTasks}" />
+        <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Auto_Remove_Completed_Tasks_Hint}}" Classes="Caption" Opacity="0.8" />
     </StackPanel>
 </UserControl>
