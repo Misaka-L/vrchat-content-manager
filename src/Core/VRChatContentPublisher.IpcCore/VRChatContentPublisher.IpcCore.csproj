@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+      <ProjectReference Include="..\VRChatContentPublisher.Core.Shared\VRChatContentPublisher.Core.Shared.csproj" />
     </ItemGroup>
 
 </Project>
