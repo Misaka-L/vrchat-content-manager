@@ -12,30 +12,44 @@ using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
 using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentPublisher.ConnectCore.Services.Health;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Database;
+using VRChatContentPublisher.Core.PublicIpChecker;
+using VRChatContentPublisher.Core.PublicIpChecker.IPCrypt;
+using VRChatContentPublisher.Core.PublicIpChecker.Services;
 using VRChatContentPublisher.Core.Resilience;
-using VRChatContentPublisher.Core.Services;
-using VRChatContentPublisher.Core.Services.App;
-using VRChatContentPublisher.Core.Services.PublicIp;
-using VRChatContentPublisher.Core.Services.PublishTask;
-using VRChatContentPublisher.Core.Services.PublishTask.Connect;
-using VRChatContentPublisher.Core.Services.PublishTask.ContentPublisher;
-using VRChatContentPublisher.Core.Services.UserSession;
-using VRChatContentPublisher.Core.Services.VRChatApi;
-using VRChatContentPublisher.Core.Services.VRChatApi.S3;
+using VRChatContentPublisher.Core.Rpc;
+using VRChatContentPublisher.Core.Rpc.TaskCreation;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.UserSession;
+using VRChatContentPublisher.Core.VirtualFileSystem.Services;
 using VRChatContentPublisher.PersistentCore.Extensions;
+using VRChatContentPublisher.VRChatApi.Extensions;
 
 namespace VRChatContentPublisher.Core.Extensions;
 
 public static class ServicesExtension
 {
-    public const string S3UploadHttpClientName = "s3-upload";
-    public const string S3UploadWithRetryHttpClientName = "s3-upload-with-retry";
-
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
+        services.AddMemoryCache();
+        services.AddMessagePipe();
+
+        #region Services Only Used by App UI
+
+        services.AddSingleton<RemoteImageService>();
+
+        #endregion
+
+        #region Default HttpClient, AppWebProxy
+
+        // Due to limitation of IHttpClientFactory (CookiesContainer)
+        // UserSessionService use UserSessionHttpClientFactory instead of IHttpClientFactory
+        services.AddTransient<AppWebProxy>();
         services.ConfigureHttpClientDefaults(builder =>
         {
             var clientName = string.IsNullOrWhiteSpace(builder.Name) ? "general" : builder.Name + "-general";
@@ -72,6 +86,8 @@ public static class ServicesExtension
                 });
         });
 
+        #endregion
+
         #region Database (Sqlite)
 
         services.AddSqliteCore(options =>
@@ -88,54 +104,73 @@ public static class ServicesExtension
         services.AddSingleton<FileDatabaseService>();
         services.AddSingleton<TaskRestoreService>();
         services.AddHostedService<TableInitializationHostedService>();
+
+        #endregion
+
+        #region Virtual File System
+
+        // For SQLite database, see FileDatabaseService
+        services.AddSingleton<RpcFileStorageService>();
         services.AddHostedService<FileCleanupHostedService>();
 
         #endregion
+
+        #region Rpc Server
 
         services.AddConnectCore();
         services.AddHostedService<RpcServerStartupHostedService>();
         services.AddSingleton<RpcStartupPortWarningState>();
         services.AddSingleton<ISessionStorageService, RpcClientSessionStorageService>();
         services.AddSingleton<ITokenSecretKeyProvider, RpcTokenSecretKeyProvider>();
-        services.AddSingleton<IFileService, RpcFileStorageService>();
+        services.AddSingleton<IFileService>(sp => sp.GetRequiredService<RpcFileStorageService>());
         services.AddTransient<IConnectMetadataProvider, ConnectMetadataProvider>();
+        services.AddTransient<IHealthService, RpcHealthService>();
 
-        // Connect Publish Service
+        #endregion
+
+        #region Content Publishing Services (Task Service and Publisher Factory)
+
+        #region Content Publisher
+
         services.AddTransient<IWorldPublishTaskService, WorldPublishTaskService>();
         services.AddTransient<WorldContentPublisherFactory>();
 
         services.AddTransient<IAvatarPublishTaskService, AvatarPublishTaskService>();
         services.AddTransient<AvatarContentPublisherFactory>();
 
+        services.AddScoped<TaskManagerService>();
+        services.AddTransient<ContentPublishTaskFactory>();
+
+        #endregion
+
+        #region Bundle Processing
+
         services.AddTransient<BundleProcessService>(_ => new BundleProcessService(new BundleProcessPipelineOptions
         {
             TempFolderPath = Path.Combine(AppStorageService.GetTempPath(), "bundle-process-temp"),
         }));
 
-        services.AddTransient<IHealthService, RpcHealthService>();
+        #endregion
 
-        services.AddMemoryCache();
+        #endregion
 
-        services.AddTransient<ConcurrentMultipartUploaderFactory>();
-
-        services.AddSingleton<RemoteImageService>();
-
-        services.AddTransient<VRChatApiClientFactory>();
+        #region User Sessions
 
         services.AddSingleton<UserSessionManagerService>();
-
         services.AddScoped<UserSessionScopeService>();
-        services.AddScoped<TaskManagerService>();
-
         services.AddTransient<UserSessionFactory>();
-        services.AddTransient<ContentPublishTaskFactory>();
-
-        services.AddTransient<AppWebProxy>();
         services.AddTransient<UserSessionHttpClientFactory>();
+
+        #endregion
+
+        #region VRChat Api Client (and S3 uplaoder) Configuration
+
+        const string s3UploadHttpClientName = "s3-upload";
+        const string s3UploadWithRetryHttpClientName = "s3-upload-with-retry";
 
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
 #pragma warning disable EXTEXP0001
-        services.AddHttpClient(S3UploadHttpClientName)
+        services.AddHttpClient(s3UploadHttpClientName)
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
@@ -148,7 +183,7 @@ public static class ServicesExtension
             })
             .RemoveAllResilienceHandlers();
 
-        services.AddHttpClient(S3UploadWithRetryHttpClientName)
+        services.AddHttpClient(s3UploadWithRetryHttpClientName)
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
@@ -160,7 +195,7 @@ public static class ServicesExtension
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
             .RemoveAllResilienceHandlers()
-            .AddResilienceHandler(S3UploadWithRetryHttpClientName, builder =>
+            .AddResilienceHandler(s3UploadWithRetryHttpClientName, builder =>
             {
                 builder.AddRetry(new AppHttpRetryStrategyOptions
                 {
@@ -172,7 +207,15 @@ public static class ServicesExtension
             });
 #pragma warning restore EXTEXP0001
 
-        services.AddTransient<VRChatApiDiagnosticService>();
+        services.AddVRChatApi(options =>
+        {
+            options.SimpleUploadHttpClientName = s3UploadHttpClientName;
+            options.MultipartUploadHttpClientName = s3UploadWithRetryHttpClientName;
+        });
+
+        #endregion
+
+        #region Public IP Checker
 
         services.AddSingleton<IIpCryptService, IpCryptService>();
         services.AddSingleton<PublicIpCheckerService>();
@@ -180,7 +223,7 @@ public static class ServicesExtension
 
         services.AddHostedService<PublicIpMonitorBackgroundService>();
 
-        services.AddMessagePipe();
+        #endregion
 
         return services;
     }

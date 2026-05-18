@@ -7,7 +7,7 @@ using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
-using VRChatContentPublisher.Core.Services.UserSession;
+using VRChatContentPublisher.Core.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
 

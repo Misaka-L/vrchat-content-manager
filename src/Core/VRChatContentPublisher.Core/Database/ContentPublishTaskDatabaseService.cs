@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Microsoft.Data.Sqlite;
-using VRChatContentPublisher.Core.Models;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.PersistentCore.Sqlite;
 
 namespace VRChatContentPublisher.Core.Database;

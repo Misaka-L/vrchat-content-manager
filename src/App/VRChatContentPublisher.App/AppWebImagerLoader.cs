@@ -1,6 +1,6 @@
 ﻿using Avalonia.Media.Imaging;
 using Microsoft.Extensions.Caching.Memory;
-using VRChatContentPublisher.Core.Services.App;
+using VRChatContentPublisher.Core.AppServices;
 
 namespace VRChatContentPublisher.App;
 

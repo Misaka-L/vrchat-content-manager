@@ -1,6 +1,5 @@
-using CommunityToolkit.Mvvm.Input;
-using VRChatContentPublisher.Core.Services.App;
-using VRChatContentPublisher.Core.Services.PublishTask;
+using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.App.ViewModels;

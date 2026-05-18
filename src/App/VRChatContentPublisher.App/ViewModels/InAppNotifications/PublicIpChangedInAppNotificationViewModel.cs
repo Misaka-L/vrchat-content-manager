@@ -1,7 +1,7 @@
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.Core.Events.PublicIp;
-using VRChatContentPublisher.Core.Services.PublicIp;
+using VRChatContentPublisher.Core.PublicIpChecker.Services;
 
 namespace VRChatContentPublisher.App.ViewModels.InAppNotifications;
 
