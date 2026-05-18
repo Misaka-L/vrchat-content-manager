@@ -19,6 +19,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - You can chose to retry or remove all restored (Pending) tasks.
   - Options to remove task from database after it completed. [`#373`](https://github.com/project-vrcz/content-publisher/pull/373)
 
+### Changes from [2.10.0-beta.1]
+
+#### Fixed
+
+- App crash after click download update. [`#375`](https://github.com/project-vrcz/content-publisher/pull/375)
+
 ## [2.10.0-beta.1] - 2026-05-16
 
 ### Changed
