@@ -4,12 +4,14 @@ using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.Events.UserSession;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
-using VRChatContentPublisher.Core.VRChatApi;
-using VRChatContentPublisher.Core.VRChatApi.Exceptions;
-using VRChatContentPublisher.Core.VRChatApi.Models.Rest.Avatars;
-using VRChatContentPublisher.Core.VRChatApi.Models.Rest.UnityPackages;
+using VRChatContentPublisher.VRChatApi;
+using VRChatContentPublisher.VRChatApi.ApiClient;
+using VRChatContentPublisher.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Models.Rest.Avatars;
+using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 
 namespace VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 

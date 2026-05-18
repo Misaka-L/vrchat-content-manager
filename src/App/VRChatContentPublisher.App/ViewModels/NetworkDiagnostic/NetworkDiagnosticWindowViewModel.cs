@@ -1,7 +1,7 @@
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using VRChatContentPublisher.Core.VRChatApi.Services;
+using VRChatContentPublisher.VRChatApi.Services;
 
 namespace VRChatContentPublisher.App.ViewModels.NetworkDiagnostic;
 

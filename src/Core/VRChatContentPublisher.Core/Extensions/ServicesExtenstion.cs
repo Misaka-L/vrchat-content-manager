@@ -27,18 +27,13 @@ using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.VirtualFileSystem.Services;
-using VRChatContentPublisher.Core.VRChatApi;
-using VRChatContentPublisher.Core.VRChatApi.S3;
-using VRChatContentPublisher.Core.VRChatApi.Services;
 using VRChatContentPublisher.PersistentCore.Extensions;
+using VRChatContentPublisher.VRChatApi.Extensions;
 
 namespace VRChatContentPublisher.Core.Extensions;
 
 public static class ServicesExtension
 {
-    public const string S3UploadHttpClientName = "s3-upload";
-    public const string S3UploadWithRetryHttpClientName = "s3-upload-with-retry";
-
     public static IServiceCollection AddAppCore(this IServiceCollection services)
     {
         services.ConfigureHttpClientDefaults(builder =>
@@ -121,11 +116,7 @@ public static class ServicesExtension
 
         services.AddMemoryCache();
 
-        services.AddTransient<ConcurrentMultipartUploaderFactory>();
-
         services.AddSingleton<RemoteImageService>();
-
-        services.AddTransient<VRChatApiClientFactory>();
 
         services.AddSingleton<UserSessionManagerService>();
 
@@ -138,9 +129,14 @@ public static class ServicesExtension
         services.AddTransient<AppWebProxy>();
         services.AddTransient<UserSessionHttpClientFactory>();
 
+        #region VRChat Api Client (and S3 uplaoder) Configuration
+
+        const string s3UploadHttpClientName = "s3-upload";
+        const string s3UploadWithRetryHttpClientName = "s3-upload-with-retry";
+
         // HttpClient only use for upload content to aws s3, DO NOT USE FOR OTHER REQUESTS UNLESS YOU WANT TO LEAK CREDENTIALS
 #pragma warning disable EXTEXP0001
-        services.AddHttpClient(S3UploadHttpClientName)
+        services.AddHttpClient(s3UploadHttpClientName)
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
@@ -153,7 +149,7 @@ public static class ServicesExtension
             })
             .RemoveAllResilienceHandlers();
 
-        services.AddHttpClient(S3UploadWithRetryHttpClientName)
+        services.AddHttpClient(s3UploadWithRetryHttpClientName)
             .ConfigurePrimaryHttpMessageHandler(serviceProvider => new SocketsHttpHandler
             {
                 UseCookies = false,
@@ -165,7 +161,7 @@ public static class ServicesExtension
                 Proxy = serviceProvider.GetRequiredService<AppWebProxy>()
             })
             .RemoveAllResilienceHandlers()
-            .AddResilienceHandler(S3UploadWithRetryHttpClientName, builder =>
+            .AddResilienceHandler(s3UploadWithRetryHttpClientName, builder =>
             {
                 builder.AddRetry(new AppHttpRetryStrategyOptions
                 {
@@ -177,7 +173,13 @@ public static class ServicesExtension
             });
 #pragma warning restore EXTEXP0001
 
-        services.AddTransient<VRChatApiDiagnosticService>();
+        services.AddVRChatApi(options =>
+        {
+            options.SimpleUploadHttpClientName = s3UploadHttpClientName;
+            options.MultipartUploadHttpClientName = s3UploadWithRetryHttpClientName;
+        });
+
+        #endregion
 
         services.AddSingleton<IIpCryptService, IpCryptService>();
         services.AddSingleton<PublicIpCheckerService>();

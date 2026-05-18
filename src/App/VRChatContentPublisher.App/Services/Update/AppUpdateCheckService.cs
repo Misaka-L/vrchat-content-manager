@@ -4,7 +4,7 @@ using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Core.Utils;
-using VRChatContentPublisher.Core.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Exceptions;
 
 namespace VRChatContentPublisher.App.Services.Update;
 

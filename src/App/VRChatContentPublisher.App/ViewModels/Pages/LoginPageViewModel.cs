@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.Core.UserSession;
-using VRChatContentPublisher.Core.VRChatApi.Exceptions;
-using VRChatContentPublisher.Core.VRChatApi.Models;
+using VRChatContentPublisher.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Models;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages;
 

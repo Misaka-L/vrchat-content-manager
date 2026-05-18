@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.UserSession;
-using VRChatContentPublisher.Core.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Exceptions;
 
 namespace VRChatContentPublisher.App.ViewModels.Dialogs;
 

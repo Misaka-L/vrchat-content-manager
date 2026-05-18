@@ -7,8 +7,8 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.UserSession;
-using VRChatContentPublisher.Core.VRChatApi.Exceptions;
-using VRChatContentPublisher.Core.VRChatApi.Models.Rest.Worlds;
+using VRChatContentPublisher.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Models.Rest.Worlds;
 
 namespace VRChatContentPublisher.Core.Rpc.TaskCreation;
 
