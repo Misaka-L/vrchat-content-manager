@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "VRChat Content Publisher"
-#define MyAppVersion "2.10.0-beta.1"
+; #define MyAppVersion "snapshot"
 #define MyAppPublisher "Project VRCZ"
 #define MyAppURL "https://github.com/project-vrcz/content-publisher"
 #define MyAppUpdatesURL "https://github.com/project-vrcz/content-publisher/releases"
