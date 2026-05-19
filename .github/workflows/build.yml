@@ -163,7 +163,7 @@ jobs:
           name: unpacked-portable-${{ matrix.rid }}
           path: ${{ env.artifact_dir }}
 
-  make-nsis-windows-installer:
+  make-windows-installer-inno:
     needs: merge-artifacts
     runs-on: blacksmith-2vcpu-windows-2025
 
