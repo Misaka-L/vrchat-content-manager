@@ -177,6 +177,10 @@ jobs:
       installer_product_version: ""
 
     steps:
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+        shell: pwsh
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@v8
         with:
@@ -197,11 +201,7 @@ jobs:
           path: ${{ env.repo_dir }}
 
       - name: Build Installer
-        uses: Minionguyjpro/Inno-Setup-Action@202dd0c4950ef315b6ba13359998fe120179b147
-        with:
-          path: ${{ env.installer_script_path }}
-          options: /O"${{ env.installer_output_dir }}" /F"${{ env.installer_output_base_name }}" /DMyAppVersion=${{ env.installer_product_version }} /DAppArtifactPath="${{ env.artifact_dir }}"
-
+        run: iscc /O"${{ env.installer_output_dir }}" /F"${{ env.installer_output_base_name }}" /DMyAppVersion=${{ env.installer_product_version }} /DAppArtifactPath="${{ env.artifact_dir }}" ${{ env.installer_script_path }}
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v7
         with:
