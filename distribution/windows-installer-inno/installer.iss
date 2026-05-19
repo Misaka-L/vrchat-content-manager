@@ -98,7 +98,6 @@ Posted by TLama, modified by community. See post 'Timeline' for change history
 Retrieved 2026-05-19, License - CC BY-SA 3.0
 *)
 
-[Code]
 function CmdLineParamExists(const Value: string): Boolean;
 var
   I: Integer;  
