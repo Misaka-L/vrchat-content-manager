@@ -14,6 +14,8 @@
 #define MyAppCopyright "Copyright (C) 2026 Misaka-L"
 #define MyAppMutex "Global\VRChatContentPublisherAppMutex-89c6689a"
 
+; #define AppArtifactPath "path/to/artifact"
+
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
@@ -60,8 +62,8 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "artifact\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "artifact\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#AppArtifactPath}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#AppArtifactPath}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]
