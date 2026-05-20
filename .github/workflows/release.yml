@@ -99,7 +99,7 @@ jobs:
         run: |
           # create release commit, push it, and create relreasing branch
           git switch -c $RELEASING_BRANCH
-          git commit -am "chore: release $NEW_VERSION"
+          git commit -am "chore: release $NEW_VERSION [skip ci]"
           git push -f -u origin releasing
 
   build:
