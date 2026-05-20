@@ -45,8 +45,8 @@ public sealed class WindowsUpdateInstallationService : IUpdateInstallationServic
             if (currentExecutableDirectory is null)
                 return false;
 
-            using var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-            using var uninstallKey = baseKey.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\VRChat Content Publisher");
+            using var baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+            using var uninstallKey = baseKey.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{DE0A71B7-A347-4F1C-A28D-665C53DA591C}_is1");
 
             var installLocation = uninstallKey?.GetValue("InstallLocation") as string;
             if (string.IsNullOrWhiteSpace(installLocation))
