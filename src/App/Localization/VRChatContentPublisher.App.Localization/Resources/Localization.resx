@@ -735,7 +735,13 @@ NOTE: Some users report that KB5083807 broke Windows notification service. You m
     <data name="In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip" xml:space="preserve">
         <value>Dismiss</value>
     </data>
-    <data name="Pages_Bootstrap_Loading_Text" xml:space="preserve">
-        <value>Loading...</value>
+    <data name="Pages_Bootstrap_Loading_Text_Initializing_Application" xml:space="preserve">
+        <value>Initializing...</value>
+    </data>
+    <data name="Pages_Bootstrap_Loading_Text_Logging_In_Accounts" xml:space="preserve">
+        <value>Logging in accounts...</value>
+    </data>
+    <data name="Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks" xml:space="preserve">
+        <value>Restoring publish tasks...</value>
     </data>
 </root>

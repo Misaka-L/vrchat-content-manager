@@ -13,7 +13,15 @@ public sealed class DialogBackgroundService(DialogService dialogService) : Backg
         var reader = dialogService.DialogChannel.Reader;
         while (!stoppingToken.IsCancellationRequested)
         {
-            var item = await reader.ReadAsync(stoppingToken);
+            DialogChannelItem item;
+            try
+            {
+                item = await reader.ReadAsync(stoppingToken);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
 
             await Dispatcher.UIThread.InvokeAsync(async () =>
             {

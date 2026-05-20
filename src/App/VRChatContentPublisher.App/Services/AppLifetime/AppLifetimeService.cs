@@ -9,6 +9,8 @@ namespace VRChatContentPublisher.App.Services.AppLifetime;
 
 public sealed class AppLifetimeService : IDisposable
 {
+    private readonly TaskCompletionSource _hostStartedTcs = new();
+
     public event EventHandler<bool>? IsSafeToShutdownChanged;
 
     private readonly UserSessionManagerService _userSessionManagerService;
@@ -27,6 +29,18 @@ public sealed class AppLifetimeService : IDisposable
             taskUpdateSubscriber.Subscribe(_ => NotifyIsSafeToShutdownChanged())
         );
     }
+
+    internal void NotifyHostStartError(Exception ex)
+    {
+        _hostStartedTcs.TrySetException(ex);
+    }
+
+    internal void NotifyHostStarted()
+    {
+        _hostStartedTcs.TrySetResult();
+    }
+
+    internal Task WaitForHostStartedAsync() => _hostStartedTcs.Task;
 
     private void NotifyIsSafeToShutdownChanged()
     {
