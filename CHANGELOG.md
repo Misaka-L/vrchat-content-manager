@@ -35,6 +35,37 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - App crash after click download update. [`#375`](https://github.com/project-vrcz/content-publisher/pull/375)
 
+## [2.10.0-beta.3] - 2026-05-20
+
+### Changed
+
+- All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
+- Extend period of background update check to a hour. [`#371`](https://github.com/project-vrcz/content-publisher/pull/371)
+- Replace the Windows installer from NSIS with Inno Setup. [`#377`](https://github.com/project-vrcz/content-publisher/pull/377)
+  - If you want to downgrade to any version older than `v2.10.0-beta.3`, you **MUST** uninstall newer version first.
+  - No more PowerShell window during update.
+  - High DPI and Dark mode support.
+
+### Added
+
+- Tasks can be restore after crash or restarted. [`#367`](https://github.com/project-vrcz/content-publisher/pull/367)
+  - Progress of all restored tasks will end with "Waiting for start".
+  - You need to manually start restored tasks.
+  - You can chose to retry or remove all restored (Pending) tasks.
+  - Options to remove task from database after it completed. [`#373`](https://github.com/project-vrcz/content-publisher/pull/373)
+
+### Fixed
+
+- Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
+- In some case app may partial start. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
+  - It can result in malfunctional or crash.
+
+### Changes from [2.10.0-beta.1]
+
+#### Fixed
+
+- App crash after click download update. [`#375`](https://github.com/project-vrcz/content-publisher/pull/375)
+
 ## [2.10.0-beta.2] - 2026-05-18
 
 ### Changed
@@ -654,7 +685,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.2...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.3...HEAD
+[2.10.0-beta.3]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.2...v2.10.0-beta.3
 [2.10.0-beta.2]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.1...v2.10.0-beta.2
 [2.10.0-beta.1]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4...v2.10.0-beta.1
 [2.9.4]: https://github.com/project-vrcz/content-publisher/compare/v2.9.4-beta.1...v2.9.4
