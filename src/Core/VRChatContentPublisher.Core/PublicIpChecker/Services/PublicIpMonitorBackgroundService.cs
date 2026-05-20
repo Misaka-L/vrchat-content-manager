@@ -38,13 +38,21 @@ public sealed class PublicIpMonitorBackgroundService(
 
         await RunCheckSafelyAsync(stoppingToken);
 
+        using var periodicTimer = new PeriodicTimer(TimeSpan.FromMinutes(30));
         while (!stoppingToken.IsCancellationRequested)
         {
-            var timerTask = Task.Delay(TimeSpan.FromMinutes(30), stoppingToken);
-            var signalTask = _checkSignal.WaitAsync(stoppingToken);
+            try
+            {
+                var timerTask = periodicTimer.WaitForNextTickAsync(stoppingToken).AsTask();
+                var signalTask = _checkSignal.WaitAsync(stoppingToken);
 
-            var completed = await Task.WhenAny(timerTask, signalTask);
-            await completed;
+                var completed = await Task.WhenAny(timerTask, signalTask);
+                await completed;
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
 
             if (!appSettings.Value.EnablePublicIpMonitor)
             {
