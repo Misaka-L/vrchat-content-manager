@@ -163,21 +163,24 @@ jobs:
           name: unpacked-portable-${{ matrix.rid }}
           path: ${{ env.artifact_dir }}
 
-  make-nsis-windows-installer:
+  make-windows-installer-inno:
     needs: merge-artifacts
     runs-on: blacksmith-2vcpu-windows-2025
 
     env:
       repo_dir: ${{ github.workspace }}/repo
-      installer_working_dir: ${{ github.workspace }}/repo/distribution/windows-installer
-      installer_script: installer.nsi
-      installer_output_name: vrchat-content-publisher-installer.exe
+      installer_script_path: ${{ github.workspace }}/repo/distribution/windows-installer-inno/installer.iss
+      installer_output_dir: ${{ github.workspace }}/installer-output
+      installer_output_base_name: vrchat-content-publisher-installer
       artifact_dir: ${{ github.workspace }}/artifacts
       executable_name: VRChatContentPublisher.App.exe
       installer_product_version: ""
-      installer_file_version: ""
 
     steps:
+      - name: Install Inno Setup
+        run: choco install innosetup -y
+        shell: pwsh
+
       - name: Download Build Artifacts
         uses: actions/download-artifact@v8
         with:
@@ -190,7 +193,6 @@ jobs:
         working-directory: ${{ env.artifact_dir }}
         run: |
           "installer_product_version=" + (Get-Item ${{ env.executable_name }} | Select-Object -ExpandProperty VersionInfo | Select-Object -ExpandProperty ProductVersion) >> $Env:GITHUB_ENV
-          "installer_file_version=" + (Get-Item ${{ env.executable_name }} | Select-Object -ExpandProperty VersionInfo | Select-Object -ExpandProperty FileVersion) >> $Env:GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -198,22 +200,10 @@ jobs:
           ref: ${{ inputs.ref }}
           path: ${{ env.repo_dir }}
 
-      - name: Install NSIS
-        uses: repolevedavaj/install-nsis@c14d0ea1b829818b4e9313d8e009b43f0a65fddd
-        with:
-          nsis-version: 3.11
-
-      - name: Create NSIS Installer
-        shell: powershell
-        working-directory: ${{ env.installer_working_dir }}
-        env:
-          INSTALLER_DISPLAY_VERSION: ${{ env.installer_product_version }}
-          INSTALLER_OLD_CLASSIC_VERSION: ${{ env.installer_file_version }}
-          INSTALLER_PATH_TO_BUNDLE: ${{ env.artifact_dir }}
-        run: makensis ${{ env.installer_script }}
-
+      - name: Build Installer
+        run: iscc /O"${{ env.installer_output_dir }}" /F"${{ env.installer_output_base_name }}" /DMyAppVersion=${{ env.installer_product_version }} /DAppArtifactPath="${{ env.artifact_dir }}" ${{ env.installer_script_path }}
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v7
         with:
           name: installer-win-x64
-          path: ${{ env.installer_working_dir }}/${{ env.installer_output_name }}
+          path: ${{ env.installer_output_dir }}/${{ env.installer_output_base_name }}.exe

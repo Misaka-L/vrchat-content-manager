@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
 - Extend period of background update check to a hour. [`#371`](https://github.com/project-vrcz/content-publisher/pull/371)
+- Replace the Windows installer from NSIS with Inno Setup. [`#377`](https://github.com/project-vrcz/content-publisher/pull/377)
+  - If you want to downgrade to any version older than `v2.10.0-beta.3`, you **MUST** uninstall newer version first.
+  - No more PowerShell window during update.
+  - High DPI and Dark mode support.
 
 ### Added
 
