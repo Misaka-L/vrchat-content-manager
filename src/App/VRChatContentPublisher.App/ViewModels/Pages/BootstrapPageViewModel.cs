@@ -1,5 +1,8 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
@@ -14,11 +17,19 @@ public sealed partial class BootstrapPageViewModel(
     NavigationService navigationService,
     IWritableOptions<AppSettings> appSettings,
     DesktopNotificationService desktopNotificationService,
-    TaskRestoreService taskRestoreService) : PageViewModelBase
+    TaskRestoreService taskRestoreService,
+    AppLifetimeService appLifetimeService) : PageViewModelBase
 {
+    [ObservableProperty]
+    public partial string LoadingText { get; private set; } =
+        LangKeys.Pages_Bootstrap_Loading_Text_Initializing_Application;
+
     [RelayCommand]
     private async Task Load()
     {
+        await appLifetimeService.WaitForHostStartedAsync();
+
+        LoadingText = LangKeys.Pages_Bootstrap_Loading_Text_Logging_In_Accounts;
         await sessionManagerService.RestoreSessionsAsync((session, ex) =>
         {
             if (!appSettings.Value.SendNotificationOnStartupSessionRestoreFailed)
@@ -30,6 +41,7 @@ public sealed partial class BootstrapPageViewModel(
             ).AsTask();
         });
 
+        LoadingText = LangKeys.Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks;
         // Restore persisted publish tasks now that user sessions are available.
         await taskRestoreService.RestoreTasksAsync(sessionManagerService);
 

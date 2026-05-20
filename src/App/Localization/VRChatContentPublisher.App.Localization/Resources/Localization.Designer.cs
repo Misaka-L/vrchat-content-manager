@@ -750,11 +750,29 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Loading....
+        ///   Looks up a localized string similar to Initializing....
         /// </summary>
-        internal static string Pages_Bootstrap_Loading_Text {
+        internal static string Pages_Bootstrap_Loading_Text_Initializing_Application {
             get {
-                return ResourceManager.GetString("Pages_Bootstrap_Loading_Text", resourceCulture);
+                return ResourceManager.GetString("Pages_Bootstrap_Loading_Text_Initializing_Application", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logging in accounts....
+        /// </summary>
+        internal static string Pages_Bootstrap_Loading_Text_Logging_In_Accounts {
+            get {
+                return ResourceManager.GetString("Pages_Bootstrap_Loading_Text_Logging_In_Accounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restoring publish tasks....
+        /// </summary>
+        internal static string Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks {
+            get {
+                return ResourceManager.GetString("Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks", resourceCulture);
             }
         }
         
@@ -1264,7 +1282,8 @@ namespace VRChatContentPublisher.App.Localization.Resources {
             }
         }
         
-        ///   Looks up a localized string similar to Don't save completed tasks.
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t save completed tasks.
         /// </summary>
         internal static string Pages_Settings_Appearance_Auto_Remove_Completed_Tasks {
             get {

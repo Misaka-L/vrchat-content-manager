@@ -6,6 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using VRChatContentPublisher.App.Services.AppLifetime;
 
 namespace VRChatContentPublisher.App.Extensions;
 
@@ -44,14 +45,21 @@ public static class AvaloniaHostExtension
         Log.Information("Host is starting...");
         Task.Run(async () =>
         {
+            var appLifetimeService = host.Services.GetRequiredService<AppLifetimeService>();
             try
             {
                 await host.StartAsync(cts.Token);
                 Log.Information("Host start completed.");
+                appLifetimeService.NotifyHostStarted();
             }
             catch (OperationCanceledException)
             {
                 Log.Error("Host start cancelled.");
+            }
+            catch (Exception ex)
+            {
+                // Host already do logging stuffs.
+                appLifetimeService.NotifyHostStartError(ex);
             }
         });
 
