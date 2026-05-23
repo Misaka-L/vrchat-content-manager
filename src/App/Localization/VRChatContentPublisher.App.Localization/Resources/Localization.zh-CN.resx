@@ -471,7 +471,8 @@
     </data>
     <data name="Pages_Tasks_Account_Tab_Initialize_Error_Description" xml:space="preserve">
         <value>网络错误、公网 IP 变动或会话过期都可能导致该问题
-点击修复账号按钮来决定重试或重新登录</value>
+点击修复账号按钮来决定重试或重新登录
+如果该问题无法通过重新登录解决，请报告该问题</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text" xml:space="preserve">
         <value>修复账号</value>
@@ -513,7 +514,7 @@
         <value>账号会话过期或无效</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description" xml:space="preserve">
-        <value>在修复账号前，正在上传阶段的任务会被取消且不允许重试任何任务。</value>
+        <value>在修复账号前，正在上传阶段的任务会被取消且不允许创建或重试任务。</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Reapir_Button_Text" xml:space="preserve">
         <value>修复账号</value>
