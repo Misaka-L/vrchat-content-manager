@@ -60,13 +60,6 @@ jobs:
         shell: bash
         working-directory: ${{ env.src_dir }}
 
-      - name: Save App Build Cache
-        uses: actions/cache/save@v5
-        with:
-          key: ${{ env.app_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}
-          enableCrossOsArchive: true
-
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -83,6 +76,19 @@ jobs:
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
+
+      - name: Remove PDB From Portable Output
+        shell: bash
+        run: |
+          set -euo pipefail
+          find "${{ env.output_dir }}" -type f \( -name "*.pdb" -o -name "*.dbg" \) -delete
+
+      - name: Save App Build Cache
+        uses: actions/cache/save@v5
+        with:
+          key: ${{ env.app_cache_key }}
+          path: artifacts/unpacked-portable-${{ matrix.rid }}
+          enableCrossOsArchive: true
 
   build-crash-handler:
     strategy:
@@ -122,13 +128,6 @@ jobs:
         shell: bash
         working-directory: ${{ env.src_dir }}
 
-      - name: Save Crash Handler Build Cache
-        uses: actions/cache/save@v5
-        with:
-          key: ${{ env.crash_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
-          enableCrossOsArchive: true
-
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
         with:
@@ -145,6 +144,19 @@ jobs:
           path: |
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
+
+      - name: Remove PDB From Crash Handler Output
+        shell: bash
+        run: |
+          set -euo pipefail
+          find "${{ env.output_dir }}" -type f \( -name "*.pdb" -o -name "*.dbg" \) -delete
+
+      - name: Save Crash Handler Build Cache
+        uses: actions/cache/save@v5
+        with:
+          key: ${{ env.crash_cache_key }}
+          path: artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
+          enableCrossOsArchive: true
 
   merge-artifacts:
     strategy:
