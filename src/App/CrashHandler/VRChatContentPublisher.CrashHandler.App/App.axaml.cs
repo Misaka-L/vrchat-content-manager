@@ -3,6 +3,7 @@ using System.Text;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using VRChatContentPublisher.CrashHandler.App.Services;
 using VRChatContentPublisher.CrashHandler.App.ViewModels;
 using VRChatContentPublisher.CrashHandler.App.Views;
 
@@ -17,6 +18,8 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        LocaleService.ApplyCulture();
+
         ViewLocator.Register<CrashReportViewModel, CrashReportView>();
 
         if (ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktop)
