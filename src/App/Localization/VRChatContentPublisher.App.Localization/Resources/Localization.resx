@@ -638,6 +638,12 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Notifications_New_Pairing_Request_Body_Template" xml:space="preserve">
         <value>{0} is requesting to pair</value>
     </data>
+    <data name="Notifications_Session_Restore_Failed_Title_Template" xml:space="preserve">
+        <value>Failed to restore session for user {0}</value>
+    </data>
+    <data name="Notifications_Session_Expired_Or_Invalid_Title_Template" xml:space="preserve">
+        <value>Session expired or invalid for user {0}</value>
+    </data>
     <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
         <value>Open Logs Folder</value>
     </data>

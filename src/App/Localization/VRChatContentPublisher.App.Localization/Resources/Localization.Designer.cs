@@ -624,6 +624,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session expired or invalid for user {0}.
+        /// </summary>
+        internal static string Notifications_Session_Expired_Or_Invalid_Title_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Session_Expired_Or_Invalid_Title_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to restore session for user {0}.
+        /// </summary>
+        internal static string Notifications_Session_Restore_Failed_Title_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Session_Restore_Failed_Title_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is a test notification.
         /// </summary>
         internal static string Notifications_Settings_Test_Notification_Body {
