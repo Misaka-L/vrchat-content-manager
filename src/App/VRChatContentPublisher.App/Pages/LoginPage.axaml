@@ -54,13 +54,26 @@
                     IsEnabled="{Binding !IsUsernameReadonly}"
                     Classes="outline" UseFloatingPlaceholder="True"
                     Theme="{StaticResource OutlineTextBox}"
-                    Text="{Binding Username}" />
+                    Text="{Binding Username}">
+                    <Interaction.Behaviors>
+                        <KeyUpTrigger Key="Enter" EventRoutingStrategy="Tunnel">
+                            <FocusControlAction TargetControl="{Binding #PasswordTextBox}" />
+                        </KeyUpTrigger>
+                    </Interaction.Behaviors>
+                </TextBox>
                 <TextBox
+                    Name="PasswordTextBox"
                     assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Add_Account_Password_Field_Label}}"
                     PasswordChar="*"
                     Classes="outline"
                     UseFloatingPlaceholder="True" Theme="{StaticResource OutlineTextBox}"
-                    Text="{Binding Password}" />
+                    Text="{Binding Password}">
+                    <Interaction.Behaviors>
+                        <KeyDownTrigger Key="Enter" EventRoutingStrategy="Tunnel">
+                            <InvokeCommandAction Command="{Binding LoginCommand}" />
+                        </KeyDownTrigger>
+                    </Interaction.Behaviors>
+                </TextBox>
             </StackPanel>
 
             <StackPanel Spacing="8">
