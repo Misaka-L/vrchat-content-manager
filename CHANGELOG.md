@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Use enter key to focus on password textbox and execute login command. [`#394`](https://github.com/project-vrcz/content-publisher/pull/394)
 - Tasks can be restore after crash or restarted. [`#367`](https://github.com/project-vrcz/content-publisher/pull/367)
   - Progress of all restored tasks will end with "Waiting for start".
   - You need to manually start restored tasks.
