@@ -1,5 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Notification;
+using VRChatContentPublisher.App.ViewModels.InAppNotifications;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 
@@ -8,13 +12,20 @@ namespace VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 public sealed partial class GuideWelcomePageViewModel(
     UserSessionManagerService userSessionManagerService,
     NavigationService navigationService,
-    LoginPageViewModelFactory loginPageViewModelFactory) : PageViewModelBase
+    LoginPageViewModelFactory loginPageViewModelFactory,
+    InAppNotificationService inAppNotificationService,
+    IWritableOptions<AppSettings> appSettings) : PageViewModelBase
 {
     public string AppVersion => AppVersionUtils.GetAppVersion();
 
     [RelayCommand]
     private void NavigateToHomePage()
     {
+        if (!appSettings.Value.SkipFirstSetup)
+        {
+            inAppNotificationService.SendNotification<SkipOnboardingOnFirstStartAppNotificationViewModel>();
+        }
+
         navigationService.Navigate<HomePageViewModel>();
     }
 

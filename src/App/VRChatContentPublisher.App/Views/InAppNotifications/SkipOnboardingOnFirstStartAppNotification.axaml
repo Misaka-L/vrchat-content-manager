@@ -1,0 +1,39 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:inAppNotifications="clr-namespace:VRChatContentPublisher.App.ViewModels.InAppNotifications"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="400"
+             x:DataType="inAppNotifications:SkipOnboardingOnFirstStartAppNotificationViewModel"
+             x:Class="VRChatContentPublisher.App.Views.InAppNotifications.SkipOnboardingOnFirstStartAppNotification">
+
+    <controls:ColorZone Mode="PrimaryMid">
+        <Grid ColumnDefinitions="Auto,*" Margin="8" ColumnSpacing="4">
+            <avalonia:MaterialIcon Kind="AlertCircle" Foreground="White"
+                                   VerticalAlignment="Top" />
+            <StackPanel Grid.Column="1" Spacing="4">
+                <TextBlock
+                    TextWrapping="Wrap"
+                    Text="{I18N {x:Static localization:LangKeys.In_App_Notifications_Skip_Onboarding_Title}}" />
+                <Grid ColumnDefinitions="Auto,Auto" ColumnSpacing="8">
+                    <Button
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Padding="0"
+                        Command="{Binding RestartOnboardingCommand}"
+                        Content="{I18N {x:Static localization:LangKeys.In_App_Notifications_Skip_Onboarding_Restart_Button_Text}}"
+                        FontWeight="Bold"/>
+                    <Button
+                        Grid.Column="1"
+                        Padding="0"
+                        Content="{I18N {x:Static localization:LangKeys.In_App_Notifications_Skip_Onboarding_Dismiss_Button_Text}}"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Command="{Binding RequestCloseCommand}"
+                        FontWeight="Bold"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
+    </controls:ColorZone>
+</UserControl>

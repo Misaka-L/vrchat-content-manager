@@ -122,6 +122,7 @@ public partial class App : Application
         ViewLocator.Register<PublicIpChangedInAppNotificationViewModel, PublicIpChangedInAppNotificationView>();
         ViewLocator.Register<UpdateAvailableAppNotificationViewModel, UpdateAvailableAppNotificationView>();
         ViewLocator.Register<UpdateProgressAppNotificationViewModel, UpdateProgressAppNotificationView>();
+        ViewLocator.Register<SkipOnboardingOnFirstStartAppNotificationViewModel, SkipOnboardingOnFirstStartAppNotification>();
 
         AvaloniaXamlLoader.Load(this);
 
