@@ -5,15 +5,16 @@
              xmlns:viewModels="clr-namespace:VRChatContentPublisher.CrashHandler.App.ViewModels"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:interaction="clr-namespace:VRChatContentPublisher.CrashHandler.App.Interaction"
+             xmlns:ext="clr-namespace:VRChatContentPublisher.CrashHandler.App.Extensions"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="viewModels:CrashReportViewModel"
              x:Class="VRChatContentPublisher.CrashHandler.App.Views.CrashReportView">
 
     <Grid RowDefinitions="Auto,*,Auto" Margin="8" RowSpacing="8">
         <StackPanel>
-            <TextBlock Text="VRChat Content Publisher has crashed"
+            <TextBlock Text="{ext:Loc CrashReport_Title}"
                        FontSize="24" FontWeight="Bold" />
-            <TextBlock Text="An unexpected error occurred. Details are provided below." />
+            <TextBlock Text="{ext:Loc CrashReport_Subtitle}" />
         </StackPanel>
         <Border Grid.Row="1"
                 BorderBrush="Gray" BorderThickness="1"
@@ -27,15 +28,15 @@
         <StackPanel Grid.Row="2" Spacing="8">
             <StackPanel>
                 <TextBlock
-                    Text="Please report this issue to help us improve the app."
+                    Text="{ext:Loc CrashReport_ReportHeader}"
                     TextWrapping="Wrap"
                     FontSize="24" />
                 <TextBlock
-                    Text="Please attach log file when report, log file MAY contains sensitive information (e.g User name, Blueprint ID)." />
+                    Text="{ext:Loc CrashReport_ReportTip}" />
             </StackPanel>
             <Grid ColumnDefinitions="Auto,*,Auto">
                 <StackPanel Spacing="4" Orientation="Horizontal">
-                    <Button Content="Open Logs Folder">
+                    <Button Content="{ext:Loc CrashReport_OpenLogsFolder}">
                         <Interaction.Behaviors>
                             <ClickEventTrigger>
                                 <interaction:LaunchDirectoryAction DirectoryPath="{Binding LogsFolderPath}" />
@@ -45,7 +46,7 @@
                 </StackPanel>
                 <StackPanel Grid.Column="2" Orientation="Horizontal"
                             Spacing="4">
-                    <Button Content="Join QQ Group">
+                    <Button Content="{ext:Loc CrashReport_JoinQQGroup}">
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel Spacing="4">
@@ -65,7 +66,7 @@
                                             </ClickEventTrigger>
                                         </Interaction.Behaviors>
                                     </Button>
-                                    <Button Content="Join via link">
+                                    <Button Content="{ext:Loc CrashReport_JoinViaLink}">
                                         <Interaction.Behaviors>
                                             <ClickEventTrigger>
                                                 <LaunchUriAction Uri="https://qm.qq.com/q/a7JmJpC3ni" />
@@ -77,14 +78,14 @@
                         </Button.Flyout>
                     </Button>
                     <Border Width="1" Background="Gray" />
-                    <Button Content="Report on Github">
+                    <Button Content="{ext:Loc CrashReport_ReportOnGithub}">
                         <Interaction.Behaviors>
                             <ClickEventTrigger>
                                 <LaunchUriAction Uri="https://github.com/project-vrcz/content-publisher/issues" />
                             </ClickEventTrigger>
                         </Interaction.Behaviors>
                     </Button>
-                    <Button Content="Close and Restart App"
+                    <Button Content="{ext:Loc CrashReport_CloseAndRestart}"
                             Command="{Binding CloseAndRestartCommand}" />
                 </StackPanel>
             </Grid>

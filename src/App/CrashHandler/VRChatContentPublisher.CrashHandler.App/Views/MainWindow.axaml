@@ -3,12 +3,13 @@
         xmlns:vm="using:VRChatContentPublisher.CrashHandler.App.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ext="clr-namespace:VRChatContentPublisher.CrashHandler.App.Extensions"
         mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="450"
         x:Class="VRChatContentPublisher.CrashHandler.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Width="900" Height="450" WindowStartupLocation="CenterScreen"
         Icon="/Assets/AppIcon.ico"
-        Title="VRChat Content Publisher - Crash Handler">
+        Title="{ext:Loc MainWindow_Title}">
 
     <Design.DataContext>
         <vm:MainWindowViewModel />
