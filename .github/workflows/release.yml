@@ -118,7 +118,7 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       assets_path: ${{ github.workspace }}/assets
-      artifact_download_path: ${{ github.workspace }}/artifact-download
+      artifact_download_path: ${{ github.workspace }}/artifacts
       note_path: ${{ github.workspace }}/note
       portable_win_cache_key: merged-release-input-${{ github.run_id }}-win-x64
       portable_linux_cache_key: merged-release-input-${{ github.run_id }}-linux-x64
@@ -143,7 +143,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           key: ${{ env.portable_win_cache_key }}
-          path: artifact-download/unpacked-portable-win-x64
+          path: artifacts/unpacked-portable-win-x64
           enableCrossOsArchive: true
 
       - name: Restore Portable Linux Cache
@@ -151,7 +151,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           key: ${{ env.portable_linux_cache_key }}
-          path: artifact-download/unpacked-portable-linux-x64
+          path: artifacts/unpacked-portable-linux-x64
           enableCrossOsArchive: true
 
       - name: Restore Windows Installer Cache
@@ -159,7 +159,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           key: ${{ env.installer_cache_key }}
-          path: artifact-download/installer-win-x64
+          path: artifacts/installer-win-x64
           enableCrossOsArchive: true
 
       - name: Download Release Artifacts

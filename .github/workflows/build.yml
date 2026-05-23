@@ -35,7 +35,7 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       src_dir: ${{ github.workspace }}/repo/src
-      output_dir: ${{ github.workspace }}/output
+      output_dir: ${{ github.workspace }}/artifacts/unpacked-portable-${{ matrix.rid }}
       app_cache_key: build-app-${{ github.run_id }}-${{ matrix.rid }}
 
     steps:
@@ -64,7 +64,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           key: ${{ env.app_cache_key }}
-          path: output
+          path: artifacts/unpacked-portable-${{ matrix.rid }}
           enableCrossOsArchive: true
 
       - name: Upload Build Artifacts
@@ -98,7 +98,7 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       src_dir: ${{ github.workspace }}/repo/src
-      output_dir: ${{ github.workspace }}/output
+      output_dir: ${{ github.workspace }}/artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
       crash_cache_key: build-crash-handler-${{ github.run_id }}-${{ matrix.rid }}
 
     steps:
@@ -126,7 +126,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           key: ${{ env.crash_cache_key }}
-          path: output
+          path: artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
           enableCrossOsArchive: true
 
       - name: Upload Build Artifacts
@@ -157,7 +157,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      artifact_dir: ${{ github.workspace }}/artifacts
+      artifact_dir: ${{ github.workspace }}/artifacts/unpacked-portable-${{ matrix.rid }}
       output_dir: ${{ github.workspace }}/output
       app_cache_key: build-app-${{ github.run_id }}-${{ matrix.rid }}
       crash_cache_key: build-crash-handler-${{ github.run_id }}-${{ matrix.rid }}
@@ -168,7 +168,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           key: ${{ env.app_cache_key }}
-          path: artifacts
+          path: artifacts/unpacked-portable-${{ matrix.rid }}
           enableCrossOsArchive: true
           fail-on-cache-miss: true
 
@@ -176,7 +176,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           key: ${{ env.crash_cache_key }}
-          path: artifacts/CrashHandler
+          path: artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
           enableCrossOsArchive: true
           fail-on-cache-miss: true
 
@@ -190,7 +190,7 @@ jobs:
         uses: actions/cache/save@v5
         with:
           key: ${{ env.merged_cache_key }}
-          path: artifacts
+          path: artifacts/unpacked-portable-${{ matrix.rid }}
           enableCrossOsArchive: true
 
   make-windows-installer-inno:
@@ -200,9 +200,9 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       installer_script_path: ${{ github.workspace }}/repo/distribution/windows-installer-inno/installer.iss
-      installer_output_dir: ${{ github.workspace }}/installer-output
+      installer_output_dir: ${{ github.workspace }}/artifacts/installer-win-x64
       installer_output_base_name: vrchat-content-publisher-installer
-      artifact_dir: ${{ github.workspace }}/artifacts
+      artifact_dir: ${{ github.workspace }}/artifacts/unpacked-portable-win-x64
       executable_name: VRChatContentPublisher.App.exe
       installer_product_version: ""
       merged_cache_key: merged-release-input-${{ github.run_id }}-win-x64
@@ -218,7 +218,7 @@ jobs:
         uses: actions/cache/restore@v5
         with:
           key: ${{ env.merged_cache_key }}
-          path: artifacts
+          path: artifacts/unpacked-portable-win-x64
           enableCrossOsArchive: true
           fail-on-cache-miss: true
 
@@ -248,5 +248,5 @@ jobs:
         uses: actions/cache/save@v5
         with:
           key: ${{ env.installer_cache_key }}
-          path: installer-output
+          path: artifacts/installer-win-x64
           enableCrossOsArchive: true
