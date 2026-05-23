@@ -30,16 +30,26 @@ public sealed partial class BootstrapPageViewModel(
         await appLifetimeService.WaitForHostStartedAsync();
 
         LoadingText = LangKeys.Pages_Bootstrap_Loading_Text_Logging_In_Accounts;
-        await sessionManagerService.RestoreSessionsAsync((session, ex) =>
-        {
-            if (!appSettings.Value.SendNotificationOnStartupSessionRestoreFailed)
-                return;
+        await sessionManagerService.RestoreSessionsAsync(
+            session =>
+            {
+                if (session.State == UserSessionState.InvalidSession)
+                {
+                    _ = desktopNotificationService.SendNotificationAsync(
+                        $"Session restored but invalid for user {session.CurrentUser?.DisplayName ?? session.UserId ?? session.UserNameOrEmail}"
+                    ).AsTask();
+                }
+            },
+            (session, ex) =>
+            {
+                if (!appSettings.Value.SendNotificationOnStartupSessionRestoreFailed)
+                    return;
 
-            _ = desktopNotificationService.SendNotificationAsync(
-                $"Failed to restore session for user {session.CurrentUser?.DisplayName ?? session.UserId ?? session.UserNameOrEmail}",
-                ex.Message
-            ).AsTask();
-        });
+                _ = desktopNotificationService.SendNotificationAsync(
+                    $"Failed to restore session for user {session.CurrentUser?.DisplayName ?? session.UserId ?? session.UserNameOrEmail}",
+                    ex.Message
+                ).AsTask();
+            });
 
         LoadingText = LangKeys.Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks;
         // Restore persisted publish tasks now that user sessions are available.
