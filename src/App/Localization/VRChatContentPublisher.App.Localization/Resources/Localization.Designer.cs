@@ -624,6 +624,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Session expired or invalid for user {0}.
+        /// </summary>
+        internal static string Notifications_Session_Expired_Or_Invalid_Title_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Session_Expired_Or_Invalid_Title_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to restore session for user {0}.
+        /// </summary>
+        internal static string Notifications_Session_Restore_Failed_Title_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Session_Restore_Failed_Title_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is a test notification.
         /// </summary>
         internal static string Notifications_Settings_Test_Notification_Body {
@@ -1938,7 +1956,7 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tasks in publish stage will be cancel and no retry allowed before account repaired..
+        ///   Looks up a localized string similar to Tasks in publish stage will be cancel and no retry or task creation allowed before account repaired..
         /// </summary>
         internal static string Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description {
             get {
@@ -1966,7 +1984,8 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to It may cause by network issue, public IP changed or session expired.
-        ///Click Repair Account to re-try or login again..
+        ///Click Repair Account to re-try or login again.
+        ///If this issue persists after re-login, please report it..
         /// </summary>
         internal static string Pages_Tasks_Account_Tab_Initialize_Error_Description {
             get {

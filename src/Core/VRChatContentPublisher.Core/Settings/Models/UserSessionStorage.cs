@@ -24,7 +24,9 @@ public sealed record UserSessionStorageItem(
             User?.DisplayName ?? UserName,
             User?.Id ?? UserName,
             User?.AvatarThumbnailImageUrl ?? string.Empty,
-            User?.ProfilePictureThumbnailUrl
+            User?.ProfilePictureThumbnailUrl,
+            User?.DeveloperType,
+            User?.Tags
         );
     }
 }
@@ -32,16 +34,20 @@ public sealed record UserSessionStorageItem(
 public sealed record UserSessionUserInfo(
     string Id,
     string DisplayName,
+    string[]? Tags = null,
     string? AvatarThumbnailImageUrl = null,
-    string? ProfilePictureThumbnailUrl = null)
+    string? ProfilePictureThumbnailUrl = null,
+    string? DeveloperType = null)
 {
     public static UserSessionUserInfo Create(CurrentUser currentUser)
     {
         return new UserSessionUserInfo(
             currentUser.Id,
             currentUser.DisplayName,
+            currentUser.Tags ?? Array.Empty<string>(),
             currentUser.AvatarThumbnailImageUrl,
-            currentUser.ProfilePictureThumbnailUrl
+            currentUser.ProfilePictureThumbnailUrl,
+            currentUser.DeveloperType
         );
     }
 }

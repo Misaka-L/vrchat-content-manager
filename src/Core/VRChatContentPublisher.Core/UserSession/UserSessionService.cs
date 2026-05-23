@@ -146,7 +146,27 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
             if (_sessionScope is { } scope)
                 return scope;
 
-            CurrentUser = await GetCurrentUserAsync();
+            try
+            {
+                CurrentUser = await GetCurrentUserAsync();
+            }
+            catch (Exception ex)
+            {
+                if (CurrentUser is null)
+                {
+                    // Fetch failed and no cache available
+                    _logger.LogWarning(
+                        ex,
+                        "Failed to create session scope for {UserNameOrEmail} because fetching current user failed and no cache available",
+                        UserNameOrEmail);
+                    throw new InvalidOperationException("Failed to create session scope because fetching current user failed and no cache available", ex);
+                }
+
+                _logger.LogWarning(
+                    ex,
+                    "Failed to fetch current user for {UserNameOrEmail} while creating session scope, but cache is available, so continue creating session scope",
+                    UserNameOrEmail);
+            }
 
             return await CreateSessionScopeAsyncCore();
         }

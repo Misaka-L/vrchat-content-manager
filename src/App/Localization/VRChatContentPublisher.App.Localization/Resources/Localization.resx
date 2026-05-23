@@ -479,7 +479,8 @@ Tip: If you switch back to your last public IP, you can click Repair Account but
     </data>
     <data name="Pages_Tasks_Account_Tab_Initialize_Error_Description" xml:space="preserve">
         <value>It may cause by network issue, public IP changed or session expired.
-Click Repair Account to re-try or login again.</value>
+Click Repair Account to re-try or login again.
+If this issue persists after re-login, please report it.</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Initialize_Error_Repair_Account_Button_Text" xml:space="preserve">
         <value>Repair Account</value>
@@ -524,7 +525,7 @@ Click Repair Account to re-try or login again.</value>
         <value>Repair</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Session_Expired_Or_Invalid_Description" xml:space="preserve">
-        <value>Tasks in publish stage will be cancel and no retry allowed before account repaired.</value>
+        <value>Tasks in publish stage will be cancel and no retry or task creation allowed before account repaired.</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Alert_Account_No_Content_Publish_Permission_Title" xml:space="preserve">
         <value>Account are not allowed to publish content</value>
@@ -637,6 +638,12 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Notifications_New_Pairing_Request_Body_Template" xml:space="preserve">
         <value>{0} is requesting to pair</value>
+    </data>
+    <data name="Notifications_Session_Restore_Failed_Title_Template" xml:space="preserve">
+        <value>Failed to restore session for user {0}</value>
+    </data>
+    <data name="Notifications_Session_Expired_Or_Invalid_Title_Template" xml:space="preserve">
+        <value>Session expired or invalid for user {0}</value>
     </data>
     <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
         <value>Open Logs Folder</value>

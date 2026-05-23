@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
-using VRChatContentPublisher.VRChatApi;
 using VRChatContentPublisher.VRChatApi.ApiClient;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Auth;
 
@@ -26,7 +25,10 @@ public sealed class UserSessionManagerService(
     public bool IsAnySessionAvailable =>
         _sessions.Count > 0 && _sessions.Any(session => session.State == UserSessionState.LoggedIn);
 
-    public async Task RestoreSessionsAsync(Action<UserSessionService, Exception>? onSessionRestoredFailed = null)
+    public async Task RestoreSessionsAsync(
+        Action<UserSessionService>? onSessionRestored = null,
+        Action<UserSessionService, Exception>? onSessionRestoredFailed = null
+    )
     {
         foreach (var (userId, sessionItem) in userSessionStorage.Value.Sessions)
         {
@@ -42,6 +44,7 @@ public sealed class UserSessionManagerService(
             try
             {
                 await session.CreateOrGetSessionScopeAsync();
+                onSessionRestored?.Invoke(session);
             }
             catch (Exception ex)
             {

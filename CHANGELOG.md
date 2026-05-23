@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- User session can be restored if user information cache available. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
+  - User information cache should always available unless you upgrade from version older than v2.2.0.
 - All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
 - Extend period of background update check to a hour. [`#371`](https://github.com/project-vrcz/content-publisher/pull/371)
 - Replace the Windows installer from NSIS with Inno Setup. [`#377`](https://github.com/project-vrcz/content-publisher/pull/377)
@@ -37,6 +39,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 #### Added
 
 - Chinese Simplified language support for windows installer. [`#393`](https://github.com/project-vrcz/content-publisher/pull/393)
+
+#### Fixed
+
+- Tasks can't be restored if user session expired or invalid during startup. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
 
 ### Changes from [2.10.0-beta.3]
 
