@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
              x:DataType="gettingStarted:GuideWelcomePageViewModel"
@@ -32,6 +33,16 @@
                         <TextBlock Text="{Binding AppVersion, StringFormat='Release v{0}'}" />
                     </StackPanel>
                 </StackPanel>
+                <ComboBox Theme="{StaticResource MaterialOutlineComboBox}" Classes="dense"
+                          assists:ComboBoxAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_App_Language}}"
+                          ItemsSource="{Binding AvailableLanguages}"
+                          SelectedItem="{Binding SelectedLanguage}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="localization:AppLang">
+                            <TextBlock Text="{I18N {Binding DisplayName}}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
                 <StackPanel Spacing="8">
                     <Button Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Welcome_Next_Page_Button_Text}}"
                             Command="{Binding NextPageCommand}" />

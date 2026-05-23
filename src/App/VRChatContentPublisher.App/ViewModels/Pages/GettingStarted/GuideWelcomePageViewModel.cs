@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using System.Linq;
+using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
@@ -16,6 +18,55 @@ public sealed partial class GuideWelcomePageViewModel(
     InAppNotificationService inAppNotificationService,
     IWritableOptions<AppSettings> appSettings) : PageViewModelBase
 {
+    private static readonly AppLang FollowSystemLang =
+        new(
+            LangKeys.Pages_Settings_Appearance_Language_Selector_Follow_System,
+            LangKeys.Pages_Settings_Appearance_Language_Selector_Follow_System
+        );
+
+    public AppLang[] AvailableLanguages { get; } =
+    [
+        FollowSystemLang,
+        ..AppLocalizationService.GetLanguages()
+    ];
+
+    public AppLang SelectedLanguage
+    {
+        get
+        {
+            if (appSettings.Value.AppCulture is null)
+                return FollowSystemLang;
+
+            return AvailableLanguages.First(x => x.CultureCode == appSettings.Value.AppCulture);
+        }
+        set
+        {
+            if (value == FollowSystemLang)
+            {
+                if (appSettings.Value.AppCulture is null)
+                    return;
+
+                OnPropertyChanging();
+                UpdateAppCulture(null);
+                OnPropertyChanged();
+                return;
+            }
+
+            if (appSettings.Value.AppCulture == value.CultureCode)
+                return;
+
+            OnPropertyChanging();
+            UpdateAppCulture(value.CultureCode);
+            OnPropertyChanged();
+        }
+    }
+
+    private void UpdateAppCulture(string? cultureCode)
+    {
+        AppLocalizationService.ReloadAppCulture(cultureCode);
+        appSettings.Update(settings => settings.AppCulture = cultureCode);
+    }
+
     public string AppVersion => AppVersionUtils.GetAppVersion();
 
     [RelayCommand]
