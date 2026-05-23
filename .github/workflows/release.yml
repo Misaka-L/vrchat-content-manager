@@ -140,26 +140,26 @@ jobs:
 
       - name: Restore Portable Windows Cache
         id: restore-portable-win-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ env.portable_win_cache_key }}
-          path: ${{ env.artifact_download_path }}/unpacked-portable-win-x64
+          path: artifact-download/unpacked-portable-win-x64
           enableCrossOsArchive: true
 
       - name: Restore Portable Linux Cache
         id: restore-portable-linux-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ env.portable_linux_cache_key }}
-          path: ${{ env.artifact_download_path }}/unpacked-portable-linux-x64
+          path: artifact-download/unpacked-portable-linux-x64
           enableCrossOsArchive: true
 
       - name: Restore Windows Installer Cache
         id: restore-installer-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ env.installer_cache_key }}
-          path: ${{ env.artifact_download_path }}/installer-win-x64
+          path: artifact-download/installer-win-x64
           enableCrossOsArchive: true
 
       - name: Download Release Artifacts

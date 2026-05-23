@@ -61,10 +61,10 @@ jobs:
         working-directory: ${{ env.src_dir }}
 
       - name: Save App Build Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           key: ${{ env.app_cache_key }}
-          path: ${{ env.output_dir }}
+          path: output
           enableCrossOsArchive: true
 
       - name: Upload Build Artifacts
@@ -123,10 +123,10 @@ jobs:
         working-directory: ${{ env.src_dir }}
 
       - name: Save Crash Handler Build Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           key: ${{ env.crash_cache_key }}
-          path: ${{ env.output_dir }}
+          path: output
           enableCrossOsArchive: true
 
       - name: Upload Build Artifacts
@@ -165,18 +165,18 @@ jobs:
 
     steps:
       - name: Restore App Build Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ env.app_cache_key }}
-          path: ${{ env.artifact_dir }}
+          path: artifacts
           enableCrossOsArchive: true
           fail-on-cache-miss: true
 
       - name: Restore Crash Handler Build Cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ env.crash_cache_key }}
-          path: ${{ env.artifact_dir }}/CrashHandler
+          path: artifacts/CrashHandler
           enableCrossOsArchive: true
           fail-on-cache-miss: true
 
@@ -187,10 +187,10 @@ jobs:
           path: ${{ env.artifact_dir }}
 
       - name: Save Merged Release Input Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           key: ${{ env.merged_cache_key }}
-          path: ${{ env.artifact_dir }}
+          path: artifacts
           enableCrossOsArchive: true
 
   make-windows-installer-inno:
@@ -215,10 +215,10 @@ jobs:
 
       - name: Restore Build Artifacts Cache
         id: restore-merged-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ env.merged_cache_key }}
-          path: ${{ env.artifact_dir }}
+          path: artifacts
           enableCrossOsArchive: true
           fail-on-cache-miss: true
 
@@ -245,8 +245,8 @@ jobs:
           path: ${{ env.installer_output_dir }}/${{ env.installer_output_base_name }}.exe
 
       - name: Save Installer Cache
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           key: ${{ env.installer_cache_key }}
-          path: ${{ env.installer_output_dir }}
+          path: installer-output
           enableCrossOsArchive: true
