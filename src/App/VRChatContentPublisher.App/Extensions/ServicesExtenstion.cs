@@ -44,6 +44,7 @@ public static class ServicesExtenstion
         services.AddTransient<PublicIpChangedInAppNotificationViewModelFactory>();
         services.AddTransient<UpdateAvailableAppNotificationViewModelFactory>();
         services.AddTransient<UpdateProgressAppNotificationViewModel>();
+        services.AddTransient<SkipOnboardingOnFirstStartAppNotificationViewModel>();
 
         // Notification Senders
         services.AddHostedService<TaskFailedNotificationSenderService>();

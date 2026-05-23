@@ -551,6 +551,33 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I know what I&apos;m doing, Dismiss this.
+        /// </summary>
+        internal static string In_App_Notifications_Skip_Onboarding_Dismiss_Button_Text {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_Skip_Onboarding_Dismiss_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart Onboarding.
+        /// </summary>
+        internal static string In_App_Notifications_Skip_Onboarding_Restart_Button_Text {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_Skip_Onboarding_Restart_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You skipped the tutorial when you first launched the app..
+        /// </summary>
+        internal static string In_App_Notifications_Skip_Onboarding_Title {
+            get {
+                return ResourceManager.GetString("In_App_Notifications_Skip_Onboarding_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to en.
         /// </summary>
         internal static string Internal_ClutureInfoCode_Use_For_Detect_System_Lanuage_Only__Modify_AppLocalizationService_To_Add_Lanauge_Option {

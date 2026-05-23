@@ -735,6 +735,15 @@ NOTE: Some users report that KB5083807 broke Windows notification service. You m
     <data name="In_App_Notifications_New_Version_Available_Dismiss_Button_Tooltip" xml:space="preserve">
         <value>Dismiss</value>
     </data>
+    <data name="In_App_Notifications_Skip_Onboarding_Title" xml:space="preserve">
+        <value>You skipped the tutorial when you first launched the app.</value>
+    </data>
+    <data name="In_App_Notifications_Skip_Onboarding_Restart_Button_Text" xml:space="preserve">
+        <value>Restart Onboarding</value>
+    </data>
+    <data name="In_App_Notifications_Skip_Onboarding_Dismiss_Button_Text" xml:space="preserve">
+        <value>I know what I'm doing, Dismiss this</value>
+    </data>
     <data name="Pages_Bootstrap_Loading_Text_Initializing_Application" xml:space="preserve">
         <value>Initializing...</value>
     </data>
