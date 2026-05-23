@@ -120,6 +120,9 @@ jobs:
       assets_path: ${{ github.workspace }}/assets
       artifact_download_path: ${{ github.workspace }}/artifact-download
       note_path: ${{ github.workspace }}/note
+      portable_win_cache_key: merged-release-input-${{ github.run_id }}-win-x64
+      portable_linux_cache_key: merged-release-input-${{ github.run_id }}-linux-x64
+      installer_cache_key: installer-win-x64-${{ github.run_id }}
 
     steps:
       - name: Checkout
@@ -135,11 +138,42 @@ jobs:
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
 
+      - name: Restore Portable Windows Cache
+        id: restore-portable-win-cache
+        uses: actions/cache/restore@v4
+        with:
+          key: ${{ env.portable_win_cache_key }}
+          path: ${{ env.artifact_download_path }}/unpacked-portable-win-x64
+          enableCrossOsArchive: true
+
+      - name: Restore Portable Linux Cache
+        id: restore-portable-linux-cache
+        uses: actions/cache/restore@v4
+        with:
+          key: ${{ env.portable_linux_cache_key }}
+          path: ${{ env.artifact_download_path }}/unpacked-portable-linux-x64
+          enableCrossOsArchive: true
+
+      - name: Restore Windows Installer Cache
+        id: restore-installer-cache
+        uses: actions/cache/restore@v4
+        with:
+          key: ${{ env.installer_cache_key }}
+          path: ${{ env.artifact_download_path }}/installer-win-x64
+          enableCrossOsArchive: true
+
       - name: Download Release Artifacts
+        if: ${{ steps.restore-portable-win-cache.outputs.cache-hit != 'true' || steps.restore-portable-linux-cache.outputs.cache-hit != 'true' || steps.restore-installer-cache.outputs.cache-hit != 'true' }}
         uses: actions/download-artifact@v8
         with:
           path: ${{ env.artifact_download_path }}
-          pattern: '{unpacked-portable-*,installer-*,pdb-*}'
+          pattern: '{unpacked-portable-*,installer-*}'
+
+      - name: Download PDB Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          path: ${{ env.artifact_download_path }}
+          pattern: 'pdb-*'
 
       - name: Create release ZIPs
         env:

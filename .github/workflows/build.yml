@@ -36,6 +36,7 @@ jobs:
       repo_dir: ${{ github.workspace }}/repo
       src_dir: ${{ github.workspace }}/repo/src
       output_dir: ${{ github.workspace }}/output
+      app_cache_key: build-app-${{ github.run_id }}-${{ matrix.rid }}
 
     steps:
       - name: Checkout
@@ -58,6 +59,13 @@ jobs:
         run: dotnet publish -c Release App/VRChatContentPublisher.App -r $RID -o $BUILD_OUTPUT_DIR -f $TARGET_FRAMEWORK
         shell: bash
         working-directory: ${{ env.src_dir }}
+
+      - name: Save App Build Cache
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ env.app_cache_key }}
+          path: ${{ env.output_dir }}
+          enableCrossOsArchive: true
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
@@ -91,6 +99,7 @@ jobs:
       repo_dir: ${{ github.workspace }}/repo
       src_dir: ${{ github.workspace }}/repo/src
       output_dir: ${{ github.workspace }}/output
+      crash_cache_key: build-crash-handler-${{ github.run_id }}-${{ matrix.rid }}
 
     steps:
       - name: Checkout
@@ -112,6 +121,13 @@ jobs:
         run: dotnet publish -c Release App/CrashHandler/VRChatContentPublisher.CrashHandler.App -r $RID -o $BUILD_OUTPUT_DIR
         shell: bash
         working-directory: ${{ env.src_dir }}
+
+      - name: Save Crash Handler Build Cache
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ env.crash_cache_key }}
+          path: ${{ env.output_dir }}
+          enableCrossOsArchive: true
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v7
@@ -143,25 +159,39 @@ jobs:
     env:
       artifact_dir: ${{ github.workspace }}/artifacts
       output_dir: ${{ github.workspace }}/output
+      app_cache_key: build-app-${{ github.run_id }}-${{ matrix.rid }}
+      crash_cache_key: build-crash-handler-${{ github.run_id }}-${{ matrix.rid }}
+      merged_cache_key: merged-release-input-${{ github.run_id }}-${{ matrix.rid }}
 
     steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v8
+      - name: Restore App Build Cache
+        uses: actions/cache/restore@v4
         with:
-          name: vrchat-content-publisher-only-app-${{ matrix.rid }}
+          key: ${{ env.app_cache_key }}
           path: ${{ env.artifact_dir }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
 
-      - name: Download Crash Handler Artifacts
-        uses: actions/download-artifact@v8
+      - name: Restore Crash Handler Build Cache
+        uses: actions/cache/restore@v4
         with:
-          name: vrchat-content-publisher-crash-handler-${{ matrix.rid }}
+          key: ${{ env.crash_cache_key }}
           path: ${{ env.artifact_dir }}/CrashHandler
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
 
       - name: Upload Merged Artifacts
         uses: actions/upload-artifact@v7
         with:
           name: unpacked-portable-${{ matrix.rid }}
           path: ${{ env.artifact_dir }}
+
+      - name: Save Merged Release Input Cache
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ env.merged_cache_key }}
+          path: ${{ env.artifact_dir }}
+          enableCrossOsArchive: true
 
   make-windows-installer-inno:
     needs: merge-artifacts
@@ -175,17 +205,22 @@ jobs:
       artifact_dir: ${{ github.workspace }}/artifacts
       executable_name: VRChatContentPublisher.App.exe
       installer_product_version: ""
+      merged_cache_key: merged-release-input-${{ github.run_id }}-win-x64
+      installer_cache_key: installer-win-x64-${{ github.run_id }}
 
     steps:
       - name: Install Inno Setup
         run: choco install innosetup -y
         shell: pwsh
 
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v8
+      - name: Restore Build Artifacts Cache
+        id: restore-merged-cache
+        uses: actions/cache/restore@v4
         with:
-          name: unpacked-portable-win-x64
+          key: ${{ env.merged_cache_key }}
           path: ${{ env.artifact_dir }}
+          enableCrossOsArchive: true
+          fail-on-cache-miss: true
 
       - name: Get Version Info
         id: get-version-info
@@ -202,8 +237,16 @@ jobs:
 
       - name: Build Installer
         run: iscc /O"${{ env.installer_output_dir }}" /F"${{ env.installer_output_base_name }}" /DMyAppVersion=${{ env.installer_product_version }} /DAppArtifactPath="${{ env.artifact_dir }}" ${{ env.installer_script_path }}
+
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v7
         with:
           name: installer-win-x64
           path: ${{ env.installer_output_dir }}/${{ env.installer_output_base_name }}.exe
+
+      - name: Save Installer Cache
+        uses: actions/cache/save@v4
+        with:
+          key: ${{ env.installer_cache_key }}
+          path: ${{ env.installer_output_dir }}
+          enableCrossOsArchive: true
