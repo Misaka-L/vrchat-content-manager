@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
-using VRChatContentPublisher.VRChatApi;
 using VRChatContentPublisher.VRChatApi.ApiClient;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Auth;
 
