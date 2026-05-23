@@ -29,6 +29,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - In some case app may partial start. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
   - It can result in malfunctional or crash.
 
+### Changes from [2.10.0-beta.4]
+
+#### Added
+
+- Chinese Simplified language support for windows installer. [`#393`](https://github.com/project-vrcz/content-publisher/pull/393)
+
 ### Changes from [2.10.0-beta.3]
 
 #### Fixed
