@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Chinese support for crash handler. [`#397`](https://github.com/project-vrcz/content-publisher/pull/397)
+- Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
 - Use enter key to focus on password textbox and execute login command. [`#394`](https://github.com/project-vrcz/content-publisher/pull/394)
 - Show restart onboarding in-app notification when skip onboarding on first launch. [`#396`](https://github.com/project-vrcz/content-publisher/pull/396)
 - Tasks can be restore after crash or restarted. [`#367`](https://github.com/project-vrcz/content-publisher/pull/367)
