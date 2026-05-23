@@ -40,6 +40,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Chinese Simplified language support for windows installer. [`#393`](https://github.com/project-vrcz/content-publisher/pull/393)
 
+#### Fixed
+
+- Tasks can't be restored if user session expired or invalid during startup. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
+
 ### Changes from [2.10.0-beta.3]
 
 #### Fixed
