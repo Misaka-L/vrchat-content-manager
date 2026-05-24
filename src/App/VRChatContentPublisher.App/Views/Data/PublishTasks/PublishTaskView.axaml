@@ -25,7 +25,8 @@
             <StackPanel Spacing="2">
                 <Grid ColumnDefinitions="*,Auto">
                     <TextBlock Text="{Binding ContentPlatform}" FontSize="12" Opacity="0.7" />
-                    <TextBlock Grid.Column="1" FontSize="12" Opacity="0.7">
+                    <TextBlock Grid.Column="1" FontSize="12" Opacity="0.7"
+                               ToolTip.Tip="{Binding CreatedTime, StringFormat='G'}" >
                         <TextBlock.Text>
                             <I18N
                                 Key="{x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Task_Item_Task_Created_At_Template}">
