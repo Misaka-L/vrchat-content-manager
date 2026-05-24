@@ -59,21 +59,10 @@ public sealed partial class PublishTaskManagerViewModel(
 
         Tasks.Clear();
 
-        if (TasksSortMode == AppTasksPageSortMode.LatestFirst)
-        {
-            var viewModels = taskManagerService.Tasks
-                .Select(task => taskFactory.Create(task.Value, taskManagerService))
-                .Reverse()
-                .ToArray();
-            Tasks.AddRange(viewModels);
-        }
-        else
-        {
-            var viewModels = taskManagerService.Tasks
-                .Select(task => taskFactory.Create(task.Value, taskManagerService))
-                .ToArray();
-            Tasks.AddRange(viewModels);
-        }
+        var viewModels = taskManagerService.Tasks
+            .Select(task => taskFactory.Create(task.Value, taskManagerService))
+            .ToArray();
+        ResortTasks(viewModels);
 
         NotifyUserSessionChanged();
         NotifyTaskCountsChanged();
@@ -108,17 +97,18 @@ public sealed partial class PublishTaskManagerViewModel(
         ResortTasks();
     }
 
-    private void ResortTasks()
+    private void ResortTasks(IEnumerable<PublishTaskViewModel>? source = null)
     {
+        var tasks = source ?? Tasks;
         if (TasksSortMode == AppTasksPageSortMode.LatestFirst)
         {
-            var sorted = Tasks.OrderByDescending(t => t.CreatedTime).ToArray();
+            var sorted = tasks.OrderByDescending(t => t.CreatedTime).ToArray();
             Tasks.Clear();
             Tasks.AddRange(sorted);
         }
         else
         {
-            var sorted = Tasks.OrderBy(t => t.CreatedTime).ToArray();
+            var sorted = tasks.OrderBy(t => t.CreatedTime).ToArray();
             Tasks.Clear();
             Tasks.AddRange(sorted);
         }
