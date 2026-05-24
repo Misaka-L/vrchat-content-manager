@@ -110,6 +110,7 @@ public static class TaskEndpoint
                 request.Name,
                 request.Platform,
                 request.UnityVersion,
+                request.AuthorId,
                 request.ThumbnailFileId,
                 request.Description,
                 request.Tags,
