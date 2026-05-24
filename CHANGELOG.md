@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Reduced time required for looking for avatar owner when create avatar publish task. [`#406`](https://github.com/project-vrcz/content-publisher/pull/406)
+  - You must upgrade connect package avatar pack to v0.5.2.
 - User session can be restored if user information cache available. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
   - User information cache should always available unless you upgrade from version older than v2.2.0.
 - All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)

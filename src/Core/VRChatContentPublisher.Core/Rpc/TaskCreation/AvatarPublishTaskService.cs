@@ -7,6 +7,7 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.UserSession;
+using VRChatContentPublisher.VRChatApi.Exceptions;
 
 namespace VRChatContentPublisher.Core.Rpc.TaskCreation;
 
@@ -21,6 +22,7 @@ public sealed class AvatarPublishTaskService(
         string name,
         string platform,
         string unityVersion,
+        string? authorId,
         string? thumbnailFileId,
         string? description,
         string[]? tags,
@@ -28,7 +30,7 @@ public sealed class AvatarPublishTaskService(
     {
         try
         {
-            var userSession = await GetUserSessionByAvatarIdAsync(avatarId);
+            var userSession = await GetUserSessionByAvatarIdAsync(avatarId, authorId);
             var scope = await userSession.CreateOrGetSessionScopeAsync();
 
             var taskManager = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
@@ -62,17 +64,40 @@ public sealed class AvatarPublishTaskService(
         }
     }
 
-    public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(string avatarId)
+    public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(string avatarId,
+        string? requestUserId = null)
     {
         if (!userSessionManagerService.IsAnySessionAvailable)
             throw new NoUserSessionAvailableException();
+
+        if (requestUserId is not null)
+        {
+            var requestSession = userSessionManagerService.Sessions
+                .FirstOrDefault(session => session.UserId == requestUserId);
+
+            if (requestSession is null)
+                throw new ContentOwnerSessionOrAvatarNotFoundException();
+
+            try
+            {
+                var avatar = await requestSession.GetApiClient().GetAvatarAsync(avatarId);
+                if (avatar.AuthorId != requestUserId)
+                    throw new ContentOwnerSessionOrAvatarNotFoundException();
+
+                return requestSession;
+            }
+            catch (ApiErrorException ex) when (ex.StatusCode == 404)
+            {
+                throw new ContentOwnerSessionOrAvatarNotFoundException();
+            }
+        }
 
         foreach (var session in userSessionManagerService.Sessions)
         {
             try
             {
-                var world = await session.GetApiClient().GetAvatarAsync(avatarId);
-                if (world.AuthorId != session.UserId)
+                var avatar = await session.GetApiClient().GetAvatarAsync(avatarId);
+                if (avatar.AuthorId != session.UserId)
                     continue;
 
                 return session;

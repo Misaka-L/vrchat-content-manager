@@ -8,6 +8,7 @@ public interface IAvatarPublishTaskService
         string name,
         string platform,
         string unityVersion,
+        string? authorId,
         string? thumbnailFileId,
         string? description,
         string[]? tags,
