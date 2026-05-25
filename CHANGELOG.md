@@ -34,6 +34,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- In some case app crash will corrupt settings file.
+  - It will result in app unable to start. [`#410`](https://github.com/project-vrcz/content-publisher/pull/410)
 - Tasks may sort incorrectly when reload tasks page. [`#403`](https://github.com/project-vrcz/content-publisher/pull/403)
 - Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
 - In some case app may partial start. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
