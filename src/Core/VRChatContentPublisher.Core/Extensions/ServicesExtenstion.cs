@@ -274,7 +274,7 @@ public static class ServicesExtension
         string filePath, bool useStoragePath = true)
         where T : class, new()
     {
-        services.AddTransient<IWritableOptions<T>>(provider =>
+        services.AddSingleton<IWritableOptions<T>>(provider =>
         {
             if (provider.GetRequiredService<IConfiguration>() is not IConfigurationRoot configuration)
                 throw new InvalidOperationException("Configuration is not an IConfigurationRoot");

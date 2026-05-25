@@ -18,6 +18,15 @@ public sealed class SimpleSemaphoreSlimLockScope : IDisposable
         return new SimpleSemaphoreSlimLockScope(semaphoreSlim);
     }
 
+    public static SimpleSemaphoreSlimLockScope Wait(
+        SemaphoreSlim semaphoreSlim,
+        CancellationToken cancellationToken = default
+    )
+    {
+        semaphoreSlim.Wait(cancellationToken);
+        return new SimpleSemaphoreSlimLockScope(semaphoreSlim);
+    }
+
     public void Dispose()
     {
         _semaphoreSlim.Release();

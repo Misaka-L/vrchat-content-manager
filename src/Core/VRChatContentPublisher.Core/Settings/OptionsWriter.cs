@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Nodes;
 using Microsoft.Extensions.Configuration;
+using VRChatContentPublisher.Core.AppServices;
 
 namespace VRChatContentPublisher.Core.Settings;
 
@@ -17,7 +18,11 @@ public sealed class OptionsWriter(
             throw new InvalidOperationException("Could not parse configuration file.");
 
         callback(config);
-        File.WriteAllText(file, config.ToJsonString());
+
+        var json = config.ToJsonString();
+        var tempFile = Path.Combine(AppStorageService.GetTempPath(), Path.GetRandomFileName());
+        File.WriteAllText(tempFile, json);
+        File.Move(tempFile, file, true);
 
         configuration.Reload();
     }
@@ -31,7 +36,11 @@ public sealed class OptionsWriter(
             throw new InvalidOperationException("Could not parse configuration file.");
 
         callback(config);
-        await File.WriteAllTextAsync(file, config.ToJsonString());
+
+        var json = config.ToJsonString();
+        var tempFile = Path.Combine(AppStorageService.GetTempPath(), Path.GetRandomFileName());
+        await File.WriteAllTextAsync(tempFile, json);
+        File.Move(tempFile, file, true);
 
         configuration.Reload();
     }
