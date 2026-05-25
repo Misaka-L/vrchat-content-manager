@@ -2,6 +2,7 @@
 using System.Text.Json.Nodes;
 using Microsoft.Extensions.Options;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.Core.Settings;
 
@@ -15,53 +16,61 @@ public sealed class WritableOptions<T>(
 {
     public T Value => options.CurrentValue;
 
+    private readonly SemaphoreSlim _semaphoreSlim = new(1, 1);
+
     public void Update(Action<T> applyChanges)
     {
-        writer.UpdateOptions(opt =>
+        using (SimpleSemaphoreSlimLockScope.Wait(_semaphoreSlim))
         {
-            var jsonTypeInfo = SettingsJsonContext.Default.GetTypeInfo(typeof(T));
-            if (jsonTypeInfo is null)
-                throw new InvalidOperationException($"No Json type info for type {typeof(T)}");
-
-            T sectionObject;
-            if (opt[sectionName] is { } sectionNode)
+            writer.UpdateOptions(opt =>
             {
-                sectionObject = sectionNode.Deserialize(jsonTypeInfo) as T ?? new T();
-            }
-            else
-            {
-                sectionObject = new T();
-            }
+                var jsonTypeInfo = SettingsJsonContext.Default.GetTypeInfo(typeof(T));
+                if (jsonTypeInfo is null)
+                    throw new InvalidOperationException($"No Json type info for type {typeof(T)}");
 
-            applyChanges(sectionObject);
+                T sectionObject;
+                if (opt[sectionName] is { } sectionNode)
+                {
+                    sectionObject = sectionNode.Deserialize(jsonTypeInfo) as T ?? new T();
+                }
+                else
+                {
+                    sectionObject = new T();
+                }
 
-            var json = JsonSerializer.Serialize(sectionObject, jsonTypeInfo);
-            opt[sectionName] = JsonNode.Parse(json);
-        });
+                applyChanges(sectionObject);
+
+                var json = JsonSerializer.Serialize(sectionObject, jsonTypeInfo);
+                opt[sectionName] = JsonNode.Parse(json);
+            });
+        }
     }
 
     public async Task UpdateAsync(Action<T> applyChanges)
     {
-        await writer.UpdateOptionsAsync(opt =>
+        using (await SimpleSemaphoreSlimLockScope.WaitAsync(_semaphoreSlim))
         {
-            var jsonTypeInfo = SettingsJsonContext.Default.GetTypeInfo(typeof(T));
-            if (jsonTypeInfo is null)
-                throw new InvalidOperationException($"No Json type info for type {typeof(T)}");
-
-            T sectionObject;
-            if (opt[sectionName] is { } sectionNode)
+            await writer.UpdateOptionsAsync(opt =>
             {
-                sectionObject = sectionNode.Deserialize(jsonTypeInfo) as T ?? new T();
-            }
-            else
-            {
-                sectionObject = new T();
-            }
+                var jsonTypeInfo = SettingsJsonContext.Default.GetTypeInfo(typeof(T));
+                if (jsonTypeInfo is null)
+                    throw new InvalidOperationException($"No Json type info for type {typeof(T)}");
 
-            applyChanges(sectionObject);
+                T sectionObject;
+                if (opt[sectionName] is { } sectionNode)
+                {
+                    sectionObject = sectionNode.Deserialize(jsonTypeInfo) as T ?? new T();
+                }
+                else
+                {
+                    sectionObject = new T();
+                }
 
-            var json = JsonSerializer.Serialize(sectionObject, jsonTypeInfo);
-            opt[sectionName] = JsonNode.Parse(json);
-        });
+                applyChanges(sectionObject);
+
+                var json = JsonSerializer.Serialize(sectionObject, jsonTypeInfo);
+                opt[sectionName] = JsonNode.Parse(json);
+            });
+        }
     }
 }
