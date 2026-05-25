@@ -12,31 +12,36 @@ public class AppHttpClientResiliencePredicates
     /// Determines whether an outcome should be treated by resilience strategies as a transient failure.
     /// </summary>
     /// <returns><see langword="true"/> if outcome is transient, <see langword="false"/> if not.</returns>
-    public static bool IsTransient(Outcome<HttpResponseMessage> outcome) => outcome switch
-    {
-        { Result: { } response } when IsTransientHttpFailure(response) => true,
-        { Exception: { } exception } when IsTransientHttpException(exception) => true,
-        _ => false
-    };
+    public static bool IsTransient(Outcome<HttpResponseMessage> outcome, HttpRequestMessage? requestMessage) =>
+        outcome switch
+        {
+            { Result: { } response } when IsTransientHttpFailure(response) => true,
+            { Exception: { } exception } when IsTransientHttpException(exception, requestMessage) => true,
+            _ => false
+        };
 
     /// <summary>
     /// Determines whether an <see cref="HttpResponseMessage"/> should be treated by resilience strategies as a transient failure.
     /// </summary>
     /// <param name="outcome">The outcome of the user-specified callback.</param>
+    /// <param name="requestMessage">The <see cref="HttpRequestMessage"/> associated with the execution, if available.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> associated with the execution.</param>
     /// <returns><see langword="true"/> if outcome is transient, <see langword="false"/> if not.</returns>
-    public static bool IsTransient(Outcome<HttpResponseMessage> outcome, CancellationToken cancellationToken)
+    public static bool IsTransient(Outcome<HttpResponseMessage> outcome, HttpRequestMessage? requestMessage,
+        CancellationToken cancellationToken)
         => IsHttpConnectionTimeout(outcome, cancellationToken)
-           || IsTransient(outcome);
+           || IsTransient(outcome, requestMessage);
 
     /// <summary>
     /// Determines whether an exception should be treated by resilience strategies as a transient failure.
     /// </summary>
-    internal static bool IsTransientHttpException(Exception exception)
+    internal static bool IsTransientHttpException(Exception exception, HttpRequestMessage? requestMessage)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
-        return exception is HttpRequestException or TimeoutRejectedException;
+        return exception is HttpRequestException || (
+            exception is TimeoutRejectedException && (requestMessage is null || requestMessage.Method == HttpMethod.Get)
+        );
     }
 
     internal static bool IsHttpConnectionTimeout(in Outcome<HttpResponseMessage> outcome,

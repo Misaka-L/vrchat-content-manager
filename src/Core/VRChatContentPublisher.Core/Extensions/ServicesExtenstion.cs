@@ -81,7 +81,7 @@ public static class ServicesExtension
                         })
                         .AddTimeout(new HttpTimeoutStrategyOptions
                         {
-                            Timeout = TimeSpan.FromSeconds(30)
+                            Timeout = TimeSpan.FromSeconds(1)
                         });
                 });
         });
