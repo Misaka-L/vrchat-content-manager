@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
+namespace VRChatContentPublisher.VRChatApi.Models;
 
 // 2022.3.60f1 -> Major: 2022, Minor: 3, UpdateNumber: 60, ReleaseType: Final, ReleaseNumber: 1
 public sealed partial record UnityVersion(

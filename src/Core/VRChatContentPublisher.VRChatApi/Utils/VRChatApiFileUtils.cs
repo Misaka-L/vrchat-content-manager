@@ -2,10 +2,14 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Blake2Fast;
+using VRChatContentPublisher.VRChatApi.ApiClient;
+using VRChatContentPublisher.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Models;
+using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 
-namespace VRChatContentPublisher.Core.Shared.Utils;
+namespace VRChatContentPublisher.VRChatApi.Utils;
 
-public static partial class VRChatApiFlieUtils
+public static partial class VRChatApiFileUtils
 {
     [GeneratedRegex(@"\/api\/1\/file\/(?<FileId>.+?)\/")]
     private static partial Regex GetFileIdFromAssetUrlRegex();
@@ -78,5 +82,36 @@ public static partial class VRChatApiFlieUtils
             default:
                 return "application/octet-stream";
         }
+    }
+
+    public static VRChatApiUnityPackage? TryGetUnityPackageForPlatform(
+        VRChatApiUnityPackage[] unityPackages,
+        string platform)
+    {
+        var platformApiUnityPackage = unityPackages
+            .Where(package => package.Platform == platform)
+            .GroupBy(package => package.UnityVersion)
+            .MaxBy(group => UnityVersion.TryParse(group.Key))?
+            .MaxBy(package => package.AssetVersion);
+
+        return platformApiUnityPackage;
+    }
+
+    public static async ValueTask<string> GetOrCreateBundleFileIdAsync(
+        VRChatApiClient apiClient, VRChatApiUnityPackage[] unityPackages, string fileName, string platform)
+    {
+        var platformApiUnityPackage = TryGetUnityPackageForPlatform(unityPackages, platform);
+        if (platformApiUnityPackage is not null)
+        {
+            var fileId = TryGetFileIdFromAssetUrl(platformApiUnityPackage.AssetUrl);
+            if (fileId is null)
+                throw new UnexpectedApiBehaviourException("Api returned an invalid asset url.");
+
+            return fileId;
+        }
+
+        var extension = Path.GetExtension(fileName);
+        var file = await apiClient.CreateFileAsync(fileName, GetMimeTypeFromExtension(extension), extension);
+        return file.Id;
     }
 }

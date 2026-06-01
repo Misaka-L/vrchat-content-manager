@@ -1,14 +1,68 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
-using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.ProgressReport;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
+using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.VRChatApi.ApiClient;
 
 public partial class VRChatApiClient
 {
+    public async ValueTask<string> UploadThumbnailAsync(
+        Stream thumbnailStream, string contentType, string thumbnailFileName, string? previousImageUrl = null,
+        Action<PublishTaskProgressEventArg>? progressCallback = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for thumbnail upload...", null));
+
+        var imageFileId = await GetOrCreateThumbnailFileIdAsync(
+            this, previousImageUrl, thumbnailFileName
+        );
+
+        var imageFileVersion = await CreateAndUploadFileVersionAsync(
+            thumbnailStream,
+            imageFileId,
+            VRChatApiFileUtils.GetMimeTypeFromExtension(Path.GetExtension(thumbnailFileName)),
+            $"{contentType} Thumbnail",
+            arg => progressCallback?.Invoke(new PublishTaskProgressEventArg(arg.ProgressText, arg.ProgressValue)),
+            cancellationToken
+        );
+
+        if (imageFileVersion.File is null)
+            throw new UnexpectedApiBehaviourException(
+                "Api did not return file info for created image file version.");
+
+        return imageFileVersion.File.Url;
+    }
+
+    public async ValueTask<string> GetOrCreateThumbnailFileIdAsync(
+        VRChatApiClient apiClient, string? sourceImageUrl, string imageFileName)
+    {
+        if (sourceImageUrl is not null)
+        {
+            var fileId = VRChatApiFileUtils.TryGetFileIdFromAssetUrl(sourceImageUrl);
+            if (fileId is null)
+                throw new UnexpectedApiBehaviourException("Api returned an invalid image asset url.");
+
+            logger.LogInformation(
+                "Thumbnail image already exists with file id {FileId}, will reuse this file for thumbnail.", fileId);
+            return fileId;
+        }
+
+        logger.LogInformation("Thumbnail image does not exist, creating new file for thumbnail upload.");
+
+        var extension = Path.GetExtension(imageFileName);
+        var mimeType = VRChatApiFileUtils.GetMimeTypeFromExtension(extension);
+
+        var fileName = Path.GetFileName(imageFileName);
+        var file = await apiClient.CreateFileAsync(fileName, mimeType, extension);
+
+        logger.LogInformation("Created new file for thumbnail upload with id {FileId}.", file.Id);
+        return file.Id;
+    }
+
     public async ValueTask<VRChatApiFileVersion> CreateAndUploadFileVersionAsync(
         Stream fileStream, string fileId, string contentType,
         string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
@@ -26,10 +80,10 @@ public partial class VRChatApiClient
             currentAssetFile = await GetFileAsync(fileId, cancellationToken);
         }
 
-        // Step 2.Caulate bundle file md5 and check is same file exists.
+        // Step 2. Calculate bundle file md5 and check is same file exists.
         progressCallback?.Invoke(new PublishTaskProgressEventArg($"Calculating MD5 for {userFileType} file...", null));
 
-        var fileMd5 = await VRChatApiFlieUtils.GetMd5FromStreamForVRChatAsync(fileStream, cancellationToken);
+        var fileMd5 = await VRChatApiFileUtils.GetMd5FromStreamForVRChatAsync(fileStream, cancellationToken);
         var fileLength = fileStream.Length;
 
         var existingFileVersion = currentAssetFile.Versions
@@ -64,8 +118,8 @@ public partial class VRChatApiClient
 
         var signatureStream =
             new MemoryStream(
-                await VRChatApiFlieUtils.GetSignatureFromStreamForVRChatAsync(fileStream, cancellationToken));
-        var signatureMd5 = await VRChatApiFlieUtils.GetMd5FromStreamForVRChatAsync(signatureStream, cancellationToken);
+                await VRChatApiFileUtils.GetSignatureFromStreamForVRChatAsync(fileStream, cancellationToken));
+        var signatureMd5 = await VRChatApiFileUtils.GetMd5FromStreamForVRChatAsync(signatureStream, cancellationToken);
         var signatureLength = signatureStream.Length;
 
         logger.LogInformation("Creating new file version for file {FileId}", fileId);
@@ -207,7 +261,7 @@ public partial class VRChatApiClient
 
         return progressText;
     }
-    
+
     private HttpClient GetUploadClient()
     {
         return options.Value.SimpleUploadHttpClientName is null
