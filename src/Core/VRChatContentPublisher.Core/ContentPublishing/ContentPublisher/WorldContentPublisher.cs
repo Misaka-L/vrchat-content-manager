@@ -156,7 +156,7 @@ public sealed class WorldContentPublisher(
             options.WorldId, options.Platform);
         progressReporter.Report("Getting or creating asset bundle file for target platform...");
 
-        var fileId = await VRChatApiFileUtils.GetOrCreateBundleFileIdAsync(
+        var fileId = await VRChatApiClient.GetOrCreateBundleFileIdAsync(
             _apiClient,
             world.UnityPackages,
             $"World - {options.WorldName} - Asset bundle - {options.UnityVersion}-{options.Platform}.vrcw",

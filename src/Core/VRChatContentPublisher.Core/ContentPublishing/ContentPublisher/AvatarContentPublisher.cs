@@ -94,7 +94,7 @@ public sealed class AvatarContentPublisher(
             options.AvatarId, options.Platform);
         progressReporter.Report("Getting or creating asset bundle file for target platform...");
 
-        var fileId = await VRChatApiFileUtils.GetOrCreateBundleFileIdAsync(
+        var fileId = await VRChatApiClient.GetOrCreateBundleFileIdAsync(
             _apiClient,
             avatar.UnityPackages,
             $"Avatar - {options.Name} - Asset bundle - {options.UnityVersion}-{options.Platform}.vrca",

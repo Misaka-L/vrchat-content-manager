@@ -12,7 +12,9 @@ using VRChatContentPublisher.VRChatApi.Models.Rest;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Auth;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Avatars;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
+using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Worlds;
+using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.VRChatApi.ApiClient;
 

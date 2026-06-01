@@ -3,12 +3,32 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.ProgressReport;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
+using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.VRChatApi.ApiClient;
 
 public partial class VRChatApiClient
 {
+    public static async ValueTask<string> GetOrCreateBundleFileIdAsync(
+        VRChatApiClient apiClient, VRChatApiUnityPackage[] unityPackages, string fileName, string platform)
+    {
+        var platformApiUnityPackage = VRChatApiFileUtils.TryGetUnityPackageForPlatform(unityPackages, platform);
+        if (platformApiUnityPackage is not null)
+        {
+            var fileId = VRChatApiFileUtils.TryGetFileIdFromAssetUrl(platformApiUnityPackage.AssetUrl);
+            if (fileId is null)
+                throw new UnexpectedApiBehaviourException("Api returned an invalid asset url.");
+
+            return fileId;
+        }
+
+        var extension = Path.GetExtension(fileName);
+        var file = await apiClient.CreateFileAsync(fileName, VRChatApiFileUtils.GetMimeTypeFromExtension(extension),
+            extension);
+        return file.Id;
+    }
+
     public async ValueTask<string> UploadThumbnailAsync(
         Stream thumbnailStream, string contentType, string thumbnailFileName, string? previousImageUrl = null,
         Action<PublishTaskProgressEventArg>? progressCallback = null,

@@ -96,22 +96,4 @@ public static partial class VRChatApiFileUtils
 
         return platformApiUnityPackage;
     }
-
-    public static async ValueTask<string> GetOrCreateBundleFileIdAsync(
-        VRChatApiClient apiClient, VRChatApiUnityPackage[] unityPackages, string fileName, string platform)
-    {
-        var platformApiUnityPackage = TryGetUnityPackageForPlatform(unityPackages, platform);
-        if (platformApiUnityPackage is not null)
-        {
-            var fileId = TryGetFileIdFromAssetUrl(platformApiUnityPackage.AssetUrl);
-            if (fileId is null)
-                throw new UnexpectedApiBehaviourException("Api returned an invalid asset url.");
-
-            return fileId;
-        }
-
-        var extension = Path.GetExtension(fileName);
-        var file = await apiClient.CreateFileAsync(fileName, GetMimeTypeFromExtension(extension), extension);
-        return file.Id;
-    }
 }
