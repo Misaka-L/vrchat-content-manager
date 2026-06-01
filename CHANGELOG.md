@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
 - In some case app may partial start. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
   - It can result in malfunctional or crash.
+- Request with invalid jwt will get HTTP 500 response instead of HTTP 401. [`#413`](https://github.com/project-vrcz/content-publisher/pull/413)
 
 ### Changes from [2.10.0-beta.4]
 
