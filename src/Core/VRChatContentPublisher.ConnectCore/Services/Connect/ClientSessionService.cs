@@ -60,6 +60,12 @@ public sealed class ClientSessionService(
             }
         });
 
+        if (!result.IsValid)
+        {
+            logger.LogWarning(result.Exception, "Got Invalid JWT");
+            return new RpcTokenValidationResult(result, null, null);
+        }
+
         if (sessionStorageService.GetSessionByClientId((string)result.Claims["aud"]) is not { } session)
         {
             throw new InvalidOperationException("No existing session found for the given client ID.");
