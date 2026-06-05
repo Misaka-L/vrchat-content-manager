@@ -426,8 +426,27 @@ public sealed partial class VRChatApiClient(
                     if (versionInfo is null)
                         throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
 
-                    if (versionInfo.Status == "waiting")
-                        throw new ResilienceRequestRetryException();
+                    switch (fileType)
+                    {
+                        case VRChatApiFileType.File:
+                            if (versionInfo.File is not { } versionFileEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without file entity.");
+                            if (versionFileEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        case VRChatApiFileType.Signature:
+                            if (versionInfo.Signature is not { } versionSignatureEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without signature entity.");
+                            if (versionSignatureEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+                    }
 
                     return Outcome.FromResult(true);
                 }
@@ -481,8 +500,27 @@ public sealed partial class VRChatApiClient(
                     if (versionInfo is null)
                         throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
 
-                    if (versionInfo.Status == "waiting")
-                        throw new ResilienceRequestRetryException();
+                    switch (fileType)
+                    {
+                        case VRChatApiFileType.File:
+                            if (versionInfo.File is not { } versionFileEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without file entity.");
+                            if (versionFileEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        case VRChatApiFileType.Signature:
+                            if (versionInfo.Signature is not { } versionSignatureEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without signature entity.");
+                            if (versionSignatureEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+                    }
 
                     return Outcome.FromResult(true);
                 }
