@@ -205,7 +205,7 @@ public sealed class WorldContentPublisher(
 
         #endregion
 
-        #region Step.5 Update avatar metadata
+        #region Step.5 Update world metadata
 
         logger.LogInformation("Updating world {WorldId} to use new file version {Version}", options.WorldId,
             fileVersion.Version);
