@@ -1,5 +1,9 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Fallback;
+using Polly.Retry;
+using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.ProgressReport;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
@@ -10,8 +14,10 @@ namespace VRChatContentPublisher.VRChatApi.ApiClient;
 
 public partial class VRChatApiClient
 {
-    public static async ValueTask<string> GetOrCreateBundleFileIdAsync(
-        VRChatApiClient apiClient, VRChatApiUnityPackage[] unityPackages, string fileName, string platform)
+    public async ValueTask<string> GetOrCreateBundleFileIdAsync(
+        VRChatApiUnityPackage[] unityPackages,
+        string fileName,
+        string platform)
     {
         var platformApiUnityPackage = VRChatApiFileUtils.TryGetUnityPackageForPlatform(unityPackages, platform);
         if (platformApiUnityPackage is not null)
@@ -24,8 +30,8 @@ public partial class VRChatApiClient
         }
 
         var extension = Path.GetExtension(fileName);
-        var file = await apiClient.CreateFileAsync(fileName, VRChatApiFileUtils.GetMimeTypeFromExtension(extension),
-            extension);
+        var file = await CreateFileAsync(fileName, VRChatApiFileUtils.GetMimeTypeFromExtension(extension), extension);
+
         return file.Id;
     }
 
@@ -95,7 +101,7 @@ public partial class VRChatApiClient
         // Step 1. Cleanup any incomplete file versions.
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Cleanup all incomplete file versions...", null));
 
-        if (!await CleanupIncompleteFileVersionsAsync(currentAssetFile, this, cancellationToken))
+        if (!await CleanupIncompleteFileVersionsAsync(currentAssetFile, cancellationToken))
         {
             currentAssetFile = await GetFileAsync(fileId, cancellationToken);
         }
@@ -221,7 +227,7 @@ public partial class VRChatApiClient
                 version,
                 fileType,
                 this,
-                GetUploadClient(),
+                GetMultipartUploadClient(),
                 cancellationToken);
         uploader.ProgressChanged += (_, progress) =>
             progressCallback?.Invoke(progress.ProgressPrcentage, progress.CurrentSpeedBytesPerSecond);
@@ -261,7 +267,7 @@ public partial class VRChatApiClient
             Content = content
         };
 
-        using var awsClient = GetUploadClient();
+        using var awsClient = GetSimpleUploadClient();
         var response = await awsClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
 
@@ -282,10 +288,17 @@ public partial class VRChatApiClient
         return progressText;
     }
 
-    private HttpClient GetUploadClient()
+    private HttpClient GetSimpleUploadClient()
     {
         return options.Value.SimpleUploadHttpClientName is null
             ? httpClientFactory.CreateClient()
             : httpClientFactory.CreateClient(options.Value.SimpleUploadHttpClientName);
+    }
+    
+    private HttpClient GetMultipartUploadClient()
+    {
+        return options.Value.MultipartUploadHttpClientName is null
+            ? httpClientFactory.CreateClient()
+            : httpClientFactory.CreateClient(options.Value.MultipartUploadHttpClientName);
     }
 }

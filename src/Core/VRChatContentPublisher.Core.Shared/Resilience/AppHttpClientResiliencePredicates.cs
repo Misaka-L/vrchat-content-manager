@@ -8,6 +8,9 @@ namespace VRChatContentPublisher.Core.Resilience;
 // https://github.com/dotnet/extensions/issues/7188
 public class AppHttpClientResiliencePredicates
 {
+    public static readonly HttpRequestOptionsKey<bool> BypassHttpMethodCheckKey =
+        new("dd1acc01-541d-4ce8-b104-f83c8bb56930.BypassHttpMethodCheck");
+
     /// <summary>
     /// Determines whether an outcome should be treated by resilience strategies as a transient failure.
     /// </summary>
@@ -35,13 +38,22 @@ public class AppHttpClientResiliencePredicates
     /// <summary>
     /// Determines whether an exception should be treated by resilience strategies as a transient failure.
     /// </summary>
-    internal static bool IsTransientHttpException(Exception exception, HttpRequestMessage? requestMessage)
+    public static bool IsTransientHttpException(Exception exception, HttpRequestMessage? requestMessage)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
-        return exception is HttpRequestException || (
-            exception is TimeoutRejectedException && (requestMessage is null || requestMessage.Method == HttpMethod.Get)
-        );
+        return exception is HttpRequestException ||
+               (
+                   exception is TimeoutRejectedException &&
+                   (
+                       requestMessage is null ||
+                       (
+                           requestMessage.Options.TryGetValue(BypassHttpMethodCheckKey, out var bypassHttpCheck) &&
+                           bypassHttpCheck
+                       ) ||
+                       requestMessage.Method == HttpMethod.Get
+                   )
+               );
     }
 
     internal static bool IsHttpConnectionTimeout(in Outcome<HttpResponseMessage> outcome,

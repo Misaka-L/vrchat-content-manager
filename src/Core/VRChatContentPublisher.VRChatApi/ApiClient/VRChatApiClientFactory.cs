@@ -8,10 +8,17 @@ public sealed class VRChatApiClientFactory(
     ILogger<VRChatApiClient> logger,
     ConcurrentMultipartUploaderFactory uploaderFactory,
     IHttpClientFactory httpClientFactory,
-    IOptions<VRChatApiOptions> options)
+    IOptions<VRChatApiOptions> options,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory)
 {
     public VRChatApiClient Create(HttpClient sessionClient)
     {
-        return new VRChatApiClient(sessionClient, httpClientFactory, logger, uploaderFactory, options);
+        return new VRChatApiClient(
+            sessionClient,
+            httpClientFactory,
+            logger,
+            uploaderFactory,
+            options,
+            resiliencePipelineBuilderFactory);
     }
 }
