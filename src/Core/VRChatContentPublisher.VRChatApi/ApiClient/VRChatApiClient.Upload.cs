@@ -103,6 +103,10 @@ public partial class VRChatApiClient
 
         if (!await CleanupIncompleteFileVersionsAsync(currentAssetFile, cancellationToken))
         {
+            progressCallback?.Invoke(new PublishTaskProgressEventArg(
+                "Waiting for incomplete file versions to be cleaned up by server (for 3s)...", null));
+
+            await Task.Delay(TimeSpan.FromSeconds(3), cancellationToken);
             currentAssetFile = await GetFileAsync(fileId, cancellationToken);
         }
 
@@ -294,7 +298,7 @@ public partial class VRChatApiClient
             ? httpClientFactory.CreateClient()
             : httpClientFactory.CreateClient(options.Value.SimpleUploadHttpClientName);
     }
-    
+
     private HttpClient GetMultipartUploadClient()
     {
         return options.Value.MultipartUploadHttpClientName is null
