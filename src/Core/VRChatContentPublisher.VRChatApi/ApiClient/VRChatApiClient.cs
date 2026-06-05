@@ -303,16 +303,26 @@ public sealed partial class VRChatApiClient(
                     if (latestVersion.Status != "waiting")
                         throw new ResilienceRequestRetryException();
 
-                    if (latestVersion.File is not { } versionFileEntity ||
-                        versionFileEntity.Md5 != fileMd5 ||
+                    if (latestVersion.File is not { } versionFileEntity)
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version without file entity.");
+
+                    if (latestVersion.Signature is not { } versionSignatureEntity)
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version without signature entity.");
+
+                    if (versionFileEntity.Md5 != fileMd5 ||
                         versionFileEntity.SizeInBytes != fileSizeInBytes ||
-                        latestVersion.Signature is not { } versionSignatureEntity ||
                         versionSignatureEntity.Md5 != signatureMd5 ||
                         versionSignatureEntity.SizeInBytes != signatureSizeInBytes)
                     {
                         throw new UnexpectedApiBehaviourException(
                             "The API returned a file version with waiting status but the file or signature metadata doesn't match the create request.");
                     }
+
+                    if (versionFileEntity.Status != "waiting" || versionSignatureEntity.Status != "waiting")
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version not in waiting status while not uploading, which is unexpected.");
 
                     return Outcome.FromResult(latestVersion);
                 }
