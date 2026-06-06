@@ -9,6 +9,7 @@ using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Resilience;
+using VRChatContentPublisher.Core.Shared.Resilience;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.VRChatApi;

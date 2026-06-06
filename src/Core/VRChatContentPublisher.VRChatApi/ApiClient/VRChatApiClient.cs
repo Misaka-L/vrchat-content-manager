@@ -12,6 +12,7 @@ using Polly.Fallback;
 using Polly.Retry;
 using Polly.Timeout;
 using VRChatContentPublisher.Core.Resilience;
+using VRChatContentPublisher.Core.Shared.Resilience;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models;
 using VRChatContentPublisher.VRChatApi.Models.Rest;
