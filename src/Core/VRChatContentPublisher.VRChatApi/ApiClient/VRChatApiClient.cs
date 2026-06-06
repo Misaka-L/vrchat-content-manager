@@ -4,15 +4,24 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Web;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Polly;
+using Polly.Fallback;
+using Polly.Retry;
+using Polly.Timeout;
+using VRChatContentPublisher.Core.Resilience;
+using VRChatContentPublisher.Core.Shared.Resilience;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models;
 using VRChatContentPublisher.VRChatApi.Models.Rest;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Auth;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Avatars;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
+using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Worlds;
+using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.VRChatApi.ApiClient;
 
@@ -21,7 +30,8 @@ public sealed partial class VRChatApiClient(
     IHttpClientFactory httpClientFactory,
     ILogger<VRChatApiClient> logger,
     ConcurrentMultipartUploaderFactory concurrentMultipartUploaderFactory,
-    IOptions<VRChatApiOptions> options)
+    IOptions<VRChatApiOptions> options,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory)
 {
     public async ValueTask<CurrentUser> GetCurrentUser()
     {
@@ -235,8 +245,7 @@ public sealed partial class VRChatApiClient(
         string fileName,
         string mimeType,
         string extension,
-        CancellationToken cancellationToken = default
-    )
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var request = new HttpRequestMessage(HttpMethod.Post, "file")
@@ -245,6 +254,11 @@ public sealed partial class VRChatApiClient(
                 new CreateFileRequest(fileName, mimeType, extension),
                 ApiJsonContext.Default.CreateFileRequest)
         };
+
+        // NOTE: /files endpoint didn't support filter or sort
+        // There is no way to retrieve the file metadata if create request succeeded but response is lost.
+        // Just recreate a new file in this case. (Just like SDK does)
+        request.Options.Set(AppHttpClientResiliencePredicates.BypassHttpMethodCheckKey, true);
 
         var response = await httpClient.SendAsync(request, cancellationToken);
         await HandleErrorResponseAsync(response);
@@ -267,30 +281,83 @@ public sealed partial class VRChatApiClient(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "file/" + fileId)
+        var pipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<VRChatApiFileVersion>("CreateFileVersion", fileId)
+            .AddRetry(new RetryStrategyOptions<VRChatApiFileVersion>
+            {
+                ShouldHandle = new PredicateBuilder<VRChatApiFileVersion>().Handle<ResilienceRequestRetryException>(),
+                MaxRetryAttempts = 5
+            })
+            .AddFallback(new FallbackStrategyOptions<VRChatApiFileVersion>()
+            {
+                ShouldHandle = args =>
+                    new ValueTask<bool>(
+                        args.Outcome.Exception is { } ex &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(ex, null)
+                    ),
+                FallbackAction = async args =>
+                {
+                    var file = await GetFileAsync(fileId, args.Context.CancellationToken);
+                    if (file.Versions.MaxBy(v => v.Version) is not { } latestVersion)
+                        throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
+
+                    if (latestVersion.Status != "waiting")
+                        throw new ResilienceRequestRetryException();
+
+                    if (latestVersion.File is not { } versionFileEntity)
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version without file entity.");
+
+                    if (latestVersion.Signature is not { } versionSignatureEntity)
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version without signature entity.");
+
+                    if (versionFileEntity.Md5 != fileMd5 ||
+                        versionFileEntity.SizeInBytes != fileSizeInBytes ||
+                        versionSignatureEntity.Md5 != signatureMd5 ||
+                        versionSignatureEntity.SizeInBytes != signatureSizeInBytes)
+                    {
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version with waiting status but the file or signature metadata doesn't match the create request.");
+                    }
+
+                    if (versionFileEntity.Status != "waiting" || versionSignatureEntity.Status != "waiting")
+                        throw new UnexpectedApiBehaviourException(
+                            "The API returned a file version not in waiting status while not uploading, which is unexpected.");
+
+                    return Outcome.FromResult(latestVersion);
+                }
+            })
+            .Build();
+
+        return await pipeline.ExecuteAsync(async ct =>
         {
-            Content = JsonContent.Create(
-                new CreateFileVersionRequest(fileMd5, fileSizeInBytes, signatureMd5, signatureSizeInBytes),
-                ApiJsonContext.Default.CreateFileVersionRequest)
-        };
+            var request = new HttpRequestMessage(HttpMethod.Post, "file/" + fileId)
+            {
+                Content = JsonContent.Create(
+                    new CreateFileVersionRequest(fileMd5, fileSizeInBytes, signatureMd5, signatureSizeInBytes),
+                    ApiJsonContext.Default.CreateFileVersionRequest)
+            };
 
-        var response = await httpClient.SendAsync(request, cancellationToken);
-        await HandleErrorResponseAsync(response);
+            var response = await httpClient.SendAsync(request, ct);
+            await HandleErrorResponseAsync(response);
 
-        var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile,
-            cancellationToken: cancellationToken);
-        if (file is null)
-            throw new UnexpectedApiBehaviourException("The API returned a null file.");
+            var file = await response.Content.ReadFromJsonAsync(ApiJsonContext.Default.VRChatApiFile,
+                cancellationToken: ct);
 
-        var latestVersion = Enumerable.MaxBy<VRChatApiFileVersion, int>(file.Versions, v => v.Version);
-        if (latestVersion is null)
-            throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
+            if (file is null)
+                throw new UnexpectedApiBehaviourException("The API returned a null file.");
 
-        if (latestVersion.Version == 0)
-            throw new UnexpectedApiBehaviourException(
-                "The API returned a file with no version created (only version 0).");
+            var latestVersion = file.Versions.MaxBy(v => v.Version);
+            if (latestVersion is null)
+                throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
 
-        return latestVersion;
+            if (latestVersion.Version == 0)
+                throw new UnexpectedApiBehaviourException(
+                    "The API returned a file with no version created (only version 0).");
+
+            return latestVersion;
+        }, cancellationToken);
     }
 
     public async ValueTask DeleteFileVersionAsync(string fileId, long versionId,
@@ -308,6 +375,10 @@ public sealed partial class VRChatApiClient(
         cancellationToken.ThrowIfCancellationRequested();
 
         var request = new HttpRequestMessage(HttpMethod.Put, $"file/{fileId}/{version}/{fileType.ToApiString()}/start");
+        // For simple upload, this endpoint just signs the upload url,
+        // so it's safe to retry (even if request may succeed but response is lost)
+        request.Options.Set(AppHttpClientResiliencePredicates.BypassHttpMethodCheckKey, true);
+
         var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
@@ -341,8 +412,68 @@ public sealed partial class VRChatApiClient(
         return uploadUrl.Url;
     }
 
-    public async ValueTask CompleteSimpleFileUploadAsync(string fileId, int version,
-        VRChatApiFileType fileType = VRChatApiFileType.File, CancellationToken cancellationToken = default)
+    public async ValueTask CompleteSimpleFileUploadAsync(
+        string fileId, int version, VRChatApiFileType fileType = VRChatApiFileType.File,
+        CancellationToken cancellationToken = default)
+    {
+        var pipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<bool>("CompleteSimpleFileUpload", fileId)
+            .AddRetry(new RetryStrategyOptions<bool>
+            {
+                ShouldHandle = new PredicateBuilder<bool>().Handle<ResilienceRequestRetryException>(),
+                MaxRetryAttempts = 5
+            })
+            .AddFallback(new FallbackStrategyOptions<bool>()
+            {
+                ShouldHandle = args =>
+                    new ValueTask<bool>(
+                        args.Outcome.Exception is { } ex &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(ex, null)
+                    ),
+                FallbackAction = async args =>
+                {
+                    var file = await GetFileAsync(fileId, args.Context.CancellationToken);
+                    var versionInfo = file.Versions.MaxBy(v => v.Version == version);
+                    if (versionInfo is null)
+                        throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
+
+                    switch (fileType)
+                    {
+                        case VRChatApiFileType.File:
+                            if (versionInfo.File is not { } versionFileEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without file entity.");
+                            if (versionFileEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        case VRChatApiFileType.Signature:
+                            if (versionInfo.Signature is not { } versionSignatureEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without signature entity.");
+                            if (versionSignatureEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+                    }
+
+                    return Outcome.FromResult(true);
+                }
+            })
+            .Build();
+
+        await pipeline.ExecuteAsync(async ct =>
+        {
+            await CompleteSimpleFileUploadAsyncCore(fileId, version, fileType, ct);
+            return true;
+        }, cancellationToken);
+    }
+
+    public async ValueTask CompleteSimpleFileUploadAsyncCore(
+        string fileId, int version, VRChatApiFileType fileType = VRChatApiFileType.File,
+        CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -354,7 +485,68 @@ public sealed partial class VRChatApiClient(
         await HandleErrorResponseAsync(response);
     }
 
-    public async ValueTask CompleteFilePartUploadAsync(string fileId, int version,
+    public async ValueTask CompleteFilePartUploadAsync(
+        string fileId, int version,
+        string[]? eTags = null, VRChatApiFileType fileType = VRChatApiFileType.File,
+        CancellationToken cancellationToken = default)
+    {
+        var pipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<bool>("CompleteFilePartUpload", fileId)
+            .AddRetry(new RetryStrategyOptions<bool>
+            {
+                ShouldHandle = new PredicateBuilder<bool>().Handle<ResilienceRequestRetryException>(),
+                MaxRetryAttempts = 5
+            })
+            .AddFallback(new FallbackStrategyOptions<bool>()
+            {
+                ShouldHandle = args =>
+                    new ValueTask<bool>(
+                        args.Outcome.Exception is { } ex &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(ex, null)
+                    ),
+                FallbackAction = async args =>
+                {
+                    var file = await GetFileAsync(fileId, args.Context.CancellationToken);
+                    var versionInfo = file.Versions.MaxBy(v => v.Version == version);
+                    if (versionInfo is null)
+                        throw new UnexpectedApiBehaviourException("The API returned a file without versions.");
+
+                    switch (fileType)
+                    {
+                        case VRChatApiFileType.File:
+                            if (versionInfo.File is not { } versionFileEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without file entity.");
+                            if (versionFileEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        case VRChatApiFileType.Signature:
+                            if (versionInfo.Signature is not { } versionSignatureEntity)
+                                throw new UnexpectedApiBehaviourException(
+                                    "The API returned a file version without signature entity.");
+                            if (versionSignatureEntity.Status == "waiting")
+                                throw new ResilienceRequestRetryException();
+
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(fileType), fileType, null);
+                    }
+
+                    return Outcome.FromResult(true);
+                }
+            })
+            .Build();
+
+        await pipeline.ExecuteAsync(async ct =>
+        {
+            await CompleteFilePartUploadAsyncCore(fileId, version, eTags, fileType, ct);
+            return true;
+        }, cancellationToken);
+    }
+
+    private async ValueTask CompleteFilePartUploadAsyncCore(
+        string fileId, int version,
         string[]? eTags = null, VRChatApiFileType fileType = VRChatApiFileType.File,
         CancellationToken cancellationToken = default)
     {
@@ -377,20 +569,49 @@ public sealed partial class VRChatApiClient(
         await HandleErrorResponseAsync(response);
     }
 
-    public static async ValueTask<bool> CleanupIncompleteFileVersionsAsync(VRChatApiFile file,
-        VRChatApiClient apiClient,
-        CancellationToken cancellationToken = default)
+    public async ValueTask<bool> CleanupIncompleteFileVersionsAsync(
+        VRChatApiFile file, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var incompleteVersions = file.Versions.Where(version => version.Status != "complete")
-            .ToArray();
-        foreach (var version in incompleteVersions)
-        {
-            await apiClient.DeleteFileVersionAsync(file.Id, version.Version, cancellationToken);
-        }
+        var fileDirty = false;
 
-        return incompleteVersions.Length == 0;
+        var deletePipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<bool>("CleanupIncompleteFileVersions", file.Id)
+            .AddRetry(new RetryStrategyOptions<bool>()
+            {
+                MaxRetryAttempts = 5,
+                ShouldHandle = new PredicateBuilder<bool>().Handle<ResilienceRequestRetryException>()
+            })
+            .AddFallback(new FallbackStrategyOptions<bool>()
+            {
+                ShouldHandle = args =>
+                    new ValueTask<bool>(
+                        args.Outcome.Exception is { } ex &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(ex, null)
+                    ),
+                FallbackAction = async args =>
+                {
+                    file = await GetFileAsync(file.Id, args.Context.CancellationToken);
+                    throw new ResilienceRequestRetryException();
+                }
+            })
+            .Build();
+
+        return await deletePipeline.ExecuteAsync(async ct =>
+        {
+            var incompleteVersions = file.Versions
+                .Where(version => version.Status != "complete")
+                .ToArray();
+
+            if (!fileDirty) fileDirty = incompleteVersions.Length > 0;
+            foreach (var version in incompleteVersions)
+            {
+                await DeleteFileVersionAsync(file.Id, version.Version, ct);
+            }
+
+            return fileDirty;
+        }, cancellationToken);
     }
 
     #endregion

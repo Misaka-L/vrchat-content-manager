@@ -34,6 +34,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Task will always fail due to retry non-idempotent requests. [`#411`](https://github.com/project-vrcz/content-publisher/pull/411)
+  - (caused by timeout or connection abort during received response)
 - In some case app crash will corrupt settings file.
   - It will result in app unable to start. [`#410`](https://github.com/project-vrcz/content-publisher/pull/410)
 - Tasks may sort incorrectly when reload tasks page. [`#403`](https://github.com/project-vrcz/content-publisher/pull/403)

@@ -4,6 +4,9 @@ namespace VRChatContentPublisher.VRChatApi.Models.Rest.Files;
 
 public record VRChatApiFile(
     [property: JsonPropertyName("id")] string Id,
+    [property: JsonPropertyName("name")] string Name,
+    [property: JsonPropertyName("mimeType")] string MimeType,
+    [property: JsonPropertyName("extension")] string Extension,
     [property: JsonPropertyName("versions")] VRChatApiFileVersion[] Versions
 );
 
@@ -12,6 +15,8 @@ public record VRChatApiFileVersion(
     int Version,
     [property: JsonPropertyName("status")]
     string Status,
+    [property: JsonPropertyName("created_at")]
+    DateTimeOffset CreatedAt,
     [property: JsonPropertyName("file")]
     VRChatApiFileVersionEntity? File = null,
     [property: JsonPropertyName("signature")]

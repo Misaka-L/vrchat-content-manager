@@ -2,10 +2,14 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using Blake2Fast;
+using VRChatContentPublisher.VRChatApi.ApiClient;
+using VRChatContentPublisher.VRChatApi.Exceptions;
+using VRChatContentPublisher.VRChatApi.Models;
+using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 
-namespace VRChatContentPublisher.Core.Shared.Utils;
+namespace VRChatContentPublisher.VRChatApi.Utils;
 
-public static partial class VRChatApiFlieUtils
+public static partial class VRChatApiFileUtils
 {
     [GeneratedRegex(@"\/api\/1\/file\/(?<FileId>.+?)\/")]
     private static partial Regex GetFileIdFromAssetUrlRegex();
@@ -78,5 +82,18 @@ public static partial class VRChatApiFlieUtils
             default:
                 return "application/octet-stream";
         }
+    }
+
+    public static VRChatApiUnityPackage? TryGetUnityPackageForPlatform(
+        VRChatApiUnityPackage[] unityPackages,
+        string platform)
+    {
+        var platformApiUnityPackage = unityPackages
+            .Where(package => package.Platform == platform)
+            .GroupBy(package => package.UnityVersion)
+            .MaxBy(group => UnityVersion.TryParse(group.Key))?
+            .MaxBy(package => package.AssetVersion);
+
+        return platformApiUnityPackage;
     }
 }

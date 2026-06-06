@@ -1,30 +1,35 @@
 ﻿using MessagePipe;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Fallback;
+using Polly.Retry;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.Events.UserSession;
-using VRChatContentPublisher.Core.Shared.Utils;
+using VRChatContentPublisher.Core.Extensions;
+using VRChatContentPublisher.Core.Resilience;
+using VRChatContentPublisher.Core.Shared.Resilience;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.VRChatApi;
 using VRChatContentPublisher.VRChatApi.ApiClient;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Avatars;
-using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
+using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 
-#pragma warning disable CS9124 // options captured into closure — expected for Options pattern
 public sealed class AvatarContentPublisher(
     AvatarContentPublisherOptions options,
     UserSessionService userSessionService,
     ILogger<AvatarContentPublisher> logger,
     IFileService fileService,
-    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory
 ) : IContentPublisher
 {
-    internal AvatarContentPublisherOptions Options { get; } = options;
+    internal AvatarContentPublisherOptions Options => options;
 
     private readonly VRChatApiClient _apiClient = userSessionService.GetApiClient();
 
@@ -58,6 +63,10 @@ public sealed class AvatarContentPublisher(
         PublishStageProgressReporter progressReporter,
         CancellationToken cancellationToken = default)
     {
+        #region Initialzation (Get rpc file stream, ensure session is valid, check CancellationToken)
+
+        cancellationToken.ThrowIfCancellationRequested();
+
         using var sessionValidScope = new EnsureSessionValidScope(
             userSessionService.UserNameOrEmail,
             sessionStateChangedSubscriber,
@@ -66,155 +75,157 @@ public sealed class AvatarContentPublisher(
 
         cancellationToken = sessionValidScope.CancellationToken;
 
-        await using var bundleFileStream = await fileService.GetFileAsync(bundleFileId);
-        var thumbnailFile = thumbnailFileId is not null
-            ? await fileService.GetFileWithNameAsync(thumbnailFileId)
-            : null;
+        var (bundleFileStream, thumbnailFile) = await fileService.GetRpcFileStream(bundleFileId, thumbnailFileId);
+        await using var stream = bundleFileStream;
         await using var thumbnailFileStream = thumbnailFile?.FileStream;
 
-        if (bundleFileStream is null)
-            throw new ArgumentException("Could not find the provided bundle file.", nameof(bundleFileId));
-
-        if (thumbnailFile is null && thumbnailFileId is not null)
-            throw new ArgumentException("Could not find the provided thumbnail file.", nameof(thumbnailFileId));
-
-        if (UnityBuildTargetUtils.IsStandalonePlatform(options.Platform))
-        {
-            if (bundleFileStream.Length > MaxBundleFileSizeForDesktopBytes)
-                throw new ArgumentException(
-                    "The provided bundle file exceeds the maximum allowed size of 200 MB for this platform.",
-                    nameof(bundleFileId));
-        }
-        else
-        {
-            if (bundleFileStream.Length > MaxBundleFileSizeForMobileBytes)
-                throw new ArgumentException(
-                    "The provided bundle file exceeds the maximum allowed size of 10 MB for this platform.",
-                    nameof(bundleFileId));
-        }
+        EnsureBundleSizeRequirement(bundleFileStream);
 
         cancellationToken.ThrowIfCancellationRequested();
 
-        // Step 1. Try to get the asset file for this platform, if not create a new one.
-        // This step also cleanups any incomplete file versions.
+        #endregion
+
+        #region Step.1 Fetch avatar details
 
         logger.LogInformation("Publish Avatar {AvatarId}", options.AvatarId);
         progressReporter.Report("Fetching avatar detail...");
-
         var avatar = await _apiClient.GetAvatarAsync(options.AvatarId, cancellationToken);
-        var fileId = await GetOrCreateBundleFileIdAsync(avatar);
 
-        // Step 2. Create and upload a new file version
-        logger.LogInformation("Using file id {FileId} for avatar {AvatarId}", fileId, options.AvatarId);
+        #endregion
+
+        #region Step.2 Try to get the asset file id for target platform, if not create a new one.
+
+        logger.LogInformation(
+            "Getting or creating asset bundle file for avatar {AvatarId} with platform {Platform}",
+            options.AvatarId, options.Platform);
+        progressReporter.Report("Getting or creating asset bundle file for target platform...");
+
+        var fileId = await _apiClient.GetOrCreateBundleFileIdAsync(avatar.UnityPackages,
+            $"Avatar - {options.Name} - Asset bundle - {options.UnityVersion}-{options.Platform}.vrca",
+            options.Platform
+        );
+
+        #endregion
+
+        #region Step.3 Upload AssetBundle - Cleanups any incomplete file versions -> Create and upload a new file version
+
+        logger.LogInformation(
+            "Creating and uploading new file version for avatar {AvatarId} with file id {FileId}",
+            options.AvatarId, fileId);
         progressReporter.Report("Preparing for upload bundle file...");
 
         var fileVersion = await _apiClient.CreateAndUploadFileVersionAsync(
             bundleFileStream,
             fileId,
-            VRChatApiFlieUtils.GetMimeTypeFromExtension(".vrca"),
+            VRChatApiFileUtils.GetMimeTypeFromExtension(".vrca"),
             "Avatar Bundle",
-            arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue), cancellationToken
+            arg => progressReporter.Report(arg.ProgressText, arg.ProgressValue), cancellationToken
         );
 
         if (fileVersion.File is null)
             throw new UnexpectedApiBehaviourException("Api did not return file info for created file version.");
 
-        // Step 2.1 Upload thumbnail if needed
+        #endregion
+
+        #region Step.4 [Optional] Upload thumbnail if needed
+
         string? imageUri = null;
         if (thumbnailFile is not null && thumbnailFileStream is not null)
         {
             logger.LogInformation("Uploading thumbnail for avatar {AvatarId}", options.AvatarId);
-            progressReporter?.Report("Uploading thumbnail...");
 
-            var imageFileId = await GetOrCreateBundleImageIdAsync(avatar, thumbnailFile.FileName);
+            var thumbnailFileName =
+                $"Avatar - {options.Name} - Image - {options.UnityVersion}-{options.Platform}{Path.GetExtension(thumbnailFile.FileName)}";
 
-            var imageFileVersion = await _apiClient.CreateAndUploadFileVersionAsync(
+            imageUri = await _apiClient.UploadThumbnailAsync(
                 thumbnailFileStream,
-                imageFileId,
-                VRChatApiFlieUtils.GetMimeTypeFromExtension(Path.GetExtension(thumbnailFile.FileName)),
-                "Avatar Thumbnail",
-                arg => progressReporter?.Report(arg.ProgressText, arg.ProgressValue), cancellationToken
+                VRChatApiFileUtils.GetMimeTypeFromExtension(Path.GetExtension(thumbnailFile.FileName)),
+                thumbnailFileName,
+                avatar.ImageUrl,
+                arg => progressReporter.Report(arg.ProgressText, arg.ProgressValue),
+                cancellationToken
             );
-
-            if (imageFileVersion.File is null)
-                throw new UnexpectedApiBehaviourException(
-                    "Api did not return file info for created image file version.");
-
-            imageUri = imageFileVersion.File.Url;
         }
 
-        // Step 3. Update Avatar
+        #endregion
+
+        #region Step.5 Update avatar metadata
+
         logger.LogInformation("Updating avatar {AvatarId} to use new file version {Version}", options.AvatarId,
             fileVersion.Version);
-        progressReporter?.Report("Updating avatar to latest asset version...");
+        progressReporter.Report("Updating avatar to latest asset version...");
 
-        await _apiClient.CreateAvatarVersionAsync(options.AvatarId, new CreateAvatarVersionRequest(
-            options.Name,
-            fileVersion.File.Url,
-            1,
-            options.Platform,
-            options.UnityVersion,
-            imageUri,
-            description,
-            tags,
-            releaseStatus
-        ), cancellationToken);
+                var updateWorldPipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<bool>("CreateAvatarVersion", options.AvatarId)
+            .AddRetry(new RetryStrategyOptions<bool>
+            {
+                ShouldHandle = new PredicateBuilder<bool>()
+                    .Handle<ResilienceRequestRetryException>(),
+                MaxRetryAttempts = 5
+            })
+            .AddFallback(new FallbackStrategyOptions<bool>
+            {
+                ShouldHandle = args =>
+                    ValueTask.FromResult(
+                        args.Outcome.Exception is not null &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(args.Outcome.Exception, null)),
+                FallbackAction = async args =>
+                {
+                    var latestAvatar = await _apiClient.GetAvatarAsync(options.AvatarId, args.Context.CancellationToken);
+                    var isUpdateSucceeded = latestAvatar.UnityPackages.Any(pkg =>
+                        pkg.Platform == options.Platform &&
+                        pkg.UnityVersion == options.UnityVersion &&
+                        pkg.AssetUrl == fileVersion.File.Url);
+
+                    if (!isUpdateSucceeded) throw new ResilienceRequestRetryException();
+                    return Outcome.FromResult(true);
+                }
+            })
+            .Build();
+
+        await updateWorldPipeline.ExecuteAsync(async ct =>
+        {
+            await _apiClient.CreateAvatarVersionAsync(options.AvatarId, new CreateAvatarVersionRequest(
+                options.Name,
+                fileVersion.File.Url,
+                1,
+                options.Platform,
+                options.UnityVersion,
+                imageUri,
+                description,
+                tags,
+                releaseStatus
+            ), ct);
+            return true;
+        }, cancellationToken);
+
+        #endregion
 
         logger.LogInformation("Successfully published avatar {AvatarId}", options.AvatarId);
     }
 
-    private VRChatApiUnityPackage? TryGetUnityPackageForPlatform(VRChatApiAvatar apiAvatar)
+    private void EnsureBundleSizeRequirement(Stream bundleFileStream)
     {
-        var platformApiUnityPackage = apiAvatar.UnityPackages
-            .Where(package => package.Platform == options.Platform)
-            .GroupBy(package => package.UnityVersion)
-            .MaxBy(group => UnityVersion.TryParse(group.Key))?
-            .MaxBy(package => package.AssetVersion);
-
-        return platformApiUnityPackage;
-    }
-
-    private async ValueTask<string> GetOrCreateBundleFileIdAsync(VRChatApiAvatar apiAvatar)
-    {
-        var platformApiUnityPackage = TryGetUnityPackageForPlatform(apiAvatar);
-        if (platformApiUnityPackage is not null)
+        if (UnityBuildTargetUtils.IsStandalonePlatform(options.Platform))
         {
-            var fileId = VRChatApiFlieUtils.TryGetFileIdFromAssetUrl(platformApiUnityPackage.AssetUrl);
-            if (fileId is null)
-                throw new UnexpectedApiBehaviourException("Api returned an invalid asset url.");
-
-            return fileId;
+            if (bundleFileStream.Length > MaxBundleFileSizeForDesktopBytes)
+                throw new ArgumentException(
+                    "The provided bundle file exceeds the maximum allowed size of 200 MB for this platform.");
         }
-
-        var fileName = $"Avatar - {options.Name} - Asset bundle - {options.UnityVersion}-{options.Platform}";
-        var file = await _apiClient.CreateFileAsync(fileName, "application/x-avatar", ".vrca");
-        return file.Id;
-    }
-
-    private async ValueTask<string> GetOrCreateBundleImageIdAsync(VRChatApiAvatar apiAvatar, string imageFileName)
-    {
-        if (apiAvatar.ImageUrl is not null)
+        else
         {
-            var fileId = VRChatApiFlieUtils.TryGetFileIdFromAssetUrl(apiAvatar.ImageUrl);
-            if (fileId is null)
-                throw new UnexpectedApiBehaviourException("Api returned an invalid image asset url.");
-
-            return fileId;
+            if (bundleFileStream.Length > MaxBundleFileSizeForMobileBytes)
+                throw new ArgumentException(
+                    "The provided bundle file exceeds the maximum allowed size of 10 MB for this platform.");
         }
-
-        var extension = Path.GetExtension(imageFileName);
-        var mimeType = VRChatApiFlieUtils.GetMimeTypeFromExtension(extension);
-
-        var fileName = $"Avatar - {options.Name} - Image - {options.UnityVersion}-{options.Platform}";
-        var file = await _apiClient.CreateFileAsync(fileName, mimeType, extension);
-        return file.Id;
     }
 }
 
 public sealed class AvatarContentPublisherFactory(
     ILogger<AvatarContentPublisher> logger,
     IFileService fileService,
-    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory
 )
 {
     public AvatarContentPublisher Create(
@@ -226,7 +237,8 @@ public sealed class AvatarContentPublisherFactory(
             userSession,
             logger,
             fileService,
-            sessionStateChangedSubscriber
+            sessionStateChangedSubscriber,
+            resiliencePipelineBuilderFactory
         );
     }
 }

@@ -13,6 +13,8 @@ public static class ServicesExtension
     {
         services.Configure(configureOptions);
 
+        services.AddSingleton<AppResiliencePipelineBuilderFactory>();
+
         services.AddTransient<ConcurrentMultipartUploaderFactory>();
         services.AddTransient<VRChatApiClientFactory>();
         services.AddTransient<VRChatApiDiagnosticService>();

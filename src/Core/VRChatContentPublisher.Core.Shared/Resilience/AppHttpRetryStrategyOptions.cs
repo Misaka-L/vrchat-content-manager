@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Http.Resilience;
+using Polly;
 
 namespace VRChatContentPublisher.Core.Resilience;
 
@@ -8,6 +9,10 @@ public class AppHttpRetryStrategyOptions : HttpRetryStrategyOptions
     {
         ShouldHandle = args =>
             new ValueTask<bool>(
-                AppHttpClientResiliencePredicates.IsTransient(args.Outcome, args.Context.CancellationToken));
+                AppHttpClientResiliencePredicates.IsTransient(
+                    args.Outcome,
+                    args.Context.GetRequestMessage(),
+                    args.Context.CancellationToken)
+            );
     }
 }
