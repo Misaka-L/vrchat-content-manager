@@ -1,13 +1,19 @@
 ﻿using MessagePipe;
 using Microsoft.Extensions.Logging;
+using Polly;
+using Polly.Fallback;
+using Polly.Retry;
+using Polly.Timeout;
 using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Extensions;
+using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
+using VRChatContentPublisher.VRChatApi;
 using VRChatContentPublisher.VRChatApi.ApiClient;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models;
@@ -23,7 +29,8 @@ public sealed class WorldContentPublisher(
     UserSessionService userSessionService,
     ILogger<WorldContentPublisher> logger,
     IFileService fileService,
-    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory
 ) : IContentPublisher
 {
     internal WorldContentPublisherOptions Options { get; } = options;
@@ -211,22 +218,55 @@ public sealed class WorldContentPublisher(
             fileVersion.Version);
         progressReporter?.Report("Updating world to latest asset version...");
 
-        await _apiClient.CreateWorldVersionAsync(options.WorldId, new CreateWorldVersionRequest(
-            options.WorldName,
-            fileVersion.File.Url,
-            fileVersion.Version,
-            options.Platform,
-            options.UnityVersion,
-            options.WorldSignature,
-            imageUri,
-            description,
-            tags,
-            releaseStatus,
-            options.Capacity,
-            options.RecommendedCapacity,
-            options.PreviewYoutubeId,
-            _udonProducts
-        ), cancellationToken);
+        var updateWorldPipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<bool>("CreateWorldVersion", options.WorldId)
+            .AddRetry(new RetryStrategyOptions<bool>
+            {
+                ShouldHandle = new PredicateBuilder<bool>()
+                    .Handle<ResilienceRequestRetryException>(),
+                MaxRetryAttempts = 5
+            })
+            .AddFallback(new FallbackStrategyOptions<bool>
+            {
+                ShouldHandle = args =>
+                    ValueTask.FromResult(
+                        args.Outcome.Exception is not null &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(args.Outcome.Exception, null)),
+                FallbackAction = async args =>
+                {
+                    var latestWorld = await _apiClient.GetWorldAsync(options.WorldId);
+                    var isUpdateSucceeded = latestWorld.UnityPackages.Any(pkg =>
+                        pkg.Platform == options.Platform &&
+                        pkg.AssetVersion == fileVersion.Version &&
+                        pkg.UnityVersion == options.UnityVersion &&
+                        pkg.AssetUrl == fileVersion.File.Url);
+
+                    if (!isUpdateSucceeded) throw new ResilienceRequestRetryException();
+                    return Outcome.FromResult(true);
+                }
+            })
+            .Build();
+
+        await updateWorldPipeline.ExecuteAsync(async ct =>
+        {
+            await _apiClient.CreateWorldVersionAsync(options.WorldId, new CreateWorldVersionRequest(
+                options.WorldName,
+                fileVersion.File.Url,
+                fileVersion.Version,
+                options.Platform,
+                options.UnityVersion,
+                options.WorldSignature,
+                imageUri,
+                description,
+                tags,
+                releaseStatus,
+                options.Capacity,
+                options.RecommendedCapacity,
+                options.PreviewYoutubeId,
+                _udonProducts
+            ), ct);
+            return true;
+        }, cancellationToken);
 
         #endregion
 
@@ -237,7 +277,8 @@ public sealed class WorldContentPublisher(
 public sealed class WorldContentPublisherFactory(
     ILogger<WorldContentPublisher> logger,
     IFileService fileService,
-    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory
 )
 {
     public WorldContentPublisher Create(
@@ -249,7 +290,8 @@ public sealed class WorldContentPublisherFactory(
             userSessionService,
             logger,
             fileService,
-            sessionStateChangedSubscriber
+            sessionStateChangedSubscriber,
+            resiliencePipelineBuilderFactory
         );
     }
 }

@@ -1,13 +1,17 @@
 ﻿using MessagePipe;
 using Microsoft.Extensions.Logging;
-using VRChatContentPublisher.ConnectCore.Models;
+using Polly;
+using Polly.Fallback;
+using Polly.Retry;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Extensions;
+using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
+using VRChatContentPublisher.VRChatApi;
 using VRChatContentPublisher.VRChatApi.ApiClient;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Avatars;
@@ -20,7 +24,8 @@ public sealed class AvatarContentPublisher(
     UserSessionService userSessionService,
     ILogger<AvatarContentPublisher> logger,
     IFileService fileService,
-    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory
 ) : IContentPublisher
 {
     internal AvatarContentPublisherOptions Options => options;
@@ -149,17 +154,49 @@ public sealed class AvatarContentPublisher(
             fileVersion.Version);
         progressReporter.Report("Updating avatar to latest asset version...");
 
-        await _apiClient.CreateAvatarVersionAsync(options.AvatarId, new CreateAvatarVersionRequest(
-            options.Name,
-            fileVersion.File.Url,
-            1,
-            options.Platform,
-            options.UnityVersion,
-            imageUri,
-            description,
-            tags,
-            releaseStatus
-        ), cancellationToken);
+                var updateWorldPipeline = resiliencePipelineBuilderFactory
+            .CreateBuilder<bool>("CreateAvatarVersion", options.AvatarId)
+            .AddRetry(new RetryStrategyOptions<bool>
+            {
+                ShouldHandle = new PredicateBuilder<bool>()
+                    .Handle<ResilienceRequestRetryException>(),
+                MaxRetryAttempts = 5
+            })
+            .AddFallback(new FallbackStrategyOptions<bool>
+            {
+                ShouldHandle = args =>
+                    ValueTask.FromResult(
+                        args.Outcome.Exception is not null &&
+                        AppHttpClientResiliencePredicates.IsTransientHttpException(args.Outcome.Exception, null)),
+                FallbackAction = async args =>
+                {
+                    var latestAvatar = await _apiClient.GetAvatarAsync(options.AvatarId, args.Context.CancellationToken);
+                    var isUpdateSucceeded = latestAvatar.UnityPackages.Any(pkg =>
+                        pkg.Platform == options.Platform &&
+                        pkg.UnityVersion == options.UnityVersion &&
+                        pkg.AssetUrl == fileVersion.File.Url);
+
+                    if (!isUpdateSucceeded) throw new ResilienceRequestRetryException();
+                    return Outcome.FromResult(true);
+                }
+            })
+            .Build();
+
+        await updateWorldPipeline.ExecuteAsync(async ct =>
+        {
+            await _apiClient.CreateAvatarVersionAsync(options.AvatarId, new CreateAvatarVersionRequest(
+                options.Name,
+                fileVersion.File.Url,
+                1,
+                options.Platform,
+                options.UnityVersion,
+                imageUri,
+                description,
+                tags,
+                releaseStatus
+            ), ct);
+            return true;
+        }, cancellationToken);
 
         #endregion
 
@@ -186,7 +223,8 @@ public sealed class AvatarContentPublisher(
 public sealed class AvatarContentPublisherFactory(
     ILogger<AvatarContentPublisher> logger,
     IFileService fileService,
-    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber
+    ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    AppResiliencePipelineBuilderFactory resiliencePipelineBuilderFactory
 )
 {
     public AvatarContentPublisher Create(
@@ -198,7 +236,8 @@ public sealed class AvatarContentPublisherFactory(
             userSession,
             logger,
             fileService,
-            sessionStateChangedSubscriber
+            sessionStateChangedSubscriber,
+            resiliencePipelineBuilderFactory
         );
     }
 }
