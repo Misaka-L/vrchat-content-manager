@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Polly;
 using VRChatContentPublisher.Core.Resilience;
@@ -30,12 +29,9 @@ public sealed class ConcurrentMultipartUploader(
     private readonly ConcurrentDictionary<int, long> _chunkProgress = new();
 
     // Speed tracking
-    private const int SpeedWindowSeconds = 3;
-    private readonly ConcurrentQueue<SpeedSample> _speedSamples = new();
-    private long _speedSampleTotalBytes;
+    private readonly UploadSpeedTracker _speedTracker = new();
 
-    private long _currentSpeedBytesPerSecond;
-    public long CurrentSpeedBytesPerSecond => Interlocked.Read(ref _currentSpeedBytesPerSecond);
+    public long CurrentSpeedBytesPerSecond => _speedTracker.GetCurrentSpeed();
 
     private ResiliencePipeline<HttpResponseMessage> CreateRetryPipeline(int partNumber)
     {
@@ -196,7 +192,7 @@ public sealed class ConcurrentMultipartUploader(
     private void OnChunkProgress(int partNumber, long bytes)
     {
         _chunkProgress.AddOrUpdate(partNumber, bytes, (_, prev) => prev + bytes);
-        RecordSpeedSample(bytes);
+        _speedTracker.RecordBytes(bytes);
     }
 
     private void FireProgressChanged()
@@ -206,36 +202,8 @@ public sealed class ConcurrentMultipartUploader(
         var inFlight = _chunkProgress.Values.Sum();
         var total = _completedChunkBytes + inFlight;
         var progress = Math.Min((double)total / fileStream.Length, 1.0);
-        ProgressChanged?.Invoke(this, (progress, CurrentSpeedBytesPerSecond));
+        ProgressChanged?.Invoke(this, (progress, _speedTracker.GetCurrentSpeed()));
     }
-
-    private void RecordSpeedSample(long bytes)
-    {
-        var now = Stopwatch.GetTimestamp();
-        _speedSamples.Enqueue(new SpeedSample(bytes, now));
-        Interlocked.Add(ref _speedSampleTotalBytes, bytes);
-
-        // Prune samples older than the sliding window.
-        var cutoff = now - SpeedWindowSeconds * Stopwatch.Frequency;
-        while (_speedSamples.TryPeek(out var sample) && sample.Timestamp < cutoff)
-        {
-            if (_speedSamples.TryDequeue(out var removed))
-                Interlocked.Add(ref _speedSampleTotalBytes, -removed.Bytes);
-        }
-
-        // Calculate current speed from the sliding window.
-        if (_speedSamples.TryPeek(out var oldest) && oldest.Timestamp < now)
-        {
-            var elapsedSeconds = (double)(now - oldest.Timestamp) / Stopwatch.Frequency;
-            if (elapsedSeconds > 0.1)
-            {
-                Interlocked.Exchange(ref _currentSpeedBytesPerSecond,
-                    (long)(Interlocked.Read(ref _speedSampleTotalBytes) / elapsedSeconds));
-            }
-        }
-    }
-
-    private readonly record struct SpeedSample(long Bytes, long Timestamp);
 
     #endregion
 
