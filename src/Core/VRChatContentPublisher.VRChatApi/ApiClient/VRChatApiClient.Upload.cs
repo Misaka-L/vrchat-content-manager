@@ -101,7 +101,7 @@ public partial class VRChatApiClient
         // Step 1. Cleanup any incomplete file versions.
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Cleanup all incomplete file versions...", null));
 
-        if (!await CleanupIncompleteFileVersionsAsync(currentAssetFile, cancellationToken))
+        if (await CleanupIncompleteFileVersionsAsync(currentAssetFile, cancellationToken))
         {
             progressCallback?.Invoke(new PublishTaskProgressEventArg(
                 "Waiting for incomplete file versions to be cleaned up by server (for 3s)...", null));
