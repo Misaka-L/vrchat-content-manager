@@ -209,8 +209,8 @@ public static class ServicesExtension
 
         services.AddVRChatApi(options =>
         {
-            options.SimpleUploadHttpClientName = s3UploadHttpClientName;
-            options.MultipartUploadHttpClientName = s3UploadWithRetryHttpClientName;
+            options.SimpleUploadHttpClientName = s3UploadWithRetryHttpClientName;
+            options.MultipartUploadHttpClientName = s3UploadHttpClientName;
         });
 
         #endregion
