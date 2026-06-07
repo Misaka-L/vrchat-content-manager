@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Attempt id to identify each attempt of publishing. [`#420`](https://github.com/project-vrcz/content-publisher/pull/420)
+  - Attempt id will show in error report and log (JSON).
 - Reduced time required for looking for avatar owner when create avatar publish task. [`#406`](https://github.com/project-vrcz/content-publisher/pull/406)
   - You must upgrade connect package avatar pack to v0.5.2.
 - User session can be restored if user information cache available. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
