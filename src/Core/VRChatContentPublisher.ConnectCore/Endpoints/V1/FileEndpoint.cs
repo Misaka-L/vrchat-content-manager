@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1.Responses.Files;
+using VRChatContentPublisher.ConnectCore.Results;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 
@@ -20,16 +20,15 @@ public static class FileEndpoint
         return endpoints;
     }
 
-    private static async Task UploadFile(HttpContext context, IServiceProvider services)
+    private static async Task<IEndpointResult> UploadFile(HttpContext context, IServiceProvider services)
     {
         var fileService = services.GetRequiredService<IFileService>();
 
         var boundary = context.Request.GetMultipartBoundary();
         if (string.IsNullOrEmpty(boundary))
         {
-            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
                 "Invalid Request", "Not a multipart request.");
-            return;
         }
 
 
@@ -65,19 +64,17 @@ public static class FileEndpoint
 
         if (!fileRead || uploadFileTask is null)
         {
-            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
                 "Invalid Request", "Request does not contain a file disposition named \"file\".");
-            return;
         }
 
         if (badRequest)
         {
-            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
                 "Invalid Request", "Request contains more than one file disposition named \"file\".");
-            return;
         }
 
-        await context.Response.WriteAsJsonAsync(new ApiV1UploadFileResponse(uploadFileTask.FileId),
+        return EndpointResults.Json(new ApiV1UploadFileResponse(uploadFileTask.FileId),
             ApiV1JsonContext.Default.ApiV1UploadFileResponse);
     }
 }

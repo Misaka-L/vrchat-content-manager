@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
+using VRChatContentPublisher.ConnectCore.Results;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
 
@@ -19,11 +20,12 @@ public static class TaskEndpoint
         return service;
     }
 
-    private static async Task CreateWorldPublishTask(HttpContext context, IServiceProvider services)
+    private static async Task<IEndpointResult> CreateWorldPublishTask(HttpContext context, IServiceProvider services)
     {
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.CreateWorldPublishTaskRequest) is not
             { } request)
-            return;
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+                "Bad Request", "Request body is null or invalid.");
 
         var loggerFactory = services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger(nameof(TaskEndpoint));
@@ -48,11 +50,13 @@ public static class TaskEndpoint
                 request.PreviewYoutubeId,
                 request.UdonProducts
             );
+
+            return EndpointResults.NoContent();
         }
         catch (ProvideFileIdNotFoundException ex)
         {
             logger.LogError(ex, "Failed to create world publish task due to provided file ID not found.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
@@ -61,7 +65,7 @@ public static class TaskEndpoint
         catch (NoUserSessionAvailableException ex)
         {
             logger.LogError(ex, "Failed to create world publish task due to no user session available.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status503ServiceUnavailable,
                 ex.Message
@@ -70,7 +74,7 @@ public static class TaskEndpoint
         catch (ContentOwnerUserSessionNotFoundException ex)
         {
             logger.LogError(ex, "Failed to create world publish task due to content owner user session not found.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
@@ -79,7 +83,7 @@ public static class TaskEndpoint
         catch (ArgumentException ex)
         {
             logger.LogError(ex, "Failed to create world publish task due to invalid argument.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
@@ -88,15 +92,19 @@ public static class TaskEndpoint
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to create world publish task.");
-            throw;
+            return EndpointResults.Problem(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status500InternalServerError,
+                "Internal Server Error", "An unexpected error occurred.");
         }
     }
 
-    private static async Task CreateAvatarPublishTask(HttpContext context, IServiceProvider services)
+    private static async Task<IEndpointResult> CreateAvatarPublishTask(HttpContext context, IServiceProvider services)
     {
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.CreateAvatarPublishTaskRequest) is not
             { } request)
-            return;
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+                "Bad Request", "Request body is null or invalid.");
 
         var loggerFactory = services.GetRequiredService<ILoggerFactory>();
         var logger = loggerFactory.CreateLogger(nameof(TaskEndpoint));
@@ -115,11 +123,13 @@ public static class TaskEndpoint
                 request.Description,
                 request.Tags,
                 request.ReleaseStatus);
+
+            return EndpointResults.NoContent();
         }
         catch (ProvideFileIdNotFoundException ex)
         {
             logger.LogError(ex, "Failed to create avatar publish task due to provided file ID not found.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
@@ -128,7 +138,7 @@ public static class TaskEndpoint
         catch (NoUserSessionAvailableException ex)
         {
             logger.LogError(ex, "Failed to create avatar publish task due to no user session available.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status503ServiceUnavailable,
                 ex.Message
@@ -137,7 +147,7 @@ public static class TaskEndpoint
         catch (ContentOwnerSessionOrAvatarNotFoundException ex)
         {
             logger.LogError(ex, "Failed to create avatar publish task due to content owner user session not found or avatar not exist.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
@@ -146,7 +156,7 @@ public static class TaskEndpoint
         catch (ArgumentException ex)
         {
             logger.LogError(ex, "Failed to create avatar publish task due to invalid argument.");
-            await context.Response.WriteProblemAsync(
+            return EndpointResults.Problem(
                 ApiV1ProblemType.Undocumented,
                 StatusCodes.Status400BadRequest,
                 ex.Message
@@ -155,6 +165,10 @@ public static class TaskEndpoint
         catch (Exception ex)
         {
             logger.LogError(ex, "Failed to create avatar publish task.");
+            return EndpointResults.Problem(
+                ApiV1ProblemType.Undocumented,
+                StatusCodes.Status500InternalServerError,
+                "Internal Server Error", "An unexpected error occurred.");
         }
     }
 }

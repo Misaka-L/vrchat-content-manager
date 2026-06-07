@@ -271,9 +271,12 @@ public sealed class HttpServerService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error handling HTTP request");
-                await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
-                    StatusCodes.Status500InternalServerError,
-                    "Internal Server Error", "An unexpected error occurred.");
+                if (!httpContext.Response.HasStarted)
+                {
+                    await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
+                        StatusCodes.Status500InternalServerError,
+                        "Internal Server Error", "An unexpected error occurred.");
+                }
             }
             finally
             {
