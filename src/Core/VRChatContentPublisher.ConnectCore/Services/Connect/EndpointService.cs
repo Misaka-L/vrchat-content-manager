@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
+using VRChatContentPublisher.ConnectCore.Results;
 
 namespace VRChatContentPublisher.ConnectCore.Services.Connect;
 
 public sealed class EndpointService(ILogger<EndpointService> logger, IServiceProvider serviceProvider)
 {
-    private readonly Dictionary<EndpointInfo, Func<HttpContext, IServiceProvider, Task>> _handlers = [];
+    private readonly Dictionary<EndpointInfo, Func<HttpContext, IServiceProvider, Task<IEndpointResult>>> _handlers = [];
 
-    public void Map(string method, string path, Func<HttpContext, IServiceProvider, Task> handler)
+    public void Map(string method, string path, Func<HttpContext, IServiceProvider, Task<IEndpointResult>> handler)
     {
         var key = new EndpointInfo(path, method.ToUpperInvariant());
         _handlers[key] = handler;
@@ -23,29 +23,35 @@ public sealed class EndpointService(ILogger<EndpointService> logger, IServicePro
         var key = new EndpointInfo(requestPath, requestMethod);
         if (_handlers.TryGetValue(key, out var handler))
         {
+            IEndpointResult result;
             try
             {
-                await handler(context, serviceProvider);
-                return;
+                result = await handler(context, serviceProvider);
             }
             catch (Exception exception)
             {
                 logger.LogError(exception, "Error handling request {Method} {Path}", requestMethod, requestPath);
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                return;
+                result = EndpointResults.Problem(ApiV1ProblemType.Undocumented,
+                    StatusCodes.Status500InternalServerError,
+                    "Internal Server Error", "An unexpected error occurred.");
             }
+
+            await result.ExecuteAsync(context);
+            return;
         }
 
         if (_handlers.Any(pair => pair.Key.Path == requestPath))
         {
-            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
-                StatusCodes.Status405MethodNotAllowed,
-                "Method Not Allowed", "The method is not allowed for the requested Endpoint.");
+            await EndpointResults.Problem(ApiV1ProblemType.Undocumented,
+                    StatusCodes.Status405MethodNotAllowed,
+                    "Method Not Allowed", "The method is not allowed for the requested Endpoint.")
+                .ExecuteAsync(context);
             return;
         }
 
-        await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status404NotFound,
-            "Not Found", "The requested Endpoint was not found on the server.");
+        await EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status404NotFound,
+                "Not Found", "The requested Endpoint was not found on the server.")
+            .ExecuteAsync(context);
     }
 
     private record EndpointInfo(string Path, string Method);

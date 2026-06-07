@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
+using VRChatContentPublisher.ConnectCore.Results;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 using VRChatContentPublisher.ConnectCore.Services.Health;
 
@@ -15,18 +15,17 @@ public static class HealthEndpoint
         return endpoints;
     }
 
-    private static async Task IsReadyForPublish(HttpContext httpContext, IServiceProvider services)
+    private static async Task<IEndpointResult> IsReadyForPublish(HttpContext httpContext, IServiceProvider services)
     {
         var contentPublishService = services.GetRequiredService<IHealthService>();
         var isReady = await contentPublishService.IsReadyForPublishAsync();
 
         if (isReady)
         {
-            httpContext.Response.StatusCode = StatusCodes.Status204NoContent;
-            return;
+            return EndpointResults.NoContent();
         }
 
-        await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
+        return EndpointResults.Problem(ApiV1ProblemType.Undocumented,
             StatusCodes.Status503ServiceUnavailable,
             "Service Unavailable",
             "The service is not ready for publishing content at this time.");

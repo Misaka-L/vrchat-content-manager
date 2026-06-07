@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1.Responses.Auth;
+using VRChatContentPublisher.ConnectCore.Results;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 
 namespace VRChatContentPublisher.ConnectCore.Endpoints.V1;
@@ -19,7 +20,7 @@ public static class AuthEndpoint
         return endpoints;
     }
 
-    private static async Task GetMetadata(HttpContext context, IServiceProvider _)
+    private static async Task<IEndpointResult> GetMetadata(HttpContext context, IServiceProvider _)
     {
         if (context.User.Identity is null) throw new InvalidOperationException("User identity is null.");
 
@@ -29,37 +30,40 @@ public static class AuthEndpoint
         if (string.IsNullOrEmpty(identity) || string.IsNullOrEmpty(expires) ||
             !ulong.TryParse(expires, out var expUnix))
         {
-            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status401Unauthorized,
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status401Unauthorized,
                 "Invalid Session", "The session is invalid or has expired. Please authenticate again.");
-            return;
         }
 
         var response = new ApiV1AuthMetadataResponse(expUnix, identity);
 
-        await context.Response.WriteAsJsonAsync(response, ApiV1JsonContext.Default.ApiV1AuthMetadataResponse);
+        return EndpointResults.Json(response, ApiV1JsonContext.Default.ApiV1AuthMetadataResponse);
     }
 
-    private static async Task RefreshToken(HttpContext context, IServiceProvider services)
+    private static async Task<IEndpointResult> RefreshToken(HttpContext context, IServiceProvider services)
     {
         if (context.User.Identity?.Name is null)
             throw new InvalidOperationException("User identity is null.");
 
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.ApiV1RefreshTokenRequest) is not
-            { } requestBody) return;
+            { } requestBody)
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+                "Bad Request", "Request body is null or invalid.");
 
         var sessionService = services.GetRequiredService<ClientSessionService>();
         var sessionId = context.User.Identity.Name;
         var clientName = requestBody.ClientName;
 
         var jwt = await sessionService.RefreshSessionAsync(sessionId, clientName);
-        await context.Response.WriteAsJsonAsync(new ApiV1ChallengeResponse(jwt),
+        return EndpointResults.Json(new ApiV1ChallengeResponse(jwt),
             ApiV1JsonContext.Default.ApiV1ChallengeResponse);
     }
 
-    private static async Task Challenge(HttpContext context, IServiceProvider services)
+    private static async Task<IEndpointResult> Challenge(HttpContext context, IServiceProvider services)
     {
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.ApiV1AuthChallengeRequest) is not
-            { } requestBody) return;
+            { } requestBody)
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+                "Bad Request", "Request body is null or invalid.");
 
         var sessionService = services.GetRequiredService<ClientSessionService>();
 
@@ -71,19 +75,20 @@ public static class AuthEndpoint
         }
         catch (InvalidOperationException)
         {
-            await context.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
                 "Code is invalid.", "The provided code is invalid or has expired.");
-            return;
         }
 
-        await context.Response.WriteAsJsonAsync(new ApiV1ChallengeResponse(jwt),
+        return EndpointResults.Json(new ApiV1ChallengeResponse(jwt),
             ApiV1JsonContext.Default.ApiV1ChallengeResponse);
     }
 
-    private static async Task RequestChallenge(HttpContext context, IServiceProvider services)
+    private static async Task<IEndpointResult> RequestChallenge(HttpContext context, IServiceProvider services)
     {
         if (await context.ReadJsonWithErrorHandleAsync(ApiV1JsonContext.Default.ApiV1RequestChallengeRequest) is not
-            { } requestBody) return;
+            { } requestBody)
+            return EndpointResults.Problem(ApiV1ProblemType.Undocumented, StatusCodes.Status400BadRequest,
+                "Bad Request", "Request body is null or invalid.");
 
         var sessionService = services.GetRequiredService<ClientSessionService>();
         var clientId = requestBody.ClientId;
@@ -92,6 +97,6 @@ public static class AuthEndpoint
 
         await sessionService.CreateChallengeAsync(clientId, identityPrompt, clientName);
 
-        context.Response.StatusCode = StatusCodes.Status204NoContent;
+        return EndpointResults.NoContent();
     }
 }

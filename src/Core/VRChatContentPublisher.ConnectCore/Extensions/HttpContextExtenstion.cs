@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization.Metadata;
 using Microsoft.AspNetCore.Http;
-using VRChatContentPublisher.ConnectCore.Models.Api.V1;
 
 namespace VRChatContentPublisher.ConnectCore.Extensions;
 
@@ -11,25 +10,11 @@ internal static class HttpContextExtenstion
     {
         try
         {
-            var jsonBody = await httpContext.Request.ReadFromJsonAsync(typeInfo);
-            if (jsonBody is null)
-            {
-                await httpContext.Response.WriteProblemAsync(
-                    ApiV1ProblemType.Undocumented,
-                    StatusCodes.Status400BadRequest,
-                    "Bad Request", "Request body is null or invalid.");
-            }
-
-            return jsonBody;
+            return await httpContext.Request.ReadFromJsonAsync(typeInfo);
         }
         catch (Exception)
         {
-            await httpContext.Response.WriteProblemAsync(
-                ApiV1ProblemType.Undocumented,
-                StatusCodes.Status400BadRequest,
-                "Bad Request", "Request body is null or invalid.");
+            return default;
         }
-
-        return default;
     }
 }

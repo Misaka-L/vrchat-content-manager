@@ -29,8 +29,7 @@ public sealed class HttpServerService
     private readonly List<MiddlewareBase> _postRequestMiddlewares = [];
 
     public HttpServerService(ILoggerFactory loggerFactory, ILogger<HttpServerService> logger,
-        EndpointMiddleware endpointMiddleware,
-        PostRequestLoggingMiddleware postRequestLoggingMiddleware, JwtAuthMiddleware jwtAuthMiddleware)
+        EndpointMiddleware endpointMiddleware, JwtAuthMiddleware jwtAuthMiddleware)
     {
         _loggerFactory = loggerFactory;
         _logger = logger;
@@ -39,7 +38,6 @@ public sealed class HttpServerService
         _preRequestMiddlewares.Add(jwtAuthMiddleware);
 
         _postRequestMiddlewares.Add(endpointMiddleware);
-        _postRequestMiddlewares.Add(postRequestLoggingMiddleware);
     }
 
     public async Task<bool> TryStartOnPortAsync(int port, CancellationToken cancellationToken)
@@ -273,9 +271,23 @@ public sealed class HttpServerService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error handling HTTP request");
-                await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
-                    StatusCodes.Status500InternalServerError,
-                    "Internal Server Error", "An unexpected error occurred.");
+                if (!httpContext.Response.HasStarted)
+                {
+                    await httpContext.Response.WriteProblemAsync(ApiV1ProblemType.Undocumented,
+                        StatusCodes.Status500InternalServerError,
+                        "Internal Server Error", "An unexpected error occurred.");
+                }
+            }
+            finally
+            {
+                _logger.LogInformation("{RequestId} {ClientIp}:{ClientPort} {Method} {Path}{Query} => {StatusCode}",
+                    httpContext.TraceIdentifier,
+                    httpContext.Connection.RemoteIpAddress,
+                    httpContext.Connection.RemotePort,
+                    httpContext.Request.Method,
+                    httpContext.Request.Path,
+                    httpContext.Request.QueryString,
+                    httpContext.Response.StatusCode);
             }
         }
     }
