@@ -19,7 +19,6 @@ public static class ServicesExtenstion
         // Middlewares
         services.AddTransient<JwtAuthMiddleware>();
         services.AddTransient<EndpointMiddleware>();
-        services.AddTransient<PostRequestLoggingMiddleware>();
         
         return services;
     }
