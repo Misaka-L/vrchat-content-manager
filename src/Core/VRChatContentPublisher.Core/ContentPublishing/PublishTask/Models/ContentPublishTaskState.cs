@@ -19,6 +19,11 @@ public sealed class ContentPublishTaskState
     /// </summary>
     public string TaskId { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The unique identifier of the publishing attempt. Will increment with each retry.
+    /// </summary>
+    public int AttemptId { get; set; }
+
     #endregion
 
     #region Content Information

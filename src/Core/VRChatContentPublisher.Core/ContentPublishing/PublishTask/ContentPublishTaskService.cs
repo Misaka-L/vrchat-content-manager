@@ -122,13 +122,17 @@ public sealed class ContentPublishTaskService
 
     private async Task StartTaskCoreAsync()
     {
+        State.AttemptId++;
+        await RequestPersistAsync();
+
         using (_logger.BeginScope(
-                   "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform}, Raw BundleFileId: {RawBundleFileId}",
+                   "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform} Attempt {AttemptId}, Raw BundleFileId: {RawBundleFileId}",
                    State.TaskId, State.ContentType, State.ContentName, State.ContentId, State.ContentPlatform,
-                   State.RawBundleFileId)
+                   State.AttemptId, State.RawBundleFileId)
               )
         {
             LastError = null;
+
             if (State.CurrentStage == PublishTaskStage.Done)
             {
                 UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
@@ -287,7 +291,8 @@ public sealed class ContentPublishTaskService
             or ContentPublishTaskStatus.Canceled
             or ContentPublishTaskStatus.Failed
             or ContentPublishTaskStatus.Pending))
-            throw new InvalidOperationException("Can only cleanup a task that is pending, completed, canceled or failed.");
+            throw new InvalidOperationException(
+                "Can only cleanup a task that is pending, completed, canceled or failed.");
 
         Status = ContentPublishTaskStatus.Disposed;
 
