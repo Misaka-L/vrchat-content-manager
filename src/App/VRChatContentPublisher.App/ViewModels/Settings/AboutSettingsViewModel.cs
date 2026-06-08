@@ -3,6 +3,7 @@ using Material.Icons;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.ViewModels.Pages.Settings;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;

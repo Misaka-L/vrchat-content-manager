@@ -6,6 +6,7 @@ using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 

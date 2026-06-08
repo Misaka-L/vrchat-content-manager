@@ -5,6 +5,7 @@ using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.App.ViewModels;
 

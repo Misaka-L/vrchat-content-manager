@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using VRChatContentPublisher.Core.Shared.Attributes;
 
-namespace VRChatContentPublisher.Core.Utils;
+namespace VRChatContentPublisher.Core.Shared.Utils;
 
 public static class AppVersionUtils
 {

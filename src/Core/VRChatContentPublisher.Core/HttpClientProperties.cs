@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core;

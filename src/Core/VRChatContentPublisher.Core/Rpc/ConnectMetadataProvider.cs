@@ -1,6 +1,7 @@
 ﻿using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core.Rpc;

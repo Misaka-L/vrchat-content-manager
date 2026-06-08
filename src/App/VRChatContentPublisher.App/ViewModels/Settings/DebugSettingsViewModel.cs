@@ -5,6 +5,7 @@ using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.App.Views;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.PublicIpChecker.IPCrypt;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 

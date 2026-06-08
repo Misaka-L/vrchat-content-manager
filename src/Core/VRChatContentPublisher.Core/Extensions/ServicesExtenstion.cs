@@ -25,6 +25,7 @@ using VRChatContentPublisher.Core.Rpc;
 using VRChatContentPublisher.Core.Rpc.TaskCreation;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.VirtualFileSystem.Services;
 using VRChatContentPublisher.PersistentCore.Extensions;

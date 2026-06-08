@@ -65,7 +65,7 @@ jobs:
         with:
           tags: csproj.Version
           version: ${{ inputs.new-version}}
-          file: "\"${{ env.repo_dir }}/src/App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj\""
+          file: "\"${{ env.repo_dir }}/src/App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core.Shared/VRChatContentPublisher.Core.Shared.csproj\""
 
       - name: Extact Release Note and Update Changelog
         working-directory: ${{ env.repo_dir }}

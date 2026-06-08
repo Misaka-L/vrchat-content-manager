@@ -10,6 +10,9 @@ using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentPublisher.App.Extensions;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Extensions;
+using VRChatContentPublisher.Core.Shared;
+using VRChatContentPublisher.Core.Shared.Sentry.Extensions;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.IpcCore;
 using VRChatContentPublisher.IpcCore.Exceptions;
@@ -36,27 +39,8 @@ internal sealed class Program
     [SupportedOSPlatform("macos")]
     public static void Main(string[] args)
     {
-        SentrySdk.Init(options =>
-        {
-            var distribution =
-#if WINDOWS
-                "win-x64";
-#else
-                OperatingSystem.IsLinux() ? "linux-x64" : "unknown";
-#endif
-
-            options.Dsn =
-                "https://410cfecb0ce1c5ff78c89f94145b0803@o4511519891914752.ingest.de.sentry.io/4511519908364368";
-            options.IsGlobalModeEnabled = true;
-            options.Distribution = distribution;
-            options.CacheDirectoryPath = Path.Combine(AppStorageService.GetTempPath(), "sentry-cache");
-#if DEBUG
-            options.Release = $"dev-{AppVersionUtils.GetAppVersion()}+{AppVersionUtils.GetAppCommitHash()}";
-            options.Environment = "debug";
-#else
-            options.Release = AppVersionUtils.GetAppVersion();
-#endif
-        });
+        // VRChatContentPublisher.Core.Shared.Sentry.Extensions.SentrySdkExtension
+        SentrySdk.InitForApp();
 
         var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
         var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
