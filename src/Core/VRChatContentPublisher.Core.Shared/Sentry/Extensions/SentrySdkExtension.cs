@@ -22,6 +22,8 @@ public static class SentrySdkExtension
                 options.IsGlobalModeEnabled = true;
                 options.Distribution = distribution;
                 options.CacheDirectoryPath = Path.Combine(AppStorageService.GetTempPath(), "sentry-cache");
+                options.EnableLogs = true;
+                options.AutoSessionTracking = true;
 #if DEBUG
                 options.Release = $"dev-{AppVersionUtils.GetAppVersion()}+{AppVersionUtils.GetAppCommitHash()}";
                 options.Environment = "debug";

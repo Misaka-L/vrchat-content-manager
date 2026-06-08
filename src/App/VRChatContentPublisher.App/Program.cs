@@ -57,6 +57,7 @@ internal sealed class Program
             .WriteTo.Async(writer =>
                 writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
+            .WriteTo.Sentry()
             .CreateLogger();
 
         Log.Information(
