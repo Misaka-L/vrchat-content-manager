@@ -10,4 +10,8 @@
         <PackageReference Include="SauceControl.Blake2Fast"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\VRChatContentPublisher.SentryCore\VRChatContentPublisher.SentryCore.csproj"/>
+    </ItemGroup>
+
 </Project>

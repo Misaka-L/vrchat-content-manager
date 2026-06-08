@@ -18,6 +18,7 @@ using VRChatContentPublisher.IpcCore.Models;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
+
 #else
 using VRChatContentPublisher.Platform.Noop.Extensions;
 #endif
@@ -35,6 +36,28 @@ internal sealed class Program
     [SupportedOSPlatform("macos")]
     public static void Main(string[] args)
     {
+        SentrySdk.Init(options =>
+        {
+            var distribution =
+#if WINDOWS
+                "win-x64";
+#else
+                OperatingSystem.IsLinux() ? "linux-x64" : "unknown";
+#endif
+
+            options.Dsn =
+                "https://410cfecb0ce1c5ff78c89f94145b0803@o4511519891914752.ingest.de.sentry.io/4511519908364368";
+            options.IsGlobalModeEnabled = true;
+            options.Distribution = distribution;
+            options.CacheDirectoryPath = Path.Combine(AppStorageService.GetTempPath(), "sentry-cache");
+#if DEBUG
+            options.Release = $"dev-{AppVersionUtils.GetAppVersion()}+{AppVersionUtils.GetAppCommitHash()}";
+            options.Environment = "debug";
+#else
+            options.Release = AppVersionUtils.GetAppVersion();
+#endif
+        });
+
         var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
         var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
         Log.Logger = new LoggerConfiguration()
@@ -59,7 +82,6 @@ internal sealed class Program
             AppVersionUtils.GetAppCommitHash()
         );
 
-
         AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
         {
             if (eventArgs.ExceptionObject is not Exception ex)
@@ -72,9 +94,16 @@ internal sealed class Program
                     eventArgs.IsTerminating
                 );
 
+                SentrySdk.CaptureMessage(
+                    $"An unhandled exception of type {eventArgs.ExceptionObject.GetType()} was thrown: {eventArgs.ExceptionObject}, IsTerminating: {eventArgs.IsTerminating}",
+                    eventArgs.IsTerminating ? SentryLevel.Fatal : SentryLevel.Error
+                );
+
+                if (!eventArgs.IsTerminating) return;
 #if RELEASE
                 TryLaunchCrashHandler(eventArgs.ExceptionObject);
 #endif
+                SentrySdk.Flush();
                 return;
             }
 
@@ -84,9 +113,11 @@ internal sealed class Program
                 eventArgs.IsTerminating
             );
 
+            if (!eventArgs.IsTerminating) return;
 #if RELEASE
             TryLaunchCrashHandler(ex);
 #endif
+            SentrySdk.Flush();
         };
 
         try
@@ -148,6 +179,11 @@ internal sealed class Program
             Log.Fatal(ex, "Oops, the application has crashed!");
             Environment.ExitCode = -1;
 
+            ex.SetSentryMechanism(
+                "Main.UnhandledException",
+                "The application has crashed due to an unhandled exception.",
+                handled: false);
+            SentrySdk.CaptureException(ex);
 #if RELEASE
             TryLaunchCrashHandler(ex);
 #endif
@@ -155,6 +191,7 @@ internal sealed class Program
         finally
         {
             Log.CloseAndFlush();
+            SentrySdk.Flush();
         }
     }
 
