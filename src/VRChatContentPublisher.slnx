@@ -7,6 +7,7 @@
   <Folder Name="/SolutionFolder/">
     <File Path="BuildInfo.targets" />
     <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
   </Folder>
   <Folder Name="/App/">
     <File Path="App/Directory.Packages.props" />
@@ -30,6 +31,7 @@
   </Folder>
   <Folder Name="/SubModules/">
     <Project Path="Submodules/AssetsTools.NET/AssetTools.NET/AssetsTools.NET.csproj" />
+    <File Path="Submodules/Directory.Packages.props" />
   </Folder>
   <Folder Name="/SubModules/Antelcat.I18N/">
     <Project Path="Submodules/Antelcat.18N/src/Antelcat.I18N.Abstractions/Antelcat.I18N.Abstractions.csproj" />
