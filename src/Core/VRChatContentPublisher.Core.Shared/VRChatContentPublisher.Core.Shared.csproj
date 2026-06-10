@@ -10,8 +10,6 @@
         <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions"/>
         <PackageReference Include="Microsoft.Extensions.Http.Resilience"/>
         <PackageReference Include="SauceControl.Blake2Fast"/>
-
-        <PackageReference Include="Sentry"/>
     </ItemGroup>
 
     <Import Project="../../BuildInfo.targets"/>

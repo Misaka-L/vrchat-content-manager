@@ -27,6 +27,7 @@
     <Project Path="Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj" />
     <Project Path="Core/VRChatContentPublisher.IpcCore/VRChatContentPublisher.IpcCore.csproj" />
     <Project Path="Core/VRChatContentPublisher.SqliteCore/VRChatContentPublisher.SqliteCore.csproj" />
+    <Project Path="Core/VRChatContentPublisher.TelemetryCore/VRChatContentPublisher.TelemetryCore.csproj" />
     <Project Path="Core/VRChatContentPublisher.VRChatApi/VRChatContentPublisher.VRChatApi.csproj" />
   </Folder>
   <Folder Name="/SubModules/">

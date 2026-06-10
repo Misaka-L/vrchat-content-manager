@@ -11,13 +11,13 @@ using VRChatContentPublisher.App.Extensions;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Shared;
-using VRChatContentPublisher.Core.Shared.Sentry.Extensions;
 using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.IpcCore;
 using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
 using VRChatContentPublisher.IpcCore.Models;
+using VRChatContentPublisher.TelemetryCore.Extensions;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
@@ -39,7 +39,7 @@ internal sealed class Program
     [SupportedOSPlatform("macos")]
     public static void Main(string[] args)
     {
-        // VRChatContentPublisher.Core.Shared.Sentry.Extensions.SentrySdkExtension
+        // VRChatContentPublisher.TelemetryCore.Extensions.SentrySdkExtension
         SentrySdk.InitForApp();
 
         var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
@@ -124,6 +124,8 @@ internal sealed class Program
 
             builder.Services.AddSerilog();
 
+            // VRChatContentPublisher.App.Extensions.HostBuilderExtension.AddAppTelemetry<T>
+            builder.AddAppTelemetry();
             builder.UseAppCore();
             builder.Services.AddAppServices();
             builder.Services.AddIpcCore();

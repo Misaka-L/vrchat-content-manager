@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using MessagePipe;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.BundleProcessCore.Models;
@@ -9,6 +10,7 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Events.PublishTask;
+using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.Utils;
 
 namespace VRChatContentPublisher.Core.ContentPublishing.PublishTask;
@@ -125,16 +127,25 @@ public sealed class ContentPublishTaskService
         State.AttemptId++;
         await RequestPersistAsync();
 
+        LastError = null;
+
+        using (var activity = CoreActivitySources.ContentPublishing.StartActivity("ContentPublishTask"))
         using (_logger.BeginScope(
                    "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform} Attempt {AttemptId}, Raw BundleFileId: {RawBundleFileId}",
                    State.TaskId, State.ContentType, State.ContentName, State.ContentId, State.ContentPlatform,
-                   State.AttemptId, State.RawBundleFileId)
-              )
+                   State.AttemptId, State.RawBundleFileId))
         {
-            LastError = null;
+            activity?.SetTag("content.id", State.ContentId);
+            activity?.SetTag("content.name", State.ContentName);
+            activity?.SetTag("content.type", State.ContentType);
+            activity?.SetTag("content.platform", State.ContentPlatform);
+            activity?.SetTag("task.id", State.TaskId);
+            activity?.SetTag("task.attempt_id", State.AttemptId);
+            activity?.SetTag("task.raw_bundle_file_id", State.RawBundleFileId);
 
             if (State.CurrentStage == PublishTaskStage.Done)
             {
+                activity?.SetStatus(ActivityStatusCode.Ok);
                 UpdateProgress("Content Published", 1, ContentPublishTaskStatus.Completed);
                 return;
             }
@@ -146,6 +157,7 @@ public sealed class ContentPublishTaskService
             {
                 if (State.CurrentStage == PublishTaskStage.BundleProcessing)
                 {
+                    using (CoreActivitySources.ContentPublishing.StartActivity("BundleProcessing"))
                     using (_logger.BeginScope("Stage {TaskStage}", State.CurrentStage))
                     {
                         UpdateProgress("Preparing to process bundle file...", null);
@@ -161,12 +173,15 @@ public sealed class ContentPublishTaskService
                     if (!_contentPublisher.CanPublish())
                         throw new InvalidOperationException("Account session expired or invalid.");
 
+                    using (var contentPublishingActivity =
+                           CoreActivitySources.ContentPublishing.StartActivity("ContentPublishing"))
                     using (_logger.BeginScope(
                                "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
                                State.CurrentStage,
                                State.BundleFileId)
                           )
                     {
+                        contentPublishingActivity?.SetTag("final_bundle_file_id", State.BundleFileId);
                         UpdateProgress("Preparing for publish...", null);
 
                         await PublishAsync(cancellationToken);
@@ -181,11 +196,15 @@ public sealed class ContentPublishTaskService
             catch (OperationCanceledException ex) when (_cancellationTokenSource.IsCancellationRequested)
             {
                 _logger.LogError(ex, "Publish task for content {ContentId} was cancelled.", State.ContentId);
+                activity?.AddEvent(new ActivityEvent("TaskCancelled"));
+
                 UpdateProgress("Task was cancelled.", 1, ContentPublishTaskStatus.Canceled);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error publishing content {ContentId}", State.ContentId);
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+
                 LastError = ex;
                 State.ErrorMessage = ex.Message;
                 UpdateProgress(ex.Message, 1, ContentPublishTaskStatus.Failed);

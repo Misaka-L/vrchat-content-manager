@@ -1,6 +1,8 @@
-﻿using VRChatContentPublisher.Core.Shared.Utils;
+﻿using Sentry.OpenTelemetry;
+using VRChatContentPublisher.Core.Shared;
+using VRChatContentPublisher.Core.Shared.Utils;
 
-namespace VRChatContentPublisher.Core.Shared.Sentry.Extensions;
+namespace VRChatContentPublisher.TelemetryCore.Extensions;
 
 public static class SentrySdkExtension
 {
@@ -18,6 +20,9 @@ public static class SentrySdkExtension
                 options.EnableLogs = true;
                 options.AutoSessionTracking = true;
                 options.Release = GetRelease();
+                options.DisableSentryHttpMessageHandler = true;
+                options.TracesSampleRate = 1.0;
+                options.UseOpenTelemetry();
 #if DEBUG
                 options.Environment = "debug";
 #endif
