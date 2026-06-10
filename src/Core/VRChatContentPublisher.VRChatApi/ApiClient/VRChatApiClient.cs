@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
@@ -21,6 +22,7 @@ using VRChatContentPublisher.VRChatApi.Models.Rest.Avatars;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
 using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Worlds;
+using VRChatContentPublisher.VRChatApi.Telemetry;
 using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.VRChatApi.ApiClient;
@@ -572,6 +574,9 @@ public sealed partial class VRChatApiClient(
     public async ValueTask<bool> CleanupIncompleteFileVersionsAsync(
         VRChatApiFile file, CancellationToken cancellationToken = default)
     {
+        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity("CleanupIncompleteFileVersions")?
+            .SetTag("file_id", file.Id);
+
         cancellationToken.ThrowIfCancellationRequested();
 
         var fileDirty = false;
@@ -592,6 +597,10 @@ public sealed partial class VRChatApiClient(
                     ),
                 FallbackAction = async args =>
                 {
+                    using var fallbackActivity = VRChatApiCoreTelemetry.VRChatApi
+                        .StartActivity("AttemptCleanupIncompleteFileVersions.FallbackRefreshFile")?
+                        .SetTag("file_id", file.Id);
+
                     file = await GetFileAsync(file.Id, args.Context.CancellationToken);
                     throw new ResilienceRequestRetryException();
                 }
@@ -600,6 +609,10 @@ public sealed partial class VRChatApiClient(
 
         return await deletePipeline.ExecuteAsync(async ct =>
         {
+            using var attemptActivity = VRChatApiCoreTelemetry.VRChatApi
+                .StartActivity("AttemptCleanupIncompleteFileVersions")?
+                .SetTag("file_id", file.Id);
+
             var incompleteVersions = file.Versions
                 .Where(version => version.Status != "complete")
                 .ToArray();

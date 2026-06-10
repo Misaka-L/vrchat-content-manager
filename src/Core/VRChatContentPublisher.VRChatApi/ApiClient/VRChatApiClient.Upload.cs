@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Fallback;
@@ -8,6 +9,7 @@ using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.ProgressReport;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
 using VRChatContentPublisher.VRChatApi.Models.Rest.UnityPackages;
+using VRChatContentPublisher.VRChatApi.Telemetry;
 using VRChatContentPublisher.VRChatApi.Utils;
 
 namespace VRChatContentPublisher.VRChatApi.ApiClient;
@@ -19,6 +21,10 @@ public partial class VRChatApiClient
         string fileName,
         string platform)
     {
+        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity()?
+            .SetTag("platform", platform)
+            .SetTag("file_name", fileName);
+
         var platformApiUnityPackage = VRChatApiFileUtils.TryGetUnityPackageForPlatform(unityPackages, platform);
         if (platformApiUnityPackage is not null)
         {
@@ -30,7 +36,9 @@ public partial class VRChatApiClient
         }
 
         var extension = Path.GetExtension(fileName);
-        var file = await CreateFileAsync(fileName, VRChatApiFileUtils.GetMimeTypeFromExtension(extension), extension);
+        var file = await CreateFileAsync(
+            fileName, VRChatApiFileUtils.GetMimeTypeFromExtension(extension), extension
+        );
 
         return file.Id;
     }
@@ -41,6 +49,10 @@ public partial class VRChatApiClient
         CancellationToken cancellationToken = default
     )
     {
+        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity()?
+            .SetTag("content_type", contentType)
+            .SetTag("thumbnail_file_name", thumbnailFileName);
+
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for thumbnail upload...", null));
 
         var imageFileId = await GetOrCreateThumbnailFileIdAsync(
@@ -94,6 +106,10 @@ public partial class VRChatApiClient
         string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
+        using var activity = VRChatApiCoreTelemetry.VRChatApi
+            .StartActivity(nameof(CreateAndUploadFileVersionAsync) + "." + userFileType)?
+            .SetTag("file_id", fileId)
+            .SetTag("user_file_type", userFileType);
         cancellationToken.ThrowIfCancellationRequested();
 
         var currentAssetFile = await GetFileAsync(fileId, cancellationToken);
@@ -209,6 +225,13 @@ public partial class VRChatApiClient
         Action<double?, long?>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
+        using var activity = VRChatApiCoreTelemetry.VRChatApi
+            .StartActivity(nameof(UploadFileVersionAsync) + "." + fileType)?
+            .SetTag("file_id", fileId)
+            .SetTag("version", version)
+            .SetTag("file_type", fileType.ToString())
+            .SetTag("is_simple_upload", isSimpleUpload);
+
         cancellationToken.ThrowIfCancellationRequested();
 
         progressCallback?.Invoke(null, null);
@@ -250,6 +273,9 @@ public partial class VRChatApiClient
         string? contentType = null,
         CancellationToken cancellationToken = default)
     {
+        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity()?
+            .SetTag("is_simple_upload", isSimpleUpload);
+
         cancellationToken.ThrowIfCancellationRequested();
 
         var content = new StreamContent(stream);
