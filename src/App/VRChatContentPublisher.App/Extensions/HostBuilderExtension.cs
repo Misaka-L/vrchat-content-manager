@@ -4,6 +4,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Sentry.OpenTelemetry;
 using VRChatContentPublisher.Core.Telemetry;
+using VRChatContentPublisher.PersistentCore.Telemetry;
 
 namespace VRChatContentPublisher.App.Extensions;
 
@@ -16,6 +17,8 @@ public static class HostBuilderExtension
             {
                 tracing.AddHttpClientInstrumentation();
                 tracing.AddSource(CoreActivitySources.ContentPublishingActivitySourceName);
+
+                tracing.AddSource(SqliteCoreActivitySources.SqliteCoreActivitySourceName);
 
                 // https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-builtin-activities
                 tracing.AddSource("Experimental.System.Net.Http.Connections");
