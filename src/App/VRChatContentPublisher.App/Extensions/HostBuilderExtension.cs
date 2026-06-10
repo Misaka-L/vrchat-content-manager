@@ -20,6 +20,7 @@ public static class HostBuilderExtension
             {
                 tracing.AddHttpClientInstrumentation();
                 tracing.AddSource(CoreActivitySources.ContentPublishingActivitySourceName);
+                tracing.AddSource(CoreActivitySources.RpcActivitySourceName);
                 tracing.AddSource(SqliteCoreActivitySources.SqliteCoreActivitySourceName);
                 tracing.AddSource(VRChatApiCoreActivitySources.VRChatApiActivitySourceName);
                 tracing.AddSource(BundleProcessCoreActivitySources.BundleProcessCoreActivitySourceName);

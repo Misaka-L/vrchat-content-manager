@@ -12,6 +12,7 @@ using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Shared.Resilience;
+using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.VRChatApi;
@@ -58,6 +59,10 @@ public sealed class WorldContentPublisher(
         CancellationToken cancellationToken = default
     )
     {
+        using var activity = CoreActivitySources.ContentPublishing
+            .StartActivity("WorldContentPublisher.BeforePublishTaskAsync")?
+            .SetTag("world_id", options.WorldId);
+
         // try fetch world detail, if not found means we need to create a new world.
         try
         {
@@ -122,6 +127,10 @@ public sealed class WorldContentPublisher(
         PublishStageProgressReporter progressReporter,
         CancellationToken cancellationToken = default)
     {
+        using var activity = CoreActivitySources.ContentPublishing
+            .StartActivity("WorldContentPublisher.PublishAsync")?
+            .SetTag("world_id", options.WorldId);
+
         #region Initialzation (Get rpc file stream, ensure session is valid, check CancellationToken)
 
         cancellationToken.ThrowIfCancellationRequested();

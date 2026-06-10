@@ -10,6 +10,7 @@ using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Shared.Resilience;
+using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.VRChatApi;
@@ -63,6 +64,10 @@ public sealed class AvatarContentPublisher(
         PublishStageProgressReporter progressReporter,
         CancellationToken cancellationToken = default)
     {
+        using var activity = CoreActivitySources.ContentPublishing
+            .StartActivity("AvatarContentPublisher.PublishAsync")?
+            .SetTag("avatar_id", options.AvatarId);
+
         #region Initialzation (Get rpc file stream, ensure session is valid, check CancellationToken)
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -155,7 +160,7 @@ public sealed class AvatarContentPublisher(
             fileVersion.Version);
         progressReporter.Report("Updating avatar to latest asset version...");
 
-                var updateWorldPipeline = resiliencePipelineBuilderFactory
+        var updateWorldPipeline = resiliencePipelineBuilderFactory
             .CreateBuilder<bool>("CreateAvatarVersion", options.AvatarId)
             .AddRetry(new RetryStrategyOptions<bool>
             {
@@ -171,7 +176,8 @@ public sealed class AvatarContentPublisher(
                         AppHttpClientResiliencePredicates.IsTransientHttpException(args.Outcome.Exception, null)),
                 FallbackAction = async args =>
                 {
-                    var latestAvatar = await _apiClient.GetAvatarAsync(options.AvatarId, args.Context.CancellationToken);
+                    var latestAvatar =
+                        await _apiClient.GetAvatarAsync(options.AvatarId, args.Context.CancellationToken);
                     var isUpdateSucceeded = latestAvatar.UnityPackages.Any(pkg =>
                         pkg.Platform == options.Platform &&
                         pkg.UnityVersion == options.UnityVersion &&

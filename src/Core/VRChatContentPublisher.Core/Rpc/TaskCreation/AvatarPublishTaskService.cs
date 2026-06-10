@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
@@ -6,6 +7,7 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 
@@ -28,6 +30,11 @@ public sealed class AvatarPublishTaskService(
         string[]? tags,
         string? releaseStatus)
     {
+        using var activity = CoreActivitySources.Rpc.StartActivity("CreateAvatarPublishTask")?
+            .SetTag("avatarId", avatarId)
+            .SetTag("authorId", authorId)
+            .SetTag("platform", platform)
+            .SetTag("unityVersion", unityVersion);
         try
         {
             var userSession = await GetUserSessionByAvatarIdAsync(avatarId, authorId);
@@ -59,6 +66,7 @@ public sealed class AvatarPublishTaskService(
         }
         catch (Exception e)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, e.Message);
             logger.LogError(e, "Failed to create avatar publish task for avatar {AvatarId}", avatarId);
             throw;
         }
@@ -67,6 +75,10 @@ public sealed class AvatarPublishTaskService(
     public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(string avatarId,
         string? requestUserId = null)
     {
+        using var activity = CoreActivitySources.Rpc.StartActivity("GetUserSessionByAvatarId")?
+            .SetTag("avatarId", avatarId)
+            .SetTag("requestUserId", requestUserId);
+
         if (!userSessionManagerService.IsAnySessionAvailable)
             throw new NoUserSessionAvailableException();
 
