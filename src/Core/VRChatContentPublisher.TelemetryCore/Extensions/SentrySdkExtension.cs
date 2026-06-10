@@ -12,8 +12,7 @@ public static class SentrySdkExtension
         {
             SentrySdk.Init(options =>
             {
-                options.Dsn =
-                    "https://410cfecb0ce1c5ff78c89f94145b0803@o4511519891914752.ingest.de.sentry.io/4511519908364368";
+                options.Dsn = SentryDsnProvider.GetDsn();
                 options.IsGlobalModeEnabled = true;
                 options.Distribution = GetDistribution();
                 options.CacheDirectoryPath = Path.Combine(AppStorageService.GetTempPath(), "sentry-cache");
@@ -22,12 +21,19 @@ public static class SentrySdkExtension
                 options.Release = GetRelease();
                 options.DisableSentryHttpMessageHandler = true;
                 options.TracesSampleRate = 1.0;
-                options.UseOpenTelemetry();
-#if DEBUG
-                options.Environment = "debug";
-#endif
+                options.Environment = GetEnvironment();
+                options.UseOtlp();
             });
         }
+    }
+    
+    internal static string GetEnvironment()
+    {
+#if DEBUG
+        return "debug";
+#else
+        return "production";
+#endif
     }
 
     private static string GetRelease()

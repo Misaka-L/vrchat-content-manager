@@ -6,7 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="Sentry"/>
-        <PackageReference Include="Sentry.OpenTelemetry"/>
+        <PackageReference Include="Sentry.OpenTelemetry.Exporter"/>
         <PackageReference Include="OpenTelemetry"/>
         <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.Http"/>

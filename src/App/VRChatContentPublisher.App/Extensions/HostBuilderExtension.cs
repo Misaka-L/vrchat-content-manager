@@ -7,6 +7,8 @@ using VRChatContentPublisher.BundleProcessCore.Telemetry;
 using VRChatContentPublisher.ConnectCore.Telemetry;
 using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.PersistentCore.Telemetry;
+using VRChatContentPublisher.TelemetryCore;
+using VRChatContentPublisher.TelemetryCore.Extensions;
 using VRChatContentPublisher.VRChatApi.Telemetry;
 
 namespace VRChatContentPublisher.App.Extensions;
@@ -33,7 +35,7 @@ public static class HostBuilderExtension
                 tracing.AddSource("Experimental.System.Net.Sockets");
                 tracing.AddSource("Experimental.System.Net.Security");
 
-                tracing.AddSentry();
+                tracing.AddAppSentryExporter();
             })
             .WithMetrics(metrics => { metrics.AddHttpClientInstrumentation(); });
 

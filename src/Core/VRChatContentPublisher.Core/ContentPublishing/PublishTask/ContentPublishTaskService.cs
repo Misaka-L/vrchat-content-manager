@@ -129,20 +129,19 @@ public sealed class ContentPublishTaskService
 
         LastError = null;
 
-        using (var activity = CoreActivitySources.ContentPublishing.StartActivity("ContentPublishTask"))
+        using (var activity = CoreActivitySources.ContentPublishing.StartActivity("ContentPublishTaskRun")?
+                   .SetTag("contentId", State.ContentId)
+                   .SetTag("content", State.ContentName)
+                   .SetTag("content.type", State.ContentType)
+                   .SetTag("content.platform", State.ContentPlatform)
+                   .SetTag("task.id", State.TaskId)
+                   .SetTag("task.attempt_id", State.AttemptId)
+                   .SetTag("task.raw_bundle_file_id", State.RawBundleFileId))
         using (_logger.BeginScope(
                    "Publish task ({TaskId}) for {ContentType} {ContentName} ({ContentId}) on platform {ContentPlatform} Attempt {AttemptId}, Raw BundleFileId: {RawBundleFileId}",
                    State.TaskId, State.ContentType, State.ContentName, State.ContentId, State.ContentPlatform,
                    State.AttemptId, State.RawBundleFileId))
         {
-            activity?.SetTag("content.id", State.ContentId);
-            activity?.SetTag("content.name", State.ContentName);
-            activity?.SetTag("content.type", State.ContentType);
-            activity?.SetTag("content.platform", State.ContentPlatform);
-            activity?.SetTag("task.id", State.TaskId);
-            activity?.SetTag("task.attempt_id", State.AttemptId);
-            activity?.SetTag("task.raw_bundle_file_id", State.RawBundleFileId);
-
             if (State.CurrentStage == PublishTaskStage.Done)
             {
                 activity?.SetStatus(ActivityStatusCode.Ok);
