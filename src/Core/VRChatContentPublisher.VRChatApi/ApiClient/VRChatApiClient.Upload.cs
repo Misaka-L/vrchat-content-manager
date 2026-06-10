@@ -21,7 +21,7 @@ public partial class VRChatApiClient
         string fileName,
         string platform)
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity()?
+        using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity()?
             .SetTag("platform", platform)
             .SetTag("file_name", fileName);
 
@@ -49,7 +49,7 @@ public partial class VRChatApiClient
         CancellationToken cancellationToken = default
     )
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity()?
+        using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity()?
             .SetTag("content_type", contentType)
             .SetTag("thumbnail_file_name", thumbnailFileName);
 
@@ -106,7 +106,7 @@ public partial class VRChatApiClient
         string userFileType, Action<PublishTaskProgressEventArg>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi
+        using var activity = VRChatApiCoreActivitySources.VRChatApi
             .StartActivity(nameof(CreateAndUploadFileVersionAsync) + "." + userFileType)?
             .SetTag("file_id", fileId)
             .SetTag("user_file_type", userFileType);
@@ -225,7 +225,7 @@ public partial class VRChatApiClient
         Action<double?, long?>? progressCallback = null,
         CancellationToken cancellationToken = default)
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi
+        using var activity = VRChatApiCoreActivitySources.VRChatApi
             .StartActivity(nameof(UploadFileVersionAsync) + "." + fileType)?
             .SetTag("file_id", fileId)
             .SetTag("version", version)
@@ -273,7 +273,7 @@ public partial class VRChatApiClient
         string? contentType = null,
         CancellationToken cancellationToken = default)
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity()?
+        using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity()?
             .SetTag("is_simple_upload", isSimpleUpload);
 
         cancellationToken.ThrowIfCancellationRequested();

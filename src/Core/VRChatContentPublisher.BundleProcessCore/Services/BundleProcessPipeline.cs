@@ -20,24 +20,15 @@ internal sealed class BundleProcessPipeline(
         bool leaveOpen = true,
         CancellationToken cancellationToken = default)
     {
-        using (var activity = BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
-                   .StartActivity("ProcessBundlePipeline")
-                   ?.SetTag("content_id", options.ContentId))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
+        using var activity = BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
+            .StartActivity("ProcessBundlePipeline")
+            ?.SetTag("content_id", options.ContentId);
 
-            try
-            {
-                return await Task.Factory.StartNew(() =>
-                        ProcessCore(bundleStream, options, progressReporter, leaveOpen, cancellationToken),
-                    cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-            }
-            catch (Exception e) when (e is not OperationCanceledException)
-            {
-                activity?.SetStatus(ActivityStatusCode.Error, e.Message);
-                throw;
-            }
-        }
+        cancellationToken.ThrowIfCancellationRequested();
+
+        return await Task.Factory.StartNew(() =>
+                ProcessCore(bundleStream, options, progressReporter, leaveOpen, cancellationToken),
+            cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
     }
 
     private Stream ProcessCore(

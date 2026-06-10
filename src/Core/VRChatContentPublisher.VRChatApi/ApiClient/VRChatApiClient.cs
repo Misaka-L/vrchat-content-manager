@@ -574,7 +574,7 @@ public sealed partial class VRChatApiClient(
     public async ValueTask<bool> CleanupIncompleteFileVersionsAsync(
         VRChatApiFile file, CancellationToken cancellationToken = default)
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity("CleanupIncompleteFileVersions")?
+        using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity("CleanupIncompleteFileVersions")?
             .SetTag("file_id", file.Id);
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -597,7 +597,7 @@ public sealed partial class VRChatApiClient(
                     ),
                 FallbackAction = async args =>
                 {
-                    using var fallbackActivity = VRChatApiCoreTelemetry.VRChatApi
+                    using var fallbackActivity = VRChatApiCoreActivitySources.VRChatApi
                         .StartActivity("AttemptCleanupIncompleteFileVersions.FallbackRefreshFile")?
                         .SetTag("file_id", file.Id);
 
@@ -609,7 +609,7 @@ public sealed partial class VRChatApiClient(
 
         return await deletePipeline.ExecuteAsync(async ct =>
         {
-            using var attemptActivity = VRChatApiCoreTelemetry.VRChatApi
+            using var attemptActivity = VRChatApiCoreActivitySources.VRChatApi
                 .StartActivity("AttemptCleanupIncompleteFileVersions")?
                 .SetTag("file_id", file.Id);
 

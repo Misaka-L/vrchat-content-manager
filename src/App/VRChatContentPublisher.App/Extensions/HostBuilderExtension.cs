@@ -20,7 +20,7 @@ public static class HostBuilderExtension
                 tracing.AddHttpClientInstrumentation();
                 tracing.AddSource(CoreActivitySources.ContentPublishingActivitySourceName);
                 tracing.AddSource(SqliteCoreActivitySources.SqliteCoreActivitySourceName);
-                tracing.AddSource(VRChatApiCoreTelemetry.VRChatApiActivitySourceName);
+                tracing.AddSource(VRChatApiCoreActivitySources.VRChatApiActivitySourceName);
                 tracing.AddSource(BundleProcessCoreActivitySources.BundleProcessCoreActivitySourceName);
 
                 // https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-builtin-activities

@@ -63,7 +63,7 @@ public sealed class ConcurrentMultipartUploader(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        using (VRChatApiCoreTelemetry.VRChatApi.StartActivity("ConcurrentMultipartUpload")
+        using (VRChatApiCoreActivitySources.VRChatApi.StartActivity("ConcurrentMultipartUpload")
                    ?.AddTag("fileId", fileId)
                    .AddTag("fileVersion", fileVersion)
                    .AddTag("fileSizeBytes", fileStream.Length)
@@ -156,7 +156,7 @@ public sealed class ConcurrentMultipartUploader(
 
     private async Task UploadChunkAsync(int partNumber, byte[] buffer, int bytesRead, CancellationToken ct)
     {
-        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity("UploadChunk")
+        using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity("UploadChunk")
             ?.AddTag("fileId", fileId)
             .AddTag("fileVersion", fileVersion)
             .AddTag("partNumber", partNumber)
@@ -181,7 +181,7 @@ public sealed class ConcurrentMultipartUploader(
                 var retryPipeline = CreateRetryPipeline(partNumber);
                 await retryPipeline.ExecuteAsync(async innerCt =>
                 {
-                    using var attemptActivity = VRChatApiCoreTelemetry.VRChatApi.StartActivity("UploadChunkAttempt");
+                    using var attemptActivity = VRChatApiCoreActivitySources.VRChatApi.StartActivity("UploadChunkAttempt");
 
                     try
                     {

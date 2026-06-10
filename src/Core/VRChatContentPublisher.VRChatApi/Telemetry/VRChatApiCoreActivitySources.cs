@@ -2,7 +2,7 @@
 
 namespace VRChatContentPublisher.VRChatApi.Telemetry;
 
-public static class VRChatApiCoreTelemetry
+public static class VRChatApiCoreActivitySources
 {
     public const string VRChatApiActivitySourceName = "VRChatContentPublisher.VRChatApi";
 
