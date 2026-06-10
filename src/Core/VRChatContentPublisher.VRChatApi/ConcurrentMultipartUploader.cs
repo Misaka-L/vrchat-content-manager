@@ -1,9 +1,11 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Polly;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.VRChatApi.ApiClient;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
+using VRChatContentPublisher.VRChatApi.Telemetry;
 
 namespace VRChatContentPublisher.VRChatApi;
 
@@ -61,128 +63,168 @@ public sealed class ConcurrentMultipartUploader(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        logger.LogInformation(
-            "Starting concurrent upload for file {FileId} version {FileVersion} with chunk size {ChunkSize}MB and concurrency {MaxConcurrency}",
-            fileId, fileVersion, ChunkSize / 1024 / 1024, MaxConcurrentUploads);
-
-        var progressTimer = new PeriodicTimer(ProgressReportInterval);
-        var progressReportTask = Task.Run(async () =>
+        using (VRChatApiCoreTelemetry.VRChatApi.StartActivity("ConcurrentMultipartUpload")
+                   ?.AddTag("fileId", fileId)
+                   .AddTag("fileVersion", fileVersion)
+                   .AddTag("fileSizeBytes", fileStream.Length)
+                   .AddTag("chunkSizeBytes", ChunkSize)
+                   .AddTag("maxConcurrency", MaxConcurrentUploads))
+        using (logger.BeginScope("FileId: {FileId}, FileVersion: {FileVersion}", fileId, fileVersion))
         {
-            // ReSharper disable once AccessToDisposedClosure
-            while (await progressTimer.WaitForNextTickAsync(CancellationToken.None))
-                FireProgressChanged();
-        }, CancellationToken.None);
+            logger.LogInformation(
+                "Starting concurrent upload for file {FileId} version {FileVersion} with chunk size {ChunkSize}MB and concurrency {MaxConcurrency}",
+                fileId, fileVersion, ChunkSize / 1024 / 1024, MaxConcurrentUploads);
 
-        using var concurrencySemaphore = new SemaphoreSlim(MaxConcurrentUploads);
-        var uploadTasks = new List<Task>();
-        var partNumber = 0;
-
-        try
-        {
-            while (fileStream.Position < fileStream.Length)
+            var progressTimer = new PeriodicTimer(ProgressReportInterval);
+            var progressReportTask = Task.Run(async () =>
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                // ReSharper disable once AccessToDisposedClosure
+                while (await progressTimer.WaitForNextTickAsync(CancellationToken.None))
+                    FireProgressChanged();
+            }, CancellationToken.None);
 
-                // Wait for a free slot to begin the next upload.
-                await concurrencySemaphore.WaitAsync(cancellationToken);
+            using var concurrencySemaphore = new SemaphoreSlim(MaxConcurrentUploads);
+            var uploadTasks = new List<Task>();
+            var partNumber = 0;
 
-                partNumber++;
-                var currentPartNumber = partNumber;
-
-                var bufferSize = (int)Math.Min(ChunkSize, fileStream.Length - fileStream.Position);
-                var buffer = new byte[bufferSize];
-                var bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
-
-                // Start the upload task for the current chunk.
-                var uploadTask = Task.Run(async () =>
+            try
+            {
+                while (fileStream.Position < fileStream.Length)
                 {
-                    try
-                    {
-                        await UploadChunkAsync(currentPartNumber, buffer, bytesRead, cancellationToken);
-                    }
-                    finally
-                    {
-                        // Release the semaphore slot once the upload is complete or has failed.
-                        // ReSharper disable once AccessToDisposedClosure
-                        concurrencySemaphore.Release();
-                    }
-                }, cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                uploadTasks.Add(uploadTask);
+                    // Wait for a free slot to begin the next upload.
+                    await concurrencySemaphore.WaitAsync(cancellationToken);
+
+                    partNumber++;
+                    var currentPartNumber = partNumber;
+
+                    var bufferSize = (int)Math.Min(ChunkSize, fileStream.Length - fileStream.Position);
+                    var buffer = new byte[bufferSize];
+                    var bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
+
+                    // Start the upload task for the current chunk.
+                    var uploadTask = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await UploadChunkAsync(currentPartNumber, buffer, bytesRead, cancellationToken);
+                        }
+                        finally
+                        {
+                            // Release the semaphore slot once the upload is complete or has failed.
+                            // ReSharper disable once AccessToDisposedClosure
+                            concurrencySemaphore.Release();
+                        }
+                    }, cancellationToken);
+
+                    uploadTasks.Add(uploadTask);
+                }
+
+                // Wait for all initiated upload tasks to complete.
+                await Task.WhenAll(uploadTasks);
+            }
+            catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
+            {
+                logger.LogWarning(ex, "Upload for file {FileId} version {FileVersion} was canceled", fileId,
+                    fileVersion);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred during the upload of file {FileId} version {FileVersion}",
+                    fileId,
+                    fileVersion);
+                // Rethrow to allow the caller to handle the failure.
+                throw;
+            }
+            finally
+            {
+                progressTimer.Dispose();
             }
 
-            // Wait for all initiated upload tasks to complete.
-            await Task.WhenAll(uploadTasks);
-        }
-        catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
-        {
-            logger.LogWarning(ex, "Upload for file {FileId} version {FileVersion} was canceled", fileId,
+            logger.LogInformation("Successfully uploaded all parts for file {FileId} version {FileVersion}", fileId,
                 fileVersion);
-            throw;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "An error occurred during the upload of file {FileId} version {FileVersion}", fileId,
-                fileVersion);
-            // Rethrow to allow the caller to handle the failure.
-            throw;
-        }
-        finally
-        {
-            progressTimer.Dispose();
-        }
 
-        logger.LogInformation("Successfully uploaded all parts for file {FileId} version {FileVersion}", fileId,
-            fileVersion);
+            // Return the ETag for each part, ordered by part number.
+            var result = _eTags.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value).ToArray();
 
-        // Return the ETag for each part, ordered by part number.
-        var result = _eTags.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value).ToArray();
-
-        await progressReportTask;
-        return result;
+            await progressReportTask;
+            return result;
+        }
     }
 
     private async Task UploadChunkAsync(int partNumber, byte[] buffer, int bytesRead, CancellationToken ct)
     {
-        logger.LogInformation(
-            "Creating upload chunk {PartNumber} (Size: {Size:F2} MiB) for file {FileId}",
-            partNumber, (double)bytesRead / 1024 / 1024, fileId);
+        using var activity = VRChatApiCoreTelemetry.VRChatApi.StartActivity("UploadChunk")
+            ?.AddTag("fileId", fileId)
+            .AddTag("fileVersion", fileVersion)
+            .AddTag("partNumber", partNumber)
+            .AddTag("chunkSizeBytes", bytesRead);
 
-        // 1. Get the pre-signed URL for this part from the VRChat API (only once — URLs are reusable).
-        var uploadUrl = await apiClient.GetFilePartUploadUrlAsync(fileId, fileVersion, partNumber, fileType, ct);
-
-        // 2. Upload the data to S3 with retry. On each retry attempt we reset in-flight progress
-        //    for this chunk so the progress bar never double-counts bytes from a failed attempt.
-        var retryPipeline = CreateRetryPipeline(partNumber);
-        await retryPipeline.ExecuteAsync(async innerCt =>
+        using (logger.BeginScope(
+                   "FileId: {FileId}, FileVersion: {FileVersion}, PartNumber: {PartNumber}",
+                   fileId, fileVersion, partNumber))
         {
-            // Reset in-flight progress for the current retry attempt.
-            _chunkProgress[partNumber] = 0;
-
-            using var stream = new MemoryStream(buffer, 0, bytesRead);
-            using var progressStream = new ProgressStreamContent(stream,
-                bytes => OnChunkProgress(partNumber, bytes));
-
-            var response = await awsClient.PutAsync(uploadUrl, progressStream, innerCt);
-            response.EnsureSuccessStatusCode();
-
-            // 3. Extract the ETag from the response headers. Required by S3 to complete the multipart upload.
-            var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
-            if (string.IsNullOrEmpty(eTag))
+            try
             {
-                throw new InvalidOperationException(
-                    $"S3 did not return an ETag for part {partNumber} of file {fileId}.");
+                logger.LogInformation(
+                    "Creating upload chunk {PartNumber} (Size: {Size:F2} MiB) for file {FileId}",
+                    partNumber, (double)bytesRead / 1024 / 1024, fileId);
+
+                // 1. Get the pre-signed URL for this part from the VRChat API (only once — URLs are reusable).
+                var uploadUrl =
+                    await apiClient.GetFilePartUploadUrlAsync(fileId, fileVersion, partNumber, fileType, ct);
+
+                // 2. Upload the data to S3 with retry. On each retry attempt we reset in-flight progress
+                //    for this chunk so the progress bar never double-counts bytes from a failed attempt.
+                var retryPipeline = CreateRetryPipeline(partNumber);
+                await retryPipeline.ExecuteAsync(async innerCt =>
+                {
+                    using var attemptActivity = VRChatApiCoreTelemetry.VRChatApi.StartActivity("UploadChunkAttempt");
+
+                    try
+                    {
+                        // Reset in-flight progress for the current retry attempt.
+                        _chunkProgress[partNumber] = 0;
+
+                        using var stream = new MemoryStream(buffer, 0, bytesRead);
+                        using var progressStream = new ProgressStreamContent(stream,
+                            bytes => OnChunkProgress(partNumber, bytes));
+
+                        var response = await awsClient.PutAsync(uploadUrl, progressStream, innerCt);
+                        response.EnsureSuccessStatusCode();
+
+                        // 3. Extract the ETag from the response headers. Required by S3 to complete the multipart upload.
+                        var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
+                        if (string.IsNullOrEmpty(eTag))
+                        {
+                            throw new InvalidOperationException(
+                                $"S3 did not return an ETag for part {partNumber} of file {fileId}.");
+                        }
+
+                        _eTags[partNumber] = eTag;
+                        return response;
+                    }
+                    catch (Exception ex)
+                    {
+                        attemptActivity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                        throw;
+                    }
+                }, ct);
+
+                // Mark chunk as fully completed — move bytes from in-flight to completed.
+                Interlocked.Add(ref _completedChunkBytes, bytesRead);
+                _chunkProgress.TryRemove(partNumber, out _);
+
+                logger.LogInformation("Completed upload for chunk {PartNumber} for file {FileId}", partNumber, fileId);
             }
-
-            _eTags[partNumber] = eTag;
-            return response;
-        }, ct);
-
-        // Mark chunk as fully completed — move bytes from in-flight to completed.
-        Interlocked.Add(ref _completedChunkBytes, bytesRead);
-        _chunkProgress.TryRemove(partNumber, out _);
-
-        logger.LogInformation("Completed upload for chunk {PartNumber} for file {FileId}", partNumber, fileId);
+            catch (Exception e)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, e.Message);
+                throw;
+            }
+        }
     }
 
     #endregion
