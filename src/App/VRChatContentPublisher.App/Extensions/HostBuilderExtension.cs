@@ -4,6 +4,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Sentry.OpenTelemetry;
 using VRChatContentPublisher.BundleProcessCore.Telemetry;
+using VRChatContentPublisher.ConnectCore.Telemetry;
 using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.PersistentCore.Telemetry;
 using VRChatContentPublisher.VRChatApi.Telemetry;
@@ -22,6 +23,7 @@ public static class HostBuilderExtension
                 tracing.AddSource(SqliteCoreActivitySources.SqliteCoreActivitySourceName);
                 tracing.AddSource(VRChatApiCoreActivitySources.VRChatApiActivitySourceName);
                 tracing.AddSource(BundleProcessCoreActivitySources.BundleProcessCoreActivitySourceName);
+                tracing.AddSource(ConnectCoreActivitySources.ConnectCoreSourceName);
 
                 // https://learn.microsoft.com/en-us/dotnet/core/diagnostics/distributed-tracing-builtin-activities
                 tracing.AddSource("Experimental.System.Net.Http.Connections");
