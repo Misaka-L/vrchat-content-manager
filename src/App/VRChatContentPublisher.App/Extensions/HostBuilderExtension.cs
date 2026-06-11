@@ -1,10 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
-using Sentry.OpenTelemetry;
 using VRChatContentPublisher.BundleProcessCore.Telemetry;
 using VRChatContentPublisher.ConnectCore.Telemetry;
 using VRChatContentPublisher.Core.Telemetry;

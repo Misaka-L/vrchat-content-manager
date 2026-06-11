@@ -1,5 +1,4 @@
-﻿using Sentry.OpenTelemetry;
-using VRChatContentPublisher.Core.Shared;
+﻿using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Core.Shared.Utils;
 
 namespace VRChatContentPublisher.TelemetryCore.Extensions;
