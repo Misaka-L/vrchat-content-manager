@@ -158,7 +158,10 @@ public sealed class ContentPublishTaskService
             {
                 if (State.CurrentStage == PublishTaskStage.BundleProcessing)
                 {
-                    using (CoreActivitySources.ContentPublishing.StartActivity("BundleProcessing"))
+                    using (CoreActivitySources.ContentPublishing.StartActivity("BundleProcessing")?
+                               .SetContentMetadata(
+                                   State.ContentId, State.ContentName, State.ContentType, State.ContentPlatform)
+                               .SetTag("task.stage", State.CurrentStage))
                     using (_logger.BeginScope("Stage {TaskStage}", State.CurrentStage))
                     {
                         UpdateProgress("Preparing to process bundle file...", null);
@@ -174,15 +177,17 @@ public sealed class ContentPublishTaskService
                     if (!_contentPublisher.CanPublish())
                         throw new InvalidOperationException("Account session expired or invalid.");
 
-                    using (var contentPublishingActivity =
-                           CoreActivitySources.ContentPublishing.StartActivity("ContentPublishing"))
+                    using (CoreActivitySources.ContentPublishing.StartActivity("ContentPublishing")?
+                               .SetContentMetadata(
+                                   State.ContentId, State.ContentName, State.ContentType, State.ContentPlatform)
+                               .SetTag("task.stage", State.CurrentStage)
+                               .SetTag("task.final_bundle_file_id", State.BundleFileId))
                     using (_logger.BeginScope(
                                "Stage {TaskStage} Publishing bundle file {FinalBundleFileId}",
                                State.CurrentStage,
                                State.BundleFileId)
                           )
                     {
-                        contentPublishingActivity?.SetTag("task.final_bundle_file_id", State.BundleFileId);
                         UpdateProgress("Preparing for publish...", null);
 
                         await PublishAsync(cancellationToken);
