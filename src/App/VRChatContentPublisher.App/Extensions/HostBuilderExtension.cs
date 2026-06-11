@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 using Sentry.OpenTelemetry;
@@ -7,7 +9,6 @@ using VRChatContentPublisher.BundleProcessCore.Telemetry;
 using VRChatContentPublisher.ConnectCore.Telemetry;
 using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.PersistentCore.Telemetry;
-using VRChatContentPublisher.TelemetryCore;
 using VRChatContentPublisher.TelemetryCore.Extensions;
 using VRChatContentPublisher.VRChatApi.Telemetry;
 
@@ -35,9 +36,14 @@ public static class HostBuilderExtension
                 tracing.AddSource("Experimental.System.Net.Sockets");
                 tracing.AddSource("Experimental.System.Net.Security");
 
+                tracing.AddOtlpExporter();
                 tracing.AddAppSentryExporter();
             })
-            .WithMetrics(metrics => { metrics.AddHttpClientInstrumentation(); });
+            .WithMetrics(metrics =>
+            {
+                metrics.AddHttpClientInstrumentation();
+                metrics.AddOtlpExporter();
+            });
 
         return builder;
     }
