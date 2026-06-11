@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using Serilog.Enrichers.Sensitive;
 
-namespace VRChatContentPublisher.TelemetryCore.Masking.SerilogOperator;
+namespace VRChatContentPublisher.TelemetryCore.Masking.Serilog.MaskingOperator;
 
 public class VRChatEntityIdMaskingOperator()
     : RegexMaskingOperator(

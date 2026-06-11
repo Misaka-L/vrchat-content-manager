@@ -17,7 +17,7 @@ using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
 using VRChatContentPublisher.IpcCore.Models;
 using VRChatContentPublisher.TelemetryCore.Extensions;
-using VRChatContentPublisher.TelemetryCore.Masking.SerilogOperator;
+using VRChatContentPublisher.TelemetryCore.Masking.Serilog;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
@@ -59,24 +59,8 @@ internal sealed class Program
             .WriteTo.Logger(new LoggerConfiguration()
                 .Enrich.WithSensitiveDataMasking(options =>
                 {
-                    options.MaskingOperators =
-                    [
-                        new EmailAddressMaskingOperator(),
-                        new VRChatEntityIdMaskingOperator()
-                    ];
-
-                    options.MaskProperties.Add(new MaskProperty
-                    {
-                        Name = "UserName"
-                    });
-                    options.MaskProperties.Add(new MaskProperty
-                    {
-                        Name = "ContentName"
-                    });
-                    options.MaskProperties.Add(new MaskProperty
-                    {
-                        Name = "ClientName"
-                    });
+                    // VRChatContentPublisher.TelemetryCore.Masking.Serilog.SensitiveDataEnricherOptionsExtension
+                    options.AddAppMaskingOptions();
 
                     options.MaskValue = "[Filtered]";
                 })
