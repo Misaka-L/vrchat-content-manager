@@ -5,23 +5,22 @@ using System.Text;
 using HotAvalonia;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Enrichers.Sensitive;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentPublisher.App.Extensions;
-using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Core.Shared.Utils;
-using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.IpcCore;
 using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
 using VRChatContentPublisher.IpcCore.Models;
 using VRChatContentPublisher.TelemetryCore.Extensions;
+using VRChatContentPublisher.TelemetryCore.Masking.SerilogOperator;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
-
 #else
 using VRChatContentPublisher.Platform.Noop.Extensions;
 #endif
@@ -57,7 +56,32 @@ internal sealed class Program
             .WriteTo.Async(writer =>
                 writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
-            .WriteTo.Sentry()
+            .WriteTo.Logger(new LoggerConfiguration()
+                .Enrich.WithSensitiveDataMasking(options =>
+                {
+                    options.MaskingOperators =
+                    [
+                        new EmailAddressMaskingOperator(),
+                        new VRChatEntityIdMaskingOperator()
+                    ];
+
+                    options.MaskProperties.Add(new MaskProperty
+                    {
+                        Name = "UserName"
+                    });
+                    options.MaskProperties.Add(new MaskProperty
+                    {
+                        Name = "ContentName"
+                    });
+                    options.MaskProperties.Add(new MaskProperty
+                    {
+                        Name = "ClientName"
+                    });
+
+                    options.MaskValue = "[Filtered]";
+                })
+                .WriteTo.Sentry()
+                .CreateLogger())
             .CreateLogger();
 
         Log.Information(
