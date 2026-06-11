@@ -26,6 +26,8 @@ public static class SensitiveDataEnricherOptionsExtension
             Name = "ClientName"
         });
 
+        options.MaskValue = MaskingConst.MaskedValue;
+
         return options;
     }
 }

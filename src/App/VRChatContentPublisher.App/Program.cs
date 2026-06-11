@@ -61,8 +61,6 @@ internal sealed class Program
                 {
                     // VRChatContentPublisher.TelemetryCore.Masking.Serilog.SensitiveDataEnricherOptionsExtension
                     options.AddAppMaskingOptions();
-
-                    options.MaskValue = "[Filtered]";
                 })
                 .WriteTo.Sentry()
                 .CreateLogger())
