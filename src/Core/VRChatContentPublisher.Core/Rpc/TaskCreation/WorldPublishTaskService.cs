@@ -7,6 +7,7 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.VRChatApi.Exceptions;
@@ -38,10 +39,7 @@ public class WorldPublishTaskService(
         string[]? udonProducts)
     {
         using var activity = CoreActivitySources.Rpc.StartActivity("CreateWorldPublishTask")?
-            .SetTag("worldId", worldId)
-            .SetTag("authorId", authorId)
-            .SetTag("platform", platform)
-            .SetTag("unityVersion", unityVersion);
+            .SetContentMetadata(worldId, worldName, "world", platform, unityVersion, authorId);
         try
         {
             var userSession = await GetUserSessionByWorldIdAsync(worldId, authorId);
@@ -90,12 +88,12 @@ public class WorldPublishTaskService(
         }
     }
 
-    private async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(string worldId,
+    private async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(
+        string worldId,
         string? requestUserId = null)
     {
         using var activity = CoreActivitySources.Rpc.StartActivity("GetUserSessionByWorldId")?
-            .SetTag("worldId", worldId)
-            .SetTag("requestUserId", requestUserId);
+            .SetContentMetadata(worldId, contentType: "world", authorId: requestUserId);
 
         if (!userSessionManagerService.IsAnySessionAvailable)
             throw new NoUserSessionAvailableException();

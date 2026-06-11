@@ -10,6 +10,7 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Events.PublishTask;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.Utils;
 
@@ -130,10 +131,11 @@ public sealed class ContentPublishTaskService
         LastError = null;
 
         using (var activity = CoreActivitySources.ContentPublishing.StartActivity("ContentPublishTaskRun")?
-                   .SetTag("contentId", State.ContentId)
-                   .SetTag("content", State.ContentName)
-                   .SetTag("content.type", State.ContentType)
-                   .SetTag("content.platform", State.ContentPlatform)
+                   .SetContentMetadata(
+                       State.ContentId,
+                       State.ContentName,
+                       State.ContentType,
+                       State.ContentPlatform)
                    .SetTag("task.id", State.TaskId)
                    .SetTag("task.attempt_id", State.AttemptId)
                    .SetTag("task.raw_bundle_file_id", State.RawBundleFileId))
@@ -180,7 +182,7 @@ public sealed class ContentPublishTaskService
                                State.BundleFileId)
                           )
                     {
-                        contentPublishingActivity?.SetTag("final_bundle_file_id", State.BundleFileId);
+                        contentPublishingActivity?.SetTag("task.final_bundle_file_id", State.BundleFileId);
                         UpdateProgress("Preparing for publish...", null);
 
                         await PublishAsync(cancellationToken);

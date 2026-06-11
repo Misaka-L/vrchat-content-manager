@@ -7,6 +7,7 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.VRChatApi.Exceptions;
@@ -31,10 +32,7 @@ public sealed class AvatarPublishTaskService(
         string? releaseStatus)
     {
         using var activity = CoreActivitySources.Rpc.StartActivity("CreateAvatarPublishTask")?
-            .SetTag("avatarId", avatarId)
-            .SetTag("authorId", authorId)
-            .SetTag("platform", platform)
-            .SetTag("unityVersion", unityVersion);
+            .SetContentMetadata(avatarId, name, "avatar", platform, unityVersion, authorId);
         try
         {
             var userSession = await GetUserSessionByAvatarIdAsync(avatarId, authorId);
@@ -72,12 +70,12 @@ public sealed class AvatarPublishTaskService(
         }
     }
 
-    public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(string avatarId,
+    public async ValueTask<UserSessionService> GetUserSessionByAvatarIdAsync(
+        string avatarId,
         string? requestUserId = null)
     {
         using var activity = CoreActivitySources.Rpc.StartActivity("GetUserSessionByAvatarId")?
-            .SetTag("avatarId", avatarId)
-            .SetTag("requestUserId", requestUserId);
+            .SetContentMetadata(avatarId, contentType: "avatar", authorId: requestUserId);
 
         if (!userSessionManagerService.IsAnySessionAvailable)
             throw new NoUserSessionAvailableException();

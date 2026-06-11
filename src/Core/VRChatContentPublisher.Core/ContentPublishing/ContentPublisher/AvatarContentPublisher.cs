@@ -66,7 +66,12 @@ public sealed class AvatarContentPublisher(
     {
         using var activity = CoreActivitySources.ContentPublishing
             .StartActivity("AvatarContentPublisher.PublishAsync")?
-            .SetTag("avatar_id", options.AvatarId);
+            .SetContentMetadata(
+                options.AvatarId,
+                GetContentName(),
+                GetContentType(),
+                GetContentPlatform(),
+                options.UnityVersion);
 
         #region Initialzation (Get rpc file stream, ensure session is valid, check CancellationToken)
 

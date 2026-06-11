@@ -61,7 +61,12 @@ public sealed class WorldContentPublisher(
     {
         using var activity = CoreActivitySources.ContentPublishing
             .StartActivity("WorldContentPublisher.BeforePublishTaskAsync")?
-            .SetTag("world_id", options.WorldId);
+            .SetContentMetadata(
+                options.WorldId,
+                options.WorldName,
+                GetContentType(),
+                options.Platform,
+                options.UnityVersion);
 
         // try fetch world detail, if not found means we need to create a new world.
         try
@@ -129,7 +134,12 @@ public sealed class WorldContentPublisher(
     {
         using var activity = CoreActivitySources.ContentPublishing
             .StartActivity("WorldContentPublisher.PublishAsync")?
-            .SetTag("world_id", options.WorldId);
+            .SetContentMetadata(
+                options.WorldId,
+                options.WorldName,
+                GetContentType(),
+                options.Platform,
+                options.UnityVersion);
 
         #region Initialzation (Get rpc file stream, ensure session is valid, check CancellationToken)
 
