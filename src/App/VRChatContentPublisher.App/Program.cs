@@ -16,6 +16,7 @@ using VRChatContentPublisher.IpcCore;
 using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
 using VRChatContentPublisher.IpcCore.Models;
+using VRChatContentPublisher.TelemetryCore;
 using VRChatContentPublisher.TelemetryCore.Extensions;
 using VRChatContentPublisher.TelemetryCore.Masking.Serilog;
 
@@ -38,9 +39,6 @@ internal sealed class Program
     [SupportedOSPlatform("macos")]
     public static void Main(string[] args)
     {
-        // VRChatContentPublisher.TelemetryCore.Extensions.SentrySdkExtension
-        SentrySdk.InitForApp();
-
         var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
         var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
         Log.Logger = new LoggerConfiguration()
@@ -57,14 +55,14 @@ internal sealed class Program
                 writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
             .WriteTo.Logger(new LoggerConfiguration()
-                .Enrich.WithSensitiveDataMasking(options =>
-                {
-                    // VRChatContentPublisher.TelemetryCore.Masking.Serilog.SensitiveDataEnricherOptionsExtension
-                    options.AddAppMaskingOptions();
-                })
+                .Enrich.WithAppSensitiveDataMasking()
                 .WriteTo.Sentry()
                 .CreateLogger())
             .CreateLogger();
+        
+        // VRChatContentPublisher.TelemetryCore.Extensions.SentrySdkExtension
+        SentrySdk.InitForApp();
+        TelemetrySettings.Initialize();
 
         Log.Information(
             "VRChat Content Publisher v{AppVersion} built on {AppBuildDate} (commit {AppCommitHash}) starting up...",

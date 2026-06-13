@@ -1,10 +1,23 @@
-﻿using Serilog.Enrichers.Sensitive;
+﻿using Serilog;
+using Serilog.Configuration;
+using Serilog.Enrichers.Sensitive;
 using VRChatContentPublisher.TelemetryCore.Masking.Serilog.MaskingOperator;
 
 namespace VRChatContentPublisher.TelemetryCore.Masking.Serilog;
 
 public static class SensitiveDataEnricherOptionsExtension
 {
+    public static LoggerConfiguration WithAppSensitiveDataMasking(
+        this LoggerEnrichmentConfiguration enrichmentConfiguration
+    )
+    {
+        return enrichmentConfiguration.When(_ => TelemetrySettings.TelemetryMode != TelemetryMode.All,
+            enrichConfig =>
+                enrichConfig
+                    .WithSensitiveDataMasking(options =>
+                        options.AddAppMaskingOptions()));
+    }
+
     public static SensitiveDataEnricherOptions AddAppMaskingOptions(this SensitiveDataEnricherOptions options)
     {
         options.MaskingOperators =

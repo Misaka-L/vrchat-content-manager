@@ -20,7 +20,6 @@
         <!--App Host-->
         <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0"/>
         <!--Serilog Logging-->
-        <PackageVersion Include="Serilog" Version="4.3.1"/>
         <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0"/>
         <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0"/>
         <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0"/>

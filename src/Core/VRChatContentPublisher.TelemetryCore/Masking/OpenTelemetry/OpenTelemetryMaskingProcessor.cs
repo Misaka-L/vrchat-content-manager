@@ -12,6 +12,9 @@ public class OpenTelemetryMaskingProcessor : BaseProcessor<Activity>
 
     public override void OnEnd(Activity data)
     {
+        if (TelemetrySettings.TelemetryMode == TelemetryMode.All)
+            return;
+
         var dirtyList = new List<KeyValuePair<string, string>>();
 
         foreach (var tagItem in data.Tags)

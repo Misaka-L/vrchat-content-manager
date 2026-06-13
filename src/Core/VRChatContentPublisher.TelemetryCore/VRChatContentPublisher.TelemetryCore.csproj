@@ -12,10 +12,15 @@
         <PackageReference Include="OpenTelemetry.Instrumentation.Http"/>
 
         <PackageReference Include="Serilog.Enrichers.Sensitive"/>
+        <PackageReference Include="Serilog"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\VRChatContentPublisher.Core.Shared\VRChatContentPublisher.Core.Shared.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageVersion Update="Serilog" Version="4.3.1" />
     </ItemGroup>
 
 </Project>

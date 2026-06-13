@@ -1,5 +1,6 @@
 ﻿using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Core.Shared.Utils;
+using VRChatContentPublisher.TelemetryCore.TelemetryToggle;
 
 namespace VRChatContentPublisher.TelemetryCore.Extensions;
 
@@ -22,10 +23,12 @@ public static class SentrySdkExtension
                 options.TracesSampleRate = 1.0;
                 options.Environment = GetEnvironment();
                 options.UseOtlp();
+
+                options.AddTelemetryModeListener();
             });
         }
     }
-    
+
     internal static string GetEnvironment()
     {
 #if DEBUG
