@@ -167,14 +167,13 @@ internal sealed class Program
         }
         catch (Exception ex)
         {
-            Log.Fatal(ex, "Oops, the application has crashed!");
-            Environment.ExitCode = -1;
-
             ex.SetSentryMechanism(
                 "Main.UnhandledException",
                 "The application has crashed due to an unhandled exception.",
                 handled: false);
-            SentrySdk.CaptureException(ex);
+
+            Log.Fatal(ex, "Oops, the application has crashed!");
+            Environment.ExitCode = -1;
 #if RELEASE
             TryLaunchCrashHandler(ex);
 #endif
