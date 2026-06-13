@@ -110,6 +110,7 @@ public static class ServicesExtenstion
         services.AddTransient<AboutSettingsViewModel>();
         services.AddTransient<DebugSettingsViewModel>();
         services.AddTransient<UpdateSettingsViewModel>();
+        services.AddTransient<TelemetrySettingsViewModel>();
 
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();

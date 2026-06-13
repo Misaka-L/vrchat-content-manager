@@ -348,6 +348,24 @@
     <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
         <value>贡献代码</value>
     </data>
+    <data name="Pages_Settings_Telemetry_Title" xml:space="preserve">
+        <value>遥测</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Enable_Toggle" xml:space="preserve">
+        <value>启用遥测</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Enable_Toggle_Description" xml:space="preserve">
+        <value>启用后，将发送诊断和使用情况数据以帮助改进应用。</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Full_Mode_Checkbox" xml:space="preserve">
+        <value>完整模式 — 发送未脱敏的标识符和 IP 地址</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Full_Mode_Checkbox_Description" xml:space="preserve">
+        <value>隐私模式仅发送设备信息、崩溃堆栈和经脱敏处理的标识符。完整模式额外包含原始标识符和 IP 地址。</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Privacy_Policy_Link" xml:space="preserve">
+        <value>隐私政策</value>
+    </data>
     <data name="Pages_Guide_Shared_Steps_Step_1_Title" xml:space="preserve">
         <value>Step.1</value>
     </data>

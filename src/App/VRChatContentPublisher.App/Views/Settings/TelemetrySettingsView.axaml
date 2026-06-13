@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:DataType="settings:TelemetrySettingsViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Settings.TelemetrySettingsView">
+
+    <StackPanel Margin="8" Spacing="8">
+        <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Enable_Toggle}}"
+            IsChecked="{Binding IsTelemetryEnabled}" />
+        <TextBlock
+            Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Enable_Toggle_Description}}"
+            Classes="Caption" Opacity="0.8" TextWrapping="Wrap" />
+
+        <CheckBox
+            IsVisible="{Binding IsTelemetryEnabled}"
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Full_Mode_Checkbox}}"
+            IsChecked="{Binding IsFullMode}" />
+        <TextBlock
+            IsVisible="{Binding IsTelemetryEnabled}"
+            Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Full_Mode_Checkbox_Description}}"
+            Classes="Caption" Opacity="0.8" TextWrapping="Wrap" />
+
+        <Border Height="1" Margin="0,4,0,0" Background="{DynamicResource MaterialDesignBodyLight}" />
+
+        <Button
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Privacy_Policy_Link}}"
+            Theme="{StaticResource MaterialFlatButton}"
+            HorizontalAlignment="Left"
+            IsEnabled="False" />
+    </StackPanel>
+</UserControl>

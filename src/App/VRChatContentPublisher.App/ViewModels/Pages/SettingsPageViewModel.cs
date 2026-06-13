@@ -14,7 +14,8 @@ public sealed partial class SettingsPageViewModel(
     AboutSettingsViewModel aboutSettingsViewModel,
     HttpProxySettingsViewModel httpProxySettingsViewModel,
     DebugSettingsViewModel debugSettingsViewModel,
-    UpdateSettingsViewModel updateSettingsViewModel) : PageViewModelBase
+    UpdateSettingsViewModel updateSettingsViewModel,
+    TelemetrySettingsViewModel telemetrySettingsViewModel) : PageViewModelBase
 {
     public Action? OnRequestBackOverride { get; set; }
 
@@ -27,6 +28,7 @@ public sealed partial class SettingsPageViewModel(
     public AboutSettingsViewModel AboutSettingsViewModel { get; } = aboutSettingsViewModel;
     public DebugSettingsViewModel DebugSettingsViewModel { get; } = debugSettingsViewModel;
     public UpdateSettingsViewModel UpdateSettingsViewModel { get; } = updateSettingsViewModel;
+    public TelemetrySettingsViewModel TelemetrySettingsViewModel { get; } = telemetrySettingsViewModel;
 
     [RelayCommand]
     private void NavigateToHome()

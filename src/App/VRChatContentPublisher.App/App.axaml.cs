@@ -116,6 +116,7 @@ public partial class App : Application
         ViewLocator.Register<AboutSettingsViewModel, AboutSettingsView>();
         ViewLocator.Register<DebugSettingsViewModel, DebugSettingsView>();
         ViewLocator.Register<UpdateSettingsViewModel, UpdateSettingsView>();
+        ViewLocator.Register<TelemetrySettingsViewModel, TelemetrySettingsView>();
 
         // In App Notification
         ViewLocator.Register<SimpleInAppNotificationViewModel, SimpleInAppNotificationView>();

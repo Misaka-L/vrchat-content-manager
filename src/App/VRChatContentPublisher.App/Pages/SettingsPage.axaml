@@ -54,6 +54,9 @@
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Title}}">
                     <ContentControl Content="{Binding DebugSettingsViewModel}" />
                 </Expander>
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Title}}">
+                    <ContentControl Content="{Binding TelemetrySettingsViewModel}" />
+                </Expander>
                 <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Title}}">
                     <ContentControl Content="{Binding AboutSettingsViewModel}" />
                 </Expander>

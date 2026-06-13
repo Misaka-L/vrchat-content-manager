@@ -2245,5 +2245,59 @@ namespace VRChatContentPublisher.App.Localization.Resources {
                 return ResourceManager.GetString("Tray_Menu_Show_Shutdown_App", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full Mode — send unmasked identifiers and IP address.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Full_Mode_Checkbox {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Full_Mode_Checkbox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Mode sends device info, crash stacks, and masked identifiers only. Full Mode additionally includes raw identifiers and your IP address.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Full_Mode_Checkbox_Description {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Full_Mode_Checkbox_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Telemetry.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Enable_Toggle {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Enable_Toggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When enabled, sends diagnostic and usage data to help improve the application.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Enable_Toggle_Description {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Enable_Toggle_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Privacy_Policy_Link {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Privacy_Policy_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Title", resourceCulture);
+            }
+        }
     }
 }
