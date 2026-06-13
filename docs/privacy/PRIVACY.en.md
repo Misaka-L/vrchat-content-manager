@@ -199,7 +199,7 @@ The Software has no means of knowing your actual age and does not actively colle
 
 ## 8. Privacy Policy Updates
 
-We may update this Privacy Policy from time to time. Material changes (such as new types of data collection, changes to data processing methods, or new sharing partners) will be notified to you via an in-app popup when the Software starts. The revision history of this policy can be reviewed through the commit records of the [GitHub repository](to be filled in).
+We may update this Privacy Policy from time to time. Material changes (such as new types of data collection, changes to data processing methods, or new sharing partners) will be notified to you via an in-app popup when the Software starts. The revision history of this policy can be reviewed through the commit records of the [GitHub repository](https://github.com/project-vrcz/content-publisher/commits/main/docs/privacy/PRIVACY.md).
 
 ## 9. Contact Information
 
