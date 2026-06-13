@@ -69,6 +69,7 @@ public partial class App : Application
     public override void Initialize()
     {
         ViewLocator.Register<BootstrapPageViewModel, BootstrapPage>();
+        ViewLocator.Register<PrivacyPolicyConsentPageViewModel, PrivacyPolicyConsentPage>();
 
         ViewLocator.Register<HomePageViewModel, HomePage>();
         ViewLocator.Register<SettingsPageViewModel, SettingsPage>();

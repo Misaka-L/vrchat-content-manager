@@ -2299,5 +2299,59 @@ namespace VRChatContentPublisher.App.Localization.Resources {
                 return ResourceManager.GetString("Pages_Settings_Telemetry_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy Consent.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please review the privacy policy before using this application..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Privacy Policy.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_ViewPolicy {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_ViewPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you do not agree with the privacy policy, please exit the application..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_DisagreeWarning {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_DisagreeWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Agree and Continue.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_AgreeAndContinue {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_AgreeAndContinue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disagree and Exit.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_ExitApp {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_ExitApp", resourceCulture);
+            }
+        }
     }
 }

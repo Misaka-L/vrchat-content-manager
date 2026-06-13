@@ -778,4 +778,22 @@ NOTE: Some users report that KB5083807 broke Windows notification service. You m
     <data name="Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks" xml:space="preserve">
         <value>Restoring publish tasks...</value>
     </data>
+    <data name="Pages_PrivacyConsent_Title" xml:space="preserve">
+        <value>Privacy Policy Consent</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Description" xml:space="preserve">
+        <value>Please review the privacy policy before using this application. By continuing, you agree to the terms outlined in the privacy policy.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_ViewPolicy" xml:space="preserve">
+        <value>View Privacy Policy</value>
+    </data>
+    <data name="Pages_PrivacyConsent_DisagreeWarning" xml:space="preserve">
+        <value>If you do not agree with the privacy policy, please exit the application.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_AgreeAndContinue" xml:space="preserve">
+        <value>Agree and Continue</value>
+    </data>
+    <data name="Pages_PrivacyConsent_ExitApp" xml:space="preserve">
+        <value>Disagree and Exit</value>
+    </data>
 </root>

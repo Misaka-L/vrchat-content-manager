@@ -1,9 +1,17 @@
+using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.TelemetryCore;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed class TelemetrySettingsViewModel : ViewModelBase
 {
+    private readonly PrivacyPolicyService _privacyPolicyService;
+
+    public TelemetrySettingsViewModel(PrivacyPolicyService privacyPolicyService)
+    {
+        _privacyPolicyService = privacyPolicyService;
+    }
+
     public bool IsTelemetryEnabled
     {
         get => TelemetrySettings.TelemetryMode != TelemetryMode.Disabled;
@@ -44,6 +52,5 @@ public sealed class TelemetrySettingsViewModel : ViewModelBase
         }
     }
 
-    // Placeholder for privacy policy URL — replace with the actual URL later
-    public string PrivacyPolicyUrl => "#";
+    public string PrivacyPolicyUrl => _privacyPolicyService.PrivacyPolicyUrl;
 }

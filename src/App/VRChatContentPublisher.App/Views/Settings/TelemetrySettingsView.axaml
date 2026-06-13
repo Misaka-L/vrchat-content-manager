@@ -9,7 +9,7 @@
              x:Class="VRChatContentPublisher.App.Views.Settings.TelemetrySettingsView">
 
     <StackPanel Margin="8" Spacing="8">
-        <ToggleSwitch
+        <CheckBox
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Enable_Toggle}}"
             IsChecked="{Binding IsTelemetryEnabled}" />
         <TextBlock
@@ -30,7 +30,12 @@
         <Button
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Privacy_Policy_Link}}"
             Theme="{StaticResource MaterialFlatButton}"
-            HorizontalAlignment="Left"
-            IsEnabled="False" />
+            HorizontalAlignment="Left">
+            <Interaction.Behaviors>
+                <ClickEventTrigger>
+                    <LaunchUriAction Uri="{Binding PrivacyPolicyUrl}" />
+                </ClickEventTrigger>
+            </Interaction.Behaviors>
+        </Button>
     </StackPanel>
 </UserControl>

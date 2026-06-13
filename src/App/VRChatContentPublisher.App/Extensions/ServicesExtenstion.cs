@@ -115,6 +115,11 @@ public static class ServicesExtenstion
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();
 
+        // Privacy Policy
+        services.AddSingleton<PrivacyPolicyService>();
+        services.AddHostedService<PrivacyPolicyPrefetchHostedService>();
+        services.AddTransient<PrivacyPolicyConsentPageViewModel>();
+
         // Update Check
         services.AddSingleton<AppUpdateCheckService>();
         services.AddHostedService<AppUpdateCheckBackgroundService>();

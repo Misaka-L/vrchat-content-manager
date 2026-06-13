@@ -60,11 +60,22 @@ public static class TelemetrySettings
             Save();
         }
     }
+
+    public static int? UserAgreementVersion
+    {
+        get => _telemetrySettingsData.UserAgreementVersion;
+        set
+        {
+            _telemetrySettingsData.UserAgreementVersion = value;
+            Save();
+        }
+    }
 }
 
 internal class TelemetrySettingsData
 {
     public TelemetryMode TelemetryMode { get; set; } = TelemetryMode.PrivacyMode;
+    public int? UserAgreementVersion { get; set; }
 }
 
 public enum TelemetryMode
