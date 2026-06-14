@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Directives>
     <Application>
-        <Assembly Name="VRChatContentPublisher.App" Dynamic="Required All">
-        </Assembly>
-        <Assembly Name="VRChatContentPublisher.Core" Dynamic="Required All">
+        <!--https://github.com/serilog-contrib/Serilog.Enrichers.Sensitive/blob/3ac241a5a67f347fb09cab6776d767cc2169ba1e/src/Serilog.Enrichers.Sensitive/SensitiveDataEnricher.cs#L35-->
+        <Assembly Name="Serilog.Enrichers.Sensitive" Dynamic="Required All">
         </Assembly>
     </Application>
 </Directives>
