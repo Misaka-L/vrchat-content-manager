@@ -6,6 +6,10 @@ on:
         type: string
         description: git ref to build
         default: ${{ github.ref_name }}
+      sentry-environment:
+        type: string
+        description: Environment name to use for Sentry
+        default: snapshot
   push:
     paths:
       - src/**
@@ -56,7 +60,9 @@ jobs:
           RID: ${{ matrix.rid }}
           BUILD_OUTPUT_DIR: ${{ env.output_dir }}
           TARGET_FRAMEWORK: ${{ matrix.target-framework }}
-        run: dotnet publish -c Release App/VRChatContentPublisher.App -r $RID -o $BUILD_OUTPUT_DIR -f $TARGET_FRAMEWORK
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_ENVIRONMENT: ${{ inputs.sentry-environment }}
+        run: dotnet publish -c Release App/VRChatContentPublisher.App -r $RID -o $BUILD_OUTPUT_DIR -f $TARGET_FRAMEWORK -p:SentryDsn=$SENTRY_DSN -p:SentryEnvironment=$SENTRY_ENVIRONMENT
         shell: bash
         working-directory: ${{ env.src_dir }}
 
