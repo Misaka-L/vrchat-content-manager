@@ -18,6 +18,7 @@
     <!--Sentry DSN for TelemetryCore-->
     <ItemGroup>
         <RuntimeHostConfigurationOption Include="VRChatContentPublisher.TelemetryCore.Sentry.Dsn" Value="$(SentryDsn)" />
+        <RuntimeHostConfigurationOption Include="VRChatContentPublisher.TelemetryCore.Sentry.Environment" Value="$(SentryEnvironment)" />
     </ItemGroup>
 
     <ItemGroup>

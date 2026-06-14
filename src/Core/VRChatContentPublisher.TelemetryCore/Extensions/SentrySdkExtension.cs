@@ -8,6 +8,7 @@ namespace VRChatContentPublisher.TelemetryCore.Extensions;
 public static class SentrySdkExtension
 {
     private static readonly WebProxyWarper WebProxyWarperInstance = new();
+
     // It looks like SentrySdk won't deep-copy SentryOptions
     private static SentryOptions? _sentryOptions;
 
@@ -45,7 +46,7 @@ public static class SentrySdkExtension
             modifyOptions(_sentryOptions);
             return true;
         }
-        
+
         public static void UpdateWebProxy(IWebProxy? proxy)
         {
             WebProxyWarperInstance.InnerWebProxy = proxy;
@@ -54,11 +55,11 @@ public static class SentrySdkExtension
 
     internal static string GetEnvironment()
     {
-#if DEBUG
+        if (AppContext.GetData("VRChatContentPublisher.TelemetryCore.Sentry.Environment") is string env &&
+            !string.IsNullOrWhiteSpace(env))
+            return env;
+
         return "debug";
-#else
-        return "production";
-#endif
     }
 
     private static string GetRelease()
