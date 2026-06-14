@@ -1,4 +1,5 @@
-﻿using VRChatContentPublisher.Core.Shared;
+﻿using System.Net;
+using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.TelemetryCore.TelemetryToggle;
 
@@ -6,12 +7,21 @@ namespace VRChatContentPublisher.TelemetryCore.Extensions;
 
 public static class SentrySdkExtension
 {
+    private static IWebProxy? _lastWebProxyUsed;
+
+    // It looks like SentrySdk won't deep-copy SentryOptions
+    private static SentryOptions? _sentryOptions;
+
     extension(SentrySdk)
     {
-        public static void InitForApp()
+        public static void InitForApp(IWebProxy? proxy = null)
         {
+            _lastWebProxyUsed = proxy;
+
             SentrySdk.Init(options =>
             {
+                _sentryOptions = options;
+
                 options.Dsn = SentryDsnProvider.GetDsn();
                 options.IsGlobalModeEnabled = true;
                 options.Distribution = GetDistribution();
@@ -22,10 +32,21 @@ public static class SentrySdkExtension
                 options.DisableSentryHttpMessageHandler = true;
                 options.TracesSampleRate = 1.0;
                 options.Environment = GetEnvironment();
+                options.SendDefaultPii = TelemetrySettings.TelemetryMode == TelemetryMode.All;
+                options.HttpProxy = _lastWebProxyUsed;
                 options.UseOtlp();
 
                 options.AddTelemetryModeListener();
             });
+        }
+
+        public static bool TryUpdateSentryOptions(Action<SentryOptions> modifyOptions)
+        {
+            if (_sentryOptions is null)
+                return false;
+
+            modifyOptions(_sentryOptions);
+            return true;
         }
     }
 

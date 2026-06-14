@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Serilog;
 using VRChatContentPublisher.Core.Shared;
+using VRChatContentPublisher.TelemetryCore.Extensions;
 
 namespace VRChatContentPublisher.TelemetryCore;
 
@@ -58,6 +59,8 @@ public static class TelemetrySettings
         {
             _telemetrySettingsData.TelemetryMode = value;
             Save();
+
+            SentrySdk.TryUpdateSentryOptions(options => options.SendDefaultPii = TelemetryMode == TelemetryMode.All);
         }
     }
 

@@ -7,7 +7,8 @@ public static class SentryDsnProvider
 
     public static string GetDsn()
     {
-        if (AppContext.GetData(SentryDsnRuntimeOptionKey) is string sentryDsn)
+        if (AppContext.GetData(SentryDsnRuntimeOptionKey) is string sentryDsn &&
+            !string.IsNullOrWhiteSpace(sentryDsn))
             return sentryDsn;
 
         if (Environment.GetEnvironmentVariable(SentryDsnEnvironmentVariableKey) is { } sentryDsnFromEnv)

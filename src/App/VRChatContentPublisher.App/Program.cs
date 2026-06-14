@@ -3,12 +3,13 @@ using Avalonia;
 using System.Runtime.Versioning;
 using System.Text;
 using HotAvalonia;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Enrichers.Sensitive;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentPublisher.App.Extensions;
+using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Core.Shared.Utils;
@@ -147,6 +148,8 @@ internal sealed class Program
                 .LogToTrace());
 
             using var host = builder.Build();
+
+            SentrySdk.InitForApp(host.Services.GetRequiredService<AppWebProxy>());
 
             host.RunAvaloniaWaitForShutdown(args);
         }
