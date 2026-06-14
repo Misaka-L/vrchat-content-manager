@@ -25,18 +25,43 @@
                     Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Title_Caption}}"
                     FontSize="16" Foreground="White" Opacity="0.7" />
                 <TextBlock
-                    Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Title}}"
+                    Text="{I18N {CompiledBinding TitleText}}"
                     FontSize="36" FontWeight="SemiBold" Foreground="White" />
             </StackPanel>
         </Border>
 
         <StackPanel Grid.Row="1"
-                    HorizontalAlignment="Center"
                     MaxWidth="380"
                     Margin="16"
                     Spacing="8">
 
-            <StackPanel Spacing="12">
+            <!-- Privacy Policy Update -->
+            <StackPanel IsVisible="{Binding IsUpdate}" Spacing="8">
+                <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Update_Description}}"
+                           TextWrapping="Wrap" />
+
+                <HyperlinkButton
+                    Theme="{StaticResource MaterialFlatButton}"
+                    FontWeight="Bold"
+                    Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_ViewPolicy}}"
+                    NavigateUri="{Binding PrivacyPolicyUrl}" />
+
+                <StackPanel Spacing="2">
+                    <HyperlinkButton
+                        FontWeight="Bold"
+                        NavigateUri="https://hello.vrchat.com/privacy">
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_VRChat_ViewPolicy}}" />
+                    </HyperlinkButton>
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Common_VRChat_Acknowledgement_Warning}}"
+                        TextWrapping="Wrap"
+                        FontWeight="Bold" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- First Startup -->
+            <StackPanel Spacing="12" IsVisible="{Binding !IsUpdate}">
                 <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
                     <avalonia:MaterialIcon VerticalAlignment="Top"
                                            Height="32" Width="{Binding $self.Bounds.Height}"

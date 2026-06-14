@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.TelemetryCore;
@@ -15,6 +16,9 @@ public sealed partial class PrivacyPolicyConsentPageViewModel(
     [ObservableProperty] public partial string PrivacyPolicyUrl { get; private set; } = string.Empty;
 
     [ObservableProperty] public partial int PrivacyPolicyVersion { get; private set; }
+
+    public string TitleText =>
+        IsUpdate ? LangKeys.Pages_PrivacyConsent_Update_Title : LangKeys.Pages_PrivacyConsent_Title;
 
     [ObservableProperty] public partial bool IsUpdate { get; private set; }
 

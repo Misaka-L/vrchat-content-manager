@@ -781,6 +781,12 @@ NOTE: Some users report that KB5083807 broke Windows notification service. You m
     <data name="Pages_PrivacyConsent_Title" xml:space="preserve">
         <value>Privacy Policy</value>
     </data>
+    <data name="Pages_PrivacyConsent_Update_Title" xml:space="preserve">
+        <value>Privacy Policy Update</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Update_Description" xml:space="preserve">
+        <value>We have updated our privacy policy. Please review and agree to the new policy to continue using the app.</value>
+    </data>
     <data name="Pages_PrivacyConsent_Summary_Respect_User_Choice_Title" xml:space="preserve">
         <value>We fully respect your choice</value>
     </data>

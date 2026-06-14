@@ -1246,6 +1246,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to We have updated our privacy policy. Please review and agree to the new policy to continue using the app..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Update_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Update_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy Update.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Update_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Update_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View Privacy Policy.
         /// </summary>
         internal static string Pages_PrivacyConsent_ViewPolicy {
