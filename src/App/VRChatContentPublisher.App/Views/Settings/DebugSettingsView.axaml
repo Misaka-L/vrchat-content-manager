@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:settings="clr-namespace:VRChatContentPublisher.App.ViewModels.Settings"
              xmlns:interaction="clr-namespace:VRChatContentPublisher.App.Interaction"
-             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:DataType="settings:DebugSettingsViewModel"
@@ -22,16 +21,5 @@
                 Command="{Binding OpenNetworkDiagnosticWindowCommand}" />
         <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Restart_Onboarding_Button_Text}}"
                 Command="{Binding RestartOnBoardingCommand}" />
-        <Border Height="1" Margin="0,4,0,0" Background="{DynamicResource MaterialDesignBodyLight}" />
-
-        <TextBox
-            assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Encrypted_IP_Field_Label}}"
-            UseFloatingPlaceholder="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
-            Text="{Binding EncryptedIpText}" />
-        <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Encrypted_IP_Button_Text}}"
-                Command="{Binding DecryptIpCommand}" />
-        <SelectableTextBlock Text="{Binding DecryptedIpText}" IsVisible="{Binding HasDecryptedIpText}" />
-        <SelectableTextBlock Text="{Binding DecryptErrorText}" Foreground="#d50000"
-                             IsVisible="{Binding HasDecryptErrorText}" />
     </StackPanel>
 </UserControl>

@@ -18,7 +18,6 @@ using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Database;
 using VRChatContentPublisher.Core.PublicIpChecker;
-using VRChatContentPublisher.Core.PublicIpChecker.IPCrypt;
 using VRChatContentPublisher.Core.PublicIpChecker.Services;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.Core.Rpc;
@@ -218,7 +217,6 @@ public static class ServicesExtension
 
         #region Public IP Checker
 
-        services.AddSingleton<IIpCryptService, IpCryptService>();
         services.AddSingleton<PublicIpCheckerService>();
         services.AddSingleton<CloudflareTracePublicIpProvider>();
 
