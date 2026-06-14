@@ -358,7 +358,7 @@
         <value>发送诊断和使用情况数据以帮助改进应用</value>
     </data>
     <data name="Pages_Settings_Telemetry_Full_Mode_Checkbox_Description" xml:space="preserve">
-        <value>包括原始标识符和 IP 地址帮助更好的定位问题。</value>
+        <value>包括原始标识符和 IP 地址帮助更好的定位问题</value>
     </data>
     <data name="Pages_Settings_Telemetry_Privacy_Policy_Link" xml:space="preserve">
         <value>隐私政策</value>
