@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:pages="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="600"
              x:DataType="pages:PrivacyPolicyConsentPageViewModel"
              x:Class="VRChatContentPublisher.App.Pages.PrivacyPolicyConsentPage">
@@ -14,75 +15,128 @@
         </AttachedToVisualTreeTrigger>
     </Interaction.Behaviors>
 
-    <ScrollViewer>
-        <StackPanel Margin="24" Spacing="12" VerticalAlignment="Center">
+    <Grid RowDefinitions="Auto,*">
+        <Border>
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Title_Caption}}"
+                    FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Title}}"
+                    FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
 
-            <!-- Title: switches between first-time consent and update notification -->
-            <TextBlock Classes="Headline5" TextAlignment="Center" TextWrapping="Wrap">
-                <TextBlock.Text>
-                    <I18N Key="{x:Static localization:LangKeys.Pages_PrivacyConsent_Title}" />
-                </TextBlock.Text>
-            </TextBlock>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Center"
+                    MaxWidth="380"
+                    Margin="16"
+                    Spacing="8">
 
-            <!-- Description of privacy policy -->
-            <TextBlock
-                Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Description}}"
-                Classes="Body1" TextWrapping="Wrap" Opacity="0.8" />
+            <StackPanel Spacing="12">
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <avalonia:MaterialIcon VerticalAlignment="Top"
+                                           Height="32" Width="{Binding $self.Bounds.Height}"
+                                           Kind="HandBackRight" />
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_Respect_User_Choice_Title}}" />
+                        <TextBlock Opacity="0.8"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_Respect_User_Choice_Description}}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
 
-            <!-- View Privacy Policy link button (opens in browser) -->
-            <Button
-                Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_ViewPolicy}}"
-                Theme="{StaticResource MaterialFlatButton}"
-                HorizontalAlignment="Left">
-                <Interaction.Behaviors>
-                    <ClickEventTrigger>
-                        <LaunchUriAction Uri="{Binding PrivacyPolicyUrl}" />
-                    </ClickEventTrigger>
-                </Interaction.Behaviors>
-            </Button>
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <avalonia:MaterialIcon VerticalAlignment="Top"
+                                           Height="32" Width="{Binding $self.Bounds.Height}"
+                                           Kind="LightbulbOn" />
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Title}}" />
+                        <TextBlock Opacity="0.8"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Description}}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
 
-            <!-- Disagree warning -->
-            <TextBlock
-                Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_DisagreeWarning}}"
-                Classes="Caption" Foreground="{DynamicResource MaterialDesignErrorForeground}"
-                TextWrapping="Wrap" />
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <avalonia:MaterialIcon VerticalAlignment="Top"
+                                           Height="32" Width="{Binding $self.Bounds.Height}"
+                                           Kind="CardAccountDetails" />
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Title}}" />
+                        <TextBlock Opacity="0.8"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Description}}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
 
-            <Border Height="1" Margin="0,4,0,0"
-                    Background="{DynamicResource MaterialDesignBodyLight}" />
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                    <avalonia:MaterialIcon VerticalAlignment="Top"
+                                           Height="32" Width="{Binding $self.Bounds.Height}"
+                                           Kind="SourceBranch" />
+                    <StackPanel Grid.Column="1" Spacing="4">
+                        <TextBlock Classes="Headline6"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_Welcome_Aduit_Title}}" />
+                        <TextBlock Opacity="0.8"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_Summary_Welcome_Aduit_Description}}"
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Grid>
 
-            <!-- Telemetry CheckBoxes -->
-            <CheckBox
-                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Enable_Toggle}}"
-                IsChecked="{Binding IsEnableTelemetry}" />
-            <TextBlock
-                Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Enable_Toggle_Description}}"
-                Classes="Caption" Opacity="0.8" TextWrapping="Wrap" Margin="24,0,0,0" />
-
-            <CheckBox
-                IsVisible="{Binding IsEnableTelemetry}"
-                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Full_Mode_Checkbox}}"
-                IsChecked="{Binding IsFullMode}" />
-            <TextBlock
-                IsVisible="{Binding IsEnableTelemetry}"
-                Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Full_Mode_Checkbox_Description}}"
-                Classes="Caption" Opacity="0.8" TextWrapping="Wrap" Margin="24,0,0,0" />
-
-            <Border Height="1" Margin="0,4,0,0"
-                    Background="{DynamicResource MaterialDesignBodyLight}" />
-
-            <!-- Action buttons -->
-            <StackPanel Spacing="8" Margin="0,8,0,0">
-                <Button
-                    Classes="accent"
-                    Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_AgreeAndContinue}}"
-                    Command="{Binding AgreeAndContinueCommand}" />
-
-                <Button
-                    Theme="{StaticResource MaterialOutlineButton}"
-                    Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_ExitApp}}"
-                    Command="{Binding DisagreeAndExitCommand}" />
+                <StackPanel Spacing="2">
+                    <HyperlinkButton
+                        Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_ViewPolicy}}"
+                        NavigateUri="{Binding PrivacyPolicyUrl}" />
+                    <HyperlinkButton
+                        FontWeight="Bold"
+                        NavigateUri="https://hello.vrchat.com/privacy">
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_VRChat_ViewPolicy}}" />
+                    </HyperlinkButton>
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Common_VRChat_Acknowledgement_Warning}}"
+                        TextWrapping="Wrap"
+                        FontWeight="Bold" />
+                </StackPanel>
             </StackPanel>
 
+            <StackPanel Spacing="8">
+
+                <StackPanel Spacing="4">
+                    <CheckBox
+                        IsEnabled="{Binding IsEnableTelemetry}"
+                        IsChecked="{Binding IsFullMode}">
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Full_Mode_Checkbox_Description}}"
+                            TextWrapping="Wrap" />
+                    </CheckBox>
+                    <CheckBox
+                        IsChecked="{Binding IsEnableTelemetry}">
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Enable_Toggle_Description}}"
+                            TextWrapping="Wrap" />
+                    </CheckBox>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="8">
+                    <Button
+                        Theme="{StaticResource MaterialOutlineButton}" Classes="light"
+                        Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_ExitApp}}"
+                        Command="{Binding DisagreeAndExitCommand}" />
+
+                    <Button
+                        Grid.Column="1"
+                        Content="{I18N {x:Static localization:LangKeys.Pages_PrivacyConsent_AgreeAndContinue}}"
+                        Command="{Binding AgreeAndContinueCommand}" />
+                </Grid>
+            </StackPanel>
         </StackPanel>
-    </ScrollViewer>
+
+    </Grid>
 </UserControl>

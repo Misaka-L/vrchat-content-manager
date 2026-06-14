@@ -12,20 +12,28 @@ public sealed partial class PrivacyPolicyConsentPageViewModel(
     PrivacyPolicyService privacyPolicyService
 ) : PageViewModelBase
 {
-    [ObservableProperty]
-    public partial string PrivacyPolicyUrl { get; private set; } = string.Empty;
+    [ObservableProperty] public partial string PrivacyPolicyUrl { get; private set; } = string.Empty;
+
+    [ObservableProperty] public partial int PrivacyPolicyVersion { get; private set; }
+
+    [ObservableProperty] public partial bool IsUpdate { get; private set; }
 
     [ObservableProperty]
-    public partial int PrivacyPolicyVersion { get; private set; }
+    [NotifyPropertyChangedFor(nameof(IsEnableTelemetry))]
+    [NotifyPropertyChangedFor(nameof(IsFullMode))]
+    private partial TelemetryMode SelectedTelemetryMode { get; set; } = TelemetrySettings.TelemetryMode;
 
-    [ObservableProperty]
-    public partial bool IsUpdate { get; private set; }
+    public bool IsEnableTelemetry
+    {
+        get => SelectedTelemetryMode != TelemetryMode.Disabled;
+        set => SelectedTelemetryMode = value ? TelemetryMode.PrivacyMode : TelemetryMode.Disabled;
+    }
 
-    [ObservableProperty]
-    public partial bool IsEnableTelemetry { get; set; } = true;
-
-    [ObservableProperty]
-    public partial bool IsFullMode { get; set; }
+    public bool IsFullMode
+    {
+        get => SelectedTelemetryMode == TelemetryMode.All;
+        set => SelectedTelemetryMode = value ? TelemetryMode.All : TelemetryMode.PrivacyMode;
+    }
 
     [RelayCommand]
     private async Task Load()
@@ -50,10 +58,7 @@ public sealed partial class PrivacyPolicyConsentPageViewModel(
     private void AgreeAndContinue()
     {
         TelemetrySettings.UserAgreementVersion = PrivacyPolicyVersion;
-
-        TelemetrySettings.TelemetryMode = IsEnableTelemetry
-            ? (IsFullMode ? TelemetryMode.All : TelemetryMode.PrivacyMode)
-            : TelemetryMode.Disabled;
+        TelemetrySettings.TelemetryMode = SelectedTelemetryMode;
 
         navigationService.Navigate<BootstrapPageViewModel>();
     }
