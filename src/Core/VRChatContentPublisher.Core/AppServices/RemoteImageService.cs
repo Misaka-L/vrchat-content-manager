@@ -2,6 +2,7 @@
 using System.Text;
 using System.Web;
 using Microsoft.Extensions.Caching.Memory;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.Core.AppServices;
 

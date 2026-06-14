@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
+        <Version>2.10.0-beta.5</Version>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -9,5 +11,7 @@
         <PackageReference Include="Microsoft.Extensions.Http.Resilience"/>
         <PackageReference Include="SauceControl.Blake2Fast"/>
     </ItemGroup>
+
+    <Import Project="../../BuildInfo.targets"/>
 
 </Project>

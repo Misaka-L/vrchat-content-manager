@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using System.Net.Sockets;
 using VRChatContentPublisher.ConnectCore.Extensions;
 using VRChatContentPublisher.ConnectCore.Middlewares;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
+using VRChatContentPublisher.ConnectCore.Telemetry;
 
 namespace VRChatContentPublisher.ConnectCore.Services.Connect;
 
@@ -242,6 +244,15 @@ public sealed class HttpServerService
         var requestId = httpContext.TraceIdentifier;
         httpContext.Response.Headers.Append("X-Request-Id", requestId);
 
+        using var activity = ConnectCoreActivitySources.ConnectCoreActivitySource
+            .StartActivity($"RPC {httpContext.Request.Method} {httpContext.Request.Path}")?
+            .SetTag("rpc.client_ip", httpContext.Connection.RemoteIpAddress?.ToString())
+            .SetTag("rpc.client_port", httpContext.Connection.RemotePort)
+            .SetTag("rpc.http_method", httpContext.Request.Method)
+            .SetTag("rpc.http_path", httpContext.Request.Path)
+            .SetTag("rpc.http_query", httpContext.Request.QueryString.ToString())
+            .SetTag("rpc.request_id", requestId);
+
         using (_logger.BeginScope(
                    "{RequestId} {RpcClientIp}:{RpcClientPort} {RpcHttpMethod} {RpcHttpPath}{RpcHttpQuery}",
                    requestId,
@@ -266,10 +277,14 @@ public sealed class HttpServerService
                 middlewares.AddRange(_preRequestMiddlewares);
                 middlewares.AddRange(_postRequestMiddlewares);
 
+                using var middlewareActivity =
+                    ConnectCoreActivitySources.ConnectCoreActivitySource.StartActivity("HandleRequestWithMiddlewares");
                 await RunMiddlewaresAsync(httpContext, middlewares);
+                activity?.SetStatus(ActivityStatusCode.Ok);
             }
             catch (Exception ex)
             {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
                 _logger.LogError(ex, "Error handling HTTP request");
                 if (!httpContext.Response.HasStarted)
                 {
@@ -304,6 +319,12 @@ public sealed class HttpServerService
             {
                 var current = middlewares[index];
                 index++;
+
+                var middlewareName = current.GetType().Name;
+                using var middlewareActivity = ConnectCoreActivitySources.ConnectCoreActivitySource
+                    .StartActivity($"RunMiddleware: {middlewareName}")?
+                    .SetTag("middleware", middlewareName);
+
                 await current.ExecuteAsync(httpContext, Next);
             }
         }

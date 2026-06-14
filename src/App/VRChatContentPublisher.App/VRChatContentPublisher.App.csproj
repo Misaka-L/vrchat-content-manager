@@ -15,6 +15,12 @@
         <PublishAot>true</PublishAot>
     </PropertyGroup>
 
+    <!--Sentry DSN for TelemetryCore-->
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="VRChatContentPublisher.TelemetryCore.Sentry.Dsn" Value="$(SentryDsn)" />
+        <RuntimeHostConfigurationOption Include="VRChatContentPublisher.TelemetryCore.Sentry.Environment" Value="$(SentryEnvironment)" />
+    </ItemGroup>
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
@@ -56,6 +62,7 @@
         <PackageReference Include="Serilog.Sinks.Console"/>
         <PackageReference Include="Serilog.Sinks.Debug"/>
         <PackageReference Include="Serilog.Sinks.File"/>
+        <PackageReference Include="Sentry.Serilog"/>
 
         <PackageReference Include="Downloader" />
     </ItemGroup>
@@ -64,6 +71,7 @@
         <ProjectReference Include="..\..\Core\Platform\VRChatContentPublisher.Platform.Abstraction\VRChatContentPublisher.Platform.Abstraction.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.Core\VRChatContentPublisher.Core.csproj"/>
         <ProjectReference Include="..\..\Core\VRChatContentPublisher.IpcCore\VRChatContentPublisher.IpcCore.csproj"/>
+        <ProjectReference Include="..\..\Core\VRChatContentPublisher.TelemetryCore\VRChatContentPublisher.TelemetryCore.csproj" />
         <ProjectReference Include="..\Localization\VRChatContentPublisher.App.Localization\VRChatContentPublisher.App.Localization.csproj" />
     </ItemGroup>
 

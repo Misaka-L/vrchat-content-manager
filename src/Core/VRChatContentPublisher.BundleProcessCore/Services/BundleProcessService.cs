@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using AssetsTools.NET;
 using VRChatContentPublisher.BundleProcessCore.Models;
+using VRChatContentPublisher.BundleProcessCore.Telemetry;
 
 namespace VRChatContentPublisher.BundleProcessCore.Services;
 
@@ -15,6 +17,10 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
+        using var activity = BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
+            .StartActivity("ProcessBundle")
+            ?.SetTag("content_id", options.ContentId);
+
         cancellationToken.ThrowIfCancellationRequested();
 
         var bundleStream = bundleRawStream;
@@ -44,6 +50,11 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
             await CompressBundleAsync(bundleStream, outputStream, progressReporter, !isTempFileCreated,
                 cancellationToken);
         }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+            throw;
+        }
         finally
         {
             if (isTempFileCreated)
@@ -59,20 +70,25 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
-        progressReporter?.Report("Copying bundle to temporary file...");
-
-        var fileStream = CreateTempStream();
-        try
+        using (var activity = BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
+                   .StartActivity("CopyRawBundleToTempFile"))
         {
-            await stream.CopyToAsync(fileStream, cancellationToken);
-        }
-        catch
-        {
-            fileStream.Close();
-            throw;
-        }
+            progressReporter?.Report("Copying bundle to temporary file...");
 
-        return fileStream;
+            var fileStream = CreateTempStream();
+            try
+            {
+                await stream.CopyToAsync(fileStream, cancellationToken);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                fileStream.Close();
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                throw;
+            }
+
+            return fileStream;
+        }
     }
 
     private async ValueTask<BundlePreprocessResult> PreprocessBundleAsync(
@@ -82,42 +98,51 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var bundleFile = new AssetBundleFile();
-
-        using var bundleReader = new AssetsFileReader(stream, true);
-        bundleFile.Read(bundleReader);
-
-        if (!bundleFile.DataIsCompressed)
+        using (var activity = BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
+                   .StartActivity("PreprocessBundle"))
         {
-            bundleFile.Close();
-            return new BundlePreprocessResult(stream, false);
-        }
+            cancellationToken.ThrowIfCancellationRequested();
 
-        cancellationToken.ThrowIfCancellationRequested();
+            var bundleFile = new AssetBundleFile();
 
-        progressReporter?.Report("Decompressing bundle file...");
-        var tempBundleStream = CreateTempStream();
+            using var bundleReader = new AssetsFileReader(stream, true);
+            bundleFile.Read(bundleReader);
 
-        try
-        {
-            await Task.Factory.StartNew(() =>
+            if (!bundleFile.DataIsCompressed)
+            {
+                bundleFile.Close();
+                return new BundlePreprocessResult(stream, false);
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            progressReporter?.Report("Decompressing bundle file...");
+            var tempBundleStream = CreateTempStream();
+
+            try
+            {
+                using (BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
+                           .StartActivity("DecompressBundle"))
                 {
-                    var bundleWriter = new AssetsFileWriter(tempBundleStream);
-                    bundleFile.Unpack(bundleWriter, cancellationToken);
-                }, cancellationToken, TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+                    await Task.Factory.StartNew(() =>
+                        {
+                            var bundleWriter = new AssetsFileWriter(tempBundleStream);
+                            bundleFile.Unpack(bundleWriter, cancellationToken);
+                        }, cancellationToken, TaskCreationOptions.LongRunning,
+                        TaskScheduler.Default);
+                }
 
-            if (!leaveOpen)
-                stream.Close();
+                if (!leaveOpen)
+                    stream.Close();
 
-            return new BundlePreprocessResult(tempBundleStream, true);
-        }
-        catch
-        {
-            tempBundleStream.Close();
-            throw;
+                return new BundlePreprocessResult(tempBundleStream, true);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                tempBundleStream.Close();
+                throw;
+            }
         }
     }
 
@@ -129,27 +154,36 @@ public sealed class BundleProcessService(BundleProcessPipelineOptions pipelineOp
         CancellationToken cancellationToken = default
     )
     {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        progressReporter?.Report("Compressing bundle file...");
-
-        var bundleFile = new AssetBundleFile();
-
-        try
+        using (var activity = BundleProcessCoreActivitySources.BundleProcessCoreActivitySource
+                   .StartActivity("CompressBundle"))
         {
-            await Task.Factory.StartNew(() =>
-                {
-                    using var bundleReader = new AssetsFileReader(stream, leaveOpen);
-                    bundleFile.Read(bundleReader);
+            cancellationToken.ThrowIfCancellationRequested();
 
-                    using var writer = new AssetsFileWriter(outputStream, true);
-                    bundleFile.Pack(writer, AssetBundleCompressionType.LZMA, cancellationToken: cancellationToken);
-                }, cancellationToken, TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
-        }
-        finally
-        {
-            bundleFile.Close();
+            progressReporter?.Report("Compressing bundle file...");
+
+            var bundleFile = new AssetBundleFile();
+
+            try
+            {
+                await Task.Factory.StartNew(() =>
+                    {
+                        using var bundleReader = new AssetsFileReader(stream, leaveOpen);
+                        bundleFile.Read(bundleReader);
+
+                        using var writer = new AssetsFileWriter(outputStream, true);
+                        bundleFile.Pack(writer, AssetBundleCompressionType.LZMA, cancellationToken: cancellationToken);
+                    }, cancellationToken, TaskCreationOptions.LongRunning,
+                    TaskScheduler.Default);
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                throw;
+            }
+            finally
+            {
+                bundleFile.Close();
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-﻿namespace VRChatContentPublisher.Core.AppServices;
+﻿namespace VRChatContentPublisher.Core.Shared;
 
 public static class AppStorageService
 {

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Database;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.Core.VirtualFileSystem.Services;
 

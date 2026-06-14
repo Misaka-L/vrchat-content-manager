@@ -2,6 +2,7 @@ using VRChatContentPublisher.ConnectCore.Models;
 using VRChatContentPublisher.ConnectCore.Services;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Database;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.Core.VirtualFileSystem.Services;
 

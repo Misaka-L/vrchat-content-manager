@@ -3,6 +3,7 @@ using Avalonia;
 using System.Runtime.Versioning;
 using System.Text;
 using HotAvalonia;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -10,11 +11,15 @@ using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentPublisher.App.Extensions;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Extensions;
-using VRChatContentPublisher.Core.Utils;
+using VRChatContentPublisher.Core.Shared;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.IpcCore;
 using VRChatContentPublisher.IpcCore.Exceptions;
 using VRChatContentPublisher.IpcCore.Extensions;
 using VRChatContentPublisher.IpcCore.Models;
+using VRChatContentPublisher.TelemetryCore;
+using VRChatContentPublisher.TelemetryCore.Extensions;
+using VRChatContentPublisher.TelemetryCore.Masking.Serilog;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
@@ -50,7 +55,15 @@ internal sealed class Program
             .WriteTo.Async(writer =>
                 writer.File(plainTextLogPath, rollingInterval: RollingInterval.Day))
             .WriteTo.Debug()
+            .WriteTo.Logger(new LoggerConfiguration()
+                .Enrich.WithAppSensitiveDataMasking()
+                .WriteTo.Sentry()
+                .CreateLogger())
             .CreateLogger();
+        
+        // VRChatContentPublisher.TelemetryCore.Extensions.SentrySdkExtension
+        SentrySdk.InitForApp();
+        TelemetrySettings.Initialize();
 
         Log.Information(
             "VRChat Content Publisher v{AppVersion} built on {AppBuildDate} (commit {AppCommitHash}) starting up...",
@@ -58,7 +71,6 @@ internal sealed class Program
             AppVersionUtils.GetAppBuildDate(),
             AppVersionUtils.GetAppCommitHash()
         );
-
 
         AppDomain.CurrentDomain.UnhandledException += (_, eventArgs) =>
         {
@@ -72,9 +84,16 @@ internal sealed class Program
                     eventArgs.IsTerminating
                 );
 
+                SentrySdk.CaptureMessage(
+                    $"An unhandled exception of type {eventArgs.ExceptionObject.GetType()} was thrown: {eventArgs.ExceptionObject}, IsTerminating: {eventArgs.IsTerminating}",
+                    eventArgs.IsTerminating ? SentryLevel.Fatal : SentryLevel.Error
+                );
+
+                if (!eventArgs.IsTerminating) return;
 #if RELEASE
                 TryLaunchCrashHandler(eventArgs.ExceptionObject);
 #endif
+                SentrySdk.Flush();
                 return;
             }
 
@@ -84,9 +103,11 @@ internal sealed class Program
                 eventArgs.IsTerminating
             );
 
+            if (!eventArgs.IsTerminating) return;
 #if RELEASE
             TryLaunchCrashHandler(ex);
 #endif
+            SentrySdk.Flush();
         };
 
         try
@@ -108,6 +129,8 @@ internal sealed class Program
 
             builder.Services.AddSerilog();
 
+            // VRChatContentPublisher.App.Extensions.HostBuilderExtension.AddAppTelemetry<T>
+            builder.AddAppTelemetry();
             builder.UseAppCore();
             builder.Services.AddAppServices();
             builder.Services.AddIpcCore();
@@ -125,6 +148,7 @@ internal sealed class Program
                 .LogToTrace());
 
             using var host = builder.Build();
+            SentrySdk.UpdateWebProxy(host.Services.GetRequiredService<AppWebProxy>());
 
             host.RunAvaloniaWaitForShutdown(args);
         }
@@ -145,9 +169,13 @@ internal sealed class Program
         }
         catch (Exception ex)
         {
+            ex.SetSentryMechanism(
+                "Main.UnhandledException",
+                "The application has crashed due to an unhandled exception.",
+                handled: false);
+
             Log.Fatal(ex, "Oops, the application has crashed!");
             Environment.ExitCode = -1;
-
 #if RELEASE
             TryLaunchCrashHandler(ex);
 #endif
@@ -155,6 +183,7 @@ internal sealed class Program
         finally
         {
             Log.CloseAndFlush();
+            SentrySdk.Flush();
         }
     }
 

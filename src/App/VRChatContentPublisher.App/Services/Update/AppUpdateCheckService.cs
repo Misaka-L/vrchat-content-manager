@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.Shared.Utils;
 using VRChatContentPublisher.Core.Utils;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 

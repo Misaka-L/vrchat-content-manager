@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Models.Api.V1;
 using VRChatContentPublisher.ConnectCore.Results;
+using VRChatContentPublisher.ConnectCore.Telemetry;
 
 namespace VRChatContentPublisher.ConnectCore.Services.Connect;
 
 public sealed class EndpointService(ILogger<EndpointService> logger, IServiceProvider serviceProvider)
 {
-    private readonly Dictionary<EndpointInfo, Func<HttpContext, IServiceProvider, Task<IEndpointResult>>> _handlers = [];
+    private readonly Dictionary<EndpointInfo, Func<HttpContext, IServiceProvider, Task<IEndpointResult>>>
+        _handlers = [];
 
     public void Map(string method, string path, Func<HttpContext, IServiceProvider, Task<IEndpointResult>> handler)
     {
@@ -23,6 +26,8 @@ public sealed class EndpointService(ILogger<EndpointService> logger, IServicePro
         var key = new EndpointInfo(requestPath, requestMethod);
         if (_handlers.TryGetValue(key, out var handler))
         {
+            using var activity = ConnectCoreActivitySources.ConnectCoreActivitySource
+                .StartActivity($"Handle {requestMethod} {requestPath}");
             IEndpointResult result;
             try
             {
@@ -30,6 +35,7 @@ public sealed class EndpointService(ILogger<EndpointService> logger, IServicePro
             }
             catch (Exception exception)
             {
+                activity?.SetStatus(ActivityStatusCode.Error, exception.Message);
                 logger.LogError(exception, "Error handling request {Method} {Path}", requestMethod, requestPath);
                 result = EndpointResults.Problem(ApiV1ProblemType.Undocumented,
                     StatusCodes.Status500InternalServerError,

@@ -1,38 +1,35 @@
 ﻿<Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-  </PropertyGroup>
-  <ItemGroup>
-    <!--Avalonia Framekwork-->
-    <PackageVersion Include="Avalonia" Version="12.0.1" />
-    <PackageVersion Include="Avalonia.Desktop" Version="12.0.1" />
-    <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.1" />
-    <!--Hot Reload Support-->
-    <PackageVersion Include="HotAvalonia" Version="3.1.0" />
-    <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.0.1" />
-    <!--DevTools Support-->
-    <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1" />
-    <!--Mvvm-->
-    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageVersion Include="DialogHost.Avalonia" Version="0.12.0" />
-    <!--UI-->
-    <PackageVersion Include="Material.Avalonia" Version="3.15.1" />
-    <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.3" />
-    <!--App Host-->
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.6" />
-    <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0" />
-    <!--Serilog Logging-->
-    <PackageVersion Include="Serilog" Version="4.3.1" />
-    <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0" />
-    <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0" />
-    <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
-    <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0" />
-    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
-    
-    <PackageVersion Include="Downloader" Version="5.1.1" />
-    <!--I18N-->
-    <!--TODO: Replace with nuget package after upstream updated-->
-    <!--PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-1" />-->
-  </ItemGroup>
+    <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Packages.props, $(MSBuildThisFileDirectory)..))"/>
+
+    <ItemGroup>
+        <!--Avalonia Framekwork-->
+        <PackageVersion Include="Avalonia" Version="12.0.1"/>
+        <PackageVersion Include="Avalonia.Desktop" Version="12.0.1"/>
+        <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.0.1"/>
+        <!--Hot Reload Support-->
+        <PackageVersion Include="HotAvalonia" Version="3.1.0"/>
+        <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.0.1"/>
+        <!--DevTools Support-->
+        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1"/>
+        <!--Mvvm-->
+        <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
+        <PackageVersion Include="DialogHost.Avalonia" Version="0.12.0"/>
+        <!--UI-->
+        <PackageVersion Include="Material.Avalonia" Version="3.15.1"/>
+        <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.3"/>
+        <!--App Host-->
+        <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0"/>
+        <!--Serilog Logging-->
+        <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0"/>
+        <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0"/>
+        <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0"/>
+        <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1"/>
+        <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0"/>
+        <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0"/>
+
+        <PackageVersion Include="Downloader" Version="5.1.1"/>
+        <!--I18N-->
+        <!--TODO: Replace with nuget package after upstream updated-->
+        <!--PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-1" />-->
+    </ItemGroup>
 </Project>

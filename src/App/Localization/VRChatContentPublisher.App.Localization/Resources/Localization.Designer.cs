@@ -170,6 +170,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to VRChat Content Publisher is not endorsed by VRChat and does not reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat properties. VRChat and all associated properties are trademarks or registered trademarks of VRChat Inc..
+        /// </summary>
+        internal static string Common_VRChat_Acknowledgement_Warning {
+            get {
+                return ResourceManager.GetString("Common_VRChat_Acknowledgement_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You already downloaded the update package. Are you sure you want to cancel and delete it?.
         /// </summary>
         internal static string Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel {
@@ -1129,6 +1138,150 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Agree and Continue.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_AgreeAndContinue {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_AgreeAndContinue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disagree and Exit.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_ExitApp {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_ExitApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your data will only be used to provide services and help us improve the app..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For services and improve the app only.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unless you specifically instruct us to include raw identifiers and IP addresses in the telemetry data, we will only send anonymized diagnostic and basic usage data to help us improve the app..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No PII send by default.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can choose not to send any telemetry data at all..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_Respect_User_Choice_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_Respect_User_Choice_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We fully respect your choice.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_Respect_User_Choice_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_Respect_User_Choice_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VRChat Content Publisher is an open-source project. You can always view what data we collect and how we handle it..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_Welcome_Aduit_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_Welcome_Aduit_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can audit the code at any time.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Summary_Welcome_Aduit_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Summary_Welcome_Aduit_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Before continue....
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Title_Caption {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Title_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We have updated our privacy policy. Please review and agree to the new policy to continue using the app..
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Update_Description {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Update_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy Update.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_Update_Title {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_Update_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Privacy Policy.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_ViewPolicy {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_ViewPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For information on how VRChat handles your data, please read the VRChat Privacy Policy.
+        /// </summary>
+        internal static string Pages_PrivacyConsent_VRChat_ViewPolicy {
+            get {
+                return ResourceManager.GetString("Pages_PrivacyConsent_VRChat_ViewPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Acknowledgement.
         /// </summary>
         internal static string Pages_Settings_About_Acknowledgement_Title {
@@ -1848,6 +2001,42 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_Software_Update_Title {
             get {
                 return ResourceManager.GetString("Pages_Settings_Software_Update_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sends diagnostic and usage data to help improve the application..
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Enable_Toggle_Description {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Enable_Toggle_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include raw identifiers and IP address help developers pinpoint the issue more effectively..
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Full_Mode_Checkbox_Description {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Full_Mode_Checkbox_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Privacy Policy.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Privacy_Policy_Link {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Privacy_Policy_Link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry.
+        /// </summary>
+        internal static string Pages_Settings_Telemetry_Title {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Telemetry_Title", resourceCulture);
             }
         }
         

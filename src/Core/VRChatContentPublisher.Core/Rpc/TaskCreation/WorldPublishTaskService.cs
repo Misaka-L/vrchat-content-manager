@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.ConnectCore.Exceptions;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
@@ -6,6 +7,8 @@ using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher.Options;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
+using VRChatContentPublisher.Core.Extensions;
+using VRChatContentPublisher.Core.Telemetry;
 using VRChatContentPublisher.Core.UserSession;
 using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Worlds;
@@ -35,6 +38,8 @@ public class WorldPublishTaskService(
         string? previewYoutubeId,
         string[]? udonProducts)
     {
+        using var activity = CoreActivitySources.Rpc.StartActivity("CreateWorldPublishTask")?
+            .SetContentMetadata(worldId, worldName, "world", platform, unityVersion, authorId);
         try
         {
             var userSession = await GetUserSessionByWorldIdAsync(worldId, authorId);
@@ -77,14 +82,19 @@ public class WorldPublishTaskService(
         }
         catch (Exception e)
         {
+            activity?.SetStatus(ActivityStatusCode.Error, e.Message);
             logger.LogError(e, "Failed to create world publish task for world {WorldId}", worldId);
             throw;
         }
     }
 
-    private async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(string worldId,
+    private async ValueTask<UserSessionService> GetUserSessionByWorldIdAsync(
+        string worldId,
         string? requestUserId = null)
     {
+        using var activity = CoreActivitySources.Rpc.StartActivity("GetUserSessionByWorldId")?
+            .SetContentMetadata(worldId, contentType: "world", authorId: requestUserId);
+
         if (!userSessionManagerService.IsAnySessionAvailable)
             throw new NoUserSessionAvailableException();
 

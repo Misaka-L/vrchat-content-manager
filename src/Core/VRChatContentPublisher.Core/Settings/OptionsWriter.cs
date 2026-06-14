@@ -1,6 +1,7 @@
 ﻿using System.Text.Json.Nodes;
 using Microsoft.Extensions.Configuration;
 using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.Core.Settings;
 

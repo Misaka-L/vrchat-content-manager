@@ -27,6 +27,9 @@
           xml:space="preserve">
         <value>en</value>
     </data>
+    <data name="Common_VRChat_Acknowledgement_Warning" xml:space="preserve">
+        <value>VRChat Content Publisher is not endorsed by VRChat and does not reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat properties. VRChat and all associated properties are trademarks or registered trademarks of VRChat Inc.</value>
+    </data>
     <data name="Common_Content_Type_Avatar" xml:space="preserve">
         <value>Avatar</value>
     </data>
@@ -355,6 +358,18 @@
     </data>
     <data name="Pages_Settings_About_Consider_Support_By_Content_Contribute" xml:space="preserve">
         <value>Contribute</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Title" xml:space="preserve">
+        <value>Telemetry</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Enable_Toggle_Description" xml:space="preserve">
+        <value>Sends diagnostic and usage data to help improve the application.</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Full_Mode_Checkbox_Description" xml:space="preserve">
+        <value>Include raw identifiers and IP address help developers pinpoint the issue more effectively.</value>
+    </data>
+    <data name="Pages_Settings_Telemetry_Privacy_Policy_Link" xml:space="preserve">
+        <value>Privacy Policy</value>
     </data>
     <data name="Pages_Guide_Shared_Steps_Step_1_Title" xml:space="preserve">
         <value>Step.1</value>
@@ -759,5 +774,53 @@ NOTE: Some users report that KB5083807 broke Windows notification service. You m
     </data>
     <data name="Pages_Bootstrap_Loading_Text_Restoring_Publish_Tasks" xml:space="preserve">
         <value>Restoring publish tasks...</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Title_Caption" xml:space="preserve">
+        <value>Before continue...</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Title" xml:space="preserve">
+        <value>Privacy Policy</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Update_Title" xml:space="preserve">
+        <value>Privacy Policy Update</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Update_Description" xml:space="preserve">
+        <value>We have updated our privacy policy. Please review and agree to the new policy to continue using the app.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_Respect_User_Choice_Title" xml:space="preserve">
+        <value>We fully respect your choice</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_Respect_User_Choice_Description" xml:space="preserve">
+        <value>You can choose not to send any telemetry data at all.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Title" xml:space="preserve">
+        <value>For services and improve the app only</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_For_Service_And_Improve_Only_Description" xml:space="preserve">
+        <value>Your data will only be used to provide services and help us improve the app.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Title" xml:space="preserve">
+        <value>No PII send by default</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_No_PII_Upload_By_Default_Description" xml:space="preserve">
+        <value>Unless you specifically instruct us to include raw identifiers and IP addresses in the telemetry data, we will only send anonymized diagnostic and basic usage data to help us improve the app.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_Welcome_Aduit_Title" xml:space="preserve">
+        <value>You can audit the code at any time</value>
+    </data>
+    <data name="Pages_PrivacyConsent_Summary_Welcome_Aduit_Description" xml:space="preserve">
+        <value>VRChat Content Publisher is an open-source project. You can always view what data we collect and how we handle it.</value>
+    </data>
+    <data name="Pages_PrivacyConsent_ViewPolicy" xml:space="preserve">
+        <value>View Privacy Policy</value>
+    </data>
+    <data name="Pages_PrivacyConsent_VRChat_ViewPolicy" xml:space="preserve">
+        <value>For information on how VRChat handles your data, please read the VRChat Privacy Policy</value>
+    </data>
+    <data name="Pages_PrivacyConsent_AgreeAndContinue" xml:space="preserve">
+        <value>Agree and Continue</value>
+    </data>
+    <data name="Pages_PrivacyConsent_ExitApp" xml:space="preserve">
+        <value>Disagree and Exit</value>
     </data>
 </root>

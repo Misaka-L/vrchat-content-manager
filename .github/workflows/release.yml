@@ -23,6 +23,7 @@ env:
   release_note_file_name: release-note
   assets_to_release_artifact_pattern: vrchat-content-publisher-app-*
   release_git_tag: v${{ inputs.new-version }}
+  sentry_environment: ${{ case(inputs.pre-release, 'preview', 'stable') }} # due to limitation of github action, build workflow input have same expression too... instead of env
 
 permissions:
   contents: read
@@ -65,7 +66,7 @@ jobs:
         with:
           tags: csproj.Version
           version: ${{ inputs.new-version}}
-          file: "\"${{ env.repo_dir }}/src/App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj\""
+          file: "\"${{ env.repo_dir }}/src/App/VRChatContentPublisher.App/VRChatContentPublisher.App.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core/VRChatContentPublisher.Core.csproj\", \"${{ env.repo_dir }}/src/Core/VRChatContentPublisher.Core.Shared/VRChatContentPublisher.Core.Shared.csproj\""
 
       - name: Extact Release Note and Update Changelog
         working-directory: ${{ env.repo_dir }}
@@ -107,6 +108,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       ref: releasing
+      sentry-environment: ${{ case(inputs.pre-release, 'preview', 'stable') }}
 
   create-release:
     needs: [update-changelog, build]

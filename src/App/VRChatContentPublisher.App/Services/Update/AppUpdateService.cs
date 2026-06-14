@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Platform.Abstraction.Services;
 
 namespace VRChatContentPublisher.App.Services.Update;

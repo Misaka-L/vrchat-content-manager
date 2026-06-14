@@ -4,6 +4,7 @@ using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.Services.Notification.Sender;
+using VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;
@@ -110,9 +111,15 @@ public static class ServicesExtenstion
         services.AddTransient<AboutSettingsViewModel>();
         services.AddTransient<DebugSettingsViewModel>();
         services.AddTransient<UpdateSettingsViewModel>();
+        services.AddTransient<TelemetrySettingsViewModel>();
 
         // Connect Core
         services.AddSingleton<IRequestChallengeService, RequestChallengeService>();
+
+        // Privacy Policy
+        services.AddSingleton<PrivacyPolicyService>();
+        services.AddHostedService<PrivacyPolicyPrefetchHostedService>();
+        services.AddTransient<PrivacyPolicyConsentPageViewModel>();
 
         // Update Check
         services.AddSingleton<AppUpdateCheckService>();

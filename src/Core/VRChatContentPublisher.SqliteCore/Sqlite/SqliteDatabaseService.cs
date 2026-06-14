@@ -1,8 +1,10 @@
 using System.Data;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Shared;
+using VRChatContentPublisher.PersistentCore.Telemetry;
 
 namespace VRChatContentPublisher.PersistentCore.Sqlite;
 
@@ -14,8 +16,15 @@ public sealed class SqliteDatabaseService(ILogger<SqliteDatabaseService> logger)
 
     public async Task InitializeAsync(string pathToDatabase)
     {
+        using (var activity =
+               SqliteCoreActivitySources.SqliteCore.StartActivity("InitializeDatabase", ActivityKind.Client))
         using (await SimpleSemaphoreSlimLockScope.WaitAsync(_semaphoreSlim))
         {
+            activity?.SetTag(
+                SqliteCoreActivitySources.DatabaseSystemNameTag,
+                SqliteCoreActivitySources.DatabaseSystemNameTag
+            );
+
             if (_connection is not null)
                 throw new InvalidOperationException("Database service has already been initialized.");
 
@@ -40,13 +49,23 @@ public sealed class SqliteDatabaseService(ILogger<SqliteDatabaseService> logger)
 
     public async ValueTask<SqliteDataReader> ExecuteReaderAsync(string commandText, params SqliteParameter[] parameters)
     {
+        using (var activity = SqliteCoreActivitySources.SqliteCore.StartActivity(commandText, ActivityKind.Client))
         using (logger.BeginScope("Executing SQL command: {CommandText}", commandText))
         {
+            activity?.SetTag(
+                SqliteCoreActivitySources.DatabaseSystemNameTag,
+                SqliteCoreActivitySources.DatabaseSystemNameTag
+            );
+            activity?.SetTag("db.query.summary", commandText);
+
             logger.LogInformation("Executing SQL command: {CommandText}", commandText);
             try
             {
+                using (var waitActivity =
+                       SqliteCoreActivitySources.SqliteCore.StartActivity("WaitForSemaphore", ActivityKind.Client))
                 using (await SimpleSemaphoreSlimLockScope.WaitAsync(_semaphoreSlim))
                 {
+                    waitActivity?.Stop();
                     ThrowOnInvalidState();
 
                     var command = _connection.CreateCommand();
@@ -57,6 +76,18 @@ public sealed class SqliteDatabaseService(ILogger<SqliteDatabaseService> logger)
             }
             catch (Exception ex)
             {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                if (ex is SqliteException sqliteEx)
+                {
+                    activity?.SetTag("error.type", sqliteEx.Message);
+                    activity?.SetTag("db.response.status_code",
+                        sqliteEx.SqliteErrorCode + "/" + sqliteEx.SqliteExtendedErrorCode);
+                }
+                else
+                {
+                    activity?.SetTag("error.type", ex.GetType().Name);
+                }
+
                 logger.LogError(ex, "An error occurred while executing SQL command: {CommandText}", commandText);
                 throw;
             }
@@ -65,13 +96,23 @@ public sealed class SqliteDatabaseService(ILogger<SqliteDatabaseService> logger)
 
     public async ValueTask<int> ExecuteNonQueryAsync(string commandText, params SqliteParameter[] parameters)
     {
+        using (var activity = SqliteCoreActivitySources.SqliteCore.StartActivity(commandText, ActivityKind.Client))
         using (logger.BeginScope("Executing (Non-Query) SQL command: {CommandText}", commandText))
         {
+            activity?.SetTag(
+                SqliteCoreActivitySources.DatabaseSystemNameTag,
+                SqliteCoreActivitySources.DatabaseSystemNameTag
+            );
+            activity?.SetTag("db.query.summary", commandText);
             logger.LogInformation("Executing (Non-Query) SQL command: {CommandText}", commandText);
+
             try
             {
+                using (var waitActivity =
+                       SqliteCoreActivitySources.SqliteCore.StartActivity("WaitForSemaphore", ActivityKind.Client))
                 using (await SimpleSemaphoreSlimLockScope.WaitAsync(_semaphoreSlim))
                 {
+                    waitActivity?.Stop();
                     ThrowOnInvalidState();
 
                     await using var command = _connection.CreateCommand();
@@ -82,6 +123,18 @@ public sealed class SqliteDatabaseService(ILogger<SqliteDatabaseService> logger)
             }
             catch (Exception ex)
             {
+                activity?.SetStatus(ActivityStatusCode.Error, ex.Message);
+                if (ex is SqliteException sqliteEx)
+                {
+                    activity?.SetTag("error.type", sqliteEx.Message);
+                    activity?.SetTag("db.response.status_code",
+                        sqliteEx.SqliteErrorCode + "/" + sqliteEx.SqliteExtendedErrorCode);
+                }
+                else
+                {
+                    activity?.SetTag("error.type", ex.GetType().Name);
+                }
+
                 logger.LogError(
                     ex, "An error occurred while executing (Non-Query) SQL command: {CommandText}", commandText);
                 throw;

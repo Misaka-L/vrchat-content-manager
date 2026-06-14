@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.Core.Events.PublicIp;
-using VRChatContentPublisher.Core.PublicIpChecker.IPCrypt;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 
@@ -10,7 +9,6 @@ namespace VRChatContentPublisher.Core.PublicIpChecker.Services;
 
 public sealed class PublicIpCheckerService(
     CloudflareTracePublicIpProvider publicIpProvider,
-    IIpCryptService ipCryptService,
     IWritableOptions<PublicIpStateStorage> ipStateStorage,
     ILogger<PublicIpCheckerService> logger)
 {
@@ -75,9 +73,6 @@ public sealed class PublicIpCheckerService(
                 return;
             }
 
-            var encryptedOldIp = await ipCryptService.EncryptAsync(previousIp, cancellationToken);
-            var encryptedNewIp = await ipCryptService.EncryptAsync(currentIp, cancellationToken);
-
             await ipStateStorage.UpdateAsync(storage =>
             {
                 storage.LastPreviousIp = previousIp;
@@ -88,15 +83,13 @@ public sealed class PublicIpCheckerService(
             });
 
             logger.LogWarning(
-                "Public public IP changed. OldIpEncrypted: {OldIpEncrypted}, NewIpEncrypted: {NewIpEncrypted}",
-                encryptedOldIp,
-                encryptedNewIp);
+                "Public public IP changed. OldIp: {OldIp}, NewIp: {NewIp}",
+                previousIp,
+                currentIp);
 
             PublicIpChanged?.Invoke(this, new PublicIpChangedEvent(
                 previousIp,
                 currentIp,
-                encryptedOldIp,
-                encryptedNewIp,
                 now));
         }
         finally
