@@ -19,8 +19,4 @@
         <ProjectReference Include="..\VRChatContentPublisher.Core.Shared\VRChatContentPublisher.Core.Shared.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageVersion Update="Serilog" Version="4.3.1" />
-    </ItemGroup>
-
 </Project>
