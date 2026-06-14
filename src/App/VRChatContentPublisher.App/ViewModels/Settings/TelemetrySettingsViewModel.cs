@@ -3,15 +3,8 @@ using VRChatContentPublisher.TelemetryCore;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
 
-public sealed class TelemetrySettingsViewModel : ViewModelBase
+public sealed class TelemetrySettingsViewModel(PrivacyPolicyService privacyPolicyService) : ViewModelBase
 {
-    private readonly PrivacyPolicyService _privacyPolicyService;
-
-    public TelemetrySettingsViewModel(PrivacyPolicyService privacyPolicyService)
-    {
-        _privacyPolicyService = privacyPolicyService;
-    }
-
     public bool IsTelemetryEnabled
     {
         get => TelemetrySettings.TelemetryMode != TelemetryMode.Disabled;
@@ -24,11 +17,9 @@ public sealed class TelemetrySettingsViewModel : ViewModelBase
 
             OnPropertyChanging();
             TelemetrySettings.TelemetryMode = newMode;
-            OnPropertyChanged();
 
-            // When toggling telemetry off/on, notify that Full Mode may have changed
-            if (!value)
-                OnPropertyChanged(nameof(IsFullMode));
+            OnPropertyChanged();
+            OnPropertyChanged(nameof(IsFullMode));
         }
     }
 
@@ -37,10 +28,6 @@ public sealed class TelemetrySettingsViewModel : ViewModelBase
         get => TelemetrySettings.TelemetryMode == TelemetryMode.All;
         set
         {
-            // Full Mode is only meaningful when telemetry is enabled
-            if (!IsTelemetryEnabled)
-                return;
-
             var newMode = value ? TelemetryMode.All : TelemetryMode.PrivacyMode;
 
             if (TelemetrySettings.TelemetryMode == newMode)
@@ -48,9 +35,11 @@ public sealed class TelemetrySettingsViewModel : ViewModelBase
 
             OnPropertyChanging();
             TelemetrySettings.TelemetryMode = newMode;
+            
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsTelemetryEnabled));
         }
     }
 
-    public string PrivacyPolicyUrl => _privacyPolicyService.PrivacyPolicyUrl;
+    public string PrivacyPolicyUrl => privacyPolicyService.PrivacyPolicyUrl;
 }
