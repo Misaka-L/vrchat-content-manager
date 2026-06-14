@@ -4,6 +4,7 @@ using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Notification;
 using VRChatContentPublisher.App.Services.Notification.Sender;
+using VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 using VRChatContentPublisher.App.Services.Update;
 using VRChatContentPublisher.App.ViewModels;
 using VRChatContentPublisher.App.ViewModels.Data;

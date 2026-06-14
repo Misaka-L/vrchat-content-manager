@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace VRChatContentPublisher.App.Services;
+namespace VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 
 /// <summary>
 /// Hosted service that triggers prefetching of the latest privacy policy

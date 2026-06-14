@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.AppLifetime;
+using VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 using VRChatContentPublisher.TelemetryCore;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages;

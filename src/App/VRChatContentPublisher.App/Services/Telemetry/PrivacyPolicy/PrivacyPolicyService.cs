@@ -1,9 +1,8 @@
 using System.Net.Http.Json;
-using System.Threading;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.PrivacyPolicy;
 
-namespace VRChatContentPublisher.App.Services;
+namespace VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 
 public sealed class PrivacyPolicyService
 {

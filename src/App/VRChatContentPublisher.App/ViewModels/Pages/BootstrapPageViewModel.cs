@@ -5,6 +5,7 @@ using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Notification;
+using VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Settings;

@@ -1,4 +1,5 @@
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Telemetry.PrivacyPolicy;
 using VRChatContentPublisher.TelemetryCore;
 
 namespace VRChatContentPublisher.App.ViewModels.Settings;
