@@ -36,7 +36,15 @@ public static class SensitiveDataEnricherOptionsExtension
         });
         options.MaskProperties.Add(new MaskProperty
         {
-            Name = "ClientName"
+            Name = "ClientName" 
+        });
+        options.MaskProperties.Add(new MaskProperty
+        {
+            Name = "OldIp"
+        });
+        options.MaskProperties.Add(new MaskProperty
+        {
+            Name = "NewIp"
         });
 
         options.MaskValue = MaskingConst.MaskedValue;
