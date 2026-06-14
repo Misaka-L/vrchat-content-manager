@@ -23,6 +23,7 @@ env:
   release_note_file_name: release-note
   assets_to_release_artifact_pattern: vrchat-content-publisher-app-*
   release_git_tag: v${{ inputs.new-version }}
+  sentry_environment: ${{ case(inputs.pre-release, 'preview', 'stable') }} # due to limitation of github action, build workflow input have same expression too... instead of env
 
 permissions:
   contents: read
@@ -107,6 +108,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       ref: releasing
+      sentry-environment: ${{ case(inputs.pre-release, 'preview', 'stable') }}
 
   create-release:
     needs: [update-changelog, build]
