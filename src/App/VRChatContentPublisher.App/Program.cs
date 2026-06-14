@@ -148,8 +148,7 @@ internal sealed class Program
                 .LogToTrace());
 
             using var host = builder.Build();
-
-            SentrySdk.InitForApp(host.Services.GetRequiredService<AppWebProxy>());
+            SentrySdk.UpdateWebProxy(host.Services.GetRequiredService<AppWebProxy>());
 
             host.RunAvaloniaWaitForShutdown(args);
         }

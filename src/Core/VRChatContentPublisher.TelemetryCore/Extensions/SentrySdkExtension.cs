@@ -7,17 +7,14 @@ namespace VRChatContentPublisher.TelemetryCore.Extensions;
 
 public static class SentrySdkExtension
 {
-    private static IWebProxy? _lastWebProxyUsed;
-
+    private static readonly WebProxyWarper WebProxyWarperInstance = new();
     // It looks like SentrySdk won't deep-copy SentryOptions
     private static SentryOptions? _sentryOptions;
 
     extension(SentrySdk)
     {
-        public static void InitForApp(IWebProxy? proxy = null)
+        public static void InitForApp()
         {
-            _lastWebProxyUsed = proxy;
-
             SentrySdk.Init(options =>
             {
                 _sentryOptions = options;
@@ -33,7 +30,7 @@ public static class SentrySdkExtension
                 options.TracesSampleRate = 1.0;
                 options.Environment = GetEnvironment();
                 options.SendDefaultPii = TelemetrySettings.TelemetryMode == TelemetryMode.All;
-                options.HttpProxy = _lastWebProxyUsed;
+                options.HttpProxy = WebProxyWarperInstance;
                 options.UseOtlp();
 
                 options.AddTelemetryModeListener();
@@ -47,6 +44,11 @@ public static class SentrySdkExtension
 
             modifyOptions(_sentryOptions);
             return true;
+        }
+        
+        public static void UpdateWebProxy(IWebProxy? proxy)
+        {
+            WebProxyWarperInstance.InnerWebProxy = proxy;
         }
     }
 
