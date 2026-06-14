@@ -15,6 +15,11 @@
         <PublishAot>true</PublishAot>
     </PropertyGroup>
 
+    <!--Sentry DSN for TelemetryCore-->
+    <ItemGroup>
+        <RuntimeHostConfigurationOption Include="VRChatContentPublisher.TelemetryCore.Sentry.Dsn" Value="$(SentryDsn)" />
+    </ItemGroup>
+
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
     </ItemGroup>
