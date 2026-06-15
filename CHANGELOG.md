@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Remove ip changes detect logging encrypt. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
 - Attempt id to identify each attempt of publishing. [`#420`](https://github.com/project-vrcz/content-publisher/pull/420)
   - Attempt id will show in error report and log (JSON).
 - Reduced time required for looking for avatar owner when create avatar publish task. [`#406`](https://github.com/project-vrcz/content-publisher/pull/406)
@@ -23,6 +24,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
+  - For how telemetry works, see [PRIVACY POLICY](https://github.com/project-vrcz/content-publisher/blob/main/docs/privacy/PRIVACY.md).
+  - You can also set `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable if you want to see the tracing data.
 - Chinese support for crash handler. [`#397`](https://github.com/project-vrcz/content-publisher/pull/397)
 - Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
 - Use enter key to focus on password textbox and execute login command. [`#394`](https://github.com/project-vrcz/content-publisher/pull/394)
