@@ -1,4 +1,5 @@
 ﻿using Antelcat.I18N.Avalonia;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
@@ -77,12 +78,17 @@ public sealed partial class BootstrapPageViewModel(
         // Restore persisted publish tasks now that user sessions are available.
         await taskRestoreService.RestoreTasksAsync(sessionManagerService);
 
-        if (!appSettings.Value.SkipFirstSetup)
+        // avoid call Navigate twice in same dispatcher loop in some case
+        // (e.g. first launch of the app)
+        Dispatcher.UIThread.Post(() =>
         {
-            navigationService.Navigate<GuideWelcomePageViewModel>();
-            return;
-        }
+            if (!appSettings.Value.SkipFirstSetup)
+            {
+                navigationService.Navigate<GuideWelcomePageViewModel>();
+                return;
+            }
 
-        navigationService.Navigate<HomePageViewModel>();
+            navigationService.Navigate<HomePageViewModel>(); 
+        });
     }
 }
