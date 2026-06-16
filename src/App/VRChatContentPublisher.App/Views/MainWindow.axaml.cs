@@ -33,9 +33,7 @@ public partial class MainWindow : Window
         {
             if (DataContext is MainWindowViewModel viewModel && (viewModel.Pinned || !viewModel.Borderless))
                 return;
-#if !DEBUG
             Hide();
-#endif
         };
 
         _lastStateBeforeMinimized = WindowState;
