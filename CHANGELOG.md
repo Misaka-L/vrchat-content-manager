@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Support taskbar with postion not at the bottom. [`#432`](https://github.com/project-vrcz/content-publisher/pull/432)
 - OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
   - For how telemetry works, see [PRIVACY POLICY](https://github.com/project-vrcz/content-publisher/blob/main/docs/privacy/PRIVACY.md).
   - You can also set `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable if you want to see the tracing data.
