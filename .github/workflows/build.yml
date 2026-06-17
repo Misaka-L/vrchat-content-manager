@@ -39,9 +39,8 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       src_dir: ${{ github.workspace }}/repo/src
-      output_dir: ${{ github.workspace }}/artifacts/unpacked-portable-${{ matrix.rid }}
-      app_cache_key: build-app-${{ github.run_id }}-${{ matrix.rid }}
       sentry_environment: ${{ case(github.event == 'workflow_call', inputs.sentry-environment, 'snapshot') }}
+      output_dir: ${{ github.workspace }}/output
 
     steps:
       - name: Checkout
@@ -83,19 +82,6 @@ jobs:
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
 
-      - name: Remove PDB From Portable Output
-        shell: bash
-        run: |
-          set -euo pipefail
-          find "${{ env.output_dir }}" -type f \( -name "*.pdb" -o -name "*.dbg" \) -delete
-
-      - name: Save App Build Cache
-        uses: actions/cache/save@v5
-        with:
-          key: ${{ env.app_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}
-          enableCrossOsArchive: true
-
   build-crash-handler:
     strategy:
       matrix:
@@ -110,8 +96,7 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       src_dir: ${{ github.workspace }}/repo/src
-      output_dir: ${{ github.workspace }}/artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
-      crash_cache_key: build-crash-handler-${{ github.run_id }}-${{ matrix.rid }}
+      output_dir: ${{ github.workspace }}/output
 
     steps:
       - name: Checkout
@@ -151,19 +136,6 @@ jobs:
             ${{ env.output_dir }}/**/*.pdb
             ${{ env.output_dir }}/**/*.dbg
 
-      - name: Remove PDB From Crash Handler Output
-        shell: bash
-        run: |
-          set -euo pipefail
-          find "${{ env.output_dir }}" -type f \( -name "*.pdb" -o -name "*.dbg" \) -delete
-
-      - name: Save Crash Handler Build Cache
-        uses: actions/cache/save@v5
-        with:
-          key: ${{ env.crash_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
-          enableCrossOsArchive: true
-
   merge-artifacts:
     strategy:
       matrix:
@@ -175,41 +147,27 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      artifact_dir: ${{ github.workspace }}/artifacts/unpacked-portable-${{ matrix.rid }}
+      artifact_dir: ${{ github.workspace }}/artifacts
       output_dir: ${{ github.workspace }}/output
-      app_cache_key: build-app-${{ github.run_id }}-${{ matrix.rid }}
-      crash_cache_key: build-crash-handler-${{ github.run_id }}-${{ matrix.rid }}
-      merged_cache_key: merged-release-input-${{ github.run_id }}-${{ matrix.rid }}
 
     steps:
-      - name: Restore App Build Cache
-        uses: actions/cache/restore@v5
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v8
         with:
-          key: ${{ env.app_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}
-          enableCrossOsArchive: true
-          fail-on-cache-miss: true
+          name: vrchat-content-publisher-only-app-${{ matrix.rid }}
+          path: ${{ env.artifact_dir }}
 
-      - name: Restore Crash Handler Build Cache
-        uses: actions/cache/restore@v5
+      - name: Download Crash Handler Artifacts
+        uses: actions/download-artifact@v8
         with:
-          key: ${{ env.crash_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}/CrashHandler
-          enableCrossOsArchive: true
-          fail-on-cache-miss: true
+          name: vrchat-content-publisher-crash-handler-${{ matrix.rid }}
+          path: ${{ env.artifact_dir }}/CrashHandler
 
       - name: Upload Merged Artifacts
         uses: actions/upload-artifact@v7
         with:
           name: unpacked-portable-${{ matrix.rid }}
           path: ${{ env.artifact_dir }}
-
-      - name: Save Merged Release Input Cache
-        uses: actions/cache/save@v5
-        with:
-          key: ${{ env.merged_cache_key }}
-          path: artifacts/unpacked-portable-${{ matrix.rid }}
-          enableCrossOsArchive: true
 
   make-windows-installer-inno:
     needs: merge-artifacts
@@ -218,27 +176,22 @@ jobs:
     env:
       repo_dir: ${{ github.workspace }}/repo
       installer_script_path: ${{ github.workspace }}/repo/distribution/windows-installer-inno/installer.iss
-      installer_output_dir: ${{ github.workspace }}/artifacts/installer-win-x64
+      installer_output_dir: ${{ github.workspace }}/installer-output
       installer_output_base_name: vrchat-content-publisher-installer
-      artifact_dir: ${{ github.workspace }}/artifacts/unpacked-portable-win-x64
+      artifact_dir: ${{ github.workspace }}/artifacts
       executable_name: VRChatContentPublisher.App.exe
       installer_product_version: ""
-      merged_cache_key: merged-release-input-${{ github.run_id }}-win-x64
-      installer_cache_key: installer-win-x64-${{ github.run_id }}
 
     steps:
       - name: Install Inno Setup
         run: choco install innosetup -y
         shell: pwsh
 
-      - name: Restore Build Artifacts Cache
-        id: restore-merged-cache
-        uses: actions/cache/restore@v5
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v8
         with:
-          key: ${{ env.merged_cache_key }}
-          path: artifacts/unpacked-portable-win-x64
-          enableCrossOsArchive: true
-          fail-on-cache-miss: true
+          name: unpacked-portable-win-x64
+          path: ${{ env.artifact_dir }}
 
       - name: Get Version Info
         id: get-version-info
@@ -255,16 +208,8 @@ jobs:
 
       - name: Build Installer
         run: iscc /O"${{ env.installer_output_dir }}" /F"${{ env.installer_output_base_name }}" /DMyAppVersion=${{ env.installer_product_version }} /DAppArtifactPath="${{ env.artifact_dir }}" ${{ env.installer_script_path }}
-
       - name: Upload Installer Artifact
         uses: actions/upload-artifact@v7
         with:
           name: installer-win-x64
           path: ${{ env.installer_output_dir }}/${{ env.installer_output_base_name }}.exe
-
-      - name: Save Installer Cache
-        uses: actions/cache/save@v5
-        with:
-          key: ${{ env.installer_cache_key }}
-          path: artifacts/installer-win-x64
-          enableCrossOsArchive: true
