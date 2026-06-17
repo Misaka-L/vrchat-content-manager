@@ -5,6 +5,7 @@
              xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
              xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:markdown="clr-namespace:LiveMarkdown.Avalonia;assembly=LiveMarkdown.Avalonia"
              mc:Ignorable="d" d:DesignWidth="350" d:DesignHeight="420"
              x:DataType="dialogs:UpdateAvailableDialogViewModel"
              x:Class="VRChatContentPublisher.App.Views.Dialogs.UpdateAvailableDialog">
@@ -18,7 +19,7 @@
         </DetachedFromVisualTreeTrigger>
     </Interaction.Behaviors>
 
-    <Grid Width="340" Height="360" RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="4">
+    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8" Margin="4">
         <Border BorderBrush="{DynamicResource MaterialDesignBodyLight}"
                 BorderThickness="0,0,0,1" Padding="0,0,0,4">
             <Grid ColumnDefinitions="*,Auto">
@@ -52,8 +53,9 @@
                 </Button>
             </Grid>
         </Border>
-        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto">
-            <SelectableTextBlock Text="{Binding Notes}" />
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled">
+            <markdown:MarkdownRenderer MarkdownBuilder="{Binding NotesStringBuilder}"
+                                        CodeBlockColorTheme="VisualStudioDark" />
         </ScrollViewer>
         <StackPanel Grid.Row="2" Spacing="4">
             <TextBlock
