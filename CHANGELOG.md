@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Update available dialog are show fullscreen in App now. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
 - Remove ip changes detect logging encrypt. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
 - Attempt id to identify each attempt of publishing. [`#420`](https://github.com/project-vrcz/content-publisher/pull/420)
   - Attempt id will show in error report and log (JSON).
@@ -24,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Preview changelog rendered from markdown in update dialog. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
 - Support taskbar with postion not at the bottom. [`#432`](https://github.com/project-vrcz/content-publisher/pull/432)
 - OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
   - For how telemetry works, see [PRIVACY POLICY](https://github.com/project-vrcz/content-publisher/blob/main/docs/privacy/PRIVACY.md).
