@@ -1,6 +1,3 @@
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Security.Credentials;
-using Windows.Security.Cryptography;
 using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
