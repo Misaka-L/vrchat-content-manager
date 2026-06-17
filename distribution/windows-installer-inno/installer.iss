@@ -77,7 +77,7 @@ Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\DefaultIcon"; ValueT
 Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\shell"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\shell\open"; Flags: uninsdeletekey
 Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\shell\open\command"; Flags: uninsdeletekey
-Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\shell\open\command"; ValueType: string; ValueName: ""; ValueData: "\""{app}\{#MyAppExeName}\"" --url \""%1\"""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" --url ""%1"""; Flags: uninsdeletevalue
 ; Old uninstall key used by nsis installer
 Root: HKLM; Subkey: "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\VRChat Content Publisher"; ValueType: none; Flags: deletekey
 
