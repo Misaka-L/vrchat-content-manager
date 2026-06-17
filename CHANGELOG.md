@@ -58,6 +58,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 #### Fixed
 
 - Simple upload request won't retry after fail. [`#418`](https://github.com/project-vrcz/content-publisher/pull/418)
+- Unable to start App from url protocol.
 
 ### Changes from [2.10.0-beta.4]
 
