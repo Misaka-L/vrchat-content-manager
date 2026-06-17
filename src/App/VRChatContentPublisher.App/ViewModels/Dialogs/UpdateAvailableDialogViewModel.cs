@@ -1,5 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LiveMarkdown.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
@@ -28,6 +29,8 @@ public sealed partial class UpdateAvailableDialogViewModel(
     public DateTimeOffset ReleaseDate => updateInformation.ReleaseDate;
     public string BrowserUrl => updateInformation.BrowserUrl;
 
+    public ObservableStringBuilder NotesStringBuilder { get; } = new();
+
     public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
     public bool IsIdle => appUpdateService.UpdateState is AppUpdateServiceState.Idle;
     public bool IsDownloading => !IsIdle && !IsWaitingForInstall;
@@ -43,6 +46,9 @@ public sealed partial class UpdateAvailableDialogViewModel(
         updateDownloadProgressViewModel.ShowWhatNewsButton = false;
         appUpdateService.OnUpdateStateChanged += OnUpdateStateChanged;
         lifetimeService.IsSafeToShutdownChanged += IsSafeToShutdownChanged;
+
+        NotesStringBuilder.Clear();
+        NotesStringBuilder.Append(Notes);
     }
 
     [RelayCommand]
