@@ -28,8 +28,15 @@ public sealed class AppUpdateCheckBackgroundService(
         using var timer = new PeriodicTimer(TimeSpan.FromHours(1));
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (!await timer.WaitForNextTickAsync(stoppingToken))
+            try
+            {
+                if (!await timer.WaitForNextTickAsync(stoppingToken))
+                    return;
+            }
+            catch (OperationCanceledException)
+            {
                 return;
+            }
 
             try
             {
