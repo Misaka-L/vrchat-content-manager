@@ -60,6 +60,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 #### Fixed
 
 - Sentry telemetry won't sent any data due to misconfiguration.
+- Misleading Text in Public IP Change Notification Settings. [`#442`](https://github.com/project-vrcz/content-publisher/pull/442)
 
 ### Changes from [2.10.0-beta.5]
 

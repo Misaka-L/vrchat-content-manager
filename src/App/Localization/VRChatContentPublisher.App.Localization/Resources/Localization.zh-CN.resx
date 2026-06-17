@@ -219,8 +219,11 @@
     <data name="Pages_Settings_Notification_Enable_Public_IP_Monitor" xml:space="preserve">
         <value>启用公网 IP 变动检测</value>
     </data>
+    <data name="Pages_Settings_Notification_Public_IP_Monitor_Tip" xml:space="preserve">
+        <value>IP 变动时将通过应用内通知通知您，并将记录到日志。</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
-        <value>公网 IP 变动</value>
+        <value>公网 IP 变动时发送桌面通知</value>
     </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request" xml:space="preserve">
         <value>有新的配对请求</value>

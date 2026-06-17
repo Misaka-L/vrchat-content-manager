@@ -1814,6 +1814,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You will be notified via an in-app notification when your IP address changes, and the change will be logged..
+        /// </summary>
+        internal static string Pages_Settings_Notification_Public_IP_Monitor_Tip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Public_IP_Monitor_Tip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Session Expired on Startup.
         /// </summary>
         internal static string Pages_Settings_Notification_Send_Notifications_When_Account_Session_Expired_On_Startup {
@@ -1833,7 +1842,7 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Public IP Changed.
+        ///   Looks up a localized string similar to Send Desktop notification when Public IP Changed.
         /// </summary>
         internal static string Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed {
             get {
