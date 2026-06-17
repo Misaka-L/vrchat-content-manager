@@ -8,52 +8,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- Update available dialog are show fullscreen in App now. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
-- Remove ip changes detect logging encrypt. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
-- Attempt id to identify each attempt of publishing. [`#420`](https://github.com/project-vrcz/content-publisher/pull/420)
-  - Attempt id will show in error report and log (JSON).
-- Reduced time required for looking for avatar owner when create avatar publish task. [`#406`](https://github.com/project-vrcz/content-publisher/pull/406)
-  - You must upgrade connect package avatar pack to v0.5.2 in order to use this feature.
-- User session can be restored if user information cache available. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
-  - User information cache should always available unless you upgrade from version older than v2.2.0.
-- All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
-- Extend period of background update check to a hour. [`#371`](https://github.com/project-vrcz/content-publisher/pull/371)
 - Replace the Windows installer from NSIS with Inno Setup. [`#377`](https://github.com/project-vrcz/content-publisher/pull/377)
   - If you want to downgrade to any version older than `v2.10.0-beta.3`, you **MUST** uninstall newer version first.
   - No more PowerShell window during update.
   - High DPI and Dark mode support.
+- Reduced time required for looking for avatar owner when create avatar publish task. [`#406`](https://github.com/project-vrcz/content-publisher/pull/406)
+  - You must upgrade connect package avatar pack to v0.5.2 in order to use this feature.
+- Attempt id to identify each attempt of publishing. [`#420`](https://github.com/project-vrcz/content-publisher/pull/420)
+  - Attempt id will show in error report and log (JSON).
+- User session can be restored if user information cache available. [`#398`](https://github.com/project-vrcz/content-publisher/pull/398)
+  - User information cache should always available unless you upgrade from version older than v2.2.0.
+- All file related to publish task (raw bundle, compressed bundle, etc) are storage in`%LOCALAPPDATA%\vrchat-content-manager-81b7bca3\rpc-files`. [`#365`](https://github.com/project-vrcz/content-publisher/pull/365)
+- Extend period of background update check to a hour. [`#371`](https://github.com/project-vrcz/content-publisher/pull/371)
+- Remove ip changes detect logging encrypt. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
+- Update available dialog are show fullscreen in App now. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
 
 ### Added
 
-- Preview changelog rendered from markdown in update dialog. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
-- Support taskbar with postion not at the bottom. [`#432`](https://github.com/project-vrcz/content-publisher/pull/432)
-- OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
-  - For how telemetry works, see [PRIVACY POLICY](https://github.com/project-vrcz/content-publisher/blob/main/docs/privacy/PRIVACY.md).
-  - You can also set `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable if you want to see the tracing data.
-- Chinese support for crash handler. [`#397`](https://github.com/project-vrcz/content-publisher/pull/397)
-- Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
-- Use enter key to focus on password textbox and execute login command. [`#394`](https://github.com/project-vrcz/content-publisher/pull/394)
-- Show restart onboarding in-app notification when skip onboarding on first launch. [`#396`](https://github.com/project-vrcz/content-publisher/pull/396)
-- Will show tooltip for task creation time. [`#403`](https://github.com/project-vrcz/content-publisher/pull/403)
 - Tasks can be restore after crash or restarted. [`#367`](https://github.com/project-vrcz/content-publisher/pull/367)
   - Progress of all restored tasks will end with "Waiting for start".
   - You need to manually start restored tasks.
   - You can chose to retry or remove all restored (Pending) tasks.
   - Options to remove task from database after it completed. [`#373`](https://github.com/project-vrcz/content-publisher/pull/373)
+- OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
+  - For how telemetry works, see [PRIVACY POLICY](https://github.com/project-vrcz/content-publisher/blob/main/docs/privacy/PRIVACY.md).
+  - You can also set `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable if you want to see the tracing data.
+- Support taskbar with position not at the bottom. [`#432`](https://github.com/project-vrcz/content-publisher/pull/432)
+- Chinese support for crash handler. [`#397`](https://github.com/project-vrcz/content-publisher/pull/397)
+- Use enter key to focus on password textbox and execute login command. [`#394`](https://github.com/project-vrcz/content-publisher/pull/394)
+- Will show tooltip for task creation time. [`#403`](https://github.com/project-vrcz/content-publisher/pull/403)
+- Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
+- Preview changelog rendered from markdown in update dialog. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
+- Show restart onboarding in-app notification when skip onboarding on first launch. [`#396`](https://github.com/project-vrcz/content-publisher/pull/396)
 
 ### Fixed
 
 - Upload speed are unreliable in some case. [`#364`](https://github.com/project-vrcz/content-publisher/issues/364)
-- In some case request handle error will result in uncompleted or invalid http response. [`#417`](https://github.com/project-vrcz/content-publisher/pull/417)
 - Task will always fail due to retry non-idempotent requests. [`#411`](https://github.com/project-vrcz/content-publisher/pull/411)
   - (caused by timeout or connection abort during received response)
 - In some case app crash will corrupt settings file.
   - It will result in app unable to start. [`#410`](https://github.com/project-vrcz/content-publisher/pull/410)
 - Tasks may sort incorrectly when reload tasks page. [`#403`](https://github.com/project-vrcz/content-publisher/pull/403)
-- Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379) [`#433`](https://github.com/project-vrcz/content-publisher/pull/433)
 - In some case app may partial start. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379)
   - It can result in malfunctional or crash.
+- In some case request handle error will result in uncompleted or invalid http response. [`#417`](https://github.com/project-vrcz/content-publisher/pull/417)
 - Request with invalid jwt will get HTTP 500 response instead of HTTP 401. [`#413`](https://github.com/project-vrcz/content-publisher/pull/413)
+- Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379) [`#433`](https://github.com/project-vrcz/content-publisher/pull/433)
 
 ### Changes from [2.10.0-beta.5]
 
