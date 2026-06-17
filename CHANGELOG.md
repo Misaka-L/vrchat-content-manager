@@ -55,6 +55,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Request with invalid jwt will get HTTP 500 response instead of HTTP 401. [`#413`](https://github.com/project-vrcz/content-publisher/pull/413)
 - Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379) [`#433`](https://github.com/project-vrcz/content-publisher/pull/433)
 
+### Changes from [2.10.0-beta.6]
+
+#### Fixed
+
+- Sentry telemetry won't sent any data due to misconfiguration.
+
 ### Changes from [2.10.0-beta.5]
 
 #### Fixed
