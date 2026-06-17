@@ -227,8 +227,11 @@
     <data name="Pages_Settings_Notification_Enable_Public_IP_Monitor" xml:space="preserve">
         <value>Enable Public IP Change Detection</value>
     </data>
+    <data name="Pages_Settings_Notification_Public_IP_Monitor_Tip" xml:space="preserve">
+        <value>You will be notified via an in-app notification when your IP address changes, and the change will be logged.</value>
+    </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed" xml:space="preserve">
-        <value>Public IP Changed</value>
+        <value>Send Desktop notification when Public IP Changed</value>
     </data>
     <data name="Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request" xml:space="preserve">
         <value>New Pairing Request</value>

@@ -68,10 +68,17 @@
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request}}"
             IsEnabled="{Binding EnabledNotifications}"
             IsChecked="{Binding SendNotificationOnNewPairingRequest}" />
+
         <Border Height="1" Margin="0,4,0,0" Background="{DynamicResource MaterialDesignBodyLight}" />
-        <ToggleSwitch
-            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Enable_Public_IP_Monitor}}"
-            IsChecked="{Binding EnablePublicIpMonitor}" />
+
+        <StackPanel>
+            <ToggleSwitch
+                Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Enable_Public_IP_Monitor}}"
+                IsChecked="{Binding EnablePublicIpMonitor}" />
+            <TextBlock Text="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Public_IP_Monitor_Tip}}"
+                       Opacity="0.8" FontSize="12" />
+        </StackPanel>
+
         <ToggleSwitch
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Public_IP_Changed}}"
             IsEnabled="{Binding EnabledNotifications}"
