@@ -8,8 +8,8 @@ public class AppOpenTelemetryToggleSampler : Sampler
     {
         // For how masking (Privacy Mode) works, see Masking namespace
         if (TelemetrySettings.TelemetryMode == TelemetryMode.Disabled)
-            return new SamplingResult(SamplingDecision.RecordAndSample);
+            return new SamplingResult(SamplingDecision.Drop);
 
-        return new SamplingResult(SamplingDecision.Drop);
+        return new SamplingResult(SamplingDecision.RecordAndSample);
     }
 }
