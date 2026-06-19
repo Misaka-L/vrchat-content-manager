@@ -123,8 +123,8 @@
     <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
         <value>移除该账号</value>
     </data>
-    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip" xml:space="preserve">
-        <value>你不能移除一个有未完成任务的账号</value>
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_With_Existing_Tasks_Tooltip" xml:space="preserve">
+        <value>你不能移除一个有发布任务的账号</value>
     </data>
     <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
         <value>设置该账号的标签页为任务页的默认标签页</value>
