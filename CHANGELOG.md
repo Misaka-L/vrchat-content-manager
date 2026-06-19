@@ -44,7 +44,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
-- App may crash when session invalid happened with public IP change check is enabled. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 - If login fail during account repair, the repairing session will be remove. [`#454`](https://github.com/project-vrcz/content-publisher/pull/454)
   - You will lost all content publish tasks.
 - Apply a used port in RPC Server Settings will crash the App. [`#455`](https://github.com/project-vrcz/content-publisher/pull/455)
@@ -67,6 +66,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Will only send tracing data when telemetry disabled. [`#453`](https://github.com/project-vrcz/content-publisher/pull/453)
   - No tracing data will send will telemetry enabled. Oops...
+- App may crash when session invalid happened with public IP change check is enabled. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 
 ### Changes from [2.10.0-beta.6]
 
