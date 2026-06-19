@@ -23,13 +23,6 @@ public sealed class PublicIpMonitorBackgroundService(
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (!appSettings.Value.EnablePublicIpMonitor)
-        {
-            logger.LogInformation("Public IP monitor is disabled by user settings.");
-            await WaitForCancellationAsync(stoppingToken);
-            return;
-        }
-
         _eventSubscription = DisposableBag.Create(
             sessionStateChangedSubscriber.Subscribe(args =>
             {
@@ -81,6 +74,9 @@ public sealed class PublicIpMonitorBackgroundService(
 
     private async Task RunCheckSafelyAsync(CancellationToken cancellationToken)
     {
+        if (!appSettings.Value.EnablePublicIpMonitor)
+            return;
+        
         try
         {
             await checkerService.RequestCheckAndPublishIfChangedAsync(cancellationToken);
@@ -92,18 +88,6 @@ public sealed class PublicIpMonitorBackgroundService(
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Failed to check internet public IP.");
-        }
-    }
-
-    private static async Task WaitForCancellationAsync(CancellationToken cancellationToken)
-    {
-        try
-        {
-            await Task.Delay(Timeout.Infinite, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected when cancellation is requested
         }
     }
 }
