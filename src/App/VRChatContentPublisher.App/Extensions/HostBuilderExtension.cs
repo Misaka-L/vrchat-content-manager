@@ -13,7 +13,10 @@ namespace VRChatContentPublisher.App.Extensions;
 
 public static class HostBuilderExtension
 {
-    public static T AddAppTelemetry<T>(this T builder) where T : IHostApplicationBuilder
+    public static T AddAppTelemetry<T>(
+        this T builder,
+        string appSessionLifetimeId
+    ) where T : IHostApplicationBuilder
     {
         builder.Services.AddOpenTelemetry()
             .WithTracing(tracing =>
@@ -34,7 +37,7 @@ public static class HostBuilderExtension
                 tracing.AddSource("Experimental.System.Net.Security");
 
                 tracing.AddOtlpExporter();
-                tracing.AddAppSentryExporter();
+                tracing.AddAppSentryExporter(appSessionLifetimeId);
             })
             .WithMetrics(metrics =>
             {
