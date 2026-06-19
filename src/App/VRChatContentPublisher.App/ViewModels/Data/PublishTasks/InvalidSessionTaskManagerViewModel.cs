@@ -30,7 +30,7 @@ public sealed partial class InvalidSessionTaskManagerViewModel(
         var page = loginPageViewModelFactory.Create(
             navigationService.Navigate<HomePageViewModel>,
             navigationService.Navigate<HomePageViewModel>,
-            userSessionService.UserNameOrEmail
+            userSessionService
         );
 
         navigationService.Navigate(page);

@@ -15,15 +15,14 @@ public sealed partial class LoginPageViewModel(
     LoginWithCookiesDialogViewModelFactory loginWithCookiesDialogFactory,
     UserSessionManagerService userSessionManagerService,
     DialogService dialogService,
+    // Create Args
     Action onRequestBack,
     Action onRequestDone,
-    string? username)
+    UserSessionService? targetUserSession)
     : PageViewModelBase
 {
-    [ObservableProperty]
-    public partial string Username { get; set; } = string.IsNullOrWhiteSpace(username) ? "" : username;
-
-    public bool IsUsernameReadonly => !string.IsNullOrWhiteSpace(username);
+    [ObservableProperty] public partial string Username { get; set; } = targetUserSession?.UserNameOrEmail ?? "";
+    public bool IsUsernameReadonly => targetUserSession is not null;
 
     [ObservableProperty] public partial string Password { get; set; } = "";
 
@@ -58,7 +57,8 @@ public sealed partial class LoginPageViewModel(
             return;
         }
 
-        var session = userSessionManagerService.CreateOrGetSession(Username);
+        var isAddNewAccount = targetUserSession is null;
+        var session = targetUserSession ?? userSessionManagerService.CreateOrGetSession(Username);
 
         LoginResult loginResult;
         try
@@ -68,19 +68,23 @@ public sealed partial class LoginPageViewModel(
         catch (ApiErrorException ex)
         {
             logger.LogError(ex, "Api error during login for user {Username}.", Username);
-            await userSessionManagerService.RemoveSessionAsync(session);
+            if (isAddNewAccount) await userSessionManagerService.RemoveSessionAsync(session);
+
             SetError(ex.ApiErrorMessage);
             return;
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Unexpected error during login for user {Username}.", Username);
-            await userSessionManagerService.RemoveSessionAsync(session);
+            if (isAddNewAccount) await userSessionManagerService.RemoveSessionAsync(session);
+
             SetError(ex.Message);
             return;
         }
 
         ClearError();
+
+        #region 2FA
 
         if (loginResult.Requires2Fa.Length != 0 && (loginResult.Requires2Fa.Contains(Requires2FA.Totp) ||
                                                     loginResult.Requires2Fa.Contains(Requires2FA.EmailOtp)))
@@ -90,6 +94,8 @@ public sealed partial class LoginPageViewModel(
 
             if (!result)
             {
+                if (!isAddNewAccount) return;
+
                 try
                 {
                     await userSessionManagerService.RemoveSessionAsync(session);
@@ -103,15 +109,24 @@ public sealed partial class LoginPageViewModel(
             }
         }
 
-        try
+        #endregion
+
+        #region Handle After Login (Add new account (when no target UserSession assigned))
+
+        if (isAddNewAccount)
         {
-            await userSessionManagerService.HandleSessionAfterLogin(session);
+            try
+            {
+                await userSessionManagerService.HandleSessionAfterLogin(session);
+            }
+            catch (Exception ex)
+            {
+                SetError(ex.Message);
+                return;
+            }
         }
-        catch (Exception ex)
-        {
-            SetError(ex.Message);
-            return;
-        }
+
+        #endregion
 
         onRequestDone();
     }
@@ -147,7 +162,7 @@ public sealed class LoginPageViewModelFactory(
     public LoginPageViewModel Create(
         Action onRequestBack,
         Action onRequestDone,
-        string? username = null
+        UserSessionService? targetUserSession = null
     )
     {
         return new LoginPageViewModel(
@@ -158,7 +173,7 @@ public sealed class LoginPageViewModelFactory(
             dialogService,
             onRequestBack,
             onRequestDone,
-            username
+            targetUserSession
         );
     }
 }
