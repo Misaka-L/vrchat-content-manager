@@ -129,9 +129,9 @@
     <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
         <value>Remove this account</value>
     </data>
-    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip"
+    <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_With_Existing_Tasks_Tooltip"
           xml:space="preserve">
-        <value>You cannot remove a session that have uncompleted tasks.</value>
+        <value>You cannot remove a session with existing tasks.</value>
     </data>
     <data name="Pages_Settings_Accounts_Account_Item_Set_Default_Button_Tooltip" xml:space="preserve">
         <value>Set this account as default show on Tasks page.</value>

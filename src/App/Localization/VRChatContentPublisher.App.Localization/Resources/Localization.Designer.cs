@@ -1408,12 +1408,12 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You cannot remove a session that have uncompleted tasks..
+        ///   Looks up a localized string similar to You cannot remove a session with existing tasks..
         /// </summary>
-        internal static string Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip {
+        internal static string Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_With_Existing_Tasks_Tooltip {
             get {
-                return ResourceManager.GetString(("Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Unco" +
-                        "mpleted_Tasks_Tooltip"), resourceCulture);
+                return ResourceManager.GetString(("Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_With_Exi" +
+                        "sting_Tasks_Tooltip"), resourceCulture);
             }
         }
         

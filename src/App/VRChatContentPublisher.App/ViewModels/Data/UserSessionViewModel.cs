@@ -32,7 +32,7 @@ public sealed partial class UserSessionViewModel(
     public string RemoveButtonTooltip => CanRemove
         ? LangKeys.Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip
         : LangKeys
-            .Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_Has_Uncompleted_Tasks_Tooltip;
+            .Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_With_Existing_Tasks_Tooltip;
 
     public string? ProfilePictureUrl
     {
