@@ -21,5 +21,7 @@
                 Command="{Binding OpenNetworkDiagnosticWindowCommand}" />
         <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Restart_Onboarding_Button_Text}}"
                 Command="{Binding RestartOnBoardingCommand}" />
+        <Button Content="Request Background Public IP Check Run"
+                Command="{Binding RequestBackgroundPublicIpCheckRunCommand}" />
     </StackPanel>
 </UserControl>

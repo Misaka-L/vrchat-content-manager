@@ -1,6 +1,8 @@
 using MessagePipe;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Nito.AsyncEx;
+using VRChatContentPublisher.Core.Events.PublicIp;
 using VRChatContentPublisher.Core.Events.UserSession;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
@@ -11,12 +13,13 @@ namespace VRChatContentPublisher.Core.PublicIpChecker.Services;
 public sealed class PublicIpMonitorBackgroundService(
     PublicIpCheckerService checkerService,
     ISubscriber<SessionStateChangedEvent> sessionStateChangedSubscriber,
+    ISubscriber<RequestBackgroundPublicIpCheckRunEvent> requestRunSubscriber,
     IWritableOptions<AppSettings> appSettings,
     ILogger<PublicIpMonitorBackgroundService> logger)
     : BackgroundService
 {
-    private readonly SemaphoreSlim _checkSignal = new(0);
-    private IDisposable? _sessionInvalidatedSubscription;
+    private readonly AsyncAutoResetEvent _checkSignal = new();
+    private IDisposable? _eventSubscription;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -27,31 +30,36 @@ public sealed class PublicIpMonitorBackgroundService(
             return;
         }
 
-        _sessionInvalidatedSubscription = sessionStateChangedSubscriber.Subscribe(args =>
-        {
-            if (args.SessionState == UserSessionState.InvalidSession ||
-                args is { OldSessionState: UserSessionState.InvalidSession, SessionState: UserSessionState.LoggedIn })
+        _eventSubscription = DisposableBag.Create(
+            sessionStateChangedSubscriber.Subscribe(args =>
             {
-                _checkSignal.Release();
-            }
-        });
+                if (args.SessionState == UserSessionState.InvalidSession || args is
+                    {
+                        // Invalid before, logged-in now
+                        OldSessionState: UserSessionState.InvalidSession, SessionState: UserSessionState.LoggedIn
+                    })
+                {
+                    _checkSignal.Set();
+                }
+            }),
+            requestRunSubscriber.Subscribe(_ => _checkSignal.Set())
+        );
 
         await RunCheckSafelyAsync(stoppingToken);
 
-        using var periodicTimer = new PeriodicTimer(TimeSpan.FromMinutes(30));
         while (!stoppingToken.IsCancellationRequested)
         {
+            using var timerCts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+            timerCts.CancelAfter(TimeSpan.FromMinutes(30));
+
             try
             {
-                var timerTask = periodicTimer.WaitForNextTickAsync(stoppingToken).AsTask();
-                var signalTask = _checkSignal.WaitAsync(stoppingToken);
-
-                var completed = await Task.WhenAny(timerTask, signalTask);
-                await completed;
+                await _checkSignal.WaitAsync(timerCts.Token);
             }
             catch (OperationCanceledException)
             {
-                return;
+                if (stoppingToken.IsCancellationRequested)
+                    return;
             }
 
             if (!appSettings.Value.EnablePublicIpMonitor)
@@ -66,8 +74,8 @@ public sealed class PublicIpMonitorBackgroundService(
 
     public override Task StopAsync(CancellationToken cancellationToken)
     {
-        _sessionInvalidatedSubscription?.Dispose();
-        _sessionInvalidatedSubscription = null;
+        _eventSubscription?.Dispose();
+        _eventSubscription = null;
         return base.StopAsync(cancellationToken);
     }
 
