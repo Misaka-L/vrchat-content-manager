@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
 - Preview changelog rendered from markdown in update dialog. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
 - Show restart onboarding in-app notification when skip onboarding on first launch. [`#396`](https://github.com/project-vrcz/content-publisher/pull/396)
+- Add request background public ip check run button in debug settings. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 
 ### Fixed
 
