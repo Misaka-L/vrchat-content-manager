@@ -111,9 +111,13 @@ public sealed class HttpServerService
         if (CurrentPort.Value == targetPort)
             return (true, null);
 
-        if (!IsPortAvailable(targetPort))
+        try
         {
-            throw new InvalidOperationException("Port is not available.");
+            EnsurePortAvailable(targetPort);
+        }
+        catch (Exception ex)
+        {
+            return (false, "Port unavailable: " + ex.Message);
         }
 
         var previousServer = _kestrelServer;
@@ -172,6 +176,8 @@ public sealed class HttpServerService
         return null;
     }
 
+    #region Port Check
+
     public bool IsPortInUse(int port)
     {
         if (!IsValidUserPort(port))
@@ -185,13 +191,28 @@ public sealed class HttpServerService
     {
         try
         {
+            EnsurePortAvailable(port);
+        }
+        catch
+        {
+            // logging handle by EnsurePortAvailable
+            return false;
+        }
+
+        return true;
+    }
+
+    private void EnsurePortAvailable(int port)
+    {
+        try
+        {
             using var tcpListener = new TcpListener(IPAddress.Loopback, port);
             tcpListener.Start();
         }
         catch (Exception ex)
         {
             _logger.LogWarning(ex, "Port {Port} not available for interface {Interface}", port, "IPv4 Loopback");
-            return false;
+            throw;
         }
 
         try
@@ -203,9 +224,14 @@ public sealed class HttpServerService
         {
             _logger.LogWarning(ex, "Port {Port} not available for interface {Interface}", port, "IPv6 Loopback");
         }
-
-        return true;
     }
+
+    private static bool IsValidUserPort(int port)
+    {
+        return port is >= MinUserPort and <= MaxUserPort;
+    }
+
+    #endregion
 
     private KestrelServer CreateServer(int port)
     {
@@ -220,11 +246,6 @@ public sealed class HttpServerService
 
         return new KestrelServer(
             new OptionsWrapper<KestrelServerOptions>(kestrelServerOptions), transportFactory, _loggerFactory);
-    }
-
-    private static bool IsValidUserPort(int port)
-    {
-        return port is >= MinUserPort and <= MaxUserPort;
     }
 
     private static async Task SafeStopAsync(KestrelServer server, CancellationToken cancellationToken)
