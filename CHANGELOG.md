@@ -37,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Chinese support for crash handler. [`#397`](https://github.com/project-vrcz/content-publisher/pull/397)
 - Use enter key to focus on password textbox and execute login command. [`#394`](https://github.com/project-vrcz/content-publisher/pull/394)
 - Will show tooltip for task creation time. [`#403`](https://github.com/project-vrcz/content-publisher/pull/403)
+- Add `ApplicationLifetimeSession` and `app.lifetime_session_id` to logging and tracing to identify each session of app.
 - Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
 - Preview changelog rendered from markdown in update dialog. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
 - Show restart onboarding in-app notification when skip onboarding on first launch. [`#396`](https://github.com/project-vrcz/content-publisher/pull/396)
