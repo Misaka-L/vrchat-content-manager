@@ -1706,6 +1706,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Request Background Public IP Check Run.
+        /// </summary>
+        internal static string Pages_Settings_Debug_Request_Background_Public_IP_Check_Run_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Debug_Request_Background_Public_IP_Check_Run_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Restart Onboarding.
         /// </summary>
         internal static string Pages_Settings_Debug_Restart_Onboarding_Button_Text {

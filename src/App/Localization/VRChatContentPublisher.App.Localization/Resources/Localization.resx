@@ -311,6 +311,9 @@
     <data name="Pages_Settings_Debug_Restart_Onboarding_Button_Text" xml:space="preserve">
         <value>Restart Onboarding</value>
     </data>
+    <data name="Pages_Settings_Debug_Request_Background_Public_IP_Check_Run_Button_Text" xml:space="preserve">
+        <value>Request Background Public IP Check Run</value>
+    </data>
     <data name="Pages_Settings_Debug_Encrypted_IP_Field_Label" xml:space="preserve">
         <value>Enter encrypted IP in the logs here</value>
     </data>

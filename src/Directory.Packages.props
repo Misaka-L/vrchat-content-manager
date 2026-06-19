@@ -16,5 +16,7 @@
         <PackageVersion Include="OpenTelemetry" Version="1.16.0"/>
         <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.16.0"/>
         <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1"/>
+        
+        <PackageVersion Include="Nito.AsyncEx" Version="5.1.2"/>
     </ItemGroup>
 </Project>

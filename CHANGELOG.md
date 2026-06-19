@@ -40,6 +40,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Allow choice app language in onboarding. [`#399`](https://github.com/project-vrcz/content-publisher/pull/399)
 - Preview changelog rendered from markdown in update dialog. [`#435`](https://github.com/project-vrcz/content-publisher/pull/435)
 - Show restart onboarding in-app notification when skip onboarding on first launch. [`#396`](https://github.com/project-vrcz/content-publisher/pull/396)
+- Add request background public ip check run button in debug settings. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 
 ### Fixed
 
@@ -56,6 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - It can result in malfunctional or crash.
 - In some case request handle error will result in uncompleted or invalid http response. [`#417`](https://github.com/project-vrcz/content-publisher/pull/417)
 - Request with invalid jwt will get HTTP 500 response instead of HTTP 401. [`#413`](https://github.com/project-vrcz/content-publisher/pull/413)
+- Public IP check require restart to turn on of turn off. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 - Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379) [`#433`](https://github.com/project-vrcz/content-publisher/pull/433)
 
 ### Changes from [2.10.0-beta.7]
@@ -64,6 +66,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Will only send tracing data when telemetry disabled. [`#453`](https://github.com/project-vrcz/content-publisher/pull/453)
   - No tracing data will send will telemetry enabled. Oops...
+- App may crash when session invalid happened with public IP change check is enabled. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 
 ### Changes from [2.10.0-beta.6]
 
