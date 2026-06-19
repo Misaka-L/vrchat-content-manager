@@ -105,7 +105,7 @@ public sealed partial class UserSessionViewModel(
         var fixPageViewModel = loginPageViewModelFactory.Create(
             navigationService.Navigate<SettingsPageViewModel>,
             navigationService.Navigate<SettingsPageViewModel>,
-            userSessionService.UserNameOrEmail
+            userSessionService
         );
 
         navigationService.Navigate(fixPageViewModel);
