@@ -59,6 +59,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Request with invalid jwt will get HTTP 500 response instead of HTTP 401. [`#413`](https://github.com/project-vrcz/content-publisher/pull/413)
 - Public IP check require restart to turn on of turn off. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
 - Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379) [`#433`](https://github.com/project-vrcz/content-publisher/pull/433)
+- Incorrect tooltip for cannot remove account with existing tasks warning. [`#457`](https://github.com/project-vrcz/content-publisher/pull/457)
+  - Previously the tooltip said you cannot remove account with uncompleted tasks, but actually you cannot remove account with existing tasks, even if all tasks are completed.
 
 ### Changes from [2.10.0-beta.7]
 
