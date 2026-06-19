@@ -42,12 +42,14 @@ internal sealed class Program
     {
         var jsonLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.json");
         var plainTextLogPath = Path.Combine(AppStorageService.GetLogsPath(), "log-.log");
+        var appLifetimeSessionId = Guid.NewGuid().ToString("D");
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", "VRChatContentPublisher")
             .Enrich.WithProperty("ApplicationVersion", AppVersionUtils.GetAppVersion())
             .Enrich.WithProperty("ApplicationBuildDate", AppVersionUtils.GetAppBuildDate())
             .Enrich.WithProperty("ApplicationCommitHash", AppVersionUtils.GetAppCommitHash())
+            .Enrich.WithProperty("ApplicationLifetimeSession", appLifetimeSessionId)
             .WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
             .WriteTo.Async(writer =>
                 writer.File(new CompactJsonFormatter(), jsonLogPath,
@@ -62,7 +64,7 @@ internal sealed class Program
             .CreateLogger();
         
         // VRChatContentPublisher.TelemetryCore.Extensions.SentrySdkExtension
-        SentrySdk.InitForApp();
+        SentrySdk.InitForApp(appLifetimeSessionId);
         TelemetrySettings.Initialize();
 
         Log.Information(
@@ -130,7 +132,7 @@ internal sealed class Program
             builder.Services.AddSerilog();
 
             // VRChatContentPublisher.App.Extensions.HostBuilderExtension.AddAppTelemetry<T>
-            builder.AddAppTelemetry();
+            builder.AddAppTelemetry(appLifetimeSessionId);
             builder.UseAppCore();
             builder.Services.AddAppServices();
             builder.Services.AddIpcCore();

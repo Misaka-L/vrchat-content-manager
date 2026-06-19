@@ -14,7 +14,7 @@ public static class SentrySdkExtension
 
     extension(SentrySdk)
     {
-        public static void InitForApp()
+        public static void InitForApp(string lifetimeSessionId)
         {
             SentrySdk.Init(options =>
             {
@@ -36,6 +36,8 @@ public static class SentrySdkExtension
 
                 options.AddTelemetryModeListener();
             });
+
+            SentrySdk.ConfigureScope(scope => scope.SetTag("app.lifetime_session_id", lifetimeSessionId));
         }
 
         public static bool TryUpdateSentryOptions(Action<SentryOptions> modifyOptions)
