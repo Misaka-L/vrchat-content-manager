@@ -9,6 +9,8 @@ namespace VRChatContentPublisher.App.Services.AppLifetime;
 
 public sealed class AppLifetimeService : IDisposable
 {
+    public bool IsShutdownRequested { get; private set; }
+    
     private readonly TaskCompletionSource _hostStartedTcs = new();
 
     public event EventHandler<bool>? IsSafeToShutdownChanged;
@@ -64,9 +66,13 @@ public sealed class AppLifetimeService : IDisposable
 
     public void Shutdown()
     {
+        if (IsShutdownRequested)
+            return;
+
         if (App.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopLifetime)
             throw new NotSupportedException("Only IClassicDesktopStyleApplicationLifetime are supported.");
 
+        IsShutdownRequested = true;
         desktopLifetime.Shutdown();
     }
 

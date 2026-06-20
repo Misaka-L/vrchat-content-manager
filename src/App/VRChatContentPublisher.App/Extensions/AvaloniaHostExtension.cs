@@ -61,6 +61,9 @@ public static class AvaloniaHostExtension
                 // Host already do logging stuffs.
                 appLifetimeService.NotifyHostStartError(ex);
             }
+
+            await host.WaitForShutdownAsync(cts.Token);
+            if (!appLifetimeService.IsShutdownRequested) appLifetimeService.Shutdown();
         });
 
         lifetime.Start();
@@ -69,7 +72,6 @@ public static class AvaloniaHostExtension
         Task.Run(async () =>
         {
             await cts.CancelAsync();
-            await host.StopAsync();
         }).Wait();
         Log.Information("Host shutdown completed.");
     }
