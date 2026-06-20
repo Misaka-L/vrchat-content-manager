@@ -127,6 +127,9 @@ jobs:
       artifact_download_path: ${{ github.workspace }}/artifact-download
       note_path: ${{ github.workspace }}/note
 
+    outputs:
+      release-tag-commit-sha: ${{ steps.push-tag.outputs.commit-sha }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -169,6 +172,7 @@ jobs:
           path: ${{ env.note_path }}
 
       - name: Push Tag
+        id: push-tag
         working-directory: ${{ env.repo_dir }}
         env:
           GIT_TAG: ${{ env.release_git_tag }}
@@ -181,6 +185,7 @@ jobs:
           # create main branch from releasing branch and fetch
           git switch -c $ACTION_REF
           git push -u origin $ACTION_REF
+          echo "commit-sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
 
       - name: Make Release
         env:
@@ -198,6 +203,45 @@ jobs:
           --fail-on-no-commits \
           v$RELEASE_VERSION \
           $PATH_TO_RELEASE_ASSETS/*
+
+  upload-pdb-and-metadata-to-sentry:
+    needs: create-release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    env:
+      artifact_download_path: ${{ github.workspace }}/artifact-download
+
+    steps:
+      - name: Setup Sentry CLI
+        run: curl -sL https://sentry.io/get-cli/ | sh
+        shell: bash
+
+      - name: Create Sentry Release
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+          VERSION: content-publisher@${{ inputs.new-version}}+${{ needs.create-release.outputs.release-tag-commit-sha }}
+          RELEASE_COMMIT_HASH: ${{ needs.create-release.outputs.release-tag-commit-sha }}
+        run: |
+          sentry-cli releases new --finalize $VERSION
+          sentry-cli releases set-commits $VERSION --commit ${{ github.repository }}@$RELEASE_COMMIT_HASH
+
+      - name: Download PDB Artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: 'pdb-app-*'
+          path: ${{ env.artifact_download_path }}
+
+      - name: Upload PDB to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        run: sentry-cli debug-files upload --wait $artifact_download_path
 
   publish-updater-metadata-to-website:
     needs: create-release
