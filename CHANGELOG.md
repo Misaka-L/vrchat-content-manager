@@ -70,6 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Will only send tracing data when telemetry disabled. [`#453`](https://github.com/project-vrcz/content-publisher/pull/453)
   - No tracing data will send will telemetry enabled. Oops...
 - App may crash when session invalid happened with public IP change check is enabled. [`#456`](https://github.com/project-vrcz/content-publisher/pull/456)
+- `UserNameOrEmail` property won't be masked in telemetry logging. [`#460`](https://github.com/project-vrcz/content-publisher/pull/460)
 
 ### Changes from [2.10.0-beta.6]
 

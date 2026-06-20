@@ -32,6 +32,10 @@ public static class SensitiveDataEnricherOptionsExtension
         });
         options.MaskProperties.Add(new MaskProperty
         {
+            Name = "UserNameOrEmail"
+        });
+        options.MaskProperties.Add(new MaskProperty
+        {
             Name = "ContentName"
         });
         options.MaskProperties.Add(new MaskProperty
