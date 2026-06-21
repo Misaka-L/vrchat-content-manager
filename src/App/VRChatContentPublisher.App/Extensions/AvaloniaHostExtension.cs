@@ -39,13 +39,16 @@ public static class AvaloniaHostExtension
             ShutdownMode = ShutdownMode.OnExplicitShutdown
         };
         host.Services.GetRequiredService<AppBuilder>().SetupWithLifetime(lifetime);
+        var appLifetimeService = host.Services.GetRequiredService<AppLifetimeService>();
 
         var cts = new CancellationTokenSource();
 
+        lifetime.Startup += (_, __) => appLifetimeService.NotifyAppStartup();
+
         Log.Information("Host is starting...");
-        Task.Run(async () =>
+
+        var hostTask = Task.Run(async () =>
         {
-            var appLifetimeService = host.Services.GetRequiredService<AppLifetimeService>();
             try
             {
                 await host.StartAsync(cts.Token);
@@ -55,15 +58,27 @@ public static class AvaloniaHostExtension
             catch (OperationCanceledException)
             {
                 Log.Error("Host start cancelled.");
+                return;
             }
             catch (Exception ex)
             {
                 // Host already do logging stuffs.
                 appLifetimeService.NotifyHostStartError(ex);
+                return;
             }
 
-            await host.WaitForShutdownAsync(cts.Token);
-            if (!appLifetimeService.IsShutdownRequested) appLifetimeService.Shutdown();
+            try
+            {
+                await host.WaitForShutdownAsync(cts.Token);
+            }
+            finally
+            {
+                if (!cts.IsCancellationRequested)
+                {
+                    Log.Error("Host experienced an unexpected shutdown!");
+                    await appLifetimeService.WaitAppStartupNotifyHostShutdown(cts.Token);
+                }
+            }
         });
 
         lifetime.Start();
@@ -72,6 +87,7 @@ public static class AvaloniaHostExtension
         Task.Run(async () =>
         {
             await cts.CancelAsync();
+            await hostTask;
         }).Wait();
         Log.Information("Host shutdown completed.");
     }
