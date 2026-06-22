@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using VRChatContentPublisher.App.Services.AppLifetime;
+using VRChatContentPublisher.ConnectCore.Exceptions;
 
 namespace VRChatContentPublisher.App.Extensions;
 
@@ -71,13 +72,16 @@ public static class AvaloniaHostExtension
             {
                 await host.WaitForShutdownAsync(cts.Token);
             }
-            finally
+            catch (OperationCanceledException)
             {
-                if (!cts.IsCancellationRequested)
-                {
-                    Log.Error("Host experienced an unexpected shutdown!");
-                    await appLifetimeService.WaitAppStartupNotifyHostShutdown(cts.Token);
-                }
+                return;
+            }
+
+            if (!cts.IsCancellationRequested)
+            {
+                Log.Error("Host experienced an unexpected shutdown!");
+                await appLifetimeService.WaitAppStartupNotifyHostShutdown(cts.Token);
+                throw new UnexpectedHostShutdownException();
             }
         });
 
