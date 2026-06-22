@@ -6,8 +6,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using VRChatContentPublisher.App.Exceptions;
 using VRChatContentPublisher.App.Services.AppLifetime;
-using VRChatContentPublisher.ConnectCore.Exceptions;
 
 namespace VRChatContentPublisher.App.Extensions;
 
