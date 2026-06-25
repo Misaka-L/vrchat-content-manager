@@ -47,6 +47,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - If login fail during account repair, the repairing session will be remove. [`#454`](https://github.com/project-vrcz/content-publisher/pull/454)
   - You will lost all content publish tasks.
+- Task will fail without retry if request multipart upload url fail. [`#470`](https://github.com/project-vrcz/content-publisher/pull/470)
 - Apply a used port in RPC Server Settings will crash the App. [`#455`](https://github.com/project-vrcz/content-publisher/pull/455)
 - Upload speed are unreliable in some case. [`#364`](https://github.com/project-vrcz/content-publisher/issues/364)
 - Task will always fail due to retry non-idempotent requests. [`#411`](https://github.com/project-vrcz/content-publisher/pull/411)
