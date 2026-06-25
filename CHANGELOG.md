@@ -30,7 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - You need to manually start restored tasks.
   - You can chose to retry or remove all restored (Pending) tasks.
   - Options to remove task from database after it completed. [`#373`](https://github.com/project-vrcz/content-publisher/pull/373)
-- OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424)
+- OpenTelemetry and Sentry support. [`#424`](https://github.com/project-vrcz/content-publisher/pull/424) [`#471`](https://github.com/project-vrcz/content-publisher/pull/471)
   - For how telemetry works, see [PRIVACY POLICY](https://github.com/project-vrcz/content-publisher/blob/main/docs/privacy/PRIVACY.md).
   - You can also set `OTEL_EXPORTER_OTLP_ENDPOINT` environment variable if you want to see the tracing data.
 - Support taskbar with position not at the bottom. [`#432`](https://github.com/project-vrcz/content-publisher/pull/432)
