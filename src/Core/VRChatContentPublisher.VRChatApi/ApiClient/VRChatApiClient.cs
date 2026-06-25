@@ -401,6 +401,8 @@ public sealed partial class VRChatApiClient(
 
         var request = new HttpRequestMessage(HttpMethod.Put,
             $"file/{fileId}/{version}/{fileType.ToApiString()}/start?partNumber={partNumber}");
+        request.Options.Set(AppHttpClientResiliencePredicates.BypassHttpMethodCheckKey, true);
+
         var response = await httpClient.SendAsync(request, cancellationToken);
 
         await HandleErrorResponseAsync(response);
