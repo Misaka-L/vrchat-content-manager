@@ -62,7 +62,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Log spam when app crash. [`#379`](https://github.com/project-vrcz/content-publisher/pull/379) [`#433`](https://github.com/project-vrcz/content-publisher/pull/433)
 - Incorrect tooltip for cannot remove account with existing tasks warning. [`#457`](https://github.com/project-vrcz/content-publisher/pull/457)
   - Previously the tooltip said you cannot remove account with uncompleted tasks, but actually you cannot remove account with existing tasks, even if all tasks are completed.
-- Background service or host crash won't stop App. [`#462`](https://github.com/project-vrcz/content-publisher/issues/461)
+- Background service or host crash won't stop App. [`#462`](https://github.com/project-vrcz/content-publisher/issues/461) [`#465`](https://github.com/project-vrcz/content-publisher/pull/465)
 
 ### Changes from [2.10.0-beta.7]
 
