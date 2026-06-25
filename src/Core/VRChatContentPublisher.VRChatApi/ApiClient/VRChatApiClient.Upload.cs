@@ -22,8 +22,8 @@ public partial class VRChatApiClient
         string platform)
     {
         using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity()?
-            .SetTag("platform", platform)
-            .SetTag("file_name", fileName);
+            .SetTag("task.get_or_create_bundle_file_id.target_platform", platform)
+            .SetTag("task.get_or_create_bundle_file_id.request_file_name", fileName);
 
         var platformApiUnityPackage = VRChatApiFileUtils.TryGetUnityPackageForPlatform(unityPackages, platform);
         if (platformApiUnityPackage is not null)
@@ -50,8 +50,9 @@ public partial class VRChatApiClient
     )
     {
         using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity()?
-            .SetTag("content_type", contentType)
-            .SetTag("thumbnail_file_name", thumbnailFileName);
+            .SetTag("task.upload_thumbnail.content_type", contentType)
+            .SetTag("task.upload_thumbnail.thumbnail_file_name", thumbnailFileName)
+            .SetTag("task.upload_thumbnail.file_size", thumbnailStream.CanSeek ? thumbnailStream.Length : null);
 
         progressCallback?.Invoke(new PublishTaskProgressEventArg("Preparing for thumbnail upload...", null));
 
@@ -108,8 +109,10 @@ public partial class VRChatApiClient
     {
         using var activity = VRChatApiCoreActivitySources.VRChatApi
             .StartActivity(nameof(CreateAndUploadFileVersionAsync) + "." + userFileType)?
-            .SetTag("file_id", fileId)
-            .SetTag("user_file_type", userFileType);
+            .SetTag("task.create_and_upload_file_version.content_type", contentType)
+            .SetTag("task.create_and_upload_file_version.file_id", fileId)
+            .SetTag("task.create_and_upload_file_version.file_type", userFileType)
+            .SetTag("task.create_and_upload_file_version.file_size", fileStream.CanSeek ? fileStream.Length : null);
         cancellationToken.ThrowIfCancellationRequested();
 
         var currentAssetFile = await GetFileAsync(fileId, cancellationToken);
@@ -227,10 +230,11 @@ public partial class VRChatApiClient
     {
         using var activity = VRChatApiCoreActivitySources.VRChatApi
             .StartActivity(nameof(UploadFileVersionAsync) + "." + fileType)?
-            .SetTag("file_id", fileId)
-            .SetTag("version", version)
-            .SetTag("file_type", fileType.ToString())
-            .SetTag("is_simple_upload", isSimpleUpload);
+            .SetTag("task.upload_file_version.file_id", fileId)
+            .SetTag("task.upload_file_version.version", version)
+            .SetTag("task.upload_file_version.file_type", fileType.ToString())
+            .SetTag("task.upload_file_version.is_simple_upload", isSimpleUpload)
+            .SetTag("task.upload_file_version.file_size", fileStream.CanSeek ? fileStream.Length : null);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -274,7 +278,8 @@ public partial class VRChatApiClient
         CancellationToken cancellationToken = default)
     {
         using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity()?
-            .SetTag("is_simple_upload", isSimpleUpload);
+            .SetTag("task.put_file.is_simple_upload", isSimpleUpload)
+            .SetTag("task.put_file.file_size", stream.CanSeek ? stream.Length : null);
 
         cancellationToken.ThrowIfCancellationRequested();
 
