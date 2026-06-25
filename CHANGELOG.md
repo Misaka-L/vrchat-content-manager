@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.10.0] - 2026-06-25
+
 ### Changed
 
 - Replace the Windows installer from NSIS with Inno Setup. [`#377`](https://github.com/project-vrcz/content-publisher/pull/377)
@@ -1123,7 +1125,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-rc.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0...HEAD
+[2.10.0]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-rc.1...v2.10.0
 [2.10.0-rc.1]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.7...v2.10.0-rc.1
 [2.10.0-beta.7]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.6...v2.10.0-beta.7
 [2.10.0-beta.6]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.5...v2.10.0-beta.6
