@@ -577,7 +577,7 @@ public sealed partial class VRChatApiClient(
         VRChatApiFile file, CancellationToken cancellationToken = default)
     {
         using var activity = VRChatApiCoreActivitySources.VRChatApi.StartActivity("CleanupIncompleteFileVersions")?
-            .SetTag("file_id", file.Id);
+            .SetTag("task.clean_incomplete_file.target_file_id", file.Id);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -601,7 +601,7 @@ public sealed partial class VRChatApiClient(
                 {
                     using var fallbackActivity = VRChatApiCoreActivitySources.VRChatApi
                         .StartActivity("AttemptCleanupIncompleteFileVersions.FallbackRefreshFile")?
-                        .SetTag("file_id", file.Id);
+                        .SetTag("task.clean_incomplete_file.target_file_id", file.Id);
 
                     file = await GetFileAsync(file.Id, args.Context.CancellationToken);
                     throw new ResilienceRequestRetryException();
@@ -613,7 +613,7 @@ public sealed partial class VRChatApiClient(
         {
             using var attemptActivity = VRChatApiCoreActivitySources.VRChatApi
                 .StartActivity("AttemptCleanupIncompleteFileVersions")?
-                .SetTag("file_id", file.Id);
+                .SetTag("task.clean_incomplete_file.target_file_id", file.Id);
 
             var incompleteVersions = file.Versions
                 .Where(version => version.Status != "complete")
@@ -622,6 +622,11 @@ public sealed partial class VRChatApiClient(
             if (!fileDirty) fileDirty = incompleteVersions.Length > 0;
             foreach (var version in incompleteVersions)
             {
+                using var deleteFileActivity = VRChatApiCoreActivitySources.VRChatApi
+                    .StartActivity("AttemptCleanupIncompleteFileVersions.DeleteFileVersion")?
+                    .SetTag("task.clean_incomplete_file.target_file_id", file.Id)
+                    .SetTag("task.clean_incomplete_file.target_version", version.Version);
+
                 await DeleteFileVersionAsync(file.Id, version.Version, ct);
             }
 
