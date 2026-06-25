@@ -27,14 +27,14 @@ public partial class MainWindow : Window
         Closing += (_, arg) =>
         {
             arg.Cancel = true;
-            Hide();
+            HideWindow();
         };
 
         Deactivated += (_, _) =>
         {
             if (DataContext is MainWindowViewModel viewModel && (viewModel.Pinned || !viewModel.Borderless))
                 return;
-            Hide();
+            HideWindow();
         };
 
         _lastStateBeforeMinimized = WindowState;
@@ -106,7 +106,7 @@ public partial class MainWindow : Window
         switch (taskBarLocation)
         {
             case TaskBarHelper.TaskBarLocation.Top:
-                Position = screenBoundsWithDpi.WithY(0) - windowBoundsWithDpi.WithY(0) + 
+                Position = screenBoundsWithDpi.WithY(0) - windowBoundsWithDpi.WithY(0) +
                            PixelPoint.FromPoint(new Point(0, taskBarHeight), primaryScreen.Scaling) -
                            PixelPoint.FromPoint(new Point(16, -12), primaryScreen.Scaling);
                 break;
@@ -170,5 +170,14 @@ public partial class MainWindow : Window
 
         WindowState = _lastStateBeforeMinimized;
         if (WindowState == WindowState.Normal) UpdateWindowConfiguration();
+    }
+
+    private void HideWindow()
+    {
+        if (DataContext is not MainWindowViewModel viewModel)
+            return;
+
+        viewModel.NotifyWindowHide();
+        Hide();
     }
 }

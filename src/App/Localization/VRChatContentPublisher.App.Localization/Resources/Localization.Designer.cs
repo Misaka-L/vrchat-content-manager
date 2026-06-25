@@ -597,6 +597,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This notification will only appear once..
+        /// </summary>
+        internal static string Notifications_First_Time_Hide_Window_Tip_Message {
+            get {
+                return ResourceManager.GetString("Notifications_First_Time_Hide_Window_Tip_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The app has minimized to the system tray!.
+        /// </summary>
+        internal static string Notifications_First_Time_Hide_Window_Tip_Title {
+            get {
+                return ResourceManager.GetString("Notifications_First_Time_Hide_Window_Tip_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is requesting to pair.
         /// </summary>
         internal static string Notifications_New_Pairing_Request_Body_Template {

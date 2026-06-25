@@ -666,6 +666,12 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Notifications_Session_Expired_Or_Invalid_Title_Template" xml:space="preserve">
         <value>Session expired or invalid for user {0}</value>
     </data>
+    <data name="Notifications_First_Time_Hide_Window_Tip_Title" xml:space="preserve">
+        <value>The app has minimized to the system tray!</value>
+    </data>
+    <data name="Notifications_First_Time_Hide_Window_Tip_Message" xml:space="preserve">
+        <value>This notification will only appear once.</value>
+    </data>
     <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
         <value>Open Logs Folder</value>
     </data>
