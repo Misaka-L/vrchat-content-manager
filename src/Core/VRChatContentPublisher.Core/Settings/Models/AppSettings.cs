@@ -27,6 +27,7 @@ public sealed class AppSettings
     public bool AutoRemoveCompletedTasks { get; set; }
 
     public bool UseBorderlessWindow { get; set; } = true;
+    public bool DismissFirstTimeHideWindowTip { get; set; }
 
     public AppUpdateCheckMode UpdateCheckMode { get; set; } = AppUpdateCheckMode.AtStartAndBackground;
     public bool DownloadUpdateAtBackground { get; set; } = true;
