@@ -1,6 +1,8 @@
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using MessagePipe;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.UserSession;
@@ -9,11 +11,10 @@ namespace VRChatContentPublisher.App.Services.AppLifetime;
 
 public sealed class AppLifetimeService : IDisposable
 {
-    public bool IsShutdownRequested { get; private set; }
-    
-    private readonly TaskCompletionSource _hostStartedTcs = new();
-
     public event EventHandler<bool>? IsSafeToShutdownChanged;
+
+    private readonly TaskCompletionSource _hostStartedTcs = new();
+    private readonly TaskCompletionSource _appStartupTcs = new();
 
     private readonly UserSessionManagerService _userSessionManagerService;
     private readonly IDisposable _eventDisposer;
@@ -42,7 +43,42 @@ public sealed class AppLifetimeService : IDisposable
         _hostStartedTcs.TrySetResult();
     }
 
+    internal void NotifyAppStartup()
+    {
+        _appStartupTcs.TrySetResult();
+    }
+
     internal Task WaitForHostStartedAsync() => _hostStartedTcs.Task;
+
+    internal async Task WaitAppStartupNotifyHostShutdown(CancellationToken token)
+    {
+        if (token.IsCancellationRequested) return;
+
+        try
+        {
+            await _appStartupTcs.Task.WaitAsync(token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        if (token.IsCancellationRequested) return;
+
+        PostShutdown();
+    }
+
+    private void PostShutdown()
+    {
+        try
+        {
+            Dispatcher.UIThread.Post(Shutdown, DispatcherPriority.MaxValue);
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Dispatcher.UIThread.Post(Shutdown) failed", ex);
+        }
+    }
 
     private void NotifyIsSafeToShutdownChanged()
     {
@@ -64,15 +100,28 @@ public sealed class AppLifetimeService : IDisposable
         return true;
     }
 
+    /// <summary>
+    /// Ensure that shutdown is not called multiple times. Use only on the UIThread.
+    /// </summary>
+    private bool _isShutdownRequested;
+
+    /// <summary>
+    /// Force Shutdown App
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Called from a thread other than the UIThread</exception>
+    /// <exception cref="NotSupportedException">Only IClassicDesktopStyleApplicationLifetime are supported</exception>
     public void Shutdown()
     {
-        if (IsShutdownRequested)
+        if (!Dispatcher.UIThread.CheckAccess())
+            throw new InvalidOperationException("Can only be called from the UIThread.");
+
+        if (_isShutdownRequested)
             return;
 
         if (App.Current.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime desktopLifetime)
             throw new NotSupportedException("Only IClassicDesktopStyleApplicationLifetime are supported.");
 
-        IsShutdownRequested = true;
+        _isShutdownRequested = true;
         desktopLifetime.Shutdown();
     }
 
