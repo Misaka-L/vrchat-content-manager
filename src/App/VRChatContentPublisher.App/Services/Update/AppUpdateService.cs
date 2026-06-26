@@ -5,7 +5,6 @@ using Downloader;
 using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
-using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.Shared;
 using VRChatContentPublisher.Platform.Abstraction.Services;
 
@@ -36,6 +35,7 @@ public sealed class AppUpdateService(
     public long? DownloadedFileSize { get; private set; }
 
     private CancellationTokenSource? _downloadCts;
+    private TaskCompletionSource? _downloadResultTcs;
 
     public void StartDownloadUpdate(AppUpdateInformation updateInformation)
     {
@@ -82,12 +82,32 @@ public sealed class AppUpdateService(
             DownloadedFileSize = download.DownloadedFileSize;
         };
 
+        download.DownloadFileCompleted += (_, args) =>
+        {
+            if (args.Error is { } ex)
+            {
+                _downloadResultTcs?.TrySetException(ex);
+                return;
+            }
+
+            if (args.Cancelled)
+            {
+                _downloadResultTcs?.TrySetCanceled();
+                return;
+            }
+
+            _downloadResultTcs?.TrySetResult();
+        };
+
         _downloadTask = download;
+        _downloadResultTcs = new TaskCompletionSource();
         _ = Task.Run(async () =>
         {
+            var downloadResultTask = _downloadResultTcs.Task;
             try
             {
                 await download.StartAsync(cancellationToken);
+                await downloadResultTask;
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
