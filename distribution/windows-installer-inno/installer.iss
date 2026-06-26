@@ -54,6 +54,8 @@ OutputBaseFilename=vrchat-content-publisher-installer
 SetupIconFile=icon.ico
 SolidCompression=yes
 WizardStyle=modern dynamic windows11
+; Should be safe to use {userappdata}
+UsedUserAreasWarning=no
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -82,9 +84,11 @@ Root: HKA; Subkey: "Software\Classes\vrchat-content-manager\shell\open\command";
 Root: HKLM; Subkey: "SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\VRChat Content Publisher"; ValueType: none; Flags: deletekey
 
 [InstallDelete]
-; Old NSIS Uninsatller
+; Old NSIS Uninstaller
 Type: files; Name: "{app}\Uninstall.dat"
 Type: files; Name: "{app}\Uninstall.exe"
+; Old NSIS Start Menu Folder
+Type: filesandordirs; Name: "{userappdata}\Microsoft\Windows\Start Menu\Programs\VRChat Content Publisher"
 
 [Icons]
 Name: "{group}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
