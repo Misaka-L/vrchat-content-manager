@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Unable to repair account using cookies. [`#477`](https://github.com/project-vrcz/content-publisher/pull/477)
 - Upgrade from version older than `v2.10.0-beta.3` will create duplicated shortcut in start menu. [`#476`](https://github.com/project-vrcz/content-publisher/pull/476)
+- Download update failed won't show actual error message. [`#478`](https://github.com/project-vrcz/content-publisher/pull/478)
 
 ## [2.10.0] - 2026-06-25
 
