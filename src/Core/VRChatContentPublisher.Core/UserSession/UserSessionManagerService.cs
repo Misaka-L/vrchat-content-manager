@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.Core.Extensions;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.VRChatApi.ApiClient;
@@ -129,7 +131,10 @@ public sealed class UserSessionManagerService(
         var cookieContainer = new CookieContainer();
         foreach (var cookie in cookies)
         {
-            cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", "api.vrchat.cloud"));
+            cookieContainer.Add(new Cookie(cookie.Key, cookie.Value, "/", "api.vrchat.cloud")
+            {
+                Expires = DateTime.UtcNow.AddYears(1)
+            });
         }
 
         using var httpClient = sessionHttpClientFactory.Create(
@@ -152,21 +157,84 @@ public sealed class UserSessionManagerService(
             throw;
         }
 
-        var session = CreateOrGetSession(user.UserName, user.Id, cookieContainer, user);
+        var session = TryGetSession(user.UserName, user.Id);
 
+        if (session is null)
+        {
+            session = CreateOrGetSession(user.UserName, user.Id, cookieContainer, user);
+
+            try
+            {
+                await session.CreateOrGetSessionScopeAsync();
+            }
+            catch (Exception ex)
+            {
+                await RemoveSessionAsync(session);
+
+                logger.LogError(ex, "Create session from cookies failed: Failed to create session scope");
+                throw;
+            }
+
+            return session;
+        }
+
+        // Backup current cookie container to JSON and remove all cookies
+        var cookiesBackupJson =
+            JsonSerializer.Serialize(session.CookieContainer.GetAllCookies().ToList(),
+                SettingsJsonContext.Default.ListCookie);
+        session.CookieContainer.SetAllCookiesExpired();
+
+        // Add request cookies (Copy from container create at early time)
+        foreach (Cookie cookie in cookieContainer.GetAllCookies())
+        {
+            session.CookieContainer.Add(cookie);
+        }
+
+        // Try fetch current user
         try
         {
-            await session.CreateOrGetSessionScopeAsync();
+            await session.GetCurrentUserAsync();
+            return session;
         }
         catch (Exception ex)
         {
-            await RemoveSessionAsync(session);
+            logger.LogError(ex, "Provided refresh cookies are invalid, will rollback to previous cookies");
+            var restoredBackupCookies =
+                JsonSerializer.Deserialize(cookiesBackupJson, SettingsJsonContext.Default.ListCookie)!;
 
-            logger.LogError(ex, "Create session from cookies failed: Failed to create session scope");
+            session.CookieContainer.SetAllCookiesExpired();
+            foreach (var cookie in restoredBackupCookies)
+            {
+                session.CookieContainer.Add(cookie);
+            }
+
+            try
+            {
+                await session.GetCurrentUserAsync();
+            }
+            catch (Exception restoreEx)
+            {
+                logger.LogWarning(restoreEx,
+                    "Failed to fetch user with previous cookies, continuing with previous cookies, but session may be invalid.");
+            }
+
             throw;
         }
+    }
 
-        return session;
+    public UserSessionService? TryGetSession(
+        string userNameOrEmail,
+        string? userId = null)
+    {
+        if (_sessions.FirstOrDefault(session =>
+                (session.UserId is not null && userId == session.UserId) ||
+                session.UserNameOrEmail == userNameOrEmail
+            ) is { } existingSession)
+        {
+            return existingSession;
+        }
+
+        return null;
     }
 
     public UserSessionService CreateOrGetSession(
