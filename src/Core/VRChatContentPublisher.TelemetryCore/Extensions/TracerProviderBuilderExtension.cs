@@ -13,7 +13,8 @@ public static class TracerProviderBuilderExtension
         builder.SetSampler(new AppOpenTelemetryToggleSampler());
 
         builder.AddProcessor(new CustomTagsProcessor([
-            new CustomTagsProcessorTag("app.lifetime_session_id", appSessionLifetimeId)
+            new CustomTagsProcessorTag("app.lifetime_session_id", appSessionLifetimeId),
+            new CustomTagsProcessorTag("user.id", InstallationIdProvider.GetInstallationId())
         ]));
 
         builder.AddProcessor(new EnvironmentTagProcessor());
