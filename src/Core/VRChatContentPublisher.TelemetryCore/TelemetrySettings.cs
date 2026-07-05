@@ -42,9 +42,12 @@ public static class TelemetrySettings
     {
         try
         {
+            var tempSettingsFilePath = Path.Combine(AppStorageService.GetTempPath(), Path.GetRandomFileName());
             var telemetrySettingsRaw = JsonSerializer.Serialize(_telemetrySettingsData,
                 TelemetrySettingsJsonContext.Default.TelemetrySettingsData);
-            File.WriteAllText(TelemetrySettingsPath, telemetrySettingsRaw);
+
+            File.WriteAllText(tempSettingsFilePath, telemetrySettingsRaw);
+            File.Move(tempSettingsFilePath, TelemetrySettingsPath, true);
         }
         catch (Exception ex)
         {
