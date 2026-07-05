@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Include exception details in logging. [`#495`](https://github.com/project-vrcz/content-publisher/pull/495)
 - Include installation id in OpenTelemetry tracing. [`#495`](https://github.com/project-vrcz/content-publisher/pull/495)
 
+## Fixed
+
+- In rare case, crash during save telemetry settings will result it be reset. [`#496`](https://github.com/project-vrcz/content-publisher/pull/496)
+
 ## [2.10.1] - 2026-06-26
 
 ### Fixed
