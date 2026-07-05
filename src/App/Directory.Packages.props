@@ -27,6 +27,7 @@
         <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1"/>
         <PackageVersion Include="Serilog.Sinks.Debug" Version="3.0.0"/>
         <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0"/>
+        <PackageVersion Include="Serilog.Exceptions" Version="8.4.0"/>
 
         <PackageVersion Include="Downloader" Version="5.8.1"/>
         <!--I18N-->
