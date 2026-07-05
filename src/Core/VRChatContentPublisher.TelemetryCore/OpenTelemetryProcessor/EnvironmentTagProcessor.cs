@@ -2,7 +2,7 @@
 using OpenTelemetry;
 using VRChatContentPublisher.TelemetryCore.Extensions;
 
-namespace VRChatContentPublisher.TelemetryCore;
+namespace VRChatContentPublisher.TelemetryCore.OpenTelemetryProcessor;
 
 public class EnvironmentTagProcessor : BaseProcessor<Activity>
 {

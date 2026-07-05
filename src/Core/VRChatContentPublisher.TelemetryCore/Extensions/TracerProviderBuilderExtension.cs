@@ -1,5 +1,6 @@
 ﻿using OpenTelemetry.Trace;
 using VRChatContentPublisher.TelemetryCore.Masking.OpenTelemetry;
+using VRChatContentPublisher.TelemetryCore.OpenTelemetryProcessor;
 using VRChatContentPublisher.TelemetryCore.TelemetryToggle;
 
 namespace VRChatContentPublisher.TelemetryCore.Extensions;

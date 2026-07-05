@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using OpenTelemetry;
 
-namespace VRChatContentPublisher.TelemetryCore;
+namespace VRChatContentPublisher.TelemetryCore.OpenTelemetryProcessor;
 
 public sealed class CustomTagsProcessor(params CustomTagsProcessorTag[] tags) : BaseProcessor<Activity>
 {
