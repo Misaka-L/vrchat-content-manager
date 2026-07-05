@@ -23,7 +23,7 @@ public static class SentrySdkExtension
                 options.Dsn = SentryDsnProvider.GetDsn();
                 options.IsGlobalModeEnabled = true;
                 options.Distribution = GetDistribution();
-                options.CacheDirectoryPath = Path.Combine(AppStorageService.GetTempPath(), "sentry-cache");
+                options.CacheDirectoryPath = TelemetryConst.GetSentryCachePath();
                 options.EnableLogs = true;
                 options.AutoSessionTracking = true;
                 options.Release = GetRelease();
@@ -37,7 +37,11 @@ public static class SentrySdkExtension
                 options.AddTelemetryModeListener();
             });
 
-            SentrySdk.ConfigureScope(scope => scope.SetTag("app.lifetime_session_id", lifetimeSessionId));
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.SetTag("app.lifetime_session_id", lifetimeSessionId);
+                scope.User.Id = InstallationIdProvider.GetInstallationId();
+            });
         }
 
         public static bool TryUpdateSentryOptions(Action<SentryOptions> modifyOptions)

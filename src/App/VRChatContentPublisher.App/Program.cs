@@ -6,6 +6,7 @@ using HotAvalonia;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Exceptions;
 using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 using VRChatContentPublisher.App.Extensions;
@@ -50,6 +51,7 @@ internal sealed class Program
             .Enrich.WithProperty("ApplicationBuildDate", AppVersionUtils.GetAppBuildDate())
             .Enrich.WithProperty("ApplicationCommitHash", AppVersionUtils.GetAppCommitHash())
             .Enrich.WithProperty("ApplicationLifetimeSession", appLifetimeSessionId)
+            .Enrich.WithExceptionDetails()
             .WriteTo.Console(applyThemeToRedirectedOutput: true, theme: AnsiConsoleTheme.Code)
             .WriteTo.Async(writer =>
                 writer.File(new CompactJsonFormatter(), jsonLogPath,
@@ -62,7 +64,7 @@ internal sealed class Program
                 .WriteTo.Sentry()
                 .CreateLogger())
             .CreateLogger();
-        
+
         // VRChatContentPublisher.TelemetryCore.Extensions.SentrySdkExtension
         SentrySdk.InitForApp(appLifetimeSessionId);
         TelemetrySettings.Initialize();

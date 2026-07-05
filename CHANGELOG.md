@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Include exception details in logging. [`#495`](https://github.com/project-vrcz/content-publisher/pull/495)
+- Include installation id in OpenTelemetry tracing. [`#495`](https://github.com/project-vrcz/content-publisher/pull/495)
+
 ## [2.10.1] - 2026-06-26
 
 ### Fixed
