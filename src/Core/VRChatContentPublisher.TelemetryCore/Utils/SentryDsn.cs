@@ -1,0 +1,156 @@
+﻿namespace VRChatContentPublisher.TelemetryCore.Utils;
+
+// https://github.com/getsentry/sentry-dotnet/blob/4b51c11082639a3fe4492e1467031fe9c85ec541/src/Sentry/Dsn.cs
+
+/// <summary>
+/// The Data Source Name of a given project in Sentry.
+/// </summary>
+/// <remarks>
+/// <see href="https://develop.sentry.dev/sdk/overview/#parsing-the-dsn"/>
+/// </remarks>
+public sealed class SentryDsn
+{
+    /// <summary>
+    /// Source DSN string.
+    /// </summary>
+    public string Source { get; }
+
+    /// <summary>
+    /// The project ID which the authenticated user is bound to.
+    /// </summary>
+    public string ProjectId { get; }
+
+    /// <summary>
+    /// An optional path of which Sentry is hosted.
+    /// </summary>
+    public string? Path { get; }
+
+    /// <summary>
+    /// The optional secret key to authenticate the SDK.
+    /// </summary>
+    public string? SecretKey { get; }
+
+    /// <summary>
+    /// The required public key to authenticate the SDK.
+    /// </summary>
+    public string PublicKey { get; }
+
+    /// <summary>
+    /// Sentry API's base URI.
+    /// </summary>
+    private Uri ApiBaseUri { get; }
+
+    /// <summary>
+    /// The organization ID parsed from the DSN host (e.g., <c>o1</c> in <c>o1.ingest.us.sentry.io</c> yields <c>"1"</c>).
+    /// Returns <c>null</c> if no org ID is present in the DSN.
+    /// </summary>
+    public string? OrgId { get; internal set; }
+
+    private SentryDsn(
+        string source,
+        string projectId,
+        string? path,
+        string? secretKey,
+        string publicKey,
+        Uri apiBaseUri,
+        string? orgId = null)
+    {
+        Source = source;
+        ProjectId = projectId;
+        Path = path;
+        SecretKey = secretKey;
+        PublicKey = publicKey;
+        ApiBaseUri = apiBaseUri;
+        OrgId = orgId;
+    }
+
+    public Uri GetStoreEndpointUri() => new(ApiBaseUri, "store/");
+
+    public Uri GetEnvelopeEndpointUri() => new(ApiBaseUri, "envelope/");
+
+    public Uri GetOtlpTracesEndpointUri() => new(ApiBaseUri, "integration/otlp/v1/traces");
+
+    public override string ToString() => Source;
+
+    public static bool IsDisabled(string? dsn) =>
+        SentryConstants.DisableSdkDsnValue.Equals(dsn, StringComparison.OrdinalIgnoreCase);
+
+    public static SentryDsn Parse(string dsn)
+    {
+        var uri = new Uri(dsn);
+
+        // uri.UserInfo returns empty string instead of null when no user info data is provided
+        if (string.IsNullOrWhiteSpace(uri.UserInfo))
+        {
+            throw new ArgumentException("Invalid DSN: No public key provided.");
+        }
+
+        var keys = uri.UserInfo.Split(':');
+
+        var publicKey = keys[0];
+        if (string.IsNullOrWhiteSpace(publicKey))
+        {
+            throw new ArgumentException("Invalid DSN: No public key provided.");
+        }
+
+        var secretKey = keys.Length > 1
+            ? keys[1]
+            : null;
+
+        var path = uri.AbsolutePath[..uri.AbsolutePath.LastIndexOf('/')];
+
+        var projectId = uri.AbsoluteUri[(uri.AbsoluteUri.LastIndexOf('/') + 1)..];
+        if (string.IsNullOrWhiteSpace(projectId))
+        {
+            throw new ArgumentException("Invalid DSN: A Project Id is required.");
+        }
+
+        // Parse org ID from host (e.g., "o1.ingest.us.sentry.io" -> "1")
+        string? orgId = null;
+        var hostParts = uri.DnsSafeHost.Split('.');
+        if (hostParts.Length > 0)
+        {
+            var firstPart = hostParts[0];
+            if (firstPart.Length >= 2 && firstPart[0] == 'o' &&
+                ulong.TryParse(firstPart.Substring(1), out _))
+            {
+                orgId = firstPart.Substring(1);
+            }
+        }
+
+        var apiBaseUri = new UriBuilder
+        {
+            Scheme = uri.Scheme,
+            Host = uri.DnsSafeHost,
+            Port = uri.Port,
+            Path = $"{path}/api/{projectId}/"
+        }.Uri;
+
+        return new SentryDsn(
+            dsn,
+            projectId,
+            path,
+            secretKey,
+            publicKey,
+            apiBaseUri,
+            orgId);
+    }
+
+    public static SentryDsn? TryParse(string? dsn)
+    {
+        if (string.IsNullOrWhiteSpace(dsn))
+        {
+            return null;
+        }
+
+        try
+        {
+            return Parse(dsn);
+        }
+        catch
+        {
+            // Parse should not throw though!
+            return null;
+        }
+    }
+}
