@@ -37,7 +37,7 @@ public sealed class ConcurrentMultipartUploader(
 
     private ResiliencePipeline<HttpResponseMessage> CreateRetryPipeline(int partNumber)
     {
-        const int maxRetryAttempts = 3;
+        const int maxRetryAttempts = 5;
         return new ResiliencePipelineBuilder<HttpResponseMessage>()
             .AddRetry(new AppHttpRetryStrategyOptions
             {

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Change max retry attempts of `ConcurrentMultipartUploader` from 3 to 5. [`#497`](https://github.com/project-vrcz/content-publisher/pull/497)
+
 ### Added
 
 - Include exception details in logging. [`#495`](https://github.com/project-vrcz/content-publisher/pull/495)
