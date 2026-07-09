@@ -9,6 +9,11 @@ public static class TelemetryConst
         return CreateIfPathNotExist(Path.Combine(AppStorageService.GetTempPath(), "sentry-cache"));
     }
 
+    public static string GetOtlpDiskRetryPath()
+    {
+        return CreateIfPathNotExist(Path.Combine(AppStorageService.GetTempPath(), "otlp-disk-retry"));
+    }
+
     public static string GetTelemetryDataPath()
     {
         return CreateIfPathNotExist(Path.Combine(AppStorageService.GetStoragePath(), "telemetry"));

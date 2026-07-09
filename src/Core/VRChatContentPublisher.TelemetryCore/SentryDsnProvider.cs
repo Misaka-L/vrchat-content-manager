@@ -1,4 +1,6 @@
-﻿namespace VRChatContentPublisher.TelemetryCore;
+﻿using VRChatContentPublisher.TelemetryCore.Utils;
+
+namespace VRChatContentPublisher.TelemetryCore;
 
 public static class SentryDsnProvider
 {
@@ -15,5 +17,10 @@ public static class SentryDsnProvider
             return sentryDsnFromEnv;
 
         return "";
+    }
+
+    public static SentryDsn? TryGetParsedDsn()
+    {
+        return SentryDsn.TryParse(GetDsn());
     }
 }
