@@ -46,19 +46,16 @@ public partial class MainWindow : Window
 
                 _lastStateBeforeMinimized = state;
             }));
-
-        if (OperatingSystem.IsWindows())
-        {
-#pragma warning disable CA1416
-            // https://github.com/AvaloniaUI/Avalonia/issues/19006#issuecomment-3562753006
-            Win32Properties.AddWorkingAreaChangedListener(this, UpdateWindowConfiguration);
-#pragma warning restore CA1416
-        }
     }
 
     private bool IsBorderlessSupported() => OperatingSystem.IsWindows();
 
     #region Window Configuration
+
+    private void OnScreensChanged(object? sender, EventArgs e)
+    {
+        UpdateWindowConfiguration();
+    }
 
     private void UpdateWindowConfiguration()
     {
@@ -96,7 +93,7 @@ public partial class MainWindow : Window
         if (Screens.Primary is not { } primaryScreen)
             return;
 
-        var workingArea = WorkingAreaHelper.GetWorkingArea();
+        var workingArea = primaryScreen.WorkingArea;
         var taskBarLocation = TaskBarHelper.GetTaskBarLocation(primaryScreen, workingArea);
         var taskBarHeight = TaskBarHelper.GetTaskBarHeight(primaryScreen, workingArea);
 
@@ -144,6 +141,7 @@ public partial class MainWindow : Window
 
         viewModel.RequestActivate += RequestActive;
         viewModel.PropertyChanged += OnPropertyChanged;
+        Screens.Changed += OnScreensChanged;
     }
 
     private void Window_OnUnloaded(object? sender, RoutedEventArgs e)
@@ -153,6 +151,7 @@ public partial class MainWindow : Window
 
         viewModel.RequestActivate -= RequestActive;
         viewModel.PropertyChanged -= OnPropertyChanged;
+        Screens.Changed -= OnScreensChanged;
     }
 
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
