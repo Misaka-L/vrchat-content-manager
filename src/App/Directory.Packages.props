@@ -7,19 +7,19 @@
         <PackageVersion Include="Avalonia.Desktop" Version="12.1.0"/>
         <PackageVersion Include="Avalonia.Fonts.Inter" Version="12.1.0"/>
         <!--Hot Reload Support-->
-        <PackageVersion Include="HotAvalonia" Version="3.1.1"/>
-        <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.0.4"/>
+        <PackageVersion Include="HotAvalonia" Version="3.1.3"/>
+        <PackageVersion Include="Avalonia.Markup.Xaml.Loader" Version="12.1.0"/>
         <!--DevTools Support-->
-        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2"/>
+        <PackageVersion Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.3"/>
         <!--Mvvm-->
         <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2"/>
         <PackageVersion Include="DialogHost.Avalonia" Version="0.12.2"/>
         <!--UI-->
         <PackageVersion Include="Material.Avalonia" Version="3.17.0"/>
         <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.3"/>
-        <PackageVersion Include="LiveMarkdown.Avalonia" Version="2.1.1"/>
+        <PackageVersion Include="LiveMarkdown.Avalonia" Version="2.2.0"/>
         <!--App Host-->
-        <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.0.1"/>
+        <PackageVersion Include="Xaml.Behaviors.Avalonia" Version="12.0.5"/>
         <!--Serilog Logging-->
         <PackageVersion Include="Serilog.Extensions.Hosting" Version="10.0.0"/>
         <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0"/>
@@ -29,7 +29,7 @@
         <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0"/>
         <PackageVersion Include="Serilog.Exceptions" Version="8.4.0"/>
 
-        <PackageVersion Include="Downloader" Version="5.8.1"/>
+        <PackageVersion Include="Downloader" Version="5.9.0"/>
         <!--I18N-->
         <!--TODO: Replace with nuget package after upstream updated-->
         <!--PackageVersion Include="Antelcat.I18N.Avalonia" Version="2.0.0-preview-1" />-->
