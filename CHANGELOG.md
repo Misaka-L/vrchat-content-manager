@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - Change max retry attempts of `ConcurrentMultipartUploader` from 3 to 5. [`#497`](https://github.com/project-vrcz/content-publisher/pull/497)
+- Use Avalonia API instead of Win32 API workaround to detect working area (or taskbar position and size) changed.
+  - It should make no different.
+  - Just to satisfy the maintainer's vanity: Maintainer fix the Avalonia API by submit patch to Avalonia: [AvaloniaUI/Avalonia/pull/21707](https://github.com/AvaloniaUI/Avalonia/pull/21707)
 
 ### Added
 
@@ -18,6 +21,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Fixed
 
+- Click "Add to the package manager" button with `vcc://` protocol registered but protocol handler file not exist will crash the app. [`#499`](https://github.com/project-vrcz/content-publisher/pull/499)
+  - Another line just to satisfy the maintainer's vanity: Maintainer fix this issue by submit patch to Avalonia: [AvaloniaUI/Avalonia/pull/21704](https://github.com/AvaloniaUI/Avalonia/pull/21704)
 - In rare case, crash during save telemetry settings will result it be reset. [`#496`](https://github.com/project-vrcz/content-publisher/pull/496)
 
 ## [2.10.1] - 2026-06-26
