@@ -1,7 +1,7 @@
-﻿License notice for Avalonia (v12.0.4)
+﻿License notice for Avalonia (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -12,10 +12,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Desktop (v12.0.4)
+License notice for Avalonia.Desktop (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -26,10 +26,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Fonts.Inter (v12.0.4)
+License notice for Avalonia.Fonts.Inter (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -40,10 +40,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Markup.Xaml.Loader (v12.0.4)
+License notice for Avalonia.Markup.Xaml.Loader (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -54,7 +54,7 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for AvaloniaUI.DiagnosticsSupport (v2.2.2)
+License notice for AvaloniaUI.DiagnosticsSupport (v2.2.3)
 ------------------------------------
 
 https://avaloniaui.net/
@@ -86,10 +86,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Downloader (v5.8.1)
+License notice for Downloader (v5.9.0)
 ------------------------------------
 
-https://github.com/bezzad/Downloader at 0c122389bada985aed9311ae309a3490644d1c47
+https://github.com/bezzad/Downloader at 6d3da98e510a7aaae614ef6f4fa5bcaa71efd257
 
 Copyright (C) 2019-2026 Behzad Khosravifar
 
@@ -98,10 +98,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for HotAvalonia (v3.1.1)
+License notice for HotAvalonia (v3.1.3)
 ------------------------------------
 
-https://github.com/Kira-NT/HotAvalonia at 4a4fca59f51ce6cc90d263c5b18cb18bf9eb5c03
+https://github.com/Kira-NT/HotAvalonia at 524c39d94384623b9f7257edb2ce9c36f120b7d1
 
 Copyright © 2023-2026 Kira-NT
 
@@ -110,10 +110,10 @@ Available at https://aka.ms/deprecateLicenseUrl
 LICENSE.md
 
 
-License notice for LiveMarkdown.Avalonia (v2.1.1)
+License notice for LiveMarkdown.Avalonia (v2.2.0)
 ------------------------------------
 
-https://github.com/DearVa/LiveMarkdown.Avalonia at 7b7d23017d4a67d9c84f07a2a50014cccbefc3ad
+https://github.com/DearVa/LiveMarkdown.Avalonia at 370fdeeb46efbaaac8e45d047f5f04149db786db
 
 Copyright 2025-2026 DearVa
 
@@ -198,6 +198,20 @@ Licensed under Apache-2.0
 Available at https://licenses.nuget.org/Apache-2.0
 
 
+License notice for Serilog.Exceptions (v8.4.0+build.694)
+------------------------------------
+
+https://github.com/RehanSaeed/Serilog.Exceptions.git at 98b7a4b8790544615bd7afd38c81639bff394081
+
+https://github.com/RehanSaeed/Serilog.Exceptions
+
+Copyright © Muhammad Rehan Saeed. All rights Reserved
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
 License notice for Serilog.Extensions.Hosting (v10.0.0)
 ------------------------------------
 
@@ -262,10 +276,10 @@ Licensed under Apache-2.0
 Available at https://licenses.nuget.org/Apache-2.0
 
 
-License notice for Xaml.Behaviors.Avalonia (v12.0.0.1)
+License notice for Xaml.Behaviors.Avalonia (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -288,10 +302,10 @@ Available at https://aka.ms/deprecateLicenseUrl
 LICENSE
 
 
-License notice for Avalonia.FreeDesktop (v12.0.4)
+License notice for Avalonia.FreeDesktop (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -302,10 +316,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.FreeDesktop.AtSpi (v12.0.4)
+License notice for Avalonia.FreeDesktop.AtSpi (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -316,10 +330,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.HarfBuzz (v12.0.4)
+License notice for Avalonia.HarfBuzz (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -330,10 +344,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Native (v12.0.4)
+License notice for Avalonia.Native (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -344,10 +358,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Remote.Protocol (v12.0.4)
+License notice for Avalonia.Remote.Protocol (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -358,10 +372,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Skia (v12.0.4)
+License notice for Avalonia.Skia (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -372,10 +386,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.Win32 (v12.0.4)
+License notice for Avalonia.Win32 (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -386,10 +400,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Avalonia.X11 (v12.0.4)
+License notice for Avalonia.X11 (v12.1.0)
 ------------------------------------
 
-https://github.com/AvaloniaUI/Avalonia/ at a8dd6417fd8918570edefdbecd92d16ac7620069
+https://github.com/AvaloniaUI/Avalonia/ at a21b9f573172f705a944dcc8aad7f036b9986f39
 
 https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
 
@@ -552,10 +566,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for HotAvalonia.Core (v3.1.1)
+License notice for HotAvalonia.Core (v3.1.3)
 ------------------------------------
 
-https://github.com/Kira-NT/HotAvalonia at 4a4fca59f51ce6cc90d263c5b18cb18bf9eb5c03
+https://github.com/Kira-NT/HotAvalonia at 524c39d94384623b9f7257edb2ce9c36f120b7d1
 
 Copyright © 2023-2026 Kira-NT
 
@@ -564,10 +578,10 @@ Available at https://aka.ms/deprecateLicenseUrl
 LICENSE.md
 
 
-License notice for HotAvalonia.Extensions (v3.1.1)
+License notice for HotAvalonia.Extensions (v3.1.3)
 ------------------------------------
 
-https://github.com/Kira-NT/HotAvalonia at 4a4fca59f51ce6cc90d263c5b18cb18bf9eb5c03
+https://github.com/Kira-NT/HotAvalonia at 524c39d94384623b9f7257edb2ce9c36f120b7d1
 
 Copyright © 2023-2026 Kira-NT
 
@@ -576,10 +590,10 @@ Available at https://aka.ms/deprecateLicenseUrl
 LICENSE.md
 
 
-License notice for HotAvalonia.Fody (v3.1.1)
+License notice for HotAvalonia.Fody (v3.1.3)
 ------------------------------------
 
-https://github.com/Kira-NT/HotAvalonia at 4a4fca59f51ce6cc90d263c5b18cb18bf9eb5c03
+https://github.com/Kira-NT/HotAvalonia at 524c39d94384623b9f7257edb2ce9c36f120b7d1
 
 Copyright © 2023-2026 Kira-NT
 
@@ -656,10 +670,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for MicroCom.Runtime (v0.11.4)
+License notice for MicroCom.Runtime (v0.11.6)
 ------------------------------------
 
-https://github.com/kekekeks/MicroCom at 28850f85fb586488828ab7267ed4a87e8c970b51
+https://github.com/kekekeks/MicroCom at 76785efcafd91b5902fd19dd11145f6dd655b7b4
 
 Copyright 2021 © Nikita Tsukanov
 
@@ -1340,6 +1354,96 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
+License notice for Nito.AsyncEx (v5.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/AsyncEx at 0361015459938f2eb8f3c1ad1021d19ee01c93a4
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.AsyncEx.Context (v5.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/AsyncEx at 0361015459938f2eb8f3c1ad1021d19ee01c93a4
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.AsyncEx.Coordination (v5.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/AsyncEx at 0361015459938f2eb8f3c1ad1021d19ee01c93a4
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.AsyncEx.Interop.WaitHandles (v5.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/AsyncEx at 0361015459938f2eb8f3c1ad1021d19ee01c93a4
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.AsyncEx.Oop (v5.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/AsyncEx at 0361015459938f2eb8f3c1ad1021d19ee01c93a4
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.AsyncEx.Tasks (v5.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/AsyncEx at 0361015459938f2eb8f3c1ad1021d19ee01c93a4
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.Cancellation (v1.1.2)
+------------------------------------
+
+https://github.com/StephenCleary/Cancellation at 3f41c18da9f9bd71a17de6329aaea2bf7388d0d7
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.Collections.Deque (v1.1.1)
+------------------------------------
+
+https://github.com/StephenCleary/Deque at fb12d9918339a9affd11f6d5f82a29bb7e26c4a0
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
+License notice for Nito.Disposables (v2.2.1)
+------------------------------------
+
+https://github.com/StephenCleary/Disposables at 421e8c3af9e9baf1c885671887671971aa2d7a29
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
 License notice for Onigwrap (v1.0.9)
 ------------------------------------
 
@@ -1424,10 +1528,10 @@ Licensed under Apache-2.0
 Available at https://licenses.nuget.org/Apache-2.0
 
 
-License notice for OpenTelemetry.Instrumentation.Http (v1.15.1)
+License notice for OpenTelemetry.Instrumentation.Http (v1.16.0)
 ------------------------------------
 
-https://github.com/open-telemetry/opentelemetry-dotnet-contrib at 8401783fd26f7e53390b79c510424a0774378f07
+https://github.com/open-telemetry/opentelemetry-dotnet-contrib at 0f4a2340b6ea7e5cad83efe2d6d73574794d6388
 
 https://opentelemetry.io/
 
@@ -1666,6 +1770,18 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
+License notice for System.Reflection.TypeExtensions (v4.7.0)
+------------------------------------
+
+https://github.com/dotnet/corefx
+
+Copyright © Microsoft Corporation. All rights reserved.
+
+Licensed under MIT
+
+Available at https://licenses.nuget.org/MIT
+
+
 License notice for System.Threading.RateLimiting (v8.0.0)
 ------------------------------------
 
@@ -1700,10 +1816,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Tmds.DBus.Protocol (v0.92.0)
+License notice for Tmds.DBus.Protocol (v0.94.1)
 ------------------------------------
 
-https://github.com/tmds/Tmds.DBus.git at 282acebca8d4e4e3ba211646ac650911ee94edfd
+https://github.com/tmds/Tmds.DBus.git at b4a7fed0b878f74cb54f7cca84d2889af4e596ba
 
 Tom Deseyn
 
@@ -1712,10 +1828,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactions (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactions (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -1724,10 +1840,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactions.Custom (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactions.Custom (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -1736,10 +1852,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactions.DragAndDrop (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactions.DragAndDrop (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -1748,10 +1864,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactions.Draggable (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactions.Draggable (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -1760,10 +1876,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactions.Events (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactions.Events (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -1772,10 +1888,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactions.Responsive (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactions.Responsive (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
@@ -1784,10 +1900,10 @@ Licensed under MIT
 Available at https://licenses.nuget.org/MIT
 
 
-License notice for Xaml.Behaviors.Interactivity (v12.0.0.1)
+License notice for Xaml.Behaviors.Interactivity (v12.0.5)
 ------------------------------------
 
-https://github.com/wieslawsoltes/Xaml.Behaviors at f9f438e8f2bdf792d27f226831161dce37cf28ff
+https://github.com/wieslawsoltes/Xaml.Behaviors at fd692d956d1ea9eecb48165d40fa1203284d68b0
 
 Copyright © Wiesław Šoltés 2026
 
