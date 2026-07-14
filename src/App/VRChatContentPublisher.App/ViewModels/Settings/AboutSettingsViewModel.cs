@@ -23,8 +23,6 @@ public sealed partial class AboutSettingsViewModel(NavigationService navigationS
     [
         new("@小川糸"),
         new("@ColorlessColor", "https://github.com/ColorlessColor"),
-        new("@flower-elf", "https://github.com/flower-elf"),
-        new("@Anteness", "https://github.com/Anteness"),
         new("@SKPloft", "https://github.com/SKPloft"),
         new("@lonelyicer", "https://github.com/lonelyicer"),
     ];
