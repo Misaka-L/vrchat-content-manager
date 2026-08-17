@@ -32,33 +32,37 @@ public sealed class FileDatabaseService(SqliteDatabaseService sqliteDatabaseServ
 
     public async Task<FileEntry?> GetFileRecordAsync(string fileId)
     {
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
+        return await sqliteDatabaseService.ExecuteReaderAsync(
             "SELECT FileName, FilePath FROM RpcFiles WHERE FileId = @FileId",
-            new SqliteParameter("@FileId", fileId));
+            [new SqliteParameter("@FileId", fileId)],
+            reader =>
+            {
+                if (reader.Read())
+                {
+                    return new FileEntry(
+                        reader.GetString(0),
+                        reader.GetString(1)
+                    );
+                }
 
-        if (await reader.ReadAsync())
-        {
-            return new FileEntry(
-                reader.GetString(0),
-                reader.GetString(1)
-            );
-        }
-
-        return null;
+                return null;
+            });
     }
 
     public async ValueTask<bool> IsFileExistAsync(string fileId)
     {
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
+        return await sqliteDatabaseService.ExecuteReaderAsync(
             "SELECT COUNT(1) FROM RpcFiles WHERE FileId = @FileId",
-            new SqliteParameter("@FileId", fileId));
+            [new SqliteParameter("@FileId", fileId)],
+            reader =>
+            {
+                if (reader.Read())
+                {
+                    return reader.GetInt32(0) > 0;
+                }
 
-        if (await reader.ReadAsync())
-        {
-            return reader.GetInt32(0) > 0;
-        }
-
-        return false;
+                return false;
+            });
     }
 
     public async Task MarkFileReadyAsync(string fileId)
@@ -77,54 +81,58 @@ public sealed class FileDatabaseService(SqliteDatabaseService sqliteDatabaseServ
 
     public async Task<IReadOnlyList<WritingFileEntry>> GetWritingFileRecordsAsync()
     {
-        var records = new List<WritingFileEntry>();
+        return await sqliteDatabaseService.ExecuteReaderAsync(
+            "SELECT FileId, FilePath FROM RpcFiles WHERE Status = 'Writing'",
+            reader =>
+            {
+                var records = new List<WritingFileEntry>();
 
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
-            "SELECT FileId, FilePath FROM RpcFiles WHERE Status = 'Writing'");
+                while (reader.Read())
+                {
+                    records.Add(new WritingFileEntry(
+                        reader.GetString(0),
+                        reader.GetString(1)
+                    ));
+                }
 
-        while (await reader.ReadAsync())
-        {
-            records.Add(new WritingFileEntry(
-                reader.GetString(0),
-                reader.GetString(1)
-            ));
-        }
-
-        return records;
+                return records;
+            });
     }
 
     public async Task<IReadOnlyList<FileEntry>> GetAllReadyFileRecordsAsync()
     {
-        var records = new List<FileEntry>();
+        return await sqliteDatabaseService.ExecuteReaderAsync(
+            "SELECT FileId, FileName, FilePath FROM RpcFiles WHERE Status = 'Ready'",
+            reader =>
+            {
+                var records = new List<FileEntry>();
+                while (reader.Read())
+                {
+                    records.Add(new FileEntry(
+                            reader.GetString(1),
+                            reader.GetString(2)
+                        )
+                        { FileId = reader.GetString(0) });
+                }
 
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
-            "SELECT FileId, FileName, FilePath FROM RpcFiles WHERE Status = 'Ready'");
-
-        while (await reader.ReadAsync())
-        {
-            records.Add(new FileEntry(
-                reader.GetString(1),
-                reader.GetString(2)
-            )
-            { FileId = reader.GetString(0) });
-        }
-
-        return records;
+                return records;
+            });
     }
 
     public async Task<IReadOnlySet<string>> GetAllFileIdsAsync()
     {
-        var fileIds = new HashSet<string>();
+        return await sqliteDatabaseService.ExecuteReaderAsync(
+            "SELECT FileId FROM RpcFiles", reader =>
+            {
+                var fileIds = new HashSet<string>();
 
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
-            "SELECT FileId FROM RpcFiles");
+                while (reader.Read())
+                {
+                    fileIds.Add(reader.GetString(0));
+                }
 
-        while (await reader.ReadAsync())
-        {
-            fileIds.Add(reader.GetString(0));
-        }
-
-        return fileIds;
+                return fileIds;
+            });
     }
 
     public record FileEntry(string FileName, string FilePath)

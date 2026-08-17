@@ -26,7 +26,8 @@ public sealed class ContentPublishTaskDatabaseService(SqliteDatabaseService sqli
 
     public async Task SaveStateAsync(ContentPublishTaskState state)
     {
-        var stateJson = JsonSerializer.Serialize(state, ContentPublishTaskStateJsonContext.Default.ContentPublishTaskState);
+        var stateJson =
+            JsonSerializer.Serialize(state, ContentPublishTaskStateJsonContext.Default.ContentPublishTaskState);
 
         await sqliteDatabaseService.ExecuteNonQueryAsync(
             """
@@ -45,35 +46,41 @@ public sealed class ContentPublishTaskDatabaseService(SqliteDatabaseService sqli
 
     public async Task<ContentPublishTaskState?> GetStateAsync(string taskId)
     {
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
+        return await sqliteDatabaseService.ExecuteReaderAsync(
             "SELECT StateJson FROM ContentPublishTasks WHERE TaskId = @TaskId",
-            new SqliteParameter("@TaskId", taskId));
+            [new SqliteParameter("@TaskId", taskId)],
+            reader =>
+            {
+                if (reader.Read())
+                {
+                    var stateJson = reader.GetString(0);
+                    return JsonSerializer.Deserialize(stateJson,
+                        ContentPublishTaskStateJsonContext.Default.ContentPublishTaskState);
+                }
 
-        if (await reader.ReadAsync())
-        {
-            var stateJson = reader.GetString(0);
-            return JsonSerializer.Deserialize(stateJson, ContentPublishTaskStateJsonContext.Default.ContentPublishTaskState);
-        }
-
-        return null;
+                return null;
+            });
     }
 
     public async Task<IReadOnlyList<ContentPublishTaskState>> GetAllStatesAsync()
     {
         var states = new List<ContentPublishTaskState>();
 
-        await using var reader = await sqliteDatabaseService.ExecuteReaderAsync(
-            "SELECT StateJson FROM ContentPublishTasks ORDER BY CreatedAt");
+        return await sqliteDatabaseService.ExecuteReaderAsync(
+            "SELECT StateJson FROM ContentPublishTasks ORDER BY CreatedAt",
+            reader =>
+            {
+                while (reader.Read())
+                {
+                    var stateJson = reader.GetString(0);
+                    var state = JsonSerializer.Deserialize(stateJson,
+                        ContentPublishTaskStateJsonContext.Default.ContentPublishTaskState);
+                    if (state is not null)
+                        states.Add(state);
+                }
 
-        while (await reader.ReadAsync())
-        {
-            var stateJson = reader.GetString(0);
-            var state = JsonSerializer.Deserialize(stateJson, ContentPublishTaskStateJsonContext.Default.ContentPublishTaskState);
-            if (state is not null)
-                states.Add(state);
-        }
-
-        return states;
+                return states;
+            });
     }
 
     public async Task DeleteStateAsync(string taskId)
