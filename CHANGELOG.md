@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.11.0] - 2026-09-09
+
 ### Changed
 
 - Change max retry attempts of `ConcurrentMultipartUploader` from 3 to 5. [`#497`](https://github.com/project-vrcz/content-publisher/pull/497)
@@ -1154,7 +1156,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.10.1...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.11.0...HEAD
+[2.11.0]: https://github.com/project-vrcz/content-publisher/compare/v2.10.1...v2.11.0
 [2.10.1]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0...v2.10.1
 [2.10.0]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-rc.1...v2.10.0
 [2.10.0-rc.1]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0-beta.7...v2.10.0-rc.1
