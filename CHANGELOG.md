@@ -15,9 +15,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Bring the main window of the running instance to the foreground when a desktop notification is clicked. [`#520`](https://github.com/project-vrcz/content-publisher/pull/520)
 - Add a option to allow send task completed successfully notification. [`#517`](https://github.com/project-vrcz/content-publisher/pull/517)
 - Allow manually refresh session state from accounts settings page and home page account tab. [`#521`](https://github.com/project-vrcz/content-publisher/issues/521) [`#522`](https://github.com/project-vrcz/content-publisher/pull/522)
-- Add a Client Pairing Guide button in RPC server settings to open the client pairing onboarding, with back navigation to return to the settings page.
-- Allow copying the RPC server port from the tray menu and from RPC server settings.
-- Add a status bar at the bottom of the home page showing the aggregated task counts of all accounts and the RPC server port with a copy button.
+- Add a Client Pairing Guide button in RPC server settings to open the client pairing onboarding, with back navigation to return to the settings page. [`#523`](https://github.com/project-vrcz/content-publisher/pull/523)
+- Allow copying the RPC server port from the tray menu and from RPC server settings. [`#523`](https://github.com/project-vrcz/content-publisher/pull/523)
+- Add a status bar at the bottom of the home page showing the aggregated task counts of all accounts and the RPC server port with a copy button. [`#523`](https://github.com/project-vrcz/content-publisher/pull/523)
 
 ### Fixed
 
