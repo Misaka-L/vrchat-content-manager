@@ -705,6 +705,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Publish {0} &quot;{1}&quot; Succeeded.
+        /// </summary>
+        internal static string Notifications_Task_Succeeded_Title_Template {
+            get {
+                return ResourceManager.GetString("Notifications_Task_Succeeded_Title_Template", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to login.
         /// </summary>
         internal static string Pages_Add_Account_Alert_Login_Failed_Title {
@@ -1892,6 +1901,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed {
             get {
                 return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish Task Succeeded.
+        /// </summary>
+        internal static string Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Succeeded {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Succeeded", resourceCulture);
             }
         }
         

@@ -60,6 +60,20 @@ public sealed partial class NotificationSettingsViewModel(
         }
     }
 
+    public bool SendNotificationOnTaskSucceeded
+    {
+        get => appSettings.Value.SendNotificationOnTaskSucceeded;
+        set
+        {
+            if (appSettings.Value.SendNotificationOnTaskSucceeded == value)
+                return;
+
+            OnPropertyChanging();
+            appSettings.Update(settings => settings.SendNotificationOnTaskSucceeded = value);
+            OnPropertyChanged();
+        }
+    }
+
     public bool EnablePublicIpMonitor
     {
         get => appSettings.Value.EnablePublicIpMonitor;

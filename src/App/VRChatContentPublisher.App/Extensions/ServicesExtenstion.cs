@@ -49,6 +49,7 @@ public static class ServicesExtenstion
 
         // Notification Senders
         services.AddHostedService<TaskFailedNotificationSenderService>();
+        services.AddHostedService<TaskSuccessNotificationSenderService>();
         services.AddHostedService<PublicIpChangedNotificationSenderService>();
         services.AddHostedService<AppUpdateNotificationSender>();
 

@@ -216,6 +216,9 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
         <value>内容发布任务发生错误</value>
     </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Succeeded" xml:space="preserve">
+        <value>内容发布任务成功完成</value>
+    </data>
     <data name="Pages_Settings_Notification_Enable_Public_IP_Monitor" xml:space="preserve">
         <value>启用公网 IP 变动检测</value>
     </data>
@@ -648,6 +651,9 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
         <value>发布 {0} "{1}" 失败</value>
+    </data>
+    <data name="Notifications_Task_Succeeded_Title_Template" xml:space="preserve">
+        <value>发布 {0} "{1}" 成功</value>
     </data>
     <data name="Notifications_New_Pairing_Request_Title" xml:space="preserve">
         <value>新的配对请求</value>

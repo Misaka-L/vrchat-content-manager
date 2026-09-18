@@ -224,6 +224,9 @@
     <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Failed" xml:space="preserve">
         <value>Publish Task Failed</value>
     </data>
+    <data name="Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Succeeded" xml:space="preserve">
+        <value>Publish Task Succeeded</value>
+    </data>
     <data name="Pages_Settings_Notification_Enable_Public_IP_Monitor" xml:space="preserve">
         <value>Enable Public IP Change Detection</value>
     </data>
@@ -656,6 +659,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Notifications_Task_Failed_Title_Template" xml:space="preserve">
         <value>Publish {0} "{1}" Failed</value>
+    </data>
+    <data name="Notifications_Task_Succeeded_Title_Template" xml:space="preserve">
+        <value>Publish {0} "{1}" Succeeded</value>
     </data>
     <data name="Notifications_New_Pairing_Request_Title" xml:space="preserve">
         <value>New Pairing Request</value>

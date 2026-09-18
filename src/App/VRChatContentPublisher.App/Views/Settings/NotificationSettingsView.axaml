@@ -65,6 +65,10 @@
             IsEnabled="{Binding EnabledNotifications}"
             IsChecked="{Binding SendNotificationOnTaskFailed}" />
         <ToggleSwitch
+            Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_Publish_Task_Succeeded}}"
+            IsEnabled="{Binding EnabledNotifications}"
+            IsChecked="{Binding SendNotificationOnTaskSucceeded}" />
+        <ToggleSwitch
             Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Send_Notifications_When_New_Pairing_Request}}"
             IsEnabled="{Binding EnabledNotifications}"
             IsChecked="{Binding SendNotificationOnNewPairingRequest}" />

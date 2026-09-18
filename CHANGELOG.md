@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Bring the main window of the running instance to the foreground when a desktop notification is clicked. [`#520`](https://github.com/project-vrcz/content-publisher/pull/520)
+- Add a option to allow send task completed successfully notification. [`#517`](https://github.com/project-vrcz/content-publisher/pull/517)
 
 ### Fixed
 
