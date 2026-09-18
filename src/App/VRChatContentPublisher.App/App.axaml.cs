@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
 using Microsoft.Extensions.Caching.Memory;
@@ -174,6 +175,20 @@ public partial class App : Application
         {
             // Fire and forget
             _ = launcher.LaunchDirectoryInfoAsync(directoryInfo);
+        }
+    }
+
+    private void OnCopyRpcServerPortClicked(object? sender, EventArgs e)
+    {
+        if (DataContext is not AppViewModel appViewModel)
+            return;
+
+        var topLevel =
+            TopLevel.GetTopLevel((ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow);
+        if (topLevel?.Clipboard is { } clipboard)
+        {
+            // Fire and forget
+            _ = clipboard.SetTextAsync(appViewModel.RpcServerPortText);
         }
     }
 }

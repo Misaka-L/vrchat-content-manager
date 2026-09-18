@@ -192,6 +192,9 @@
     <data name="Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text" xml:space="preserve">
         <value>客户端配对指南</value>
     </data>
+    <data name="Pages_Settings_Connect_Copy_Server_Port_Button_Text" xml:space="preserve">
+        <value>复制端口</value>
+    </data>
     <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
         <value>服务器名称为必填项</value>
     </data>
@@ -684,6 +687,9 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     </data>
     <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
         <value>打开日志文件夹</value>
+    </data>
+    <data name="Tray_Menu_Copy_Rpc_Server_Port" xml:space="preserve">
+        <value>复制 RPC 服务器端口</value>
     </data>
     <data name="Tray_Menu_Show_Main_Window" xml:space="preserve">
         <value>打开 VCP</value>

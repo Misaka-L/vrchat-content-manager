@@ -55,19 +55,35 @@
             </StackPanel>
         </Border>
 
-        <TextBox Text="{Binding RpcServerPort}"
-                 UseFloatingPlaceholder="True" PlaceholderText="1024-65535" Classes="outline"
-                 assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Port_Field_Label}}"
-                 Theme="{StaticResource OutlineTextBox}">
-            <Interaction.Behaviors>
-                <TextBoxValidationBehavior>
-                    <validation:IntRangeValidationRule
-                        Min="{x:Static settings:ConnectSettingsViewModel.MinUserPort}"
-                        Max="{x:Static settings:ConnectSettingsViewModel.MaxUserPort}"
-                        ErrorMessage="{x:Static settings:ConnectSettingsViewModel.ServerPortOutOfRangeValidationErrorText}" />
-                </TextBoxValidationBehavior>
-            </Interaction.Behaviors>
-        </TextBox>
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+            <TextBox x:Name="ServerPortTextBox"
+                     Text="{Binding RpcServerPort}"
+                     UseFloatingPlaceholder="True" PlaceholderText="1024-65535" Classes="outline"
+                     assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Server_Port_Field_Label}}"
+                     Theme="{StaticResource OutlineTextBox}">
+                <Interaction.Behaviors>
+                    <TextBoxValidationBehavior>
+                        <validation:IntRangeValidationRule
+                            Min="{x:Static settings:ConnectSettingsViewModel.MinUserPort}"
+                            Max="{x:Static settings:ConnectSettingsViewModel.MaxUserPort}"
+                            ErrorMessage="{x:Static settings:ConnectSettingsViewModel.ServerPortOutOfRangeValidationErrorText}" />
+                    </TextBoxValidationBehavior>
+                </Interaction.Behaviors>
+            </TextBox>
+            <Button Grid.Column="1"
+                    VerticalAlignment="Stretch"
+                    Margin="0 8 0 0"
+                    Width="{Binding $self.Bounds.Height}"
+                    Theme="{StaticResource MaterialOutlineButton}" Classes="light"
+                    Content="{avalonia:MaterialIconExt Kind=ContentCopy, Size=18}"
+                    ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Copy_Server_Port_Button_Text}}">
+                <Interaction.Behaviors>
+                    <ButtonClickEventTriggerBehavior>
+                        <SetClipboardTextAction Text="{Binding RpcServerPort}" />
+                    </ButtonClickEventTriggerBehavior>
+                </Interaction.Behaviors>
+            </Button>
+        </Grid>
 
         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
             <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Apply_Button_Text}}"

@@ -1670,6 +1670,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy Port.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Copy_Server_Port_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Copy_Server_Port_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Name.
         /// </summary>
         internal static string Pages_Settings_Connect_Server_Name_Field_Label {
@@ -2477,6 +2486,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Tray_Menu_Borderless_Window_Toggle_Unchecked_Text {
             get {
                 return ResourceManager.GetString("Tray_Menu_Borderless_Window_Toggle_Unchecked_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy RPC Server Port.
+        /// </summary>
+        internal static string Tray_Menu_Copy_Rpc_Server_Port {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Copy_Rpc_Server_Port", resourceCulture);
             }
         }
         

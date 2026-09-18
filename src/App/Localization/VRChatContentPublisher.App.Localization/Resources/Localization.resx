@@ -199,6 +199,9 @@
     <data name="Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text" xml:space="preserve">
         <value>Client Pairing Guide</value>
     </data>
+    <data name="Pages_Settings_Connect_Copy_Server_Port_Button_Text" xml:space="preserve">
+        <value>Copy Port</value>
+    </data>
     <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
         <value>Server name are require.</value>
     </data>
@@ -692,6 +695,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
         <value>Open Logs Folder</value>
+    </data>
+    <data name="Tray_Menu_Copy_Rpc_Server_Port" xml:space="preserve">
+        <value>Copy RPC Server Port</value>
     </data>
     <data name="Tray_Menu_Show_Main_Window" xml:space="preserve">
         <value>Show Window</value>
