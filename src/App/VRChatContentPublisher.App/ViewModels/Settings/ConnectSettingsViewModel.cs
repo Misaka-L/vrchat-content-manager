@@ -2,6 +2,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Localization;
+using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.ViewModels.Pages;
+using VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
@@ -10,7 +13,8 @@ namespace VRChatContentPublisher.App.ViewModels.Settings;
 
 public sealed partial class ConnectSettingsViewModel(
     IWritableOptions<AppSettings> appSettings,
-    HttpServerService httpServerService)
+    HttpServerService httpServerService,
+    NavigationService navigationService)
     : ViewModelBase
 {
     [ObservableProperty]
@@ -93,6 +97,13 @@ public sealed partial class ConnectSettingsViewModel(
     private void ResetToDefaultPort()
     {
         RpcServerPort = HttpServerService.DefaultPort.ToString();
+    }
+
+    [RelayCommand]
+    private void OpenClientPairingGuide()
+    {
+        navigationService.Navigate<GuideOpenConnectSettingsPageViewModel>(viewModel =>
+            viewModel.OnRequestBackOverride = navigationService.Navigate<SettingsPageViewModel>);
     }
 
     partial void OnConnectInstanceNameChanged(string value)

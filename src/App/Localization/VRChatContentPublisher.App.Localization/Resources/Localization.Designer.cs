@@ -1165,6 +1165,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RPC Port.
+        /// </summary>
+        internal static string Pages_Home_Status_Bar_Rpc_Server_Port_Label {
+            get {
+                return ResourceManager.GetString("Pages_Home_Status_Bar_Rpc_Server_Port_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Pages_Navigation_Go_Back_Button_Text {
@@ -1657,6 +1666,24 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Settings_Connect_Apply_Error_Unknown_Error {
             get {
                 return ResourceManager.GetString("Pages_Settings_Connect_Apply_Error_Unknown_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client Pairing Guide.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy Port.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Copy_Server_Port_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Copy_Server_Port_Button_Text", resourceCulture);
             }
         }
         
@@ -2468,6 +2495,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Tray_Menu_Borderless_Window_Toggle_Unchecked_Text {
             get {
                 return ResourceManager.GetString("Tray_Menu_Borderless_Window_Toggle_Unchecked_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy RPC Server Port.
+        /// </summary>
+        internal static string Tray_Menu_Copy_Rpc_Server_Port {
+            get {
+                return ResourceManager.GetString("Tray_Menu_Copy_Rpc_Server_Port", resourceCulture);
             }
         }
         

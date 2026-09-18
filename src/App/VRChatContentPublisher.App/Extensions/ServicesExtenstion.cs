@@ -78,6 +78,8 @@ public static class ServicesExtenstion
         services.AddSingleton<HomePageViewModel>();
         services.AddTransient<SettingsPageViewModel>();
 
+        services.AddSingleton<HomeStatusBarViewModel>();
+
         // Data ViewModels
         services.AddTransient<UserSessionViewModelFactory>();
         services.AddTransient<PublishTaskViewModelFactory>();

@@ -12,6 +12,14 @@ public sealed partial class GuideConnectUnityPageViewModel(
     IWritableOptions<AppSettings> appSettings
 ) : PageViewModelBase
 {
+    /// <summary>
+    /// Set when this page is opened from somewhere other than the onboarding flow (e.g. RPC server
+    /// settings). When not <see langword="null"/> a back button is shown and invokes this action.
+    /// </summary>
+    public Action? OnRequestBackOverride { get; set; }
+
+    public bool CanGoBack => OnRequestBackOverride is not null;
+
     public string HostUri => $"http://localhost:{appSettings.Value.RpcServerPort}";
 
     [RelayCommand]
@@ -35,5 +43,11 @@ public sealed partial class GuideConnectUnityPageViewModel(
     private void Skip()
     {
         navigationService.Navigate<HomePageViewModel>();
+    }
+
+    [RelayCommand]
+    private void Back()
+    {
+        OnRequestBackOverride?.Invoke();
     }
 }

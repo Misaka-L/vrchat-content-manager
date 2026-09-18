@@ -196,6 +196,12 @@
     <data name="Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text" xml:space="preserve">
         <value>Reset Port to Default</value>
     </data>
+    <data name="Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text" xml:space="preserve">
+        <value>Client Pairing Guide</value>
+    </data>
+    <data name="Pages_Settings_Connect_Copy_Server_Port_Button_Text" xml:space="preserve">
+        <value>Copy Port</value>
+    </data>
     <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
         <value>Server name are require.</value>
     </data>
@@ -595,6 +601,9 @@ Please try using VRChat SDK to publish content, if fail, contact VRChat Support,
         <value>Borderless Window: Toggle prevent window hide ,
 Normal Window: Toggle window on top.</value>
     </data>
+    <data name="Pages_Home_Status_Bar_Rpc_Server_Port_Label" xml:space="preserve">
+        <value>RPC Port</value>
+    </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>Identity Prompt</value>
     </data>
@@ -689,6 +698,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     </data>
     <data name="Tray_Menu_Open_Logs_Folder" xml:space="preserve">
         <value>Open Logs Folder</value>
+    </data>
+    <data name="Tray_Menu_Copy_Rpc_Server_Port" xml:space="preserve">
+        <value>Copy RPC Server Port</value>
     </data>
     <data name="Tray_Menu_Show_Main_Window" xml:space="preserve">
         <value>Show Window</value>

@@ -5,6 +5,8 @@ using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.Core.Shared;
 
 namespace VRChatContentPublisher.App.ViewModels;
@@ -13,10 +15,13 @@ public sealed partial class AppViewModel(
     AppWindowService appWindowService,
     AppLifetimeService lifetimeService,
     DialogService dialogService,
+    IWritableOptions<AppSettings> appSettings,
     ExitAppDialogViewModel exitAppDialogViewModel
 ) : ViewModelBase
 {
     public string LogsFolderPath => AppStorageService.GetLogsPath();
+
+    public string RpcServerPortText => appSettings.Value.RpcServerPort.ToString();
 
     public bool IsBorderless => appWindowService.IsBorderless();
     public bool IsPinned => appWindowService.IsPinned();

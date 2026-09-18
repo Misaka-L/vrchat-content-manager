@@ -73,6 +73,9 @@
                     <NativeMenu>
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Open_Logs_Folder}}"
                                         Click="OnOpenLogsFolderClicked" />
+                        <NativeMenuItem
+                            Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Copy_Rpc_Server_Port}}"
+                            Click="OnCopyRpcServerPortClicked" />
                         <NativeMenuItemSeparator />
                         <NativeMenuItem Header="{I18N {x:Static localization:LangKeys.Tray_Menu_Show_Main_Window}}"
                                         Command="{Binding ActivateWindowCommand}" />
