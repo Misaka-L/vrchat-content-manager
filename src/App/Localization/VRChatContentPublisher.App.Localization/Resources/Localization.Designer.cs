@@ -1165,6 +1165,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to RPC Port.
+        /// </summary>
+        internal static string Pages_Home_Status_Bar_Rpc_Server_Port_Label {
+            get {
+                return ResourceManager.GetString("Pages_Home_Status_Bar_Rpc_Server_Port_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Back.
         /// </summary>
         internal static string Pages_Navigation_Go_Back_Button_Text {

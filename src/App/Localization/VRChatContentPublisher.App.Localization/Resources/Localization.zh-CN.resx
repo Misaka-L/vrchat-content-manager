@@ -593,6 +593,9 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
         <value>使用无边框窗口时：开关阻止窗口消失
 不使用无边框窗口时：开关窗口置顶</value>
     </data>
+    <data name="Pages_Home_Status_Bar_Rpc_Server_Port_Label" xml:space="preserve">
+        <value>RPC 端口</value>
+    </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>认证请求识别码</value>
     </data>

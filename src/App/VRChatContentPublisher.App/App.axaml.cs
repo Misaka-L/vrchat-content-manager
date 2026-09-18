@@ -75,6 +75,9 @@ public partial class App : Application
         ViewLocator.Register<HomePageViewModel, HomePage>();
         ViewLocator.Register<SettingsPageViewModel, SettingsPage>();
 
+        // HomePage Components
+        ViewLocator.Register<HomeStatusBarViewModel, HomeStatusBar>();
+
         // HomePage Tabs
         ViewLocator.Register<HomeTasksPageViewModel, HomeTasksPage>();
 

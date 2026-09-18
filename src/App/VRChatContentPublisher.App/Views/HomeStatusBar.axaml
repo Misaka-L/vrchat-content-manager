@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:VRChatContentPublisher.App.ViewModels"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="32"
+             x:DataType="viewModels:HomeStatusBarViewModel"
+             x:Class="VRChatContentPublisher.App.Views.HomeStatusBar">
+
+    <Border Background="{DynamicResource MaterialDesignPaper}"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="0,1,0,0">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" Margin="12,2">
+            <StackPanel Orientation="Horizontal" Spacing="4">
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_In_Progress_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressUpload" Foreground="#7986CB" />
+                    <TextBlock Text="{Binding InProgressTaskCount}"
+                               Foreground="#7986CB" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_Completed_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressCheck" Foreground="#00c853" />
+                    <TextBlock Text="{Binding CompletedTaskCount}"
+                               Foreground="#00c853" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_Failed_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressAlert" Foreground="#EF5350" />
+                    <TextBlock Text="{Binding FailedTaskCount}"
+                               Foreground="#EF5350" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="4"
+                            IsHitTestVisible="True" Background="Transparent"
+                            ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Account_Tab_Tasks_Count_Canceled_Tooltip}}">
+                    <avalonia:MaterialIcon Kind="ProgressClose" />
+                    <TextBlock Text="{Binding CanceledTaskCount}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4">
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Home_Status_Bar_Rpc_Server_Port_Label}}"
+                    VerticalAlignment="Center" Opacity="0.7" />
+                <SelectableTextBlock Text="{Binding RpcServerPortText}"
+                                     VerticalAlignment="Center" />
+                <Button MinWidth="0" MinHeight="0" Padding="0"
+                        Height="24" Width="{Binding $self.Bounds.Height}"
+                        Theme="{StaticResource MaterialFlatButton}"
+                        Content="{avalonia:MaterialIconExt Kind=ContentCopy, Size=18}"
+                        ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Copy_Server_Port_Button_Text}}">
+                    <Interaction.Behaviors>
+                        <ButtonClickEventTriggerBehavior>
+                            <SetClipboardTextAction Text="{Binding RpcServerPortText}" />
+                        </ButtonClickEventTriggerBehavior>
+                    </Interaction.Behaviors>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

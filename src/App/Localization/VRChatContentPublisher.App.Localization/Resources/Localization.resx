@@ -601,6 +601,9 @@ Please try using VRChat SDK to publish content, if fail, contact VRChat Support,
         <value>Borderless Window: Toggle prevent window hide ,
 Normal Window: Toggle window on top.</value>
     </data>
+    <data name="Pages_Home_Status_Bar_Rpc_Server_Port_Label" xml:space="preserve">
+        <value>RPC Port</value>
+    </data>
     <data name="Dialog_Request_Challenge_Identity_Prompt_Title" xml:space="preserve">
         <value>Identity Prompt</value>
     </data>

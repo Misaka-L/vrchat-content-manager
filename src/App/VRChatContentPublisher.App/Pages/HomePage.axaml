@@ -40,7 +40,7 @@
         </Style>
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,*,Auto">
         <controls:ColorZone Mode="PrimaryMid" Height="60" Classes.rgb-enabled="{Binding UseRgbCyclingBackgroundMenu}">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0,8,0" ColumnSpacing="12">
                 <PathIcon Height="32" Width="32" Data="{StaticResource AppIconGeometry}" Foreground="White" />
@@ -82,5 +82,6 @@
             </Grid>
         </controls:ColorZone>
         <TransitioningContentControl Grid.Row="1" Content="{Binding CurrentPage}" />
+        <ContentControl Grid.Row="2" Content="{Binding StatusBar}" />
     </Grid>
 </UserControl>

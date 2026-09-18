@@ -29,6 +29,8 @@ public partial class HomePageViewModel : PageViewModelBase
     public bool IsPinned => _appWindowService.IsPinned();
     public bool IsBorderless => _appWindowService.IsBorderless();
 
+    public HomeStatusBarViewModel StatusBar { get; }
+
     private readonly NavigationService _navigationService;
     private readonly AppWindowService _appWindowService;
     private readonly DialogService _dialogService;
@@ -43,7 +45,8 @@ public partial class HomePageViewModel : PageViewModelBase
         IWritableOptions<AppSettings> appSettings,
         AppWindowService appWindowService,
         RpcStartupPortWarningState startupPortWarningState,
-        StartupPortChangedDialogViewModelFactory startupPortChangedDialogFactory)
+        StartupPortChangedDialogViewModelFactory startupPortChangedDialogFactory,
+        HomeStatusBarViewModel statusBar)
     {
         _navigationService = navigationService;
         _dialogService = dialogService;
@@ -51,6 +54,7 @@ public partial class HomePageViewModel : PageViewModelBase
         _appWindowService = appWindowService;
         _startupPortWarningState = startupPortWarningState;
         _startupPortChangedDialogFactory = startupPortChangedDialogFactory;
+        StatusBar = statusBar;
 
         PropertyChanged += (_, args) =>
         {
