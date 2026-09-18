@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Bring the main window of the running instance to the foreground when a desktop notification is clicked. [`#520`](https://github.com/project-vrcz/content-publisher/pull/520)
 - Add a option to allow send task completed successfully notification. [`#517`](https://github.com/project-vrcz/content-publisher/pull/517)
+- Allow manually refresh session state from accounts settings page and home page account tab. [`#521`](https://github.com/project-vrcz/content-publisher/issues/521) [`#522`](https://github.com/project-vrcz/content-publisher/pull/522)
 
 ### Fixed
 
