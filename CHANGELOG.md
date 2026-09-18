@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Show detail error information returned by AWS S3 when file upload failed. [`#518`](https://github.com/project-vrcz/content-publisher/pull/518)
 
+### Fixed
+
+- Multipart upload won't abort when a single chunk upload failed. [`#518`](https://github.com/project-vrcz/content-publisher/pull/518)
+
 ## [2.11.0] - 2026-09-09
 
 ### Changed
