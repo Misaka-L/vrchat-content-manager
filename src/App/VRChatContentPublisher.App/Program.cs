@@ -24,6 +24,7 @@ using VRChatContentPublisher.TelemetryCore.Masking.Serilog;
 
 #if WINDOWS
 using VRChatContentPublisher.Platform.Windows.Extensions;
+using VRChatContentPublisher.Platform.Windows.Services;
 #else
 using VRChatContentPublisher.Platform.Noop.Extensions;
 #endif
@@ -158,8 +159,13 @@ internal sealed class Program
         }
         catch (MutexOwnedByAnotherInstanceException)
         {
-            Log.Information("Another instance is already running. Exiting this instance.");
             Environment.ExitCode = -1;
+
+            if (IsNotificationClickLaunch(out _))
+                Log.Information(
+                    "Launched by a desktop notification click. Activating the window of the running instance.");
+            else
+                Log.Information("Another instance is already running. Exiting this instance.");
 
             try
             {
@@ -197,6 +203,27 @@ internal sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace();
+
+    /// <summary>
+    /// Whether the current process was launched by clicking a desktop notification. Desktop
+    /// notification click activates <see cref="AppProtocolConst.NotificationActivateUri"/> through
+    /// the protocol handler registered by the installer.
+    /// </summary>
+    private static bool IsNotificationClickLaunch(out string? activationUri)
+    {
+        activationUri = null;
+
+#if WINDOWS
+        activationUri = WindowsDesktopNotificationService.TryGetNotificationActivationUri(
+            Environment.GetCommandLineArgs(),
+            AppProtocolConst.NotificationActivateUri,
+            WindowsDesktopNotificationService.ToastActivatedLaunchArgumentPrefix);
+
+        return activationUri is not null;
+#else
+        return false;
+#endif
+    }
 
     private static void TryLaunchCrashHandler(object ex)
     {

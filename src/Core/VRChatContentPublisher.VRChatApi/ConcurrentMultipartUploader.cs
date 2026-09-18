@@ -1,9 +1,11 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using Microsoft.Extensions.Logging;
 using Polly;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.VRChatApi.ApiClient;
+using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
 using VRChatContentPublisher.VRChatApi.Telemetry;
 
@@ -49,8 +51,11 @@ public sealed class ConcurrentMultipartUploader(
                 {
                     logger.LogWarning(
                         args.Outcome.Exception,
-                        "S3 upload retry {Attempt}/{MaxAttempts} for chunk {PartNumber}",
-                        args.AttemptNumber, maxRetryAttempts, partNumber);
+                        "S3 upload retry {Attempt}/{MaxAttempts} for chunk {PartNumber}, reason: {Reason}",
+                        args.AttemptNumber, maxRetryAttempts, partNumber,
+                        args.Outcome.Exception?.Message ??
+                        args.Outcome.Result?.StatusCode.ToString() ??
+                        "unknown");
                     return default;
                 }
             })
@@ -87,14 +92,30 @@ public sealed class ConcurrentMultipartUploader(
             var uploadTasks = new List<Task>();
             var partNumber = 0;
 
+            // Linked token source used to abort every in-flight chunk upload as soon as one chunk failed for good,
+            // so a failed upload does not keep pushing the rest of the file to S3.
+            using var uploadCancellationTokenSource =
+                CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            var uploadCancellationToken = uploadCancellationTokenSource.Token;
+
+            // The first chunk failure. Once it has been set no further chunk upload is started.
+            Exception? chunkFailure = null;
+
             try
             {
-                while (fileStream.Position < fileStream.Length)
+                while (fileStream.Position < fileStream.Length && chunkFailure is null)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     // Wait for a free slot to begin the next upload.
                     await concurrencySemaphore.WaitAsync(cancellationToken);
+
+                    if (chunkFailure is not null)
+                    {
+                        // A chunk failed while waiting for a free slot, abort without starting another chunk.
+                        concurrencySemaphore.Release();
+                        break;
+                    }
 
                     partNumber++;
                     var currentPartNumber = partNumber;
@@ -104,11 +125,29 @@ public sealed class ConcurrentMultipartUploader(
                     var bytesRead = await fileStream.ReadAsync(buffer, cancellationToken);
 
                     // Start the upload task for the current chunk.
+                    // The upload cancellation token (instead of the caller token) is passed to the chunk upload, so
+                    // that a failure of any chunk aborts the remaining in-flight chunks too.
+                    // The token is deliberately not passed to Task.Run: the semaphore slot is released inside the
+                    // task, so the task body has to run even when the upload has already been aborted.
                     var uploadTask = Task.Run(async () =>
                     {
                         try
                         {
-                            await UploadChunkAsync(currentPartNumber, buffer, bytesRead, cancellationToken);
+                            await UploadChunkAsync(currentPartNumber, buffer, bytesRead, uploadCancellationToken);
+                        }
+                        catch (OperationCanceledException) when (uploadCancellationToken.IsCancellationRequested)
+                        {
+                            // Aborted because another chunk failed (or because the caller canceled the upload).
+                            // Not a failure of this chunk, so it is not remembered as the abort reason.
+                            throw;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Remember the first failure and abort all remaining chunk uploads.
+                            Interlocked.CompareExchange(ref chunkFailure, ex, null);
+                            // ReSharper disable once AccessToDisposedClosure
+                            uploadCancellationTokenSource.Cancel();
+                            throw;
                         }
                         finally
                         {
@@ -116,12 +155,13 @@ public sealed class ConcurrentMultipartUploader(
                             // ReSharper disable once AccessToDisposedClosure
                             concurrencySemaphore.Release();
                         }
-                    }, cancellationToken);
+                    });
 
                     uploadTasks.Add(uploadTask);
                 }
 
-                // Wait for all initiated upload tasks to complete.
+                // Wait for all initiated upload tasks to complete. When a chunk failed, the remaining in-flight
+                // chunks have been aborted and their tasks complete as canceled.
                 await Task.WhenAll(uploadTasks);
             }
             catch (OperationCanceledException ex) when (cancellationToken.IsCancellationRequested)
@@ -132,6 +172,16 @@ public sealed class ConcurrentMultipartUploader(
             }
             catch (Exception ex)
             {
+                // When a chunk failed, the remaining chunks were aborted and the cancellation caused by that abort
+                // is not the reason of the failed upload, so surface the original chunk failure instead.
+                if (chunkFailure is { } failure && !ReferenceEquals(failure, ex))
+                {
+                    logger.LogError(failure,
+                        "Aborting upload of file {FileId} version {FileVersion} because a chunk upload failed",
+                        fileId, fileVersion);
+                    ExceptionDispatchInfo.Capture(failure).Throw();
+                }
+
                 logger.LogError(ex, "An error occurred during the upload of file {FileId} version {FileVersion}",
                     fileId,
                     fileVersion);
@@ -179,7 +229,7 @@ public sealed class ConcurrentMultipartUploader(
                 // 2. Upload the data to S3 with retry. On each retry attempt we reset in-flight progress
                 //    for this chunk so the progress bar never double-counts bytes from a failed attempt.
                 var retryPipeline = CreateRetryPipeline(partNumber);
-                await retryPipeline.ExecuteAsync(async innerCt =>
+                var finalResponse = await retryPipeline.ExecuteAsync(async innerCt =>
                 {
                     using var attemptActivity = VRChatApiCoreActivitySources.VRChatApi.StartActivity("UploadChunkAttempt");
 
@@ -193,7 +243,16 @@ public sealed class ConcurrentMultipartUploader(
                             bytes => OnChunkProgress(partNumber, bytes));
 
                         var response = await awsClient.PutAsync(uploadUrl, progressStream, innerCt);
-                        response.EnsureSuccessStatusCode();
+
+                        // Do not throw on a failed status code here: returning the response lets the retry pipeline
+                        // decide whether the failure is transient. The final response is turned into a
+                        // S3ErrorException with the parsed error response below.
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            attemptActivity?.SetStatus(ActivityStatusCode.Error,
+                                $"S3 returned status code {(int)response.StatusCode} ({response.ReasonPhrase}).");
+                            return response;
+                        }
 
                         // 3. Extract the ETag from the response headers. Required by S3 to complete the multipart upload.
                         var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
@@ -212,6 +271,11 @@ public sealed class ConcurrentMultipartUploader(
                         throw;
                     }
                 }, ct);
+
+                // S3 rejected the chunk with an HTTP error response after all retry attempts, surface the error
+                // details it returned.
+                if (!finalResponse.IsSuccessStatusCode)
+                    throw await S3ErrorException.FromResponseAsync(finalResponse, ct);
 
                 // Mark chunk as fully completed — move bytes from in-flight to completed.
                 Interlocked.Add(ref _completedChunkBytes, bytesRead);

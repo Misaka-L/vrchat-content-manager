@@ -640,6 +640,9 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     <data name="Notifications_Settings_Test_Notification_Body" xml:space="preserve">
         <value>这是一条测试通知</value>
     </data>
+    <data name="Notifications_Action_Open_App" xml:space="preserve">
+        <value>打开应用</value>
+    </data>
     <data name="Notifications_Public_IP_Changed_Title" xml:space="preserve">
         <value>公网 IP 变更</value>
     </data>

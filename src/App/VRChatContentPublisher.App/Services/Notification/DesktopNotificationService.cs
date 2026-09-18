@@ -4,6 +4,7 @@ using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.ViewModels.InAppNotifications;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.IpcCore.Models;
 using VRChatContentPublisher.Platform.Abstraction.Services;
 
 namespace VRChatContentPublisher.App.Services.Notification;
@@ -26,7 +27,7 @@ public sealed class DesktopNotificationService(
 
         try
         {
-            await desktopNotificationService.InitializeAsync();
+            await desktopNotificationService.InitializeAsync(AppProtocolConst.NotificationActivateUri);
             IsInitialized = true;
         }
         catch (Exception ex)
@@ -56,7 +57,9 @@ public sealed class DesktopNotificationService(
 
         var localizedTitle = I18NExtension.Translate(title) ?? title;
         var localizedMessage = message is not null ? I18NExtension.Translate(message, message) : message;
+        var localizedActionButtonText = I18NExtension.Translate(LangKeys.Notifications_Action_Open_App);
 
-        await desktopNotificationService.SendDesktopNotificationAsync(localizedTitle, localizedMessage);
+        await desktopNotificationService.SendDesktopNotificationAsync(localizedTitle, localizedMessage,
+            localizedActionButtonText);
     }
 }

@@ -6,12 +6,13 @@ public sealed class NoopDesktopNotificationService : IDesktopNotificationService
 {
     public bool IsSupported => false;
 
-    public ValueTask SendDesktopNotificationAsync(string title, string? message = null)
+    public ValueTask SendDesktopNotificationAsync(string title, string? message = null,
+        string? actionButtonText = null)
     {
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask InitializeAsync()
+    public ValueTask InitializeAsync(string notificationActivationUri)
     {
         return ValueTask.CompletedTask;
     }
