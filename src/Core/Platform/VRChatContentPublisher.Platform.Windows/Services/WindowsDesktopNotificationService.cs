@@ -1,4 +1,3 @@
-using System.Runtime.Versioning;
 using Windows.UI.Notifications;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Win32;
@@ -7,7 +6,6 @@ using VRChatContentPublisher.Platform.Windows.Interop;
 
 namespace VRChatContentPublisher.Platform.Windows.Services;
 
-[SupportedOSPlatform("windows")]
 public class WindowsDesktopNotificationService : IDesktopNotificationService
 {
     /// <summary>
