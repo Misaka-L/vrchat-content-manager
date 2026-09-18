@@ -6,9 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Fixed
+### Added
 
-- Clicking a desktop notification did nothing even if the app was running. The main window of the running instance is brought to the foreground now.
+- Bring the main window of the running instance to the foreground when a desktop notification is clicked. [`#520`](https://github.com/project-vrcz/content-publisher/pull/520)
 
 ## [2.11.0] - 2026-09-09
 
