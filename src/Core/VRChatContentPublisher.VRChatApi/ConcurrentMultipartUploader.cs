@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using VRChatContentPublisher.Core.Resilience;
 using VRChatContentPublisher.VRChatApi.ApiClient;
+using VRChatContentPublisher.VRChatApi.Exceptions;
 using VRChatContentPublisher.VRChatApi.Models.Rest.Files;
 using VRChatContentPublisher.VRChatApi.Telemetry;
 
@@ -49,8 +50,11 @@ public sealed class ConcurrentMultipartUploader(
                 {
                     logger.LogWarning(
                         args.Outcome.Exception,
-                        "S3 upload retry {Attempt}/{MaxAttempts} for chunk {PartNumber}",
-                        args.AttemptNumber, maxRetryAttempts, partNumber);
+                        "S3 upload retry {Attempt}/{MaxAttempts} for chunk {PartNumber}, reason: {Reason}",
+                        args.AttemptNumber, maxRetryAttempts, partNumber,
+                        args.Outcome.Exception?.Message ??
+                        args.Outcome.Result?.StatusCode.ToString() ??
+                        "unknown");
                     return default;
                 }
             })
@@ -179,7 +183,7 @@ public sealed class ConcurrentMultipartUploader(
                 // 2. Upload the data to S3 with retry. On each retry attempt we reset in-flight progress
                 //    for this chunk so the progress bar never double-counts bytes from a failed attempt.
                 var retryPipeline = CreateRetryPipeline(partNumber);
-                await retryPipeline.ExecuteAsync(async innerCt =>
+                var finalResponse = await retryPipeline.ExecuteAsync(async innerCt =>
                 {
                     using var attemptActivity = VRChatApiCoreActivitySources.VRChatApi.StartActivity("UploadChunkAttempt");
 
@@ -193,7 +197,16 @@ public sealed class ConcurrentMultipartUploader(
                             bytes => OnChunkProgress(partNumber, bytes));
 
                         var response = await awsClient.PutAsync(uploadUrl, progressStream, innerCt);
-                        response.EnsureSuccessStatusCode();
+
+                        // Do not throw on a failed status code here: returning the response lets the retry pipeline
+                        // decide whether the failure is transient. The final response is turned into a
+                        // S3ErrorException with the parsed error response below.
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            attemptActivity?.SetStatus(ActivityStatusCode.Error,
+                                $"S3 returned status code {(int)response.StatusCode} ({response.ReasonPhrase}).");
+                            return response;
+                        }
 
                         // 3. Extract the ETag from the response headers. Required by S3 to complete the multipart upload.
                         var eTag = response.Headers.ETag?.Tag.Trim('\"', '\'');
@@ -212,6 +225,11 @@ public sealed class ConcurrentMultipartUploader(
                         throw;
                     }
                 }, ct);
+
+                // S3 rejected the chunk with an HTTP error response after all retry attempts, surface the error
+                // details it returned.
+                if (!finalResponse.IsSuccessStatusCode)
+                    throw await S3ErrorException.FromResponseAsync(finalResponse, ct);
 
                 // Mark chunk as fully completed — move bytes from in-flight to completed.
                 Interlocked.Add(ref _completedChunkBytes, bytesRead);

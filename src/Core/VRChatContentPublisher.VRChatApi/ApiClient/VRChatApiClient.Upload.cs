@@ -304,7 +304,10 @@ public partial class VRChatApiClient
 
         using var awsClient = GetSimpleUploadClient();
         var response = await awsClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
+
+        // S3 rejected the upload with an HTTP error response, surface the error details it returned.
+        if (!response.IsSuccessStatusCode)
+            throw await S3ErrorException.FromResponseAsync(response, cancellationToken);
 
         if (response.Headers.ETag is null)
             throw new UnexpectedApiBehaviourException("Api did not return an ETag header.");
