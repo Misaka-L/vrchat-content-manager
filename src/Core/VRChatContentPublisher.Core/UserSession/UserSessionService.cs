@@ -95,6 +95,30 @@ public sealed class UserSessionService : IAsyncDisposable, IDisposable
         await _apiClient.LogoutAsync();
     }
 
+    /// <summary>
+    /// Checks whether the current session is still valid by requesting the current user from the VRChat API
+    /// (<c>/auth/user</c>). The session state (including whether it becomes invalid) is handled by this service
+    /// based on the response, so no explicit result handling is required by the caller.
+    /// </summary>
+    /// <returns><see langword="true"/> if the session is still valid, otherwise <see langword="false"/>.</returns>
+    public async ValueTask<bool> RefreshSessionStateAsync()
+    {
+        try
+        {
+            await GetCurrentUserAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(
+                ex,
+                "Failed to refresh session state for {UserNameOrEmail}, the session state was updated based on the response",
+                UserNameOrEmail);
+            return false;
+        }
+
+        return true;
+    }
+
     public async ValueTask<bool> TryRepairAsync()
     {
         try

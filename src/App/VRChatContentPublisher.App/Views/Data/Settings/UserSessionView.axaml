@@ -36,6 +36,10 @@
             <TextBlock Text="{Binding DisplayName}" />
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Button Command="{Binding RefreshSessionStateCommand}"
+                    Theme="{StaticResource MaterialFlatButton}"
+                    Content="{avalonia:MaterialIconExt Kind=Refresh, Size=24}" Width="32" Height="32"
+                    ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Account_Item_Refresh_Session_State_Button_Tooltip}}" />
             <Button Command="{Binding SetAsDefaultCommand}"
                     Theme="{StaticResource MaterialFlatButton}"
                     IsEnabled="{Binding CanSetDefault}"

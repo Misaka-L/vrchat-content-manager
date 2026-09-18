@@ -29,6 +29,13 @@ public sealed partial class UserSessionViewModel(
     [NotifyPropertyChangedFor(nameof(RemoveButtonTooltip))]
     public partial bool CanRemove { get; private set; }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanRefreshSessionState))]
+    [NotifyCanExecuteChangedFor(nameof(RefreshSessionStateCommand))]
+    public partial bool IsRefreshingSessionState { get; private set; }
+
+    public bool CanRefreshSessionState => !IsRefreshingSessionState;
+
     public string RemoveButtonTooltip => CanRemove
         ? LangKeys.Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip
         : LangKeys
@@ -94,6 +101,21 @@ public sealed partial class UserSessionViewModel(
     private async Task Remove()
     {
         await userSessionManagerService.RemoveSessionAsync(userSessionService);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanRefreshSessionState))]
+    private async Task RefreshSessionState()
+    {
+        IsRefreshingSessionState = true;
+
+        try
+        {
+            await userSessionService.RefreshSessionStateAsync();
+        }
+        finally
+        {
+            IsRefreshingSessionState = false;
+        }
     }
 
     [RelayCommand]

@@ -37,6 +37,28 @@ public sealed partial class PublishTaskManagerContainerViewModel(
 
     [ObservableProperty] public partial IPublishTaskManagerViewModel PublishTaskManager { get; private set; }
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CanRefreshSessionState))]
+    [NotifyCanExecuteChangedFor(nameof(RefreshSessionStateCommand))]
+    public partial bool IsRefreshingSessionState { get; private set; }
+
+    public bool CanRefreshSessionState => !IsRefreshingSessionState;
+
+    [RelayCommand(CanExecute = nameof(CanRefreshSessionState))]
+    private async Task RefreshSessionState()
+    {
+        IsRefreshingSessionState = true;
+
+        try
+        {
+            await userSessionService.RefreshSessionStateAsync();
+        }
+        finally
+        {
+            IsRefreshingSessionState = false;
+        }
+    }
+
     [RelayCommand]
     private async Task Load()
     {

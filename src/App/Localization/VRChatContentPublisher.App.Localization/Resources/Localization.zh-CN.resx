@@ -120,6 +120,9 @@
     <data name="Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip" xml:space="preserve">
         <value>修复该账号</value>
     </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Refresh_Session_State_Button_Tooltip" xml:space="preserve">
+        <value>刷新会话状态（检查该会话是否仍然有效）</value>
+    </data>
     <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
         <value>移除该账号</value>
     </data>
@@ -489,6 +492,9 @@
     </data>
     <data name="Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip" xml:space="preserve">
         <value>添加新的账号</value>
+    </data>
+    <data name="Pages_Tasks_Tabs_Refresh_Session_State_Button_Tooltip" xml:space="preserve">
+        <value>刷新当前选中账号的会话状态（检查会话是否仍然有效）</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Initialize_Error_Title" xml:space="preserve">
         <value>无法初始化该账号</value>

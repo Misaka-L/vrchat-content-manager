@@ -28,7 +28,7 @@
             <Grid RowDefinitions="Auto,*"
                   IsVisible="{Binding TaskManagers.Count}">
                 <controls1:ColorZone>
-                    <Grid ColumnDefinitions="*,Auto">
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto">
                             <Interaction.Behaviors>
                                 <HorizontalScrollViewerBehavior RequireShiftKey="False" ScrollChangeSize="Line" />
@@ -66,6 +66,14 @@
                             </ListBox>
                         </ScrollViewer>
                         <Button Grid.Column="1"
+                                Name="RefreshSessionStateButton"
+                                Theme="{StaticResource MaterialFlatButton}"
+                                Command="{Binding SelectedTaskManagerContainerViewModel.RefreshSessionStateCommand}"
+                                IsEnabled="{Binding SelectedTaskManagerContainerViewModel, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                Content="{avalonia:MaterialIconExt Kind=Refresh, Size=24}"
+                                Width="{Binding #AddAccountButton.Bounds.Height}"
+                                ToolTip.Tip="{I18N {x:Static localization:LangKeys.Pages_Tasks_Tabs_Refresh_Session_State_Button_Tooltip}}" />
+                        <Button Grid.Column="2"
                                 Name="AddAccountButton"
                                 Theme="{StaticResource MaterialFlatButton}"
                                 Command="{Binding LoginCommand}"
