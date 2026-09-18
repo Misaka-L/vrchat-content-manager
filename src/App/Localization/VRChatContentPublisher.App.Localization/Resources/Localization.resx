@@ -196,6 +196,9 @@
     <data name="Pages_Settings_Connect_Server_Port_Reset_To_Default_Button_Text" xml:space="preserve">
         <value>Reset Port to Default</value>
     </data>
+    <data name="Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text" xml:space="preserve">
+        <value>Client Pairing Guide</value>
+    </data>
     <data name="Pages_Settings_Connect_Apply_Error_Empty_Server_Name" xml:space="preserve">
         <value>Server name are require.</value>
     </data>

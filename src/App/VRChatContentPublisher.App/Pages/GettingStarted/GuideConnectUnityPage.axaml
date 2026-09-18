@@ -25,6 +25,17 @@
                 <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
             </Border.Background>
             <StackPanel Margin="18">
+                <Button
+                    Command="{Binding BackCommand}"
+                    IsVisible="{Binding CanGoBack}"
+                    Padding="0" Margin="0,0,0,5" Foreground="White"
+                    Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="ArrowLeft" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Navigation_Go_Back_Button_Text}}" />
+                    </StackPanel>
+                </Button>
                 <TextBlock
                     Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Connect_Unity_To_App_Headline1_Light}}"
                     FontSize="16" Foreground="White" Opacity="0.7" />

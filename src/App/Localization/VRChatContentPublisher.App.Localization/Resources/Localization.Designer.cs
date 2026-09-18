@@ -1661,6 +1661,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Client Pairing Guide.
+        /// </summary>
+        internal static string Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Server Name.
         /// </summary>
         internal static string Pages_Settings_Connect_Server_Name_Field_Label {

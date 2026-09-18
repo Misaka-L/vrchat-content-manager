@@ -77,5 +77,9 @@
                     Command="{Binding ResetToDefaultPortCommand}"
                     Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
         </Grid>
+
+        <Button Content="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Open_Client_Pairing_Guide_Button_Text}}"
+                Command="{Binding OpenClientPairingGuideCommand}"
+                Theme="{StaticResource MaterialOutlineButton}" Classes="light" />
     </StackPanel>
 </UserControl>
