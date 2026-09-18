@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Clicking a desktop notification did nothing even if the app was running. The main window of the running instance is brought to the foreground now.
+
 ## [2.11.0] - 2026-09-09
 
 ### Changed

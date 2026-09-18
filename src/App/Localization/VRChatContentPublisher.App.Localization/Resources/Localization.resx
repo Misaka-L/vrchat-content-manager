@@ -645,6 +645,9 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Notifications_Settings_Test_Notification_Body" xml:space="preserve">
         <value>This is a test notification</value>
     </data>
+    <data name="Notifications_Action_Open_App" xml:space="preserve">
+        <value>Open App</value>
+    </data>
     <data name="Notifications_Public_IP_Changed_Title" xml:space="preserve">
         <value>Public IP Changed</value>
     </data>
