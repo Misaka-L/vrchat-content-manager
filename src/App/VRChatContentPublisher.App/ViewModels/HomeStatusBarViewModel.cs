@@ -1,121 +1,181 @@
-using System.Collections.Specialized;
-using System.ComponentModel;
-using VRChatContentPublisher.App.ViewModels.Data.PublishTasks;
-using VRChatContentPublisher.App.ViewModels.Pages.HomeTab;
+using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Models;
+using VRChatContentPublisher.Core.ContentPublishing.PublishTask.Services;
 using VRChatContentPublisher.Core.Settings;
 using VRChatContentPublisher.Core.Settings.Models;
+using VRChatContentPublisher.Core.UserSession;
 
 namespace VRChatContentPublisher.App.ViewModels;
 
 /// <summary>
-/// Bottom status bar of the home page. Aggregates the task counts of every account task manager
-/// and exposes the RPC server port.
+/// Bottom status bar of the home page. Aggregates the publish task counts of every account
+/// directly from the core task managers, so it does not depend on any page or view model.
 /// </summary>
-public sealed class HomeStatusBarViewModel : ViewModelBase
+public sealed partial class HomeStatusBarViewModel(
+    UserSessionManagerService userSessionManagerService,
+    IWritableOptions<AppSettings> appSettings,
+    ILogger<HomeStatusBarViewModel> logger) : ViewModelBase
 {
-    private readonly HomeTasksPageViewModel _homeTasksPageViewModel;
-    private readonly IWritableOptions<AppSettings> _appSettings;
-
     /// <summary>
-    /// Containers currently subscribed to, mapped to the task manager instance currently exposed by
-    /// them. Containers without a valid task manager (e.g. an invalid session) are not tracked and
-    /// contribute nothing to the aggregated counts.
+    /// Subscribed task managers, keyed by the manager so task events can be routed back to the
+    /// owning subscription. The status of every known task is tracked separately, because the core
+    /// task dictionary is live and must not be enumerated from the UI thread.
     /// </summary>
-    private readonly Dictionary<PublishTaskManagerContainerViewModel, PublishTaskManagerViewModel>
-        _managerSubscriptions = [];
+    private readonly Dictionary<TaskManagerService, TaskManagerSubscription> _subscriptions = [];
 
-    public HomeStatusBarViewModel(
-        HomeTasksPageViewModel homeTasksPageViewModel,
-        IWritableOptions<AppSettings> appSettings)
+    private bool _loaded;
+
+    public string RpcServerPortText => appSettings.Value.RpcServerPort.ToString();
+
+    public int InProgressTaskCount => Aggregate(status =>
+        status is ContentPublishTaskStatus.InProgress or ContentPublishTaskStatus.Pending);
+
+    public int CompletedTaskCount => Aggregate(status => status is ContentPublishTaskStatus.Completed);
+    public int FailedTaskCount => Aggregate(status => status is ContentPublishTaskStatus.Failed);
+    public int CanceledTaskCount => Aggregate(status => status is ContentPublishTaskStatus.Canceled);
+
+    [RelayCommand]
+    private async Task Load()
     {
-        _homeTasksPageViewModel = homeTasksPageViewModel;
-        _appSettings = appSettings;
+        if (_loaded)
+            return;
 
-        _homeTasksPageViewModel.TaskManagers.CollectionChanged += OnTaskManagersCollectionChanged;
+        _loaded = true;
 
-        foreach (var container in _homeTasksPageViewModel.TaskManagers)
-            Subscribe(container);
+        userSessionManagerService.SessionCreated += OnSessionCreated;
+        userSessionManagerService.SessionRemoved += OnSessionRemoved;
+
+        // Read the current state so the bar is correct as soon as it is shown, then keep it up to
+        // date through the subscriptions below. Attaching is idempotent, so a session created while
+        // the state is being read is still handled by OnSessionCreated.
+        foreach (var session in userSessionManagerService.Sessions.ToArray())
+            await AttachSessionAsync(session);
+
+        NotifyTaskCountsChanged();
     }
 
-    public string RpcServerPortText => _appSettings.Value.RpcServerPort.ToString();
-
-    public int InProgressTaskCount => Aggregate(manager => manager.InProgressTaskCount);
-    public int CompletedTaskCount => Aggregate(manager => manager.CompletedTaskCount);
-    public int FailedTaskCount => Aggregate(manager => manager.FailedTaskCount);
-    public int CanceledTaskCount => Aggregate(manager => manager.CanceledTaskCount);
-
-    private int Aggregate(Func<PublishTaskManagerViewModel, int> selector) =>
-        _managerSubscriptions.Values.Sum(selector);
-
-    private void OnTaskManagersCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    [RelayCommand]
+    private void Unload()
     {
-        if (e.OldItems is not null)
+        if (!_loaded)
+            return;
+
+        _loaded = false;
+
+        userSessionManagerService.SessionCreated -= OnSessionCreated;
+        userSessionManagerService.SessionRemoved -= OnSessionRemoved;
+
+        foreach (var subscription in _subscriptions.Values.ToArray())
+            Detach(subscription);
+
+        _subscriptions.Clear();
+    }
+
+    private int Aggregate(Func<ContentPublishTaskStatus, bool> predicate) =>
+        _subscriptions.Values.Sum(subscription => subscription.TaskStatuses.Values.Count(predicate));
+
+    private async ValueTask AttachSessionAsync(UserSessionService session)
+    {
+        if (_subscriptions.Values.Any(subscription => subscription.UserSessionService == session))
+            return;
+
+        TaskManagerService taskManagerService;
+        try
         {
-            foreach (var item in e.OldItems)
-            {
-                if (item is PublishTaskManagerContainerViewModel container)
-                    Unsubscribe(container);
-            }
+            var scope = await session.CreateOrGetSessionScopeAsync();
+            taskManagerService = scope.ServiceProvider.GetRequiredService<TaskManagerService>();
+        }
+        catch (Exception ex)
+        {
+            // Sessions without a usable scope have no tasks to aggregate (e.g. invalid sessions).
+            logger.LogWarning(ex,
+                "Failed to resolve task manager of session {UserNameOrEmail} for the home status bar",
+                session.UserNameOrEmail);
+            return;
         }
 
-        if (e.NewItems is not null)
+        // The status bar may have been unloaded while the scope was being resolved.
+        if (!_loaded)
+            return;
+
+        var subscription = new TaskManagerSubscription(session, taskManagerService);
+
+        // Read the latest status of every task before subscribing to further changes.
+        foreach (var task in taskManagerService.Tasks.Values)
+            subscription.TaskStatuses[task.TaskId] = task.Status;
+
+        if (!_subscriptions.TryAdd(taskManagerService, subscription))
+            return;
+
+        taskManagerService.TaskCreated += OnTaskCreated;
+        taskManagerService.TaskRemoved += OnTaskRemoved;
+        taskManagerService.TaskUpdated += OnTaskUpdated;
+    }
+
+    private void Detach(TaskManagerSubscription subscription)
+    {
+        if (!_subscriptions.Remove(subscription.TaskManagerService))
+            return;
+
+        subscription.TaskManagerService.TaskCreated -= OnTaskCreated;
+        subscription.TaskManagerService.TaskRemoved -= OnTaskRemoved;
+        subscription.TaskManagerService.TaskUpdated -= OnTaskUpdated;
+    }
+
+    private void OnSessionCreated(object? sender, UserSessionService session)
+    {
+        Dispatcher.UIThread.Post(() => _ = AttachSessionAsync(session));
+    }
+
+    private void OnSessionRemoved(object? sender, UserSessionService session)
+    {
+        Dispatcher.UIThread.Post(() =>
         {
-            foreach (var item in e.NewItems)
-            {
-                if (item is PublishTaskManagerContainerViewModel container)
-                    Subscribe(container);
-            }
-        }
+            var subscription = _subscriptions.Values
+                .FirstOrDefault(subscription => subscription.UserSessionService == session);
+            if (subscription is null)
+                return;
 
-        NotifyTaskCountsChanged();
+            Detach(subscription);
+            NotifyTaskCountsChanged();
+        });
     }
 
-    private void Subscribe(PublishTaskManagerContainerViewModel container)
+    private void OnTaskCreated(object? sender, ContentPublishTaskCreatedEventArg e)
     {
-        container.PropertyChanged += OnContainerPropertyChanged;
-        AddManagerSubscription(container);
+        PostTaskStatus(sender, e.Task.TaskId, e.Task.Status);
     }
 
-    private void Unsubscribe(PublishTaskManagerContainerViewModel container)
+    private void OnTaskRemoved(object? sender, ContentPublishTaskRemovedEventArg e)
     {
-        container.PropertyChanged -= OnContainerPropertyChanged;
-        RemoveManagerSubscription(container);
+        PostTaskStatus(sender, e.Task.TaskId, null);
     }
 
-    private void OnContainerPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private void OnTaskUpdated(object? sender, ContentPublishTaskUpdateEventArg e)
     {
-        if (e.PropertyName != nameof(PublishTaskManagerContainerViewModel.PublishTaskManager))
+        PostTaskStatus(sender, e.Task.TaskId, e.Task.Status);
+    }
+
+    private void PostTaskStatus(object? sender, string taskId, ContentPublishTaskStatus? status)
+    {
+        if (sender is not TaskManagerService taskManagerService)
             return;
 
-        if (sender is not PublishTaskManagerContainerViewModel container)
-            return;
+        Dispatcher.UIThread.Post(() =>
+        {
+            if (!_subscriptions.TryGetValue(taskManagerService, out var subscription))
+                return;
 
-        AddManagerSubscription(container);
-        NotifyTaskCountsChanged();
-    }
+            if (status is { } currentStatus)
+                subscription.TaskStatuses[taskId] = currentStatus;
+            else
+                subscription.TaskStatuses.Remove(taskId);
 
-    private void AddManagerSubscription(PublishTaskManagerContainerViewModel container)
-    {
-        RemoveManagerSubscription(container);
-
-        if (container.PublishTaskManager is not PublishTaskManagerViewModel manager)
-            return;
-
-        manager.PropertyChanged += OnManagerPropertyChanged;
-        _managerSubscriptions[container] = manager;
-    }
-
-    private void RemoveManagerSubscription(PublishTaskManagerContainerViewModel container)
-    {
-        if (!_managerSubscriptions.Remove(container, out var manager))
-            return;
-
-        manager.PropertyChanged -= OnManagerPropertyChanged;
-    }
-
-    private void OnManagerPropertyChanged(object? sender, PropertyChangedEventArgs e)
-    {
-        NotifyTaskCountsChanged();
+            NotifyTaskCountsChanged();
+        });
     }
 
     private void NotifyTaskCountsChanged()
@@ -124,5 +184,15 @@ public sealed class HomeStatusBarViewModel : ViewModelBase
         OnPropertyChanged(nameof(CompletedTaskCount));
         OnPropertyChanged(nameof(FailedTaskCount));
         OnPropertyChanged(nameof(CanceledTaskCount));
+    }
+
+    private sealed class TaskManagerSubscription(
+        UserSessionService userSessionService,
+        TaskManagerService taskManagerService)
+    {
+        public UserSessionService UserSessionService { get; } = userSessionService;
+        public TaskManagerService TaskManagerService { get; } = taskManagerService;
+
+        public Dictionary<string, ContentPublishTaskStatus> TaskStatuses { get; } = [];
     }
 }

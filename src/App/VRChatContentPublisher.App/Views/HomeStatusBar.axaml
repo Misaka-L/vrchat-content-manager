@@ -9,6 +9,15 @@
              x:DataType="viewModels:HomeStatusBarViewModel"
              x:Class="VRChatContentPublisher.App.Views.HomeStatusBar">
 
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+        <DetachedFromVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding UnloadCommand}" />
+        </DetachedFromVisualTreeTrigger>
+    </Interaction.Behaviors>
+
     <Border Background="{DynamicResource MaterialDesignPaper}"
             BorderBrush="{DynamicResource MaterialDesignDivider}"
             BorderThickness="0,1,0,0">
