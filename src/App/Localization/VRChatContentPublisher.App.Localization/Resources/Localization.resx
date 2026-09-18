@@ -126,6 +126,9 @@
     <data name="Pages_Settings_Accounts_Account_Item_Repair_Button_Tooltip" xml:space="preserve">
         <value>Repair this account</value>
     </data>
+    <data name="Pages_Settings_Accounts_Account_Item_Refresh_Session_State_Button_Tooltip" xml:space="preserve">
+        <value>Refresh session state (check whether this session is still valid)</value>
+    </data>
     <data name="Pages_Settings_Accounts_Account_Item_Remove_Button_Tooltip" xml:space="preserve">
         <value>Remove this account</value>
     </data>
@@ -497,6 +500,9 @@ Tip: If you switch back to your last public IP, you can click Repair Account but
     </data>
     <data name="Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip" xml:space="preserve">
         <value>Add New Account</value>
+    </data>
+    <data name="Pages_Tasks_Tabs_Refresh_Session_State_Button_Tooltip" xml:space="preserve">
+        <value>Refresh session state of the selected account (check whether the session is still valid)</value>
     </data>
     <data name="Pages_Tasks_Account_Tab_Initialize_Error_Title" xml:space="preserve">
         <value>Failed to initialize this account</value>

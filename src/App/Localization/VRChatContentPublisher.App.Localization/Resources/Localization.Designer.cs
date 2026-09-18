@@ -1444,6 +1444,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh session state (check whether this session is still valid).
+        /// </summary>
+        internal static string Pages_Settings_Accounts_Account_Item_Refresh_Session_State_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Settings_Accounts_Account_Item_Refresh_Session_State_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cannot remove a session with existing tasks..
         /// </summary>
         internal static string Pages_Settings_Accounts_Account_Item_Remove_Button_Cannot_Remove_Account_With_Existing_Tasks_Tooltip {
@@ -2423,6 +2432,15 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         internal static string Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip {
             get {
                 return ResourceManager.GetString("Pages_Tasks_Tabs_Add_New_Account_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh session state of the selected account (check whether the session is still valid).
+        /// </summary>
+        internal static string Pages_Tasks_Tabs_Refresh_Session_State_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Pages_Tasks_Tabs_Refresh_Session_State_Button_Tooltip", resourceCulture);
             }
         }
         
