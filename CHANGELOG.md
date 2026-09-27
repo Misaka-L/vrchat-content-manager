@@ -19,7 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Allow copying the RPC server port from the tray menu and from RPC server settings. [`#523`](https://github.com/project-vrcz/content-publisher/pull/523)
 - Add a status bar at the bottom of the home page showing the aggregated task counts of all accounts and the RPC server port with a copy button. [`#523`](https://github.com/project-vrcz/content-publisher/pull/523)
 - Show a reminder dialog when onboarding cannot launch the package manager with `vcc://` protocol. [`#526`](https://github.com/project-vrcz/content-publisher/pull/526)
-- Add a final onboarding page telling users to publish from the VRChat SDK Build and Upload button.
+- Add a final onboarding page telling users to publish from the VRChat SDK Build and Upload button. [`#528`](https://github.com/project-vrcz/content-publisher/pull/528)
 
 ### Fixed
 
