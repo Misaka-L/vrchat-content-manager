@@ -649,6 +649,19 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
         <value>我知道了</value>
     </data>
+    <data name="Dialog_Package_Manager_Unavailable_Title" xml:space="preserve">
+        <value>无法打开包管理器</value>
+    </data>
+    <data name="Dialog_Package_Manager_Unavailable_Description" xml:space="preserve">
+        <value>无法通过 vcc:// 协议启动包管理器。
+请检查是否已安装 VPM 包管理器（例如 ALCOM / VRChat Creator Companion），或者在包管理器中手动添加下方的 VPM 仓库。</value>
+    </data>
+    <data name="Dialog_Package_Manager_Unavailable_Copy_Repository_Url_Button_Text" xml:space="preserve">
+        <value>复制仓库 URL</value>
+    </data>
+    <data name="Dialog_Package_Manager_Unavailable_Close_Button_Text" xml:space="preserve">
+        <value>关闭</value>
+    </data>
     <data name="Notifications_Settings_Test_Notification_Title" xml:space="preserve">
         <value>测试通知</value>
     </data>

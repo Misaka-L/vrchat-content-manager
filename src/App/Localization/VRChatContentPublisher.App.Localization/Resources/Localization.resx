@@ -657,6 +657,19 @@ Please notice that you need to re-pair with the app, or you can change port back
     <data name="Dialog_Rpc_Server_Port_Changed_Due_To_Bind_Error_Close_Dialog_Button_Text" xml:space="preserve">
         <value>I know</value>
     </data>
+    <data name="Dialog_Package_Manager_Unavailable_Title" xml:space="preserve">
+        <value>Failed to open the package manager</value>
+    </data>
+    <data name="Dialog_Package_Manager_Unavailable_Description" xml:space="preserve">
+        <value>The package manager could not be launched with the vcc:// protocol.
+Please check whether a VPM package manager (such as ALCOM / VRChat Creator Companion) is installed, or add the VPM repository below manually in your package manager.</value>
+    </data>
+    <data name="Dialog_Package_Manager_Unavailable_Copy_Repository_Url_Button_Text" xml:space="preserve">
+        <value>Copy Repository URL</value>
+    </data>
+    <data name="Dialog_Package_Manager_Unavailable_Close_Button_Text" xml:space="preserve">
+        <value>Close</value>
+    </data>
     <data name="Notifications_Settings_Test_Notification_Title" xml:space="preserve">
         <value>Test Notification</value>
     </data>

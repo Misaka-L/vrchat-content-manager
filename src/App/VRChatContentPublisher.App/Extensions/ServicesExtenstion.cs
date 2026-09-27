@@ -34,6 +34,7 @@ public static class ServicesExtenstion
         services.AddSingleton<AppLifetimeService>();
         services.AddSingleton<AppWindowService>();
         services.AddSingleton<IActivateWindowService>(s => s.GetRequiredService<AppWindowService>());
+        services.AddSingleton<UriLauncherService>();
 
         services.AddSingleton<InAppNotificationService>();
 
@@ -65,6 +66,7 @@ public static class ServicesExtenstion
         services.AddTransient<CancelUpdateConfirmationDialogViewModel>();
         services.AddTransient<LoginWithCookiesDialogViewModelFactory>();
         services.AddTransient<UpdateAvailableDialogViewModelFactory>();
+        services.AddTransient<PackageManagerUnavailableDialogViewModelFactory>();
 
         // ViewModels
         services.AddSingleton<MainWindowViewModel>();
