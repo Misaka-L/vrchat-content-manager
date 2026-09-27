@@ -482,6 +482,18 @@
     <data name="Pages_Guide_Connect_Unity_To_App_Skip_Button_Text" xml:space="preserve">
         <value>Skip</value>
     </data>
+    <data name="Pages_Guide_Build_And_Upload_Headline1_Light" xml:space="preserve">
+        <value>Setup complete</value>
+    </data>
+    <data name="Pages_Guide_Build_And_Upload_Headline2_Bold" xml:space="preserve">
+        <value>Build and Upload</value>
+    </data>
+    <data name="Pages_Guide_Build_And_Upload_Step_1_Description" xml:space="preserve">
+        <value>Just open the VRChat SDK build panel in Unity and click Build &amp; Publish - Content Publisher will handle the upload for you.</value>
+    </data>
+    <data name="Pages_Guide_Build_And_Upload_Done_Button_Text" xml:space="preserve">
+        <value>Done</value>
+    </data>
     <data name="Pages_Tasks_Alert_Public_IP_Changed_Message" xml:space="preserve">
         <value>Your public IP address has changed since the last time you logged in. This may cause login issues. You may need to click Repair Account button to login again
 Tip: If you switch back to your last public IP, you can click Repair Account button without login again.</value>

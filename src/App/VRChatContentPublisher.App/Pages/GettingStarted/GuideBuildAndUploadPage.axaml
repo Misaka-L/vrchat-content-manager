@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:gettingStarted="clr-namespace:VRChatContentPublisher.App.ViewModels.Pages.GettingStarted"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="420" d:DesignHeight="680"
+             x:DataType="gettingStarted:GuideBuildAndUploadPageViewModel"
+             x:Class="VRChatContentPublisher.App.Pages.GettingStarted.GuideBuildAndUploadPage">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <Border MinHeight="90">
+            <Border.Background>
+                <ImageBrush Source="/Assets/WelcomeHeader.png" Stretch="UniformToFill" />
+            </Border.Background>
+            <StackPanel Margin="18">
+                <Button
+                    Command="{Binding BackCommand}"
+                    IsVisible="{Binding CanGoBack}"
+                    Padding="0" Margin="0,0,0,5" Foreground="White"
+                    Theme="{StaticResource MaterialFlatButton}" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="ArrowLeft" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Pages_Navigation_Go_Back_Button_Text}}" />
+                    </StackPanel>
+                </Button>
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Build_And_Upload_Headline1_Light}}"
+                    FontSize="16" Foreground="White" Opacity="0.7" />
+                <TextBlock
+                    Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Build_And_Upload_Headline2_Bold}}"
+                    FontSize="36" FontWeight="SemiBold" Foreground="White" />
+            </StackPanel>
+        </Border>
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled">
+            <StackPanel Margin="18" Spacing="12">
+                <StackPanel Spacing="8">
+                    <TextBlock
+                        Text="{I18N {x:Static localization:LangKeys.Pages_Guide_Build_And_Upload_Step_1_Description}}"
+                        TextWrapping="Wrap" />
+                    <Image Source="/Assets/Setup/UnitySetup/BuildAndUpload.png"
+                           Stretch="Uniform" MaxHeight="320" HorizontalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right"
+                    Margin="18 14" Spacing="8">
+            <Button
+                Content="{I18N {x:Static localization:LangKeys.Pages_Guide_Build_And_Upload_Done_Button_Text}}"
+                Command="{Binding DoneCommand}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

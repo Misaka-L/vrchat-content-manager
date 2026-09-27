@@ -904,6 +904,42 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        internal static string Pages_Guide_Build_And_Upload_Done_Button_Text {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Build_And_Upload_Done_Button_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup complete.
+        /// </summary>
+        internal static string Pages_Guide_Build_And_Upload_Headline1_Light {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Build_And_Upload_Headline1_Light", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build and Upload.
+        /// </summary>
+        internal static string Pages_Guide_Build_And_Upload_Headline2_Bold {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Build_And_Upload_Headline2_Bold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Just open the VRChat SDK build panel in Unity and click Build &amp; Publish - Content Publisher will handle the upload for you..
+        /// </summary>
+        internal static string Pages_Guide_Build_And_Upload_Step_1_Description {
+            get {
+                return ResourceManager.GetString("Pages_Guide_Build_And_Upload_Step_1_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy.
         /// </summary>
         internal static string Pages_Guide_Connect_Unity_To_App_Copy_Host_URL_Button_Text {

@@ -36,7 +36,12 @@ public sealed partial class GuideConnectUnityPageViewModel(
 
     private void OnSessionCreated(object? sender, string e)
     {
-        navigationService.Navigate<HomePageViewModel>();
+        // Unity is now connected: show the final guide page explaining that publishing only needs
+        // the "Build and Upload" button in the VRChat SDK build target panel.
+        // Forward the back override so a guide opened from somewhere else (e.g. RPC server settings)
+        // can still walk back to where it came from.
+        navigationService.Navigate<GuideBuildAndUploadPageViewModel>(viewModel =>
+            viewModel.OnRequestBackOverride = OnRequestBackOverride);
     }
 
     [RelayCommand]

@@ -101,6 +101,7 @@ public static class ServicesExtenstion
         services.AddTransient<GuideSetupUnityPageViewModel>();
         services.AddTransient<GuideOpenConnectSettingsPageViewModel>();
         services.AddTransient<GuideConnectUnityPageViewModel>();
+        services.AddTransient<GuideBuildAndUploadPageViewModel>();
 
         // Settings Pages
         services.AddTransient<LoginPageViewModelFactory>();
