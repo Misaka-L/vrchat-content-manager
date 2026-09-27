@@ -1,12 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using VRChatContentPublisher.App.Services;
+using VRChatContentPublisher.App.Services.Dialog;
+using VRChatContentPublisher.App.ViewModels.Dialogs;
 using VRChatContentPublisher.ConnectCore.Services.Connect;
 
 namespace VRChatContentPublisher.App.ViewModels.Pages.GettingStarted;
 
 public partial class GuideSetupUnityPageViewModel(
     NavigationService navigationService,
-    ClientSessionService clientSessionService
+    ClientSessionService clientSessionService,
+    UriLauncherService uriLauncherService,
+    DialogService dialogService,
+    PackageManagerUnavailableDialogViewModelFactory packageManagerUnavailableDialogFactory
 ) : PageViewModelBase
 {
     public string VpmRepositoryUrl => "https://project-vrcz.github.io/vpm-listing/index.json";
@@ -39,5 +44,14 @@ public partial class GuideSetupUnityPageViewModel(
     private void Next()
     {
         navigationService.Navigate<GuideOpenConnectSettingsPageViewModel>();
+    }
+
+    [RelayCommand]
+    private async Task AddToPackageManager()
+    {
+        if (await uriLauncherService.LaunchUriAsync(PackageManagerUrl))
+            return;
+
+        await dialogService.ShowDialogAsync(packageManagerUnavailableDialogFactory.Create(VpmRepositoryUrl));
     }
 }

@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dialogs="clr-namespace:VRChatContentPublisher.App.ViewModels.Dialogs"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:localization="clr-namespace:VRChatContentPublisher.App.Localization;assembly=VRChatContentPublisher.App.Localization"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:DataType="dialogs:PackageManagerUnavailableDialogViewModel"
+             x:Class="VRChatContentPublisher.App.Views.Dialogs.PackageManagerUnavailableDialog">
+
+    <StackPanel Spacing="16" Margin="8" Width="380">
+        <StackPanel Spacing="8">
+            <avalonia:MaterialIcon Kind="AlertCircle" Height="30" Width="30" HorizontalAlignment="Center" />
+            <TextBlock Classes="Headline6"
+                       Text="{I18N {x:Static localization:LangKeys.Dialog_Package_Manager_Unavailable_Title}}"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap" />
+        </StackPanel>
+
+        <StackPanel Spacing="8">
+            <TextBlock
+                Text="{I18N {x:Static localization:LangKeys.Dialog_Package_Manager_Unavailable_Description}}"
+                TextWrapping="Wrap" />
+            <TextBox UseFloatingPlaceholder="True" Classes="outline" Theme="{StaticResource OutlineTextBox}"
+                     assists:TextFieldAssist.Label="{I18N {x:Static localization:LangKeys.Pages_Guide_Setup_Unity_Step_1_VPM_Repository_URL_Field_Hint}}"
+                     IsReadOnly="True" Text="{Binding RepositoryUrl}" />
+
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Theme="{StaticResource MaterialOutlineButton}">
+                    <Interaction.Behaviors>
+                        <ButtonClickEventTriggerBehavior>
+                            <SetClipboardTextAction Text="{Binding RepositoryUrl}" />
+                        </ButtonClickEventTriggerBehavior>
+                    </Interaction.Behaviors>
+                    <StackPanel Orientation="Horizontal" Spacing="4">
+                        <avalonia:MaterialIcon Kind="ContentCopy" />
+                        <TextBlock
+                            Text="{I18N {x:Static localization:LangKeys.Dialog_Package_Manager_Unavailable_Copy_Repository_Url_Button_Text}}"
+                            TextWrapping="Wrap" />
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="1"
+                        Content="{I18N {x:Static localization:LangKeys.Dialog_Package_Manager_Unavailable_Close_Button_Text}}"
+                        Command="{Binding AcknowledgeCommand}" />
+            </Grid>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

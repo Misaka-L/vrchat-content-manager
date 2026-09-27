@@ -52,12 +52,7 @@
                          IsReadOnly="True" Text="{Binding VpmRepositoryUrl}" />
 
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                    <Button>
-                        <Interaction.Behaviors>
-                            <ButtonClickEventTriggerBehavior>
-                                <LaunchUriAction Uri="{Binding PackageManagerUrl}" />
-                            </ButtonClickEventTriggerBehavior>
-                        </Interaction.Behaviors>
+                    <Button Command="{Binding AddToPackageManagerCommand}">
                         <StackPanel Orientation="Horizontal" Spacing="4">
                             <avalonia:MaterialIcon Kind="PackageVariantClosedPlus" />
                             <TextBlock
