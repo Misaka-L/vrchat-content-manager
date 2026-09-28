@@ -12,6 +12,7 @@ public static class EndpointExtenstion
         endpointService.MapFileEndpoints();
         endpointService.MapTaskEndpoint();
         endpointService.MapHealthEndpoints();
+        endpointService.MapUserSessionEndpoints();
 
         return endpointService;
     }
