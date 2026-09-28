@@ -108,6 +108,7 @@ public static class ServicesExtenstion
         services.AddTransient<LicensePageViewModel>();
 
         // Settings Sections
+        services.AddTransient<LazySettingsSectionViewModelFactory>();
         services.AddTransient<AccountsSettingsViewModel>();
         services.AddTransient<AppearanceSettingsViewModel>();
         services.AddTransient<ConnectSettingsViewModel>();
