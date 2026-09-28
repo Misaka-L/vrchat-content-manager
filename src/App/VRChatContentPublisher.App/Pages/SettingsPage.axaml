@@ -30,35 +30,47 @@
         </Border>
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="8" Margin="18">
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Title}}">
-                    <ContentControl Content="{Binding AccountsSettingsViewModel}" />
+                <!--Sections are created on demand, the first time their expander is expanded.
+                See LazySettingsSectionViewModel and the LazySettingsSectionViewModelFactory.-->
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Accounts_Title}}"
+                          IsExpanded="{Binding AccountsSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding AccountsSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Title}}">
-                    <ContentControl Content="{Binding AppearanceSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Appearance_Title}}"
+                          IsExpanded="{Binding AppearanceSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding AppearanceSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Title}}">
-                    <ContentControl Content="{Binding ConnectSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Connect_Title}}"
+                          IsExpanded="{Binding ConnectSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding ConnectSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Title}}">
-                    <ContentControl Content="{Binding NotificationSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Notification_Title}}"
+                          IsExpanded="{Binding NotificationSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding NotificationSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_PairedClients_Title}}">
-                    <ContentControl Content="{Binding SessionsSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_PairedClients_Title}}"
+                          IsExpanded="{Binding SessionsSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding SessionsSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Title}}">
-                    <ContentControl Content="{Binding HttpProxySettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Http_Proxy_Title}}"
+                          IsExpanded="{Binding HttpProxySection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding HttpProxySection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Title}}">
-                    <ContentControl Content="{Binding UpdateSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Software_Update_Title}}"
+                          IsExpanded="{Binding UpdateSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding UpdateSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Title}}">
-                    <ContentControl Content="{Binding DebugSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Debug_Title}}"
+                          IsExpanded="{Binding DebugSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding DebugSection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Title}}">
-                    <ContentControl Content="{Binding TelemetrySettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_Telemetry_Title}}"
+                          IsExpanded="{Binding TelemetrySection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding TelemetrySection.Content}" />
                 </Expander>
-                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Title}}">
-                    <ContentControl Content="{Binding AboutSettingsViewModel}" />
+                <Expander Header="{I18N {x:Static localization:LangKeys.Pages_Settings_About_Title}}"
+                          IsExpanded="{Binding AboutSection.IsExpanded, Mode=TwoWay}">
+                    <ContentControl Content="{Binding AboutSection.Content}" />
                 </Expander>
             </StackPanel>
         </ScrollViewer>

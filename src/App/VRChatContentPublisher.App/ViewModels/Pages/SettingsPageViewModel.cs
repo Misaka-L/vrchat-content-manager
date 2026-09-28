@@ -6,29 +6,39 @@ namespace VRChatContentPublisher.App.ViewModels.Pages;
 
 public sealed partial class SettingsPageViewModel(
     NavigationService navigationService,
-    AccountsSettingsViewModel accountsSettingsViewModel,
-    AppearanceSettingsViewModel appearanceSettingsViewModel,
-    ConnectSettingsViewModel connectSettingsViewModel,
-    NotificationSettingsViewModel notificationSettingsViewModel,
-    SessionsSettingsViewModel sessionsSettingsViewModel,
-    AboutSettingsViewModel aboutSettingsViewModel,
-    HttpProxySettingsViewModel httpProxySettingsViewModel,
-    DebugSettingsViewModel debugSettingsViewModel,
-    UpdateSettingsViewModel updateSettingsViewModel,
-    TelemetrySettingsViewModel telemetrySettingsViewModel) : PageViewModelBase
+    LazySettingsSectionViewModelFactory sectionFactory) : PageViewModelBase
 {
     public Action? OnRequestBackOverride { get; set; }
 
-    public AccountsSettingsViewModel AccountsSettingsViewModel { get; } = accountsSettingsViewModel;
-    public AppearanceSettingsViewModel AppearanceSettingsViewModel { get; } = appearanceSettingsViewModel;
-    public ConnectSettingsViewModel ConnectSettingsViewModel { get; } = connectSettingsViewModel;
-    public NotificationSettingsViewModel NotificationSettingsViewModel { get; } = notificationSettingsViewModel;
-    public SessionsSettingsViewModel SessionsSettingsViewModel { get; } = sessionsSettingsViewModel;
-    public HttpProxySettingsViewModel HttpProxySettingsViewModel { get; } = httpProxySettingsViewModel;
-    public AboutSettingsViewModel AboutSettingsViewModel { get; } = aboutSettingsViewModel;
-    public DebugSettingsViewModel DebugSettingsViewModel { get; } = debugSettingsViewModel;
-    public UpdateSettingsViewModel UpdateSettingsViewModel { get; } = updateSettingsViewModel;
-    public TelemetrySettingsViewModel TelemetrySettingsViewModel { get; } = telemetrySettingsViewModel;
+    public LazySettingsSectionViewModel<AccountsSettingsViewModel> AccountsSection { get; } =
+        sectionFactory.Create<AccountsSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<AppearanceSettingsViewModel> AppearanceSection { get; } =
+        sectionFactory.Create<AppearanceSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<ConnectSettingsViewModel> ConnectSection { get; } =
+        sectionFactory.Create<ConnectSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<NotificationSettingsViewModel> NotificationSection { get; } =
+        sectionFactory.Create<NotificationSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<SessionsSettingsViewModel> SessionsSection { get; } =
+        sectionFactory.Create<SessionsSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<HttpProxySettingsViewModel> HttpProxySection { get; } =
+        sectionFactory.Create<HttpProxySettingsViewModel>();
+
+    public LazySettingsSectionViewModel<UpdateSettingsViewModel> UpdateSection { get; } =
+        sectionFactory.Create<UpdateSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<DebugSettingsViewModel> DebugSection { get; } =
+        sectionFactory.Create<DebugSettingsViewModel>();
+
+    public LazySettingsSectionViewModel<TelemetrySettingsViewModel> TelemetrySection { get; } =
+        sectionFactory.Create<TelemetrySettingsViewModel>();
+
+    public LazySettingsSectionViewModel<AboutSettingsViewModel> AboutSection { get; } =
+        sectionFactory.Create<AboutSettingsViewModel>();
 
     [RelayCommand]
     private void NavigateToHome()
