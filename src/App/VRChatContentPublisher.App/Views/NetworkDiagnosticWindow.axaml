@@ -13,11 +13,20 @@
         <networkDiagnostic:NetworkDiagnosticTestStatusIconConverter x:Key="NetworkDiagnosticTestStatusIconConverter" />
     </Window.Resources>
 
+    <Interaction.Behaviors>
+        <AttachedToVisualTreeTrigger>
+            <InvokeCommandAction Command="{Binding LoadCommand}" />
+        </AttachedToVisualTreeTrigger>
+    </Interaction.Behaviors>
+
     <Grid RowDefinitions="Auto,*">
         <Button Content="Run Diagnostic"
                 Command="{Binding RunDiagnosticCommand}"
                 Margin="8,8,8,0" />
+
+        <!-- Body -->
         <Grid Grid.Row="1" RowDefinitions="*,*" Margin="8">
+            <!-- VRChat API Status / Cloudflare Trace -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
                 <Grid RowDefinitions="Auto,*" RowSpacing="2">
                     <TextBlock Classes="Headline6" Text="VRChat API Status" />
@@ -61,43 +70,135 @@
                     </Panel>
                 </Grid>
             </Grid>
-            <ScrollViewer Grid.Row="1">
-                <ItemsControl ItemsSource="{Binding ConnectionTests}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Spacing="4" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.DataTemplates>
-                        <DataTemplate x:DataType="networkDiagnostic:ConnectionTestViewModel">
-                            <Expander>
-                                <Expander.Header>
-                                    <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
-                                        <Panel>
-                                            <avalonia:MaterialIcon
-                                                IsVisible="{Binding !IsTaskRunning}"
-                                                Kind="{Binding Status, Converter={StaticResource NetworkDiagnosticTestStatusIconConverter}}"
-                                                Height="22" Width="22" />
-                                            <ProgressBar IsVisible="{Binding IsTaskRunning}"
-                                                         Classes="circular" IsIndeterminate="True" />
-                                        </Panel>
-                                        <TextBlock Grid.Column="1"
-                                                   Text="{Binding Name}"
-                                                   VerticalAlignment="Center" />
-                                        <Button Grid.Column="2"
-                                                Theme="{StaticResource MaterialFlatButton}"
-                                                Content="{avalonia:MaterialIconExt Kind=Refresh, Size=22}"
-                                                Width="{Binding $self.Bounds.Height}"
-                                                Command="{Binding RunTestCommand}" />
-                                    </Grid>
-                                </Expander.Header>
-                                <SelectableTextBlock Text="{Binding TaskResult}"
-                                                     Margin="8" />
-                            </Expander>
-                        </DataTemplate>
-                    </ItemsControl.DataTemplates>
-                </ItemsControl>
-            </ScrollViewer>
+
+            <!-- Connection Test / Proxy -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="8">
+                <!-- Connection Test -->
+                <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                    <TextBlock Classes="Headline6" Text="Connection Test" />
+                    <ScrollViewer Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding ConnectionTests}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Spacing="4" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.DataTemplates>
+                                <DataTemplate x:DataType="networkDiagnostic:ConnectionTestViewModel">
+                                    <Expander>
+                                        <Expander.Header>
+                                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+                                                <Panel>
+                                                    <avalonia:MaterialIcon
+                                                        IsVisible="{Binding !IsTaskRunning}"
+                                                        Kind="{Binding Status, Converter={StaticResource NetworkDiagnosticTestStatusIconConverter}}"
+                                                        Height="22" Width="22" />
+                                                    <ProgressBar IsVisible="{Binding IsTaskRunning}"
+                                                                 Classes="circular" IsIndeterminate="True" />
+                                                </Panel>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{Binding Name}"
+                                                           VerticalAlignment="Center" />
+                                                <Button Grid.Column="2"
+                                                        Theme="{StaticResource MaterialFlatButton}"
+                                                        Content="{avalonia:MaterialIconExt Kind=Refresh, Size=22}"
+                                                        Width="{Binding $self.Bounds.Height}"
+                                                        Command="{Binding RunTestCommand}" />
+                                            </Grid>
+                                        </Expander.Header>
+                                        <SelectableTextBlock Text="{Binding TaskResult}"
+                                                             Margin="8" />
+                                    </Expander>
+                                </DataTemplate>
+                            </ItemsControl.DataTemplates>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                </Grid>
+
+                <!-- Proxy -->
+                <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="8">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Classes="Headline6" Text="Detected Proxy"
+                                   VerticalAlignment="Center" />
+                        <Button Grid.Column="1"
+                                Theme="{StaticResource MaterialFlatButton}"
+                                Content="{avalonia:MaterialIconExt Kind=Refresh, Size=22}"
+                                Width="{Binding $self.Bounds.Height}"
+                                MinWidth="32" MinHeight="32"
+                                ToolTip.Tip="Re-read the proxy settings"
+                                Command="{Binding LoadCommand}" />
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1">
+                        <StackPanel Spacing="6">
+
+                            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                                  ColumnSpacing="12" RowSpacing="2">
+                                <TextBlock Grid.Row="0" Grid.Column="0" Classes="Body2"
+                                           Opacity="0.7" Text="App Proxy Mode" />
+                                <SelectableTextBlock Grid.Row="0" Grid.Column="1"
+                                                     Text="{Binding ProxyInfo.AppProxyMode}" />
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Classes="Body2"
+                                           Opacity="0.7" Text="Custom Proxy URI" />
+                                <SelectableTextBlock Grid.Row="1" Grid.Column="1"
+                                                     Text="{Binding ProxyInfo.CustomProxyUri}" />
+
+                                <TextBlock Grid.Row="2" Grid.Column="0" Classes="Body2"
+                                           Opacity="0.7" Text="Proxy In Use" />
+                                <SelectableTextBlock Grid.Row="2" Grid.Column="1"
+                                                     Text="{Binding ProxyInfo.ProxyInUseText}" />
+
+                                <TextBlock Grid.Row="3" Grid.Column="0" Classes="Body2"
+                                           Opacity="0.7" Text="System Proxy Source" />
+                                <SelectableTextBlock Grid.Row="3" Grid.Column="1"
+                                                     TextWrapping="Wrap"
+                                                     Text="{Binding ProxyInfo.SystemProxySource}" />
+
+                                <TextBlock Grid.Row="4" Grid.Column="0" Classes="Body2"
+                                           Opacity="0.7" Text="Proxy Environment Variables" />
+                                <SelectableTextBlock Grid.Row="4" Grid.Column="1"
+                                                     TextWrapping="Wrap"
+                                                     Text="{Binding ProxyInfo.ProxyEnvironmentSummary}" />
+                            </Grid>
+
+                            <SelectableTextBlock Classes="Body2"
+                                                 Opacity="0.7"
+                                                 TextWrapping="Wrap"
+                                                 IsVisible="{Binding ProxyInfo.HasNotes}"
+                                                 Text="{Binding ProxyInfo.Notes}" />
+
+                            <TextBlock Classes="Body2"
+                                       Opacity="0.7"
+                                       TextWrapping="Wrap"
+                                       Text="All app HTTP requests (VRChat API, S3 upload, update check, telemetry) use the proxy resolved below. Change it in Settings - HTTP Proxy." />
+
+                            <ItemsControl ItemsSource="{Binding ProxyInfo.ProbeResults}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Spacing="2" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.DataTemplates>
+                                    <DataTemplate x:DataType="networkDiagnostic:ProxyResolutionViewModel">
+                                        <Grid ColumnDefinitions="300,*,Auto" ColumnSpacing="8" Margin="8,0">
+                                            <SelectableTextBlock Text="{Binding Destination}" />
+                                            <SelectableTextBlock Grid.Column="1"
+                                                                 TextWrapping="Wrap"
+                                                                 Text="{Binding Proxy}" />
+                                            <SelectableTextBlock Grid.Column="2"
+                                                                 Text="{Binding Bypassed, StringFormat='Bypassed: {0}'}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.DataTemplates>
+                            </ItemsControl>
+
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+            </Grid>
         </Grid>
     </Grid>
 </Window>
