@@ -9,5 +9,5 @@ public sealed class ConnectMetadataService(IConnectMetadataProvider metadataProv
     
     public string[] GetFeatureFlags() => metadataProvider.GetFeatureFlags();
 
-    public string GetApiVersion() => "1.1.0";
+    public string GetApiVersion() => "1.2.0";
 }

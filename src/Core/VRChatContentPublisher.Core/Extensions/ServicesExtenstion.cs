@@ -12,6 +12,7 @@ using VRChatContentPublisher.ConnectCore.Services.Connect.Metadata;
 using VRChatContentPublisher.ConnectCore.Services.Connect.SessionStorage;
 using VRChatContentPublisher.ConnectCore.Services.Health;
 using VRChatContentPublisher.ConnectCore.Services.PublishTask;
+using VRChatContentPublisher.ConnectCore.Services.UserSession;
 using VRChatContentPublisher.Core.AppServices;
 using VRChatContentPublisher.Core.ContentPublishing.ContentPublisher;
 using VRChatContentPublisher.Core.ContentPublishing.PublishTask;
@@ -125,6 +126,7 @@ public static class ServicesExtension
         services.AddSingleton<IFileService>(sp => sp.GetRequiredService<RpcFileStorageService>());
         services.AddTransient<IConnectMetadataProvider, ConnectMetadataProvider>();
         services.AddTransient<IHealthService, RpcHealthService>();
+        services.AddTransient<IUserSessionValidityService, UserSessionValidityService>();
 
         #endregion
 
