@@ -25,7 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - The app proxy mode.
   - The system proxy source.
   - The effective proxy for each destination.
-- Add `GET /v1/user-sessions/validity` RPC API for clients to check whether a VRChat account session is still valid.
+- Add `GET /v1/user-sessions/validity` RPC API for clients to check whether a VRChat account session is still valid. [`#533`](https://github.com/project-vrcz/content-publisher/pull/533)
 
 ### Fixed
 
