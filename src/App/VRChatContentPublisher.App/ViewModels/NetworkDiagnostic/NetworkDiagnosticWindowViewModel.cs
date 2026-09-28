@@ -1,16 +1,23 @@
 using Avalonia.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using VRChatContentPublisher.Core.AppServices;
+using VRChatContentPublisher.Core.Settings;
+using VRChatContentPublisher.Core.Settings.Models;
 using VRChatContentPublisher.VRChatApi.Services;
 
 namespace VRChatContentPublisher.App.ViewModels.NetworkDiagnostic;
 
 public sealed partial class NetworkDiagnosticWindowViewModel(
-    VRChatApiDiagnosticService diagnosticService
+    VRChatApiDiagnosticService diagnosticService,
+    AppWebProxy appWebProxy,
+    IWritableOptions<AppSettings> appSettings
 ) : ViewModelBase
 {
     public AvaloniaList<StatusPageComponentViewModel> StatusPageComponents { get; } = [];
     [ObservableProperty] public partial string StatusSummary { get; private set; } = "";
+
+    public ProxyInfoViewModel ProxyInfo { get; } = new(appSettings, appWebProxy);
 
     public AvaloniaList<ConnectionTestViewModel> ConnectionTests { get; } =
     [
@@ -39,6 +46,12 @@ public sealed partial class NetworkDiagnosticWindowViewModel(
     [ObservableProperty] public partial string CloudflareTraceResult { get; private set; } = "";
 
     [RelayCommand]
+    private void Load()
+    {
+        ProxyInfo.Refresh();
+    }
+
+    [RelayCommand]
     private async Task RunDiagnosticAsync()
     {
         CloudflareTraceResult = "Running...";
@@ -47,6 +60,10 @@ public sealed partial class NetworkDiagnosticWindowViewModel(
         {
             test.ClearResult();
         }
+
+        // The proxy information is resolved locally, so it is refreshed alongside the network tests
+        // without being awaited.
+        ProxyInfo.Refresh();
 
         var tasksToRun = ConnectionTests
             .Select(test => test.RunTestAsync())
