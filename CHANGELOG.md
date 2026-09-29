@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Exit a page won't execute it's unload logic, which result in: [`#536`](https://github.com/project-vrcz/content-publisher/pull/536)
+  - As long as you've opened the paring page in onboarding, paring new client will also navigate to last page of onboarding page, until the app is restarted.
+  - Increased memory usage.
+  - Random hang up or low fps.
+  - Random crash.
+
 ## [2.12.0] - 2026-09-29
 
 ### Changed
