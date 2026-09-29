@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [2.12.1] - 2026-09-29
+
 ### Fixed
 
 - Exit a page won't execute it's unload logic, which result in: [`#536`](https://github.com/project-vrcz/content-publisher/pull/536)
@@ -1192,7 +1194,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   - Increase retry delay
   - Increase MaxConnectionsPerServer to 256 from 10 for AWS S3 HttpClient
 
-[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.12.0...HEAD
+[unreleased]: https://github.com/project-vrcz/content-publisher/compare/v2.12.1...HEAD
+[2.12.1]: https://github.com/project-vrcz/content-publisher/compare/v2.12.0...v2.12.1
 [2.12.0]: https://github.com/project-vrcz/content-publisher/compare/v2.11.0...v2.12.0
 [2.11.0]: https://github.com/project-vrcz/content-publisher/compare/v2.10.1...v2.11.0
 [2.10.1]: https://github.com/project-vrcz/content-publisher/compare/v2.10.0...v2.10.1
