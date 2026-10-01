@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveMarkdown.Avalonia;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
@@ -19,7 +20,8 @@ public sealed partial class UpdateAvailableDialogViewModel(
     IWritableOptions<AppSettings> appSettings,
     UpdateDownloadProgressViewModel updateDownloadProgressViewModel,
     DialogService dialogService,
-    IServiceProvider serviceProvider
+    IServiceProvider serviceProvider,
+    ILogger<UpdateAvailableDialogViewModel> logger
 ) : DialogViewModelBase
 {
     public UpdateDownloadProgressViewModel UpdateDownloadProgressViewModel => updateDownloadProgressViewModel;
@@ -85,7 +87,15 @@ public sealed partial class UpdateAvailableDialogViewModel(
             return;
         }
 
-        appUpdateService.StartDownloadUpdate(updateInformation);
+        try
+        {
+            appUpdateService.StartDownloadUpdate(updateInformation);
+        }
+        catch (Exception ex)
+        {
+            // A failing command must never escape to the dispatcher and take the app down.
+            logger.LogError(ex, "Failed to start the update download");
+        }
     }
 
     [RelayCommand]
@@ -119,7 +129,8 @@ public sealed class UpdateAvailableDialogViewModelFactory(
     UpdateDownloadProgressViewModel updateDownloadProgressViewModel,
     AppLifetimeService lifetimeService,
     DialogService dialogService,
-    IServiceProvider serviceProvider
+    IServiceProvider serviceProvider,
+    ILogger<UpdateAvailableDialogViewModel> logger
 )
 {
     public UpdateAvailableDialogViewModel Create(AppUpdateInformation updateInformation)
@@ -131,7 +142,8 @@ public sealed class UpdateAvailableDialogViewModelFactory(
             appSettings,
             updateDownloadProgressViewModel,
             dialogService,
-            serviceProvider
+            serviceProvider,
+            logger
         );
     }
 }

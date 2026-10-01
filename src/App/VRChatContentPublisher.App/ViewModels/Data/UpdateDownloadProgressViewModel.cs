@@ -2,6 +2,7 @@ using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using VRChatContentPublisher.App.Localization;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
@@ -14,7 +15,8 @@ public sealed partial class UpdateDownloadProgressViewModel(
     AppUpdateService appUpdateService,
     DialogService dialogService,
     AppLifetimeService lifetimeService,
-    IServiceProvider serviceProvider
+    IServiceProvider serviceProvider,
+    ILogger<UpdateDownloadProgressViewModel> logger
 ) : ViewModelBase
 {
     [ObservableProperty] public partial bool ShowWhatNewsButton { get; set; } = true;
@@ -90,14 +92,34 @@ public sealed partial class UpdateDownloadProgressViewModel(
                 return;
         }
 
-        await appUpdateService.CancelUpdateAsync();
+        try
+        {
+            await appUpdateService.CancelUpdateAsync();
+        }
+        catch (Exception ex)
+        {
+            // A failing command must never escape to the dispatcher and take the app down.
+            logger.LogError(ex, "Failed to cancel the update download");
+        }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanRetryDownloadUpdate))]
     private async Task RetryDownloadUpdate()
     {
-        await appUpdateService.RetryUpdateAsync();
+        try
+        {
+            await appUpdateService.RetryUpdateAsync();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to retry the update download");
+        }
     }
+
+    private bool CanRetryDownloadUpdate() =>
+        appUpdateService.UpdateInformation is not null &&
+        appUpdateService.UpdateState is AppUpdateServiceState.DownloadError
+            or AppUpdateServiceState.IntegrityCheckFailed;
 
     [RelayCommand]
     private async Task InstallUpdate()
@@ -140,6 +162,7 @@ public sealed partial class UpdateDownloadProgressViewModel(
         OnPropertyChanged(nameof(IsError));
         OnPropertyChanged(nameof(ErrorTitleText));
         OnPropertyChanged(nameof(UpdateError));
+        RetryDownloadUpdateCommand.NotifyCanExecuteChanged();
         UpdateTimerEnabled();
     }
 

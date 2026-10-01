@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Cancel an update download no longer leaves the updater in a bogus "download failed" state, and retrying a download can no longer crash the app with an unhandled exception.
+
 ## [2.12.1] - 2026-09-29
 
 ### Fixed

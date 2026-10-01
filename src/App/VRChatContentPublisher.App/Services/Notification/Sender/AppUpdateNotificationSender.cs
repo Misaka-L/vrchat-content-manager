@@ -27,8 +27,11 @@ public sealed class AppUpdateNotificationSender(
         {
             if (state == AppUpdateServiceState.Idle)
             {
-                inAppNotificationService.RemoveNotificationOfType<UpdateAvailableAppNotificationViewModel>();
-                inAppNotificationService.RemoveNotificationOfType<UpdateProgressAppNotificationViewModel>();
+                Dispatcher.UIThread.Invoke(() =>
+                {
+                    inAppNotificationService.RemoveNotificationOfType<UpdateAvailableAppNotificationViewModel>();
+                    inAppNotificationService.RemoveNotificationOfType<UpdateProgressAppNotificationViewModel>();
+                });
                 return;
             }
 
