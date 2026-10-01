@@ -6,8 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- Cancel update no longer require confirm. [`#539`](https://github.com/project-vrcz/content-publisher/pull/539)
+
 ### Fixed
 
+- Cancel update and retry download update will crash the app. [`#539`](https://github.com/project-vrcz/content-publisher/pull/539)
+- Cancel update downloading will show as update download error. [`#539`](https://github.com/project-vrcz/content-publisher/pull/539)
 - Unable to show any dialogs. [`#538`](https://github.com/project-vrcz/content-publisher/pull/538)
 
 ## [2.12.1] - 2026-09-29
