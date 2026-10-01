@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Unable to show any dialogs. [`#538`](https://github.com/project-vrcz/content-publisher/pull/538)
+
 ## [2.12.1] - 2026-09-29
 
 ### Fixed
