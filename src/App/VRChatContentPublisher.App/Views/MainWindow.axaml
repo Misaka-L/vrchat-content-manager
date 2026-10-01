@@ -12,13 +12,13 @@
         Icon="/Assets/AppIcon.ico"
         Title="VRChat Content Publisher">
 
-    <Interaction.Behaviors>
-        <AttachedToVisualTreeTrigger>
-            <InvokeCommandAction Command="{Binding LoadCommand}" />
-        </AttachedToVisualTreeTrigger>
-    </Interaction.Behaviors>
-
     <dialogHostAvalonia:DialogHost Identifier="{Binding DialogHostId}">
+        <Interaction.Behaviors>
+            <AttachedToVisualTreeTrigger>
+                <InvokeCommandAction Command="{Binding LoadCommand}" />
+            </AttachedToVisualTreeTrigger>
+        </Interaction.Behaviors>
+
         <TransitioningContentControl Content="{Binding CurrentPage}" />
     </dialogHostAvalonia:DialogHost>
 </Window>
