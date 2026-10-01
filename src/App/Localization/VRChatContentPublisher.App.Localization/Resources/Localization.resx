@@ -644,12 +644,6 @@ Are you really sure you want to shutdown the app?</value>
     <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
         <value>No</value>
     </data>
-    <data name="Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel" xml:space="preserve">
-        <value>You already downloaded the update package. Are you sure you want to cancel and delete it?</value>
-    </data>
-    <data name="Dialog_Cancel_Update_Confirmation_Cancel_Cancel" xml:space="preserve">
-        <value>No</value>
-    </data>
     <data name="Dialog_Cancel_Update_Confirmation_Confirm_Cancel" xml:space="preserve">
         <value>Cancel Update</value>
     </data>

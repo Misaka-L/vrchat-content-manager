@@ -636,12 +636,6 @@ VRChat Content Publisher 不会阻止你尝试使用这个账号发布内容，�
     <data name="Dialog_Shutdown_Cancel_Shutdown_With_Uncompleted_Tasks" xml:space="preserve">
         <value>不退出</value>
     </data>
-    <data name="Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel" xml:space="preserve">
-        <value>你已经下载好了更新包。确定要取消更新并删除已下载的文件吗？</value>
-    </data>
-    <data name="Dialog_Cancel_Update_Confirmation_Cancel_Cancel" xml:space="preserve">
-        <value>否</value>
-    </data>
     <data name="Dialog_Cancel_Update_Confirmation_Confirm_Cancel" xml:space="preserve">
         <value>取消更新</value>
     </data>
