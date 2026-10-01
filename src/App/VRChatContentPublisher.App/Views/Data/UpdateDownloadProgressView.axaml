@@ -26,7 +26,7 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <TextBlock
                         Text="{I18N {x:Static localization:LangKeys.Common_Views_Update_Progress_View_Downloading_Update}}" />
-                    <Button Theme="{StaticResource MaterialFlatBubtton}"
+                    <Button Theme="{StaticResource MaterialFlatButton}"
                             Command="{Binding ShowWhatNewsCommand}"
                             IsVisible="{Binding ShowWhatNewsButton}"
                             Padding="0" Grid.Column="1">
