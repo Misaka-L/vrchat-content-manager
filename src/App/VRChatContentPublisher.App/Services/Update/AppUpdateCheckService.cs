@@ -26,7 +26,7 @@ public sealed class AppUpdateCheckService(
 
     public async ValueTask<AppUpdateInformation?> CheckForUpdateAsync()
     {
-        if (appUpdateService.UpdateState != AppUpdateServiceState.Idle)
+        if (appUpdateService.UpdateState is not AppUpdateServiceState.Idle)
             return null;
 
         var update = await GetUpdateInformationAsync();

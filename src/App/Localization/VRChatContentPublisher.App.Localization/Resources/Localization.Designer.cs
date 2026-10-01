@@ -179,24 +179,6 @@ namespace VRChatContentPublisher.App.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You already downloaded the update package. Are you sure you want to cancel and delete it?.
-        /// </summary>
-        internal static string Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel {
-            get {
-                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Ask_User_To_Confirm_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No.
-        /// </summary>
-        internal static string Dialog_Cancel_Update_Confirmation_Cancel_Cancel {
-            get {
-                return ResourceManager.GetString("Dialog_Cancel_Update_Confirmation_Cancel_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cancel Update.
         /// </summary>
         internal static string Dialog_Cancel_Update_Confirmation_Confirm_Cancel {

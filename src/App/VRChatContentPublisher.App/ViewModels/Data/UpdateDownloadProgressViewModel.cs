@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using VRChatContentPublisher.App.Localization;
+using VRChatContentPublisher.App.Models.Update;
 using VRChatContentPublisher.App.Services.AppLifetime;
 using VRChatContentPublisher.App.Services.Dialog;
 using VRChatContentPublisher.App.Services.Update;
@@ -19,18 +20,21 @@ public sealed partial class UpdateDownloadProgressViewModel(
 {
     [ObservableProperty] public partial bool ShowWhatNewsButton { get; set; } = true;
 
-    public long TotalFileSize => appUpdateService.TotalFileSize ?? 1;
-    public long DownloadedFileSize => appUpdateService.DownloadedFileSize ?? 0;
+    private AppUpdateServiceState.Downloading? DownloadingState =>
+        appUpdateService.UpdateState as AppUpdateServiceState.Downloading;
+
+    public long TotalFileSize => DownloadingState?.TotalFileSize ?? 1;
+    public long DownloadedFileSize => DownloadingState?.DownloadedFileSize ?? 0;
     public string DownloadPrecent => ((double)DownloadedFileSize / TotalFileSize * 100).ToString("N") + "%";
 
-    public double MebibytePerSecondSpeed => appUpdateService.BytesPerSecondSpeed.HasValue
-        ? appUpdateService.BytesPerSecondSpeed.Value / 1.048576e+6
+    public double MebibytePerSecondSpeed => DownloadingState is not null
+        ? DownloadingState.BytesPerSecondSpeed / 1.048576e+6
         : 0;
 
     public string? TargetVersion => appUpdateService.UpdateInformation?.Version;
 
-    public bool IsDownloading => appUpdateService.UpdateState == AppUpdateServiceState.Downloading;
-    public bool IsWaitingForInstall => appUpdateService.UpdateState == AppUpdateServiceState.WaitingForInstall;
+    public bool IsDownloading => appUpdateService.UpdateState is AppUpdateServiceState.Downloading;
+    public bool IsWaitingForInstall => appUpdateService.UpdateState is AppUpdateServiceState.WaitingForInstall;
     public bool IsUpdateInstallationSupported => appUpdateService.IsAppUpdateSupported();
 
     [ObservableProperty]
@@ -82,14 +86,6 @@ public sealed partial class UpdateDownloadProgressViewModel(
     [RelayCommand]
     private async Task CancelUpdate()
     {
-        if (appUpdateService.UpdateState == AppUpdateServiceState.WaitingForInstall)
-        {
-            var result = await dialogService.ShowDialogAsync(
-                serviceProvider.GetRequiredService<CancelUpdateConfirmationDialogViewModel>());
-            if (result is not true)
-                return;
-        }
-
         await appUpdateService.CancelUpdateAsync();
     }
 
@@ -125,6 +121,11 @@ public sealed partial class UpdateDownloadProgressViewModel(
 
     private void OnUpdateProgressTimerTick(object? sender, EventArgs e)
     {
+        UpdateProgress();
+    }
+
+    private void UpdateProgress()
+    {
         OnPropertyChanged(nameof(TotalFileSize));
         OnPropertyChanged(nameof(DownloadedFileSize));
         OnPropertyChanged(nameof(DownloadPrecent));
@@ -140,12 +141,14 @@ public sealed partial class UpdateDownloadProgressViewModel(
         OnPropertyChanged(nameof(IsError));
         OnPropertyChanged(nameof(ErrorTitleText));
         OnPropertyChanged(nameof(UpdateError));
+
+        UpdateProgress();
         UpdateTimerEnabled();
     }
 
     private void UpdateTimerEnabled()
     {
-        _updateProgressTimer.IsEnabled = appUpdateService.UpdateState == AppUpdateServiceState.Downloading;
+        _updateProgressTimer.IsEnabled = appUpdateService.UpdateState is AppUpdateServiceState.Downloading;
     }
 
     private void IsSafeToShutdownChanged(object? sender, bool e)

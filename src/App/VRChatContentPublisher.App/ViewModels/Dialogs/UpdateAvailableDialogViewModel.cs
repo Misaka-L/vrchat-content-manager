@@ -91,12 +91,6 @@ public sealed partial class UpdateAvailableDialogViewModel(
     [RelayCommand]
     private async Task CancelUpdate()
     {
-        RequestClose();
-        var result = await dialogService.ShowDialogAsync(
-            serviceProvider.GetRequiredService<CancelUpdateConfirmationDialogViewModel>());
-        if (result is not true)
-            return;
-
         await appUpdateService.CancelUpdateAsync();
     }
 

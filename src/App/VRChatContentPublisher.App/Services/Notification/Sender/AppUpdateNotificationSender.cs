@@ -25,7 +25,7 @@ public sealed class AppUpdateNotificationSender(
 
         appUpdateService.OnUpdateStateChanged += (_, state) =>
         {
-            if (state == AppUpdateServiceState.Idle)
+            if (state is AppUpdateServiceState.Idle)
             {
                 inAppNotificationService.RemoveNotificationOfType<UpdateAvailableAppNotificationViewModel>();
                 inAppNotificationService.RemoveNotificationOfType<UpdateProgressAppNotificationViewModel>();

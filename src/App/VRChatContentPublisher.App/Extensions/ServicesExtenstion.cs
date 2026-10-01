@@ -63,7 +63,6 @@ public static class ServicesExtenstion
         services.AddTransient<RequestChallengeDialogViewModelFactory>();
         services.AddTransient<StartupPortChangedDialogViewModelFactory>();
         services.AddTransient<ExitAppDialogViewModel>();
-        services.AddTransient<CancelUpdateConfirmationDialogViewModel>();
         services.AddTransient<LoginWithCookiesDialogViewModelFactory>();
         services.AddTransient<UpdateAvailableDialogViewModelFactory>();
         services.AddTransient<PackageManagerUnavailableDialogViewModelFactory>();

@@ -35,7 +35,7 @@ public sealed partial class UpdateSettingsViewModel(
     #region Update Progress
 
     public UpdateDownloadProgressViewModel UpdateDownloadProgressViewModel => updateDownloadProgressViewModel;
-    public bool IsIdle => appUpdateService.UpdateState == AppUpdateServiceState.Idle;
+    public bool IsIdle => appUpdateService.UpdateState is AppUpdateServiceState.Idle;
     public bool IsUpdateInstallationSupported => appUpdateService.IsAppUpdateSupported();
 
     private void OnUpdateStateChanged(object? sender, AppUpdateServiceState e)

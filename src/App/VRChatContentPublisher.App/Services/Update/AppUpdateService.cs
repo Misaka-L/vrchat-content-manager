@@ -19,32 +19,37 @@ public sealed class AppUpdateService(
 {
     public bool IsAppUpdateSupported() => updateInstallationService.IsUpdateInstallationSupported();
 
-    public AppUpdateInformation? UpdateInformation { get; private set; }
-    public AppUpdateServiceState UpdateState { get; private set; } = AppUpdateServiceState.Idle;
+    private readonly Lock _updateStateLock = new();
+    public AppUpdateServiceState UpdateState { get; private set; } = new AppUpdateServiceState.Idle();
     public event EventHandler<AppUpdateServiceState>? OnUpdateStateChanged;
 
-    private string? _pathToDownloadFile;
+    public AppUpdateInformation? UpdateInformation => UpdateState switch
+    {
+        AppUpdateServiceState.Downloading downloading => downloading.UpdateInformation,
+        AppUpdateServiceState.DownloadError downloadError => downloadError.UpdateInformation,
+        AppUpdateServiceState.IntegrityCheckFailed integrityCheckFailed => integrityCheckFailed.UpdateInformation,
+        AppUpdateServiceState.WaitingForInstall waitingForInstall => waitingForInstall.UpdateInformation,
+        AppUpdateServiceState.InstallError installError => installError.UpdateInformation,
+        _ => null
+    };
+
+    public Exception? LastException => UpdateState switch
+    {
+        AppUpdateServiceState.DownloadError downloadError => downloadError.DownloadErrorException,
+        AppUpdateServiceState.IntegrityCheckFailed integrityCheckFailed => new UpdateFileIntegrityCheckFailedException(
+            integrityCheckFailed.DownloadedFileSha256, integrityCheckFailed.ExceptedFileSha256),
+        AppUpdateServiceState.InstallError installError => installError.InstallErrorException,
+        _ => null
+    };
 
     #region Download
 
-    private IDownload? _downloadTask;
-
-    public Exception? LastException { get; private set; }
-    public double? BytesPerSecondSpeed { get; private set; }
-    public long? TotalFileSize { get; private set; }
-    public long? DownloadedFileSize { get; private set; }
-
-    private CancellationTokenSource? _downloadCts;
-    private TaskCompletionSource? _downloadResultTcs;
-
     public void StartDownloadUpdate(AppUpdateInformation updateInformation)
     {
-        if (UpdateState != AppUpdateServiceState.Idle)
-            throw new InvalidOperationException("Update Service are not in Idle state");
-
         if (!IsAppUpdateSupported())
             throw new NotSupportedException("Update are not supported for this platform");
 
+        CleanupAndEnterIdle();
         if (!updateInformation.Platforms
                 .TryGetValue(updateInstallationService.GetPlatformIdentifier(), out var platformInformation))
         {
@@ -55,17 +60,20 @@ public sealed class AppUpdateService(
         logger.LogInformation("Starting download update {Version} Sha256: {Sha256} Url: {DownloadUrl}",
             updateInformation.Version, platformInformation.Sha256, platformInformation.Url);
 
-        UpdateInformation = updateInformation;
-        OnOnUpdateStateChanged(AppUpdateServiceState.Downloading);
+        var downloadCts = new CancellationTokenSource();
+        var pathToDownloadFile = Path.Combine(AppStorageService.GetTempPath(), "update", "package");
+        var downloadStateInfo = OnOnUpdateStateChanged(new AppUpdateServiceState.Downloading
+        {
+            UpdateInformation = updateInformation,
+            DownloadCancellationTokenSource = downloadCts,
+            PathToDownloadedFile = pathToDownloadFile
+        });
 
-        _downloadCts = new CancellationTokenSource();
-        var cancellationToken = _downloadCts.Token;
+        var cancellationToken = downloadCts.Token;
 
-        _pathToDownloadFile = Path.Combine(AppStorageService.GetTempPath(), "update", "package");
-
-        var download = DownloadBuilder.New()
+        var downloadTask = DownloadBuilder.New()
             .WithUrl(platformInformation.Url)
-            .WithFileLocation(_pathToDownloadFile)
+            .WithFileLocation(pathToDownloadFile)
             .WithConfiguration(new DownloadConfiguration
             {
                 ParallelCount = 8,
@@ -75,44 +83,43 @@ public sealed class AppUpdateService(
             .WithHttpClient(() => httpClientFactory.CreateClient(nameof(AppUpdateService)))
             .Build();
 
-        download.DownloadProgressChanged += (_, args) =>
+        downloadTask.DownloadProgressChanged += (_, args) =>
         {
-            BytesPerSecondSpeed = args.BytesPerSecondSpeed;
-            TotalFileSize = download.TotalFileSize;
-            DownloadedFileSize = download.DownloadedFileSize;
+            downloadStateInfo.BytesPerSecondSpeed = args.BytesPerSecondSpeed;
+            downloadStateInfo.TotalFileSize = downloadTask.TotalFileSize;
+            downloadStateInfo.DownloadedFileSize = downloadTask.DownloadedFileSize;
         };
 
-        download.DownloadFileCompleted += (_, args) =>
+        var downloadResultTcs = new TaskCompletionSource();
+        downloadTask.DownloadFileCompleted += (_, args) =>
         {
             if (args.Error is { } ex)
             {
-                _downloadResultTcs?.TrySetException(ex);
+                downloadResultTcs.TrySetException(ex);
                 return;
             }
 
             if (args.Cancelled)
             {
-                _downloadResultTcs?.TrySetCanceled();
+                downloadResultTcs.TrySetCanceled();
                 return;
             }
 
-            _downloadResultTcs?.TrySetResult();
+            downloadResultTcs.TrySetResult();
         };
 
-        _downloadTask = download;
-        _downloadResultTcs = new TaskCompletionSource();
         _ = Task.Run(async () =>
         {
-            var downloadResultTask = _downloadResultTcs.Task;
+            var downloadResultTask = downloadResultTcs.Task;
             try
             {
-                await download.StartAsync(cancellationToken);
+                await downloadTask.StartAsync(cancellationToken);
                 await downloadResultTask;
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                await using var fileStream = File.OpenRead(_pathToDownloadFile);
+                await using var fileStream = File.OpenRead(pathToDownloadFile);
                 var fileSha256 = await ComputeSha256Async(fileStream, cancellationToken);
                 var remoteSha256 = platformInformation.Sha256;
 
@@ -126,27 +133,51 @@ public sealed class AppUpdateService(
                     ex.RemoteSha256, ex.LocalSha256
                 );
 
-                OnOnUpdateStateChanged(AppUpdateServiceState.IntegrityCheckFailed);
-                NotifException(ex);
+                TryDeleteFile(pathToDownloadFile);
+                OnOnUpdateStateChanged(new AppUpdateServiceState.IntegrityCheckFailed
+                {
+                    UpdateInformation = updateInformation,
+                    DownloadedFileSha256 = ex.LocalSha256,
+                    ExceptedFileSha256 = ex.RemoteSha256
+                });
+
+                return;
+            }
+            catch (OperationCanceledException)
+                // Downloader won't ensure the exception throw with our CancellationToken,
+                // so ignore check exception CancellationToken property
+                when (cancellationToken.IsCancellationRequested)
+            {
+                logger.LogInformation("Download was canceled");
+                TryDeleteFile(pathToDownloadFile);
+                CleanupAndEnterIdle();
 
                 return;
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Failed to download update");
-                OnOnUpdateStateChanged(AppUpdateServiceState.DownloadError);
-                NotifException(ex);
+                TryDeleteFile(pathToDownloadFile);
+
+                OnOnUpdateStateChanged(new AppUpdateServiceState.DownloadError
+                {
+                    UpdateInformation = updateInformation,
+                    DownloadErrorException = ex
+                });
 
                 return;
             }
             finally
             {
-                await _downloadTask.DisposeAsync();
-                _downloadTask = null;
+                await downloadTask.DisposeAsync();
             }
 
             logger.LogInformation("Update downloaded and waiting for install");
-            OnOnUpdateStateChanged(AppUpdateServiceState.WaitingForInstall);
+            OnOnUpdateStateChanged(new AppUpdateServiceState.WaitingForInstall
+            {
+                UpdateInformation = updateInformation,
+                PathToDownloadedFile = pathToDownloadFile
+            });
         }, cancellationToken).ConfigureAwait(false);
     }
 
@@ -161,99 +192,117 @@ public sealed class AppUpdateService(
         return fileHash;
     }
 
-    private void NotifException(Exception ex)
-    {
-        LastException = ex;
-    }
-
     #endregion
 
     public async ValueTask InstallUpdateAsync()
     {
-        if (UpdateState != AppUpdateServiceState.WaitingForInstall)
-            throw new InvalidOperationException("Update Service not in WaitingForInstall state");
+        string pathToDownloadedFile;
+        AppUpdateInformation updateInformation;
+
+        switch (UpdateState)
+        {
+            case AppUpdateServiceState.WaitingForInstall waitingForInstallState:
+                pathToDownloadedFile = waitingForInstallState.PathToDownloadedFile;
+                updateInformation = waitingForInstallState.UpdateInformation;
+                break;
+            case AppUpdateServiceState.InstallError installErrorState:
+                pathToDownloadedFile = installErrorState.PathToDownloadedFile;
+                updateInformation = installErrorState.UpdateInformation;
+                break;
+            default:
+                throw new InvalidOperationException("Update Service not in WaitingForInstall or Install state");
+        }
 
         try
         {
-            if (_pathToDownloadFile is null)
-            {
-                Debug.Fail("_pathToDownloadFile should not be null when WaitingForInstall");
-                throw new InvalidOperationException("_pathToDownloadFile should not be null when WaitingForInstall");
-            }
-
-            await updateInstallationService.InstallUpdateAsync(_pathToDownloadFile);
+            await updateInstallationService.InstallUpdateAsync(pathToDownloadedFile);
             Dispatcher.UIThread.Invoke(lifetimeService.Shutdown);
         }
         catch (Exception ex)
         {
-            NotifException(ex);
-            OnOnUpdateStateChanged(AppUpdateServiceState.InstallError);
+            OnOnUpdateStateChanged(new AppUpdateServiceState.InstallError
+            {
+                UpdateInformation = updateInformation,
+                InstallErrorException = ex,
+                PathToDownloadedFile = pathToDownloadedFile
+            });
+
             throw;
         }
     }
 
     public async ValueTask RetryUpdateAsync()
     {
-        if (UpdateState is not (AppUpdateServiceState.DownloadError or AppUpdateServiceState.IntegrityCheckFailed))
-            throw new InvalidOperationException("Update Service not in any error state");
-
-        if (UpdateInformation is null)
+        switch (UpdateState)
         {
-            Debug.Fail("UpdateInformation should not be null in error state");
-            throw new InvalidOperationException("UpdateInformation should not be null in error state");
+            case AppUpdateServiceState.DownloadError downloadErrorState:
+                StartDownloadUpdate(downloadErrorState.UpdateInformation);
+                break;
+            case AppUpdateServiceState.IntegrityCheckFailed integrityCheckFailedState:
+                StartDownloadUpdate(integrityCheckFailedState.UpdateInformation);
+                break;
+            case AppUpdateServiceState.InstallError:
+                await InstallUpdateAsync();
+                break;
+            default:
+                throw new InvalidOperationException("Update Service not in any error state");
         }
-
-        var update = UpdateInformation;
-        await CancelUpdateAsync();
-        StartDownloadUpdate(update);
     }
 
     public async ValueTask CancelUpdateAsync()
     {
         logger.LogInformation("Canceling update");
 
-        if (_downloadCts is not null)
-            await _downloadCts.CancelAsync();
-        _downloadCts = null;
-        _downloadTask = null;
-
-        if (_pathToDownloadFile is not null && File.Exists(_pathToDownloadFile))
+        if (UpdateState is AppUpdateServiceState.Downloading downloadingState)
         {
-            try
-            {
-                File.Delete(_pathToDownloadFile);
-            }
-            catch (Exception ex)
-            {
-                logger.LogWarning(ex, "Failed to cleanup downloaded file");
-            }
+            await downloadingState.DownloadCancellationTokenSource.CancelAsync();
         }
 
-        _downloadTask = null;
-        UpdateInformation = null;
-        BytesPerSecondSpeed = null;
-        DownloadedFileSize = null;
-        TotalFileSize = null;
-        _pathToDownloadFile = null;
-
-        OnOnUpdateStateChanged(AppUpdateServiceState.Idle);
+        CleanupAndEnterIdle();
     }
 
-    private void OnOnUpdateStateChanged(AppUpdateServiceState e)
+    private void CleanupAndEnterIdle()
     {
-        UpdateState = e;
-        OnUpdateStateChanged?.Invoke(this, e);
-    }
-}
+        string? pathToDownloadFile = null;
+        switch (UpdateState)
+        {
+            // Download method will handle file cleanup
+            case AppUpdateServiceState.InstallError installErrorState:
+                pathToDownloadFile = installErrorState.PathToDownloadedFile;
+                break;
+            case AppUpdateServiceState.WaitingForInstall waitingForInstallState:
+                pathToDownloadFile = waitingForInstallState.PathToDownloadedFile;
+                break;
+        }
 
-public enum AppUpdateServiceState
-{
-    Idle,
-    Downloading,
-    DownloadError,
-    IntegrityCheckFailed,
-    WaitingForInstall,
-    InstallError
+        if (pathToDownloadFile is not null) TryDeleteFile(pathToDownloadFile);
+        OnOnUpdateStateChanged(new AppUpdateServiceState.Idle());
+    }
+
+    private void TryDeleteFile(string filePath)
+    {
+        if (!File.Exists(filePath)) return;
+
+        try
+        {
+            File.Delete(filePath);
+        }
+        catch (Exception ex)
+        {
+            logger.LogWarning(ex, "Failed to cleanup downloaded file");
+        }
+    }
+
+    private T OnOnUpdateStateChanged<T>(T e) where T : AppUpdateServiceState
+    {
+        lock (_updateStateLock)
+        {
+            UpdateState = e;
+        }
+
+        OnUpdateStateChanged?.Invoke(this, e);
+        return e;
+    }
 }
 
 public sealed class UpdateFileIntegrityCheckFailedException(string localSha256, string remoteSha256)
